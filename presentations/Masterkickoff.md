@@ -9,7 +9,9 @@
 - lamp (de)
 - ground
 - battery (small / big line)
+- TODO:
 - transistor?
+- source?
 
 Q: Classes are with orientation encoded. Maybe remove?
 
@@ -50,6 +52,7 @@ Q: Which classes to add / remove?
 ## Next steps
 
 1. Make clean and train yolo in pytorch
+1. Convert to all us / de classes?
 2. Convert detected circuit in "syntax tree"
 1. TODO research
    1. Remove detected components
@@ -64,7 +67,8 @@ Q: Which classes to add / remove?
 
 ## Evaluation Metrics to use
 
-?
+1. Recall / Pecision / F1 / MAP
+1. ?
 
 ## Thesis questions
 
@@ -73,3 +77,4 @@ Q: Which classes to add / remove?
 3. How deep should the theory be? (e.g. explain yolo indepth?)
 4. German / English?
 6. Where can I train?
+1. Best way to select papers to cite? Pick by how it is cited? etc.
