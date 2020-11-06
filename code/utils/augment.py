@@ -237,6 +237,7 @@ class YoloAugmentator:
                 and (f != "train.txt")
                 and (f != "train_yolo.txt")
                 and (f != "valid.txt")
+                and (f != "val.txt")
             )
         ]
 
