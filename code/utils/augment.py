@@ -267,7 +267,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     #label_dir = Path(args.label_dir)
-    label_dir = Path("data")
+    label_dir = Path("data/labeled")
     files = os.listdir(str(label_dir))
 
     if args.delete:
