@@ -40,7 +40,7 @@ def convert_coco(label_path, labeled_images):
         coco_labels = " ".join(coco_labels)
 
         img_name = img_path.split("/")[-1]
-        train_file.write(f"{img_name} {coco_labels}\n")
+        train_file.write(f"./data/{img_name} {coco_labels}\n")
 
         print(f"Converted: {img_name}")
 
