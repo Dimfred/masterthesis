@@ -13,11 +13,11 @@ parser = argparse.ArgumentParser(
     description="Rotates and flips every image in a folder and changes yolo labels and bbox's according to a transition state"
 )
 
-parser.add_argument(
-    "-p", "--label_dir", type=str, help="the path where the files are appearing"
-)
+# parser.add_argument(
+#     "-p", "--label_dir", type=str, help="the path where the files are appearing"
+# )
 
-parser.add_argument("-t", "--train_prefix", type=str, help="path prefix for train.txt")
+# parser.add_argument("-t", "--train_prefix", type=str, help="path prefix for train.txt")
 
 parser.add_argument(
     "-d",
@@ -266,7 +266,8 @@ class YoloAugmentator:
 if __name__ == "__main__":
     args = parser.parse_args()
 
-    label_dir = Path(args.label_dir)
+    #label_dir = Path(args.label_dir)
+    label_dir = Path("data")
     files = os.listdir(str(label_dir))
 
     if args.delete:
@@ -304,4 +305,4 @@ if __name__ == "__main__":
         augmentator.augment(file, oimg, ocontent)
 
     augmentator.summary()
-    augmentator.create_train(args.train_prefix)
+    augmentator.create_train("train_yolo")
