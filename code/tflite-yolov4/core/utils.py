@@ -208,7 +208,7 @@ def bbox_iou(bboxes1, bboxes2):
         ],
         axis=-1,
     )
-    bboxes2_coor = tf.concat(
+    bboxes2_coor = tf.concatd(
         [
             bboxes2[..., :2] - bboxes2[..., 2:] * 0.5,
             bboxes2[..., :2] + bboxes2[..., 2:] * 0.5,

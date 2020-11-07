@@ -1,3 +1,3 @@
 ### darknet
 
-    ./darknet detector train obj.data yolov4-tiny-custom.cfg yolov4-tiny.conv.29 
+    ./darknet detector train yolov4.data yolov4-tiny-custom.cfg checkpoints
