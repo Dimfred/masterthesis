@@ -28,7 +28,7 @@ __C.TRAIN                     = edict()
 
 __C.TRAIN.ANNOT_PATH            = "./data/train.txt"
 __C.TRAIN.BATCH_SIZE            = 24
-# __C.TRAIN.INPUT_SIZE              = [320, 352, 384, 416, 448, 480, 512, 544, 576, 608]
+# __C.TRAIN.INPUT_SIZE          = [320, 352, 384, 416, 448, 480, 512, 544, 576, 608]
 __C.TRAIN.INPUT_SIZE            = 416
 __C.TRAIN.DATA_AUG              = False
 __C.TRAIN.LR_INIT               = 1e-3

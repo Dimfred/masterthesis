@@ -1,6 +1,3 @@
 [submodule "code/pytorch-YOLOv4"]
 	path = code/pytorch-YOLOv4
 	url = git@github.com:Dimfred/pytorch-YOLOv4.git
-[submodule "code/darknet"]
-	path = code/darknet
-	url = https://github.com/AlexeyAB/darknet.git

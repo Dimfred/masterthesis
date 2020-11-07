@@ -235,12 +235,19 @@ def main(_argv):
         for image_data, target in trainset:
             train_step(image_data, target)
 
+        mean_loss = 0
+        counter = 0
         for image_data, target in testset:
             last_giou, last_conf, last_prob, last_total = test_step(image_data, target)
+            counter += 1
+            mean_loss += last_total
+
+        mean_loss /= counter
+        mean_loss = "{%.3f}".format(mean_loss)
 
         model.save_weights(f"./checkpoints/yolov4")
         if epoch % 10 == 0:
-            path = f"./checkpoints/epoch-{epoch}-{last_total}"
+            path = f"./checkpoints/epoch-{epoch}-{mean_loss}"
             os.mkdir(path)
             model.save_weights(f"{path}/yolov4")
 

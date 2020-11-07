@@ -4,8 +4,17 @@
     python3 train.py --tiny --weights weights/yolov4-tiny.weights
 
     // convert
-    python3 save_model.py --weights ./weights/yolov4-tiny.weights --output ./models/yolov4-
-    tiny-416 --input_size 416 --model yolov4 --tiny
+    // if converting yolo weights
+    python3 save_model.py --weights ./weights/yolov4-tiny.weights --output ./models/yolov4-tiny-416 --input_size 416 --tiny
+
+    // from checkpoint
+    dir: checkpoints/some_name
+      checkpoint
+      yolov4.data-...
+      yolov4.index
+
+    python3 save_model.py --weights ./checkpoints/some_name/yolov4 --output ./models/yolov4-tiny-416 --input_size 416 --model yolov4 --tiny
+
 
     // detect
     python3 detect.py --weights ./models/yolov4-tiny-416 --size 416 --tiny --image <img>
