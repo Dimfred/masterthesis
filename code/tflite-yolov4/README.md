@@ -1,7 +1,14 @@
 # run
 
-python3 train.py --tiny --weights weights/yolov4-tiny.weights
+    // train
+    python3 train.py --tiny --weights weights/yolov4-tiny.weights
 
+    // convert
+    python3 save_model.py --weights ./weights/yolov4-tiny.weights --output ./models/yolov4-
+    tiny-416 --input_size 416 --model yolov4 --tiny
+
+    // detect
+    python3 detect.py --weights ./models/yolov4-tiny-416 --size 416 --tiny --image <img>
 
 # tensorflow-yolov4-tflite
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)

@@ -215,6 +215,8 @@ def main(_argv):
                 % (global_steps, giou_loss, conf_loss, prob_loss, total_loss)
             )
 
+            return giou_loss, conf_loss, prob_loss, total_loss
+
     for epoch in range(first_stage_epochs + second_stage_epochs):
         if epoch < first_stage_epochs:
             if not isfreeze:
@@ -222,17 +224,25 @@ def main(_argv):
                 for name in freeze_layers:
                     freeze = model.get_layer(name)
                     freeze_all(freeze)
+
         elif epoch >= first_stage_epochs:
             if isfreeze:
                 isfreeze = False
                 for name in freeze_layers:
                     freeze = model.get_layer(name)
                     unfreeze_all(freeze)
+
         for image_data, target in trainset:
             train_step(image_data, target)
+
         for image_data, target in testset:
-            test_step(image_data, target)
-        model.save_weights("./checkpoints/yolov4")
+            last_giou, last_conf, last_prob, last_total = test_step(image_data, target)
+
+        model.save_weights(f"./checkpoints/yolov4")
+        if epoch % 10 == 0:
+            path = f"./checkpoints/epoch-{epoch}-{last_total}"
+            os.mkdir(path)
+            model.save_weights(f"{path}/yolov4")
 
 
 if __name__ == "__main__":
