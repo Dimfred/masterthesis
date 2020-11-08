@@ -13,66 +13,6 @@ from tabulate import tabulate
 from typing import List
 
 
-# transition occurs always with the clock (90°)
-label_transition_rotation = {
-    "diode_left": "diode_top",
-    "diode_top": "diode_right",
-    "diode_right": "diode_bot",
-    "diode_bot": "diode_left",
-    "battery_left": "battery_top",
-    "battery_top": "battery_right",
-    "battery_right": "battery_bot",
-    "battery_bot": "battery_left",
-    "resistor_de_hor": "resistor_de_ver",
-    "resistor_de_ver": "resistor_de_hor",
-    "resistor_usa_hor": "resistor_usa_ver",
-    "resistor_usa_ver": "resistor_usa_hor",
-    "capacitor_hor": "capacitor_ver",
-    "capacitor_ver": "capacitor_hor",
-    "ground_left": "ground_top",
-    "ground_top": "ground_right",
-    "ground_right": "ground_bot",
-    "ground_bot": "ground_left",
-    "lamp_de_hor": "lamp_de_ver",
-    "lamp_de_ver": "lamp_de_hor",
-    "lamp_usa_hor": "lamp_usa_ver",
-    "lamp_usa_ver": "lamp_usa_hor",
-    "inductor_de_hor": "inductor_de_ver",
-    "inductor_de_ver": "inductor_de_hor",
-    "inductor_usa_hor": "inductor_usa_ver",
-    "inductor_usa_ver": "inductor_usa_hor",
-}
-
-label_transition_flip = {
-    "diode_left": "diode_right",
-    "diode_top": "diode_top",
-    "diode_right": "diode_left",
-    "diode_bot": "diode_bot",
-    "battery_left": "battery_right",
-    "battery_top": "battery_top",
-    "battery_right": "battery_left",
-    "battery_bot": "battery_bot",
-    "resistor_de_hor": "resistor_de_hor",
-    "resistor_de_ver": "resistor_de_ver",
-    "resistor_usa_hor": "resistor_usa_hor",
-    "resistor_usa_ver": "resistor_usa_ver",
-    "capacitor_hor": "capacitor_hor",
-    "capacitor_ver": "capacitor_ver",
-    "ground_left": "ground_right",
-    "ground_top": "ground_top",
-    "ground_right": "ground_left",
-    "ground_bot": "ground_bot",
-    "lamp_de_hor": "lamp_de_hor",
-    "lamp_de_ver": "lamp_de_ver",
-    "lamp_usa_hor": "lamp_usa_hor",
-    "lamp_usa_ver": "lamp_usa_ver",
-    "inductor_de_hor": "inductor_de_hor",
-    "inductor_de_ver": "inductor_de_ver",
-    "inductor_usa_hor": "inductor_usa_hor",
-    "inductor_usa_ver": "inductor_usa_ver",
-}
-
-
 class YoloAugmentator:
     def __init__(
         self,
@@ -148,7 +88,10 @@ class YoloAugmentator:
         filename, ext = os.path.splitext(filename)
 
         # {name}_{XXX: degree}_{flip/""}_aug.ext
-        filename = "{}_{:03d}_{}aug".format(filename, degree, "flip_" if flip else "")
+        filename = "{filename}_{degree:03d}_{flip}aug".format(
+            filename=filename, degree=degree, flip=("hflip_" if flip else "nflip_")
+        )
+
         img_filename = f"{filename}{ext}"
         label_filename = f"{filename}.txt"
 
@@ -161,12 +104,31 @@ class YoloAugmentator:
 
             print("Augmented: ", label_filename)
 
-    def create_train(self, train_prefix: str):
+    def create_train(self):
         yolo_files = self._get_label_files()
         imgs = [(f.split(".")[0] + ".jpg") for f in yolo_files]
-        with open(str(self.label_dir / "train_yolo.txt"), "w") as f:
+
+        train_yolo = "train_yolo.txt"
+        with open(str(self.label_dir / train_yolo), "w") as f:
             for img in imgs:
-                f.write(str(Path(train_prefix) / img) + "\n")
+                if "aug" in img:
+                    f.write(str(self.preprocessed_dir / img) + "\n")
+
+        os.symlink(
+            os.path.abspath(self.label_dir / train_yolo),
+            self.preprocessed_dir / train_yolo,
+        )
+
+        valid_yolo = "valid_yolo.txt"
+        with open(str(self.label_dir / valid_yolo), "w") as f:
+            for img in imgs:
+                if "aug" not in img:
+                    f.write(str(self.preprocessed_dir / img) + "\n")
+
+        os.symlink(
+            os.path.abspath(self.label_dir / valid_yolo),
+            self.preprocessed_dir / valid_yolo,
+        )
 
     def rotate(self, img):
         return cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
@@ -273,6 +235,11 @@ class YoloAugmentator:
         for filename in os.listdir(self.preprocessed_dir):
             os.remove(self.preprocessed_dir / filename)
 
+        os.symlink(
+            os.path.abspath(self.label_dir / "classes.txt"),
+            self.preprocessed_dir / "classes.txt",
+        )
+
         for img_filename in self._get_imgs_to_augment(self.label_dir):
             label_filepath = label_dir / "{}.txt".format(
                 os.path.splitext(img_filename)[0]
@@ -289,8 +256,67 @@ class YoloAugmentator:
             self.augment(img_filename, original_image, original_labels)
 
         self.summary()
-        self.create_train("train_yolo")
+        self.create_train()
 
+
+# transition occurs always with the clock (90°)
+label_transition_rotation = {
+    "diode_left": "diode_top",
+    "diode_top": "diode_right",
+    "diode_right": "diode_bot",
+    "diode_bot": "diode_left",
+    "battery_left": "battery_top",
+    "battery_top": "battery_right",
+    "battery_right": "battery_bot",
+    "battery_bot": "battery_left",
+    "resistor_de_hor": "resistor_de_ver",
+    "resistor_de_ver": "resistor_de_hor",
+    "resistor_usa_hor": "resistor_usa_ver",
+    "resistor_usa_ver": "resistor_usa_hor",
+    "capacitor_hor": "capacitor_ver",
+    "capacitor_ver": "capacitor_hor",
+    "ground_left": "ground_top",
+    "ground_top": "ground_right",
+    "ground_right": "ground_bot",
+    "ground_bot": "ground_left",
+    "lamp_de_hor": "lamp_de_ver",
+    "lamp_de_ver": "lamp_de_hor",
+    "lamp_usa_hor": "lamp_usa_ver",
+    "lamp_usa_ver": "lamp_usa_hor",
+    "inductor_de_hor": "inductor_de_ver",
+    "inductor_de_ver": "inductor_de_hor",
+    "inductor_usa_hor": "inductor_usa_ver",
+    "inductor_usa_ver": "inductor_usa_hor",
+}
+
+label_transition_flip = {
+    "diode_left": "diode_right",
+    "diode_top": "diode_top",
+    "diode_right": "diode_left",
+    "diode_bot": "diode_bot",
+    "battery_left": "battery_right",
+    "battery_top": "battery_top",
+    "battery_right": "battery_left",
+    "battery_bot": "battery_bot",
+    "resistor_de_hor": "resistor_de_hor",
+    "resistor_de_ver": "resistor_de_ver",
+    "resistor_usa_hor": "resistor_usa_hor",
+    "resistor_usa_ver": "resistor_usa_ver",
+    "capacitor_hor": "capacitor_hor",
+    "capacitor_ver": "capacitor_ver",
+    "ground_left": "ground_right",
+    "ground_top": "ground_top",
+    "ground_right": "ground_left",
+    "ground_bot": "ground_bot",
+    "lamp_de_hor": "lamp_de_hor",
+    "lamp_de_ver": "lamp_de_ver",
+    "lamp_usa_hor": "lamp_usa_hor",
+    "lamp_usa_ver": "lamp_usa_ver",
+    "inductor_de_hor": "inductor_de_hor",
+    "inductor_de_ver": "inductor_de_ver",
+    "inductor_usa_hor": "inductor_usa_hor",
+    "inductor_usa_ver": "inductor_usa_ver",
+}
 
 label_dir_files_to_ignore = [
     "classes.names",
@@ -316,14 +342,3 @@ if __name__ == "__main__":
     )
 
     augmentator.run()
-
-    # files = os.listdir(str(label_dir))
-    # if args.delete:
-    #     for f in files:
-    #         if f.startswith("aug_"):
-    #             f = str(label_dir / f)
-    #             os.remove(f)
-    #             print("Remove: ", f)
-    #     os.remove(str(label_dir / "train_yolo.txt"))
-
-    #     sys.exit()

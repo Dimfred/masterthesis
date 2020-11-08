@@ -1,7 +1,7 @@
-data/example_circuit3.jpg
-data/example_circuit4.jpg
-data/to_label1.jpg
-data/to_label2.jpg
-data/example_circuit2.jpg
-data/example_circuit.jpg
-data/example_circuit5.jpg
+data/preprocessed/00_01.jpg
+data/preprocessed/00_06.jpg
+data/preprocessed/00_00.jpg
+data/preprocessed/00_03.jpg
+data/preprocessed/00_04.jpg
+data/preprocessed/00_05.jpg
+data/preprocessed/00_02.jpg
