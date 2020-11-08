@@ -24,7 +24,7 @@ def get_labeled_files(label_path):
 
 
 def convert_coco(label_path, labeled_images):
-    train_file = open(f"{label_path}/train.txt", "w")
+    train_file = open(f"{label_path}/train_coco.txt", "w")
 
     for img_path, label_path in labeled_images:
         img = cv.imread(img_path)
@@ -40,7 +40,7 @@ def convert_coco(label_path, labeled_images):
         coco_labels = " ".join(coco_labels)
 
         img_name = img_path.split("/")[-1]
-        train_file.write(f"./data/{img_name} {coco_labels}\n")
+        train_file.write(f"./data/preprocessed/{img_name} {coco_labels}\n")
 
         print(f"Converted: {img_name}")
 
@@ -48,8 +48,8 @@ def convert_coco(label_path, labeled_images):
 
 
 def _convert_coco(himg, wimg, cls_, x, y, w, h):
-    cls_, x, y, w, h = int(cls_), float(x), float(y), float(w), float(h)
-    return x, y, w, h, cls_
+    return f"{x},{y},{w},{h},{cls_}"
+    # cls_, x, y, w, h = int(cls_), float(x), float(y), float(w), float(h)
     # will calculate absolute values
     # this is not needed for a converted_coco
     #xabs, yabs = wimg * x, himg * y
@@ -61,7 +61,7 @@ def _convert_coco(himg, wimg, cls_, x, y, w, h):
     #return f"{x1},{y1},{x2},{y2},{cls_}"
 
 
-label_dir = "data/labeled"
+label_dir = "data/preprocessed"
 
 if __name__ == "__main__":
     yolo_labels = get_labeled_files(label_dir)

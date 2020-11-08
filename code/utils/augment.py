@@ -9,6 +9,7 @@ import sys
 import os
 import shutil
 from tabulate import tabulate
+import copy
 
 from typing import List
 
@@ -30,34 +31,24 @@ class YoloAugmentator:
         self.flip_transition = flip_transition
 
     def augment(self, file: str, oimg, ocontent):
-        img90 = self.rotate(oimg)
-        content90 = self.calc_rotations(ocontent)
-        self.write(file, img90, content90, 90)
-
-        img180 = self.rotate(img90)
-        content180 = self.calc_rotations(content90)
-        self.write(file, img180, content180, 180)
-
-        img270 = self.rotate(img180)
-        content270 = self.calc_rotations(content180)
-        self.write(file, img270, content270, 270)
+        # rotate original image
+        img = oimg.copy()
+        content = copy.deepcopy(ocontent)
+        for degree in (90, 180, 270):
+            img = self.rotate(img)
+            content = self.calc_rotations(content)
+            self.write(file, img, content, degree)
 
         # flip
-        fimg = self.flip(oimg)
-        fcontent = self.calc_flips(ocontent)
-        self.write(file, fimg, fcontent, 0, True)
+        img = self.flip(oimg)
+        content = self.calc_flips(ocontent)
+        self.write(file, img, content, 0, True)
 
-        fimg90 = self.rotate(fimg)
-        fcontent90 = self.calc_rotations(fcontent)
-        self.write(file, fimg90, fcontent90, 90, True)
-
-        fimg180 = self.rotate(fimg90)
-        fcontent180 = self.calc_rotations(fcontent90)
-        self.write(file, fimg180, fcontent180, 180, True)
-
-        fimg270 = self.rotate(fimg180)
-        fcontent270 = self.calc_rotations(fcontent180)
-        self.write(file, fimg270, fcontent270, 270, True)
+        # rotate flipped image
+        for degree in (90, 180, 270):
+            img = self.rotate(img)
+            content = self.calc_rotations(content)
+            self.write(file, img, content, degree, True)
 
     def make_symlink(self, img_filename):
         img_sym = str(self.preprocessed_dir / img_filename)
