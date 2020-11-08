@@ -49,13 +49,16 @@ def convert_coco(label_path, labeled_images):
 
 def _convert_coco(himg, wimg, cls_, x, y, w, h):
     cls_, x, y, w, h = int(cls_), float(x), float(y), float(w), float(h)
-    xabs, yabs = wimg * x, himg * y
-    wabs, habs = wimg * w, himg * h
+    return x, y, w, h, cls_
+    # will calculate absolute values
+    # this is not needed for a converted_coco
+    #xabs, yabs = wimg * x, himg * y
+    #wabs, habs = wimg * w, himg * h
 
-    x1, y1 = int(xabs - 0.5 * wabs), int(yabs - 0.5 * habs)
-    x2, y2 = int(xabs + 0.5 * wabs), int(yabs + 0.5 * habs)
+    #x1, y1 = int(xabs - 0.5 * wabs), int(yabs - 0.5 * habs)
+    #x2, y2 = int(xabs + 0.5 * wabs), int(yabs + 0.5 * habs)
 
-    return f"{x1},{y1},{x2},{y2},{cls_}"
+    #return f"{x1},{y1},{x2},{y2},{cls_}"
 
 
 label_dir = "data/labeled"

@@ -6,26 +6,12 @@ import time
 from pathlib import Path
 import cv2 as cv
 import sys
+import os
+import shutil
+from tabulate import tabulate
 
 from typing import List
 
-parser = argparse.ArgumentParser(
-    description="Rotates and flips every image in a folder and changes yolo labels and bbox's according to a transition state"
-)
-
-# parser.add_argument(
-#     "-p", "--label_dir", type=str, help="the path where the files are appearing"
-# )
-
-# parser.add_argument("-t", "--train_prefix", type=str, help="path prefix for train.txt")
-
-parser.add_argument(
-    "-d",
-    "--delete",
-    type=bool,
-    required=False,
-    help="deletes all augmented files in this dir",
-)
 
 # transition occurs always with the clock (90°)
 label_transition_rotation = {
@@ -87,74 +73,69 @@ label_transition_flip = {
 }
 
 
-def parse_classes(label_dir: Path):
-    with open(str(label_dir / "classes.txt"), "r") as f:
-        return [f.replace("\n", "") for f in f.readlines()]
-
-
-def parse_yolo(yolo_file: Path):
-    with open(str(yolo_file), "r") as f:
-        lines = f.readlines()
-        content = []
-        for line in lines:
-            l, x, y, w, h = line.split(" ")
-            content.append((int(l), float(x), float(y), float(w), float(h)))
-
-        return content
-
-
-def get_imgs_to_augment(label_dir: Path):
-    files_to_augment = os.listdir(str(label_dir))
-    files_to_augment.pop(files_to_augment.index("classes.txt"))
-    # exclude already augmented files
-    files_to_augment = [f for f in files_to_augment if not f.startswith("aug")]
-    # exclude yolo files
-    files_to_augment = [f for f in files_to_augment if not f.endswith(".txt")]
-    return files_to_augment
-
-
 class YoloAugmentator:
     def __init__(
         self,
         label_dir: Path,
-        classes: List[str],
+        preprocessed_dir: Path,
+        label_dir_files_to_ignore: List[str],
         rot_transition: dict,
         flip_transition: dict,
     ):
         self.label_dir = label_dir
-        self.classes = classes
+        self.preprocessed_dir = preprocessed_dir
+        self.label_dir_files_to_ignore = label_dir_files_to_ignore
+        self.classes = self._parse_classes(label_dir)
         self.rot_transition = rot_transition
         self.flip_transition = flip_transition
 
     def augment(self, file: str, oimg, ocontent):
-        img90 = augmentator.rotate(oimg)
-        content90 = augmentator.calc_rotations(ocontent)
-        augmentator.write(file, img90, content90, 90)
+        img90 = self.rotate(oimg)
+        content90 = self.calc_rotations(ocontent)
+        self.write(file, img90, content90, 90)
 
-        img180 = augmentator.rotate(img90)
-        content180 = augmentator.calc_rotations(content90)
-        augmentator.write(file, img180, content180, 180)
+        img180 = self.rotate(img90)
+        content180 = self.calc_rotations(content90)
+        self.write(file, img180, content180, 180)
 
-        img270 = augmentator.rotate(img180)
-        content270 = augmentator.calc_rotations(content180)
-        augmentator.write(file, img270, content270, 270)
+        img270 = self.rotate(img180)
+        content270 = self.calc_rotations(content180)
+        self.write(file, img270, content270, 270)
 
         # flip
-        fimg = augmentator.flip(oimg)
-        fcontent = augmentator.calc_flips(ocontent)
-        augmentator.write(file, fimg, fcontent, 0, True)
+        fimg = self.flip(oimg)
+        fcontent = self.calc_flips(ocontent)
+        self.write(file, fimg, fcontent, 0, True)
 
-        fimg90 = augmentator.rotate(fimg)
-        fcontent90 = augmentator.calc_rotations(fcontent)
-        augmentator.write(file, fimg90, fcontent90, 90, True)
+        fimg90 = self.rotate(fimg)
+        fcontent90 = self.calc_rotations(fcontent)
+        self.write(file, fimg90, fcontent90, 90, True)
 
-        fimg180 = augmentator.rotate(fimg90)
-        fcontent180 = augmentator.calc_rotations(fcontent90)
-        augmentator.write(file, fimg180, fcontent180, 180, True)
+        fimg180 = self.rotate(fimg90)
+        fcontent180 = self.calc_rotations(fcontent90)
+        self.write(file, fimg180, fcontent180, 180, True)
 
-        fimg270 = augmentator.rotate(fimg180)
-        fcontent270 = augmentator.calc_rotations(fcontent180)
-        augmentator.write(file, fimg270, fcontent270, 270, True)
+        fimg270 = self.rotate(fimg180)
+        fcontent270 = self.calc_rotations(fcontent180)
+        self.write(file, fimg270, fcontent270, 270, True)
+
+    def make_symlink(self, img_filename):
+        img_sym = str(self.preprocessed_dir / img_filename)
+        if os.path.exists(img_sym):
+            os.remove(img_sym)
+
+        # create a symlink in the preprocessed dir of the image
+        img_abs = os.path.abspath(str(self.label_dir / img_filename))
+        os.symlink(img_abs, img_sym)
+
+        label_filename = f"{(os.path.splitext(img_filename)[0])}.txt"
+        label_sym = str(self.preprocessed_dir / label_filename)
+        if os.path.exists(label_sym):
+            os.remove(label_sym)
+
+        # create a symlink in the preprocessed dir of the labelfile
+        label_abs = os.path.abspath(str(self.label_dir / label_filename))
+        os.symlink(label_abs, label_sym)
 
     def write(
         self,
@@ -164,20 +145,24 @@ class YoloAugmentator:
         degree: int,
         flip: bool = False,
     ):
-        img_filename = "aug_" + ("flip_" if flip else "") + str(degree) + "_" + filename
-        yolo_filename = img_filename.split(".")[0] + ".txt"
+        filename, ext = os.path.splitext(filename)
 
-        cv.imwrite(str(self.label_dir / img_filename), img)
+        # {name}_{XXX: degree}_{flip/""}_aug.ext
+        filename = "{}_{:03d}_{}aug".format(filename, degree, "flip_" if flip else "")
+        img_filename = f"{filename}{ext}"
+        label_filename = f"{filename}.txt"
 
-        with open(str(self.label_dir / yolo_filename), "w") as yolo_file:
+        cv.imwrite(str(self.preprocessed_dir / img_filename), img)
+
+        with open(str(self.preprocessed_dir / label_filename), "w") as label_file:
             for c in content:
-                yolo_file.write(" ".join(str(i) for i in c))
-                yolo_file.write("\n")
+                label_file.write(" ".join(str(i) for i in c))
+                label_file.write("\n")
 
-            print("Augmented: ", yolo_filename)
+            print("Augmented: ", label_filename)
 
     def create_train(self, train_prefix: str):
-        yolo_files = self._get_yolo_files()
+        yolo_files = self._get_label_files()
         imgs = [(f.split(".")[0] + ".jpg") for f in yolo_files]
         with open(str(self.label_dir / "train_yolo.txt"), "w") as f:
             for img in imgs:
@@ -227,83 +212,118 @@ class YoloAugmentator:
         new_h = w
         return new_label, new_x, new_y, new_w, new_h
 
-    def _get_yolo_files(self):
+    def _get_label_files(self):
         return [
             f
-            for f in os.listdir(self.label_dir)
-            if (
-                f.endswith(".txt")
-                and (f != "classes.txt")
-                and (f != "train.txt")
-                and (f != "train_yolo.txt")
-                and (f != "valid.txt")
-                and (f != "val.txt")
-            )
+            for f in os.listdir(self.preprocessed_dir)
+            if f.endswith(".txt") and f not in self.label_dir_files_to_ignore
         ]
 
     def summary(self):
         # just some summary how much of each class we have
         summary = {}
-        yolo_files = self._get_yolo_files()
-        for f in yolo_files:
-            with open(str(label_dir / f), "r") as yolo_file:
+
+        label_files = self._get_label_files()
+        for f in label_files:
+            with open(str(self.preprocessed_dir / f), "r") as yolo_file:
                 lines = yolo_file.readlines()
                 for line in lines:
                     label = int(line.split(" ")[0])
-                    name = classes[label]
+                    name = self.classes[label]
                     if name not in summary:
                         summary[name] = 0
 
                     summary[name] += 1
 
         summary = sorted(list(summary.items()), key=lambda x: x[0])
-        print("")
-        print("-" * 60)
-        print("Class summary")
-        for name, num in summary:
-            print(f"{name}: {num}")
+        summary = [("Labels", "Number")] + summary
+        print(tabulate(summary))
 
+    def _parse_classes(self, label_dir: Path):
+        with open(str(label_dir / "classes.txt"), "r") as f:
+            return [f.replace("\n", "") for f in f.readlines()]
+
+    def _parse_labels(self, yolo_file: Path):
+        with open(str(yolo_file), "r") as f:
+            lines = f.readlines()
+            content = []
+            for line in lines:
+                l, x, y, w, h = line.split(" ")
+                content.append((int(l), float(x), float(y), float(w), float(h)))
+
+        return content
+
+    def _get_imgs_to_augment(self, label_dir: Path):
+        imgs_to_augment = os.listdir(str(label_dir))
+
+        for file in self.label_dir_files_to_ignore:
+            try:
+                imgs_to_augment.pop(imgs_to_augment.index(file))
+            except Exception as e:
+                print(e)
+
+        # exclude already augmented files
+        # files_to_augment = [f for f in files_to_augment if not "aug" in f]
+
+        # exclude label files
+        imgs_to_augment = [f for f in imgs_to_augment if not f.endswith(".txt")]
+        return imgs_to_augment
+
+    def run(self):
+        for filename in os.listdir(self.preprocessed_dir):
+            os.remove(self.preprocessed_dir / filename)
+
+        for img_filename in self._get_imgs_to_augment(self.label_dir):
+            label_filepath = label_dir / "{}.txt".format(
+                os.path.splitext(img_filename)[0]
+            )
+
+            # create symlinks for the original image and labels in the preprocessed
+            # directory
+            self.make_symlink(img_filename)
+
+            # create 3 rotations of the original img + flip and 3 rotations of the
+            # flipped img => 7 more imgs per original_img
+            original_labels = self._parse_labels(label_filepath)
+            original_image = cv.imread(str(label_dir / img_filename))
+            self.augment(img_filename, original_image, original_labels)
+
+        self.summary()
+        self.create_train("train_yolo")
+
+
+label_dir_files_to_ignore = [
+    "classes.names",
+    "classes.txt",
+    "train.txt",
+    "val.txt",
+    "val.txt.bak",
+    "valid_yolo.txt",
+    "train_yolo.txt",
+    "log",
+]
 
 if __name__ == "__main__":
-    args = parser.parse_args()
-
-    #label_dir = Path(args.label_dir)
     label_dir = Path("data/labeled")
-    files = os.listdir(str(label_dir))
-
-    if args.delete:
-        for f in files:
-            if f.startswith("aug_"):
-                f = str(label_dir / f)
-                os.remove(f)
-                print("Remove: ", f)
-        os.remove(str(label_dir / "train_yolo.txt"))
-
-        sys.exit()
-
-    classes = parse_classes(label_dir)
-
-    imgs_to_augment = get_imgs_to_augment(label_dir)
+    preprocessed_dir = Path("data/preprocessed")
 
     augmentator = YoloAugmentator(
-        label_dir, classes, label_transition_rotation, label_transition_flip
+        label_dir,
+        preprocessed_dir,
+        label_dir_files_to_ignore,
+        label_transition_rotation,
+        label_transition_flip,
     )
 
-    for file in imgs_to_augment:
-        yolo_file_name = label_dir / (file.split(".")[0] + ".txt")
+    augmentator.run()
 
-        try:
-            # get original data
-            ocontent = parse_yolo(yolo_file_name)
-            oimg = cv.imread(str(label_dir / file))
-        except Exception as e:  # file does not exists hence we haven't labeled it yet
-            # print(e)
-            continue
+    # files = os.listdir(str(label_dir))
+    # if args.delete:
+    #     for f in files:
+    #         if f.startswith("aug_"):
+    #             f = str(label_dir / f)
+    #             os.remove(f)
+    #             print("Remove: ", f)
+    #     os.remove(str(label_dir / "train_yolo.txt"))
 
-        # create 3 rotations of the original img
-        # + flip and 3 rotations of the flipped img
-        # => 7 more imgs per original_img
-        augmentator.augment(file, oimg, ocontent)
-
-    augmentator.summary()
-    augmentator.create_train("train_yolo")
+    #     sys.exit()
