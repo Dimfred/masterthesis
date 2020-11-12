@@ -101,7 +101,16 @@ class YoloAugmentator:
 
     def create_train(self):
         yolo_files = self._get_label_files()
-        imgs = [(f.split(".")[0] + ".jpg") for f in yolo_files]
+
+        imgs = []
+        for label_file in yolo_files:
+            file_name = os.path.splitext(label_file)[0]
+            jpg = f"{file_name}.jpg"
+            if os.path.exists(self.preprocessed_dir / jpg):
+                imgs.append(jpg)
+            else:
+                png = f"{file_name}.png"
+                imgs.append(png)
 
         train_yolo = "train_yolo.txt"
         with open(str(self.label_dir / train_yolo), "w") as f:
