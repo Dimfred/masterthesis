@@ -7,7 +7,15 @@ import math
 import random
 from numba import njit
 import os
+from pathlib import Path
 
+data = Path("data")
+labeled = data / "labeled"
+
+img_path = labeled / "03_02.png"
+img = cv.imread(str(img_path), cv.IMREAD_GRAYSCALE)
+
+utils.show(img, 416)
 
 # @njit
 # def colorize_connected_components(dst, n_labels, components):

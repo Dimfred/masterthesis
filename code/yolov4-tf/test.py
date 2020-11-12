@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import cv2 as cv
 import tensorflow as tf
 tf.get_logger().setLevel("ERROR")
@@ -18,7 +20,7 @@ yolo = YOLOv4(tiny=True, small=True)
 # used classes
 yolo.classes = "trained_classes.txt"
 # 608, 736, 832, 928, 960, 1120, 1280, 1600
-size = 736
+size = 608
 yolo.input_size = (size, size)
 yolo.channels = 1
 
@@ -31,7 +33,7 @@ yolo.make_model()
 # yolo.load_weights("weights/tiny_custom_last.weights", weights_type="yolo")
 
 # small
-yolo.load_weights("weights/v1sm/small_conf_best.weights", weights_type="yolo")
+yolo.load_weights("weights/v2label/small_conf_best.weights", weights_type="yolo")
 
 
 # yolo.load_weights(
@@ -39,9 +41,11 @@ yolo.load_weights("weights/v1sm/small_conf_best.weights", weights_type="yolo")
 #     weights_type="yolo",
 # )
 
-#yolo.inference(media_path="data/unlabeled/05_00.jpg")
-#yolo.inference(media_path="data/unlabeled/03_00.png")
-#yolo.inference(media_path="data/unlabeled/03_01.png")
+# juli
+yolo.inference(media_path="data/unlabeled/06_00.jpg")
+yolo.inference(media_path="data/unlabeled/06_01.jpg")
+yolo.inference(media_path="data/unlabeled/06_02.jpg")
+
 #yolo.inference(media_path="data/unlabeled/03_02.png")
 #yolo.inference(media_path="data/unlabeled/03_03.png")
 #yolo.inference(media_path="data/unlabeled/03_04.png")
@@ -51,18 +55,13 @@ yolo.load_weights("weights/v1sm/small_conf_best.weights", weights_type="yolo")
 #yolo.inference(media_path="data/unlabeled/03_08.png")
 #yolo.inference(media_path="data/unlabeled/03_09.png")
 
-yolo.inference(media_path="data/unlabeled/01_00.jpg")
-#yolo.inference(media_path="data/labeled/00_01.jpg")
-#yolo.inference(media_path="data/labeled/00_02.jpg")
-#yolo.inference(media_path="data/labeled/00_03.jpg")
-#yolo.inference(media_path="data/labeled/00_04.jpg")
-#yolo.inference(media_path="data/unlabeled/00_07.jpg")
-# yolo.inference(media_path="data/unlabeled/01_00.jpg")
-# yolo.inference(media_path="data/unlabeled/02_00.jpg")
-# yolo.inference(media_path="data/unlabeled/02_01.jpg")
-# yolo.inference(media_path="data/unlabeled/02_02.jpg")
-# yolo.inference(media_path="data/unlabeled/02_03.jpg")
-# yolo.inference(media_path="data/unlabeled/oesi_0.jpg")
+#yolo.inference(media_path="data/labeled/03_04.png")
+#yolo.inference(media_path="data/labeled/03_05.png")
+#yolo.inference(media_path="data/labeled/03_06.png")
+#yolo.inference(media_path="data/labeled/03_07.png")
+#yolo.inference(media_path="data/labeled/03_08.png")
+#yolo.inference(media_path="data/labeled/03_09.png")
+
 
 # img = cv.imread("data/0_6.jpg")
 # img = cv.cvtColor(img, cv.COLOR_RGB2BGR)

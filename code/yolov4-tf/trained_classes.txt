@@ -24,3 +24,7 @@ inductor_de_hor
 inductor_de_ver
 inductor_usa_hor
 inductor_usa_ver
+source_hor
+source_ver
+current_hor
+current_ver

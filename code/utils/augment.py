@@ -187,7 +187,8 @@ class YoloAugmentator:
 
     def summary(self):
         # just some summary how much of each class we have
-        summary = {}
+        summary_real = {}
+        summary_augmented = {}
 
         label_files = self._get_label_files()
         for f in label_files:
@@ -196,13 +197,24 @@ class YoloAugmentator:
                 for line in lines:
                     label = int(line.split(" ")[0])
                     name = self.classes[label]
-                    if name not in summary:
-                        summary[name] = 0
+                    if name not in summary_augmented:
+                        summary_augmented[name] = 0
+                        summary_real[name] = 0
 
-                    summary[name] += 1
+                    summary_augmented[name] += 1
 
-        summary = sorted(list(summary.items()), key=lambda x: x[0])
-        summary = [("Labels", "Number")] + summary
+                    # is original
+                    if "_000_nflip_" in f:
+                        summary_real[name] += 1
+
+        summary = sorted(
+            [
+                (name, summary_real[name], summary_augmented[name])
+                for name in summary_augmented.keys()
+            ],
+            key=lambda x: x[0],
+        )
+        summary = [("Labels", "Real", "Augmented")] + summary
         print(tabulate(summary))
 
     def _parse_classes(self, label_dir: Path):
@@ -296,7 +308,7 @@ label_transition_rotation = {
     "source_hor": "source_ver",
     "source_ver": "source_hor",
     "current_hor": "current_ver",
-    "current_ver": "current_hor"
+    "current_ver": "current_hor",
 }
 
 label_transition_flip = {
@@ -329,7 +341,7 @@ label_transition_flip = {
     "source_hor": "source_hor",
     "source_ver": "source_ver",
     "current_hor": "current_hor",
-    "current_ver": "current_ver"
+    "current_ver": "current_ver",
 }
 
 label_dir_files_to_ignore = [
