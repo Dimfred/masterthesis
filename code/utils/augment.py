@@ -284,6 +284,10 @@ label_transition_rotation = {
     "inductor_de_ver": "inductor_de_hor",
     "inductor_usa_hor": "inductor_usa_ver",
     "inductor_usa_ver": "inductor_usa_hor",
+    "source_hor": "source_ver",
+    "source_ver": "source_hor",
+    "current_hor": "current_ver",
+    "current_ver": "current_hor"
 }
 
 label_transition_flip = {
@@ -313,6 +317,10 @@ label_transition_flip = {
     "inductor_de_ver": "inductor_de_ver",
     "inductor_usa_hor": "inductor_usa_hor",
     "inductor_usa_ver": "inductor_usa_ver",
+    "source_hor": "source_hor",
+    "source_ver": "source_ver",
+    "current_hor": "current_hor",
+    "current_ver": "current_ver"
 }
 
 label_dir_files_to_ignore = [
