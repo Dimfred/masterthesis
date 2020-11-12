@@ -23,11 +23,11 @@ from yolov4.tf import YOLOv4
 yolo = YOLOv4(tiny=True, small=True)
 
 yolo.classes = "trained_classes.txt"
-yolo.input_size = 736
+yolo.input_size = 608
 yolo.channels = 1
 
 yolo.make_model()
-yolo.load_weights("weights/vlabel/small_conf_best.weights", weights_type="yolo")
+yolo.load_weights("weights/v2label/small_conf_best.weights", weights_type="yolo")
 
 img_dir = Path(sys.argv[1])
 label_dir = Path("data/yolo_labeled")
