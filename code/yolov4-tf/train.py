@@ -25,17 +25,17 @@ weights = Path("weights")
 #################
 
 # TODO config
-yolo = YOLOv4(tiny=True)
+yolo = YOLOv4(tiny=True, small=True)
 yolo.classes = str(data / "classes.txt")
-yolo.input_size = (416, 416)
+yolo.input_size = (608, 608)
 yolo.channels = 1
 # TODO normally 64 and subdivision 3
-yolo.batch_size = 24
+yolo.batch_size = 16
 # TODO check other params
 
 yolo.make_model()
 yolo.load_weights(
-    weights / "yolov4-tiny-custom_last_save.weights", weights_type="yolo"
+    weights / "yolov4-tiny-custom.weights", weights_type="yolo"
 )
 
 
@@ -53,7 +53,7 @@ train_dataset = yolo.load_dataset(
 # test_dataset(yolo, dataset)
 
 valid_dataset = yolo.load_dataset(
-    dataset_path=str(data / "valid_yolo.txt"),
+    dataset_path=str(data / "train_yolo.txt"),
     dataset_type="yolo",
     training=False
 )
