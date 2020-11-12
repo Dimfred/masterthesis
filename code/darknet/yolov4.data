@@ -1,5 +1,6 @@
 classes = 26
 train = data/preprocessed/train_yolo.txt
-valid = data/preprocessed/valid_yolo.txt
+valid = data/preprocessed/train_yolo.txt
+#valid = data/preprocessed/valid_yolo.txt
 names = data/preprocessed/classes.txt
 backup = checkpoints

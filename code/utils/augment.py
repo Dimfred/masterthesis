@@ -34,6 +34,10 @@ class YoloAugmentator:
         # rotate original image
         img = oimg.copy()
         content = copy.deepcopy(ocontent)
+
+        # store the original_img
+        self.write(file, img, content, 0)
+
         for degree in (90, 180, 270):
             img = self.rotate(img)
             content = self.calc_rotations(content)
@@ -238,12 +242,14 @@ class YoloAugmentator:
 
             # create symlinks for the original image and labels in the preprocessed
             # directory
-            self.make_symlink(img_filename)
+            # self.make_symlink(img_filename)
 
             # create 3 rotations of the original img + flip and 3 rotations of the
             # flipped img => 7 more imgs per original_img
             original_labels = self._parse_labels(label_filepath)
-            original_image = cv.imread(str(label_dir / img_filename))
+            original_image = cv.imread(
+                str(label_dir / img_filename), cv.IMREAD_GRAYSCALE
+            )
             self.augment(img_filename, original_image, original_labels)
 
         self.summary()

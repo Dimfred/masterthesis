@@ -8,3 +8,5 @@ weights
 result.png
 models
 bad.list
+.vscode
+yolo_labeled

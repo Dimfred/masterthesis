@@ -92,7 +92,7 @@ Coordinate system starts at upper left corner
       yCt = yWt - 16
       xCl = xWl 
       wC  = 64
-      yCb = yWt + 64
+      xCb = xWt + 64
       
     R180: 
       yCb = yWb
@@ -101,6 +101,23 @@ Coordinate system starts at upper left corner
 
     R270: 
       
+### Diode      
+ 
+    R0: (bottom)
+      yDt = yWt
+      xD  = xW - 16
+      hD  = 64
+
+    R90: (left) 
+      yDt = yWt - 16
+      xDl = xWl 
+      wD  = 64
+      xDr = xWtl + 64
+      
+    R180: 
+      yCb = yWb
+      xC  = xW + 16
+      yCt = yWb - 64
       
 
 
@@ -108,3 +125,18 @@ Coordinate system starts at upper left corner
 
 
 
+#SYMBOL diode 64 192 R0
+#SYMBOL diode 64 192 R90
+#SYMBOL diode 64 192 R180
+#SYMBOL diode 64 192 R270
+
+#SYMBOL cap 64 192 R0
+#SYMBOL cap 64 192 R90
+#SYMBOL cap 64 192 R180
+#SYMBOL cap 64 192 R270
+
+
+SYMBOL ind 64 192 R0
+SYMBOL ind 64 192 R90
+SYMBOL ind 64 192 R180
+SYMBOL ind 64 192 R270

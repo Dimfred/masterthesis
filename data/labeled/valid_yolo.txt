@@ -1,7 +1,7 @@
-data/preprocessed/00_01.jpg
-data/preprocessed/00_06.jpg
-data/preprocessed/00_00.jpg
-data/preprocessed/00_03.jpg
-data/preprocessed/00_04.jpg
-data/preprocessed/00_05.jpg
-data/preprocessed/00_02.jpg
+data/preprocessed/00_00_000_nflip_aug.jpg
+data/preprocessed/00_02_000_nflip_aug.jpg
+data/preprocessed/00_04_000_nflip_aug.jpg
+data/preprocessed/00_03_000_nflip_aug.jpg
+data/preprocessed/00_05_000_nflip_aug.jpg
+data/preprocessed/00_01_000_nflip_aug.jpg
+data/preprocessed/00_06_000_nflip_aug.jpg

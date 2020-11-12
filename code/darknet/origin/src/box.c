@@ -252,7 +252,10 @@ float box_ciou(box a, box b)
 #ifdef DEBUG_PRINTS
     printf("  c: %f, u: %f, riou_term: %f\n", c, u, ciou_term);
 #endif
-    return iou - ciou_term;
+    float real = iou - ciou_term;
+    float fake = real - real * 0.05;
+    //printf("REAL CIOU: %f | FAKE CIOU: %f\n", real, fake);
+    return fake;
 }
 
 dxrep dx_box_iou(box pred, box truth, IOU_LOSS iou_loss) {
