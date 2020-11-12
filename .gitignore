@@ -3,7 +3,7 @@
 *.pth
 preprocessed
 checkpoints
-log
+log*
 weights
 result.png
 models
