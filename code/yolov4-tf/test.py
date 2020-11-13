@@ -33,7 +33,7 @@ yolo.make_model()
 # yolo.load_weights("weights/tiny_custom_last.weights", weights_type="yolo")
 
 # small
-yolo.load_weights("weights/v2label/small_conf_best.weights", weights_type="yolo")
+yolo.load_weights("weights/v3label/small_conf_best.weights", weights_type="yolo")
 
 
 # yolo.load_weights(
@@ -42,9 +42,25 @@ yolo.load_weights("weights/v2label/small_conf_best.weights", weights_type="yolo"
 # )
 
 # juli
-yolo.inference(media_path="data/unlabeled/06_00.jpg")
-yolo.inference(media_path="data/unlabeled/06_01.jpg")
-yolo.inference(media_path="data/unlabeled/06_02.jpg")
+#yolo.inference(media_path="data/unlabeled/06_00.jpg")
+#yolo.inference(media_path="data/unlabeled/06_01.jpg")
+#yolo.inference(media_path="data/unlabeled/06_02.jpg")
+
+# grounds, sources, currents, inductors
+#yolo.inference(media_path="data/labeled/00_08.jpg")
+#yolo.inference(media_path="data/labeled/00_09.jpg")
+#yolo.inference(media_path="data/labeled/00_10.jpg")
+
+# valid
+yolo.inference(media_path="data/valid/00_11.jpg")
+yolo.inference(media_path="data/valid/00_11_00.jpg")
+yolo.inference(media_path="data/valid/00_11_01.jpg")
+yolo.inference(media_path="data/valid/00_11_02.jpg")
+yolo.inference(media_path="data/valid/00_11_03.jpg")
+yolo.inference(media_path="data/valid/00_11_04.jpg")
+yolo.inference(media_path="data/valid/00_11_05.jpg")
+yolo.inference(media_path="data/valid/00_11_06.jpg")
+
 
 #yolo.inference(media_path="data/unlabeled/03_02.png")
 #yolo.inference(media_path="data/unlabeled/03_03.png")
