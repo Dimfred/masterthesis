@@ -27,7 +27,7 @@ yolo.input_size = 608
 yolo.channels = 1
 
 yolo.make_model()
-yolo.load_weights("weights/v2label/small_conf_best.weights", weights_type="yolo")
+yolo.load_weights("weights/label.weights", weights_type="yolo")
 
 img_dir = Path(sys.argv[1])
 label_dir = Path("data/yolo_labeled")

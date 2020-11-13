@@ -33,18 +33,12 @@ yolo.make_model()
 # yolo.load_weights("weights/tiny_custom_last.weights", weights_type="yolo")
 
 # small
-yolo.load_weights("weights/v3label/small_conf_best.weights", weights_type="yolo")
-
-
-# yolo.load_weights(
-#     "weights/tiny-channel3-burnin100-in416x416-noangle-sat1.5-expos1.5-0.1hue/yolov4-tiny-custom_last.weights",
-#     weights_type="yolo",
-# )
+yolo.load_weights("weights/label.weights", weights_type="yolo")
 
 # juli
-#yolo.inference(media_path="data/unlabeled/06_00.jpg")
-#yolo.inference(media_path="data/unlabeled/06_01.jpg")
-#yolo.inference(media_path="data/unlabeled/06_02.jpg")
+yolo.inference(media_path="data/labeled/06_00.jpg")
+yolo.inference(media_path="data/labeled/06_01.jpg")
+yolo.inference(media_path="data/labeled/06_02.jpg")
 
 # grounds, sources, currents, inductors
 #yolo.inference(media_path="data/labeled/00_08.jpg")
