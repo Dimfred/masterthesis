@@ -12,6 +12,7 @@ from tabulate import tabulate
 import copy
 
 from typing import List
+from config import config
 
 
 class YoloAugmentator:
@@ -356,15 +357,13 @@ label_dir_files_to_ignore = [
 ]
 
 if __name__ == "__main__":
-    label_dir = Path("data/labeled")
-    preprocessed_dir = Path("data/preprocessed")
+    label_dir = config.label_dir
+    preprocessed_dir = config.preprocessed_dir
 
-    augmentator = YoloAugmentator(
+    YoloAugmentator(
         label_dir,
         preprocessed_dir,
         label_dir_files_to_ignore,
         label_transition_rotation,
         label_transition_flip,
-    )
-
-    augmentator.run()
+    ).run()
