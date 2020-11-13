@@ -1,4 +1,5 @@
 import cv2 as cv
+from .test_dataset import test_dataset
 
 WINDOW_NAME = "img"
 
@@ -13,7 +14,7 @@ def show(img, width=600):
     cv.destroyAllWindows()
 
 
-def resize(img, width: int = None, height: int = None, inter=cv.INTER_AREA):
+def resize(img, width: int = None, height: int = None, interpolation=cv.INTER_AREA):
     h, w = img.shape[:2]
 
     if width is None and height is None:
@@ -26,5 +27,12 @@ def resize(img, width: int = None, height: int = None, inter=cv.INTER_AREA):
         r = width / float(w)
         dim = (width, int(h * r))
 
-    img = cv.resize(img, dim, interpolation=cv.INTER_AREA)
+    img = cv.resize(img, dim, interpolation=interpolation)
     return img
+
+def resize_max_axis(img, size):
+    h, w = img.shape[:2]
+    if h > w:
+        return resize(img, height=size)
+    else:
+        return resize(img, width=size)

@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+import sys
+from pathlib import Path
 import cv2 as cv
 import tensorflow as tf
+
 tf.get_logger().setLevel("ERROR")
 
 # has to be called right after tf import
@@ -11,12 +14,16 @@ if len(physical_devices) > 0:
 
 
 from yolov4.tf import YOLOv4
+import utils
+
+data = Path("data")
+label_dir = data / "labeled"
+
 
 # small will use yolov4 head with 3 yolo layers
 yolo = YOLOv4(tiny=True, small=True)
-
 # real classes
-#yolo.classes = "data/preprocessed/classes.txt"
+# yolo.classes = "data/preprocessed/classes.txt"
 # used classes
 yolo.classes = "trained_classes.txt"
 # 608, 736, 832, 928, 960, 1120, 1280, 1600
@@ -32,35 +39,51 @@ yolo.make_model()
 # tiny
 # yolo.load_weights("weights/tiny_custom_last.weights", weights_type="yolo")
 
+test_data = len(sys.argv) > 1
+if test_data:
+    utils.test_dataset(yolo, label_dir)
+    sys.exit()
+
+
 # small
-yolo.load_weights("weights/v2label/small_conf_best.weights", weights_type="yolo")
-
-
-# yolo.load_weights(
-#     "weights/tiny-channel3-burnin100-in416x416-noangle-sat1.5-expos1.5-0.1hue/yolov4-tiny-custom_last.weights",
-#     weights_type="yolo",
-# )
+yolo.load_weights("weights/label.weights", weights_type="yolo")
 
 # juli
-yolo.inference(media_path="data/unlabeled/06_00.jpg")
-yolo.inference(media_path="data/unlabeled/06_01.jpg")
-yolo.inference(media_path="data/unlabeled/06_02.jpg")
+yolo.inference(media_path="data/labeled/06_00.jpg")
+yolo.inference(media_path="data/labeled/06_01.jpg")
+yolo.inference(media_path="data/labeled/06_02.jpg")
 
-#yolo.inference(media_path="data/unlabeled/03_02.png")
-#yolo.inference(media_path="data/unlabeled/03_03.png")
-#yolo.inference(media_path="data/unlabeled/03_04.png")
-#yolo.inference(media_path="data/unlabeled/03_05.png")
-#yolo.inference(media_path="data/unlabeled/03_06.png")
-#yolo.inference(media_path="data/unlabeled/03_07.png")
-#yolo.inference(media_path="data/unlabeled/03_08.png")
-#yolo.inference(media_path="data/unlabeled/03_09.png")
+# grounds, sources, currents, inductors
+# yolo.inference(media_path="data/labeled/00_08.jpg")
+# yolo.inference(media_path="data/labeled/00_09.jpg")
+# yolo.inference(media_path="data/labeled/00_10.jpg")
 
-#yolo.inference(media_path="data/labeled/03_04.png")
-#yolo.inference(media_path="data/labeled/03_05.png")
-#yolo.inference(media_path="data/labeled/03_06.png")
-#yolo.inference(media_path="data/labeled/03_07.png")
-#yolo.inference(media_path="data/labeled/03_08.png")
-#yolo.inference(media_path="data/labeled/03_09.png")
+# valid
+yolo.inference(media_path="data/valid/00_11.jpg")
+yolo.inference(media_path="data/valid/00_11_00.jpg")
+yolo.inference(media_path="data/valid/00_11_01.jpg")
+yolo.inference(media_path="data/valid/00_11_02.jpg")
+yolo.inference(media_path="data/valid/00_11_03.jpg")
+yolo.inference(media_path="data/valid/00_11_04.jpg")
+yolo.inference(media_path="data/valid/00_11_05.jpg")
+yolo.inference(media_path="data/valid/00_11_06.jpg")
+
+
+# yolo.inference(media_path="data/unlabeled/03_02.png")
+# yolo.inference(media_path="data/unlabeled/03_03.png")
+# yolo.inference(media_path="data/unlabeled/03_04.png")
+# yolo.inference(media_path="data/unlabeled/03_05.png")
+# yolo.inference(media_path="data/unlabeled/03_06.png")
+# yolo.inference(media_path="data/unlabeled/03_07.png")
+# yolo.inference(media_path="data/unlabeled/03_08.png")
+# yolo.inference(media_path="data/unlabeled/03_09.png")
+
+# yolo.inference(media_path="data/labeled/03_04.png")
+# yolo.inference(media_path="data/labeled/03_05.png")
+# yolo.inference(media_path="data/labeled/03_06.png")
+# yolo.inference(media_path="data/labeled/03_07.png")
+# yolo.inference(media_path="data/labeled/03_08.png")
+# yolo.inference(media_path="data/labeled/03_09.png")
 
 
 # img = cv.imread("data/0_6.jpg")
