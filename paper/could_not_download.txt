@@ -1,0 +1,8 @@
+plain_cnn: https://www.inderscienceonline.com/doi/pdf/10.1504/IJCAT.2020.103905
+plain_cnn2: https://ieeexplore.ieee.org/abstract/document/9152866?casa_token=FzqmFuiRqv0AAAAA:34fmM82uzCwd_Wc_QhljbIBbolR-t0lNDySeZKw8icovPLVnCV2YppfEBHOu4Czbv83kX-Im7w
+not_handdrawn: https://ieeexplore.ieee.org/abstract/document/7951826
+diagram shit: https://ieeexplore.ieee.org/abstract/document/860185?casa_token=Mua-P-9Q7L4AAAAA:F0Z8d7_sR0dXzsrglmTMK_oORMX-Zj8c2zUX4zNfBjaNfmAoXLCEG1vA32UVS_U2LeZe9eoU9w
+hmm: https://ieeexplore.ieee.org/abstract/document/4732362?casa_token=pd-uu7aAhH0AAAAA:1lJRyW_mYald-X-WN8qbjJeUnMIih4ShhKEGrfgimeb5L4ON5fTRFXh8m7dfCtSPtTOFyYLsGw
+netlist: https://ieeexplore.ieee.org/abstract/document/6707591?casa_token=wqLFRVfU0Y8AAAAA:I0pr7slQ8RQ9LKFtvTILIkXCzFcbmHPCRU8htfEaZELLRV0oPXE0CZwf442DCw161Os__qBnWg
+cv_smo: https://link.springer.com/article/10.1007/s11042-020-09570-6
+boolean_expr_from_circtui: https://ieeexplore.ieee.org/abstract/document/9063264?casa_token=as2EV3lNE6AAAAAA:ftnquMcrbpnV59vrFfpM0hOCaIDDwYeq9u5JmGqb8wQ1rh-vOtNW0dgri5UyLAhKkBRKC_qnfw
