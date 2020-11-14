@@ -1,7 +1,7 @@
 00 Dimi
-01 JonasBrother
+01 Jonas Brother
 02 Github
 03 Alex Barnhill
 04 Jonas Utz
-05 Luis 
+05 Luis
 06 Juliarno

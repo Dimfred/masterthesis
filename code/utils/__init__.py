@@ -1,13 +1,19 @@
 import cv2 as cv
+import numpy as np
 from .test_dataset import test_dataset
 
 WINDOW_NAME = "img"
 
 
-def show(img, width=600):
+def show(img, size=1000, max_axis=True):
     cv.namedWindow(WINDOW_NAME)
     cv.moveWindow(WINDOW_NAME, 100, 100)
-    img = resize(img, width=width)
+
+    if max_axis:
+        img = resize_max_axis(img, size)
+    else:
+        img = resize(img, width=size)
+
     cv.imshow(WINDOW_NAME, img)
     while not ord("q") == cv.waitKey(200):
         pass
@@ -27,8 +33,14 @@ def resize(img, width: int = None, height: int = None, interpolation=cv.INTER_AR
         r = width / float(w)
         dim = (width, int(h * r))
 
+    len_shape_before = len(img.shape)
     img = cv.resize(img, dim, interpolation=interpolation)
+
+    if len(img.shape) != len_shape_before:
+        img = np.expand_dims(img, axis=2)
+
     return img
+
 
 def resize_max_axis(img, size):
     h, w = img.shape[:2]
