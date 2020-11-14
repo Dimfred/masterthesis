@@ -23,7 +23,7 @@ from config import config
 
 # small will use yolov4 head with 3 yolo layers
 yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-yolo.classes = config.yolo.classes
+yolo.classes = config.yolo.safe_classes
 yolo.input_size = config.yolo.input_size
 yolo.channels = config.yolo.channels
 yolo.make_model()
@@ -48,6 +48,10 @@ yolo.load_weights(config.yolo.label_weights, weights_type=config.yolo.weights_ty
 # yolo.inference(media_path="data/labeled/00_08.jpg")
 # yolo.inference(media_path="data/labeled/00_09.jpg")
 # yolo.inference(media_path="data/labeled/00_10.jpg")
+
+# papers
+yolo.inference(media_path=str(config.noise_dir / "00_noise.jpg"))
+yolo.inference(media_path=str(config.noise_dir / "01_noise.jpg"))
 
 # jonas
 yolo.inference(media_path=str(config.label_dir / "01_01.jpg"))

@@ -115,6 +115,7 @@ class Component:
     def is_vertical(self):
         return not self.is_horizontal
 
+
 class Resistor(Component):
     def __init__(self, name, x, y, rotation):
         super().__init__(
