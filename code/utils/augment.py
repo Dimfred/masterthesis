@@ -358,9 +358,9 @@ label_transition_flip = {
     "edge_br": "edge_bl",
     "edge_bl": "edge_br",
     "t_left": "t_right",
-    "t_top": "t_bot",
+    "t_top": "t_top",
     "t_right": "t_left",
-    "t_bot": "t_top",
+    "t_bot": "t_bot",
     "cross": "cross",
 }
 
