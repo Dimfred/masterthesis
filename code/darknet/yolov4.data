@@ -1,4 +1,4 @@
-classes = 30
+classes = 39
 train = data/preprocessed/train_yolo.txt
 valid = data/preprocessed/train_yolo.txt
 #valid = data/preprocessed/valid_yolo.txt
