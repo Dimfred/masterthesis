@@ -23,6 +23,8 @@ config.yolo.input_size = (608, 608)  # 608, 736, 832, 928, 960, 1120, 1280, 1600
 config.yolo.channels = 1
 config.yolo.tiny = True
 config.yolo.small = True
+
+# classes
 config.yolo.classes = str(config.label_dir / "classes.txt")
 config.yolo.safe_classes = str(config.labeled_safe_dir / "classes.txt")
 

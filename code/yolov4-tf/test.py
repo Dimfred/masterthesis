@@ -85,8 +85,11 @@ def validate(yolo, path):
 # validate(yolo, "data/valid/05_02.jpg")
 
 # felix
-validate(yolo, "data/valid/07_00.png")
-validate(yolo, "data/valid/07_01.png")
-validate(yolo, "data/valid/07_02.png")
-validate(yolo, "data/valid/07_03.png")
-validate(yolo, "data/valid/07_04.png")
+#validate(yolo, "data/valid/07_00.png")
+#validate(yolo, "data/valid/07_01.png")
+#validate(yolo, "data/valid/07_02.png")
+#validate(yolo, "data/valid/07_03.png")
+#validate(yolo, "data/valid/07_04.png")
+
+# flo
+yolo.inference(media_path="data/unlabeled/08_06.png")
