@@ -6,7 +6,7 @@
     module load python3
 
     // cip
-    ./darknet_cip detector train yolov4.data small_conf.cfg weights/yolov4-tiny.conv.29 -map -dont_show | tee log.txt
+    ./darknet_cip detector train yolocip.data small_edge.cfg checkpoints_cip/last.weights -map -dont_show | tee log.txt
 
 ### build 
 
