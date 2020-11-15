@@ -34,7 +34,7 @@ from ltbuilder import (
 
 def init_yolo():
     yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-    yolo.classes = config.yolo.classes
+    yolo.classes = config.yolo.safe_classes
     yolo.input_size = config.yolo.input_size
     yolo.channels = config.yolo.channels
     yolo.make_model()
@@ -336,13 +336,13 @@ class LTBuilder:
         return LTClass(name, x, y, rotation)
 
 
-dorig = False
-dprep = False
-dremb = False
-dclos = False
-dconn = False
-dmask = False
-dinte = False
+dorig = True
+dprep = True
+dremb = True
+dclos = True
+dconn = True
+dmask = True
+dinte = True
 dbidx = True
 
 lt_file = "ltbuilder/circuits/g.asc"

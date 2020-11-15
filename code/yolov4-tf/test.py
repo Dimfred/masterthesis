@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 import cv2 as cv
 import tensorflow as tf
+import os
 
 tf.get_logger().setLevel("INFO")
 
@@ -23,7 +24,8 @@ from config import config
 
 # small will use yolov4 head with 3 yolo layers
 yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-yolo.classes = config.yolo.safe_classes
+#yolo.classes = config.yolo.safe_classes
+yolo.classes = config.yolo.classes
 yolo.input_size = config.yolo.input_size
 yolo.channels = config.yolo.channels
 yolo.make_model()
@@ -54,19 +56,37 @@ yolo.inference(media_path=str(config.noise_dir / "00_noise.jpg"))
 yolo.inference(media_path=str(config.noise_dir / "01_noise.jpg"))
 
 # jonas
-yolo.inference(media_path=str(config.label_dir / "01_01.jpg"))
-yolo.inference(media_path=str(config.label_dir / "01_02.jpg"))
-yolo.inference(media_path=str(config.label_dir / "01_03.jpg"))
-yolo.inference(media_path=str(config.label_dir / "01_04.jpg"))
-yolo.inference(media_path=str(config.label_dir / "01_05.jpg"))
-yolo.inference(media_path=str(config.label_dir / "01_06.jpg"))
+#yolo.inference(media_path=str(config.label_dir / "01_01.jpg"))
+#yolo.inference(media_path=str(config.label_dir / "01_02.jpg"))
+#yolo.inference(media_path=str(config.label_dir / "01_03.jpg"))
+#yolo.inference(media_path=str(config.label_dir / "01_04.jpg"))
+#yolo.inference(media_path=str(config.label_dir / "01_05.jpg"))
+#yolo.inference(media_path=str(config.label_dir / "01_06.jpg"))
 
-# valid
-yolo.inference(media_path="data/valid/00_11.jpg")
-yolo.inference(media_path="data/valid/00_11_00.jpg")
-yolo.inference(media_path="data/valid/00_11_01.jpg")
-yolo.inference(media_path="data/valid/00_11_02.jpg")
-yolo.inference(media_path="data/valid/00_11_03.jpg")
-yolo.inference(media_path="data/valid/00_11_04.jpg")
-yolo.inference(media_path="data/valid/00_11_05.jpg")
-yolo.inference(media_path="data/valid/00_11_06.jpg")
+#############
+### valid ###
+#############
+
+def validate(yolo, path):
+    yolo.inference(media_path=path)
+
+    base_name, ext = os.path.splitext(path)
+    for i in range(7):
+        npath = "{}_{:02d}{}".format(base_name, i, ext)
+        yolo.inference(media_path=npath)
+
+
+
+# me
+# validate(yolo, "data/valid/00_11.jpg")
+
+# luis
+# validate(yolo, "data/valid/05_01.jpg")
+# validate(yolo, "data/valid/05_02.jpg")
+
+# felix
+validate(yolo, "data/valid/07_00.png")
+validate(yolo, "data/valid/07_01.png")
+validate(yolo, "data/valid/07_02.png")
+validate(yolo, "data/valid/07_03.png")
+validate(yolo, "data/valid/07_04.png")

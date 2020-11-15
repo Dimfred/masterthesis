@@ -11,6 +11,7 @@ config.unlabeled_dir = config.data / "unlabeled"
 config.noise_dir = config.data / "noise"
 config.labeled_safe_dir = config.data / "labeled_safe"
 config.preprocessed_dir = config.data / "preprocessed"
+config.preprocessed_valid_dir = config.data / "preprocessed_valid"
 config.yolo_labeled_dir = config.data / "yolo_labeled"
 config.weights_dir = Path("weights")
 

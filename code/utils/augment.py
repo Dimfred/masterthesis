@@ -376,8 +376,18 @@ label_dir_files_to_ignore = [
 ]
 
 if __name__ == "__main__":
-    label_dir = config.label_dir
-    preprocessed_dir = config.preprocessed_dir
+
+    if len(sys.argv) < 1:
+        print("./augment.py <train/valid>")
+        sys.exit()
+
+    augment_type = sys.argv[1]
+    if augment_type == "train":
+        label_dir = config.label_dir
+        preprocessed_dir = config.preprocessed_dir
+    else:
+        label_dir = config.valid_dir
+        preprocessed_dir = config.valid_preprocessed_dir
 
     YoloAugmentator(
         label_dir,
