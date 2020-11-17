@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 import os
-import argparse
-import time
 from pathlib import Path
 import cv2 as cv
 import sys
 import os
 import shutil
+from numpy.core.defchararray import endswith
 from tabulate import tabulate
 import copy
 
@@ -20,13 +19,13 @@ class YoloAugmentator:
         self,
         label_dir: Path,
         preprocessed_dir: Path,
-        label_dir_files_to_ignore: List[str],
+        files_to_ignore: List[str],
         rot_transition: dict,
         flip_transition: dict,
     ):
         self.label_dir = label_dir
         self.preprocessed_dir = preprocessed_dir
-        self.label_dir_files_to_ignore = label_dir_files_to_ignore
+        self.files_to_ignore = files_to_ignore
         self.classes = self._parse_classes(label_dir)
         self.rot_transition = rot_transition
         self.flip_transition = flip_transition
@@ -183,10 +182,11 @@ class YoloAugmentator:
         return [
             f
             for f in os.listdir(self.preprocessed_dir)
-            if f.endswith(".txt") and f not in self.label_dir_files_to_ignore
+            if f.endswith(".txt") and f not in self.files_to_ignore
         ]
 
     def summary(self):
+        self.classes = self._parse_classes(self.preprocessed_dir)
         # just some summary how much of each class we have
         summary_real = {}
         summary_augmented = {}
@@ -235,7 +235,7 @@ class YoloAugmentator:
     def _get_imgs_to_augment(self, label_dir: Path):
         imgs_to_augment = os.listdir(str(label_dir))
 
-        for file in self.label_dir_files_to_ignore:
+        for file in self.files_to_ignore:
             try:
                 imgs_to_augment.pop(imgs_to_augment.index(file))
             except Exception as e:
@@ -252,9 +252,12 @@ class YoloAugmentator:
         for filename in os.listdir(self.preprocessed_dir):
             os.remove(self.preprocessed_dir / filename)
 
-        os.symlink(
-            os.path.abspath(self.label_dir / "classes.txt"),
-            self.preprocessed_dir / "classes.txt",
+        # os.symlink(
+        #     os.path.abspath(self.label_dir / "classes.txt"),
+        #     self.preprocessed_dir / "classes.txt",
+        # )
+        shutil.copy(
+            self.label_dir / "classes.txt", self.preprocessed_dir / "classes.txt"
         )
 
         for img_filename in self._get_imgs_to_augment(self.label_dir):
@@ -274,8 +277,118 @@ class YoloAugmentator:
             )
             self.augment(img_filename, original_image, original_labels)
 
-        self.summary()
-        self.create_train()
+
+class ClassStripper:
+    def __init__(self, label_dir, labels_to_remove, labels_and_files_to_remove, gc):
+        self.label_dir = label_dir
+        self.gc = files_to_ignore
+
+        with open(self.label_dir / "classes.txt", "r") as f:
+            lines = f.readlines()
+            self.old_classes = [cls_.strip() for cls_ in lines]
+
+        self.labels_to_remove = labels_to_remove
+        self.label_idxs_to_remove = [
+            self.old_classes.index(label_to_remove)
+            for label_to_remove in labels_to_remove
+        ]
+
+        self.labels_and_files_to_remove = labels_and_files_to_remove
+        self.labels_and_files_idxs_to_remove = [
+            self.old_classes.index(rem) for rem in labels_and_files_to_remove
+        ]
+
+        self.new_classes = list(self.old_classes)
+        self.new_classes = [
+            cls_
+            for cls_ in self.new_classes
+            if cls_ not in self.labels_to_remove
+            and cls_ not in self.labels_and_files_to_remove
+        ]
+
+    def run(self):
+        label_filenames = self.get_label_filenames()
+
+        # remove all files if a label is in there
+        for label_filename in label_filenames:
+            with open(self.label_dir / label_filename, "r") as f:
+                lines = f.readlines()
+
+            # check if the label is present
+            for line in lines:
+                label_idx, _ = line.split(" ", 1)
+                # remove all corresponding files
+                if int(label_idx) in self.labels_and_files_idxs_to_remove:
+                    img_filename = self.get_img_filename(label_filename)
+
+                    os.remove(self.label_dir / label_filename)
+                    os.remove(self.label_dir / img_filename)
+                    break
+
+        # requery after deleting
+        label_filenames = self.get_label_filenames()
+
+        # change the existing labels
+        for label_filename in label_filenames:
+            with open(self.label_dir / label_filename, "r") as f:
+                lines = f.readlines()
+
+            with open(self.label_dir / label_filename, "w") as f:
+                for line in lines:
+                    label_idx, bbox = line.split(" ", 1)
+                    label_idx = int(label_idx)
+
+                    # don't write the label back
+                    if label_idx in self.label_idxs_to_remove:
+                        continue
+
+                    # get the labelname with the old_idx
+                    label_name = self.old_classes[label_idx]
+
+                    # obtain new index from new classes
+                    new_idx = self.new_classes.index(label_name)
+
+                    # write the new cls_idx back with the label
+                    new_line = f"{new_idx} {bbox}"
+                    f.write(new_line)
+
+        with open(self.label_dir / "classes.txt", "r") as f:
+            lines = f.readlines()
+
+        with open(self.label_dir / "classes.txt", "w") as f:
+            for line in lines:
+                label_name = line.strip()
+
+                # skip deleted classes
+                if (
+                    label_name in self.labels_to_remove
+                    or label_name in self.labels_and_files_to_remove
+                ):
+                    continue
+
+                f.write(line)
+
+    def get_label_filenames(self):
+        label_filenames = os.listdir(self.label_dir)
+        label_filenames = [label for label in label_filenames if label.endswith(".txt")]
+        label_filenames = [label for label in label_filenames if label not in self.gc]
+
+        return label_filenames
+
+    def get_img_filename(self, label_filename):
+        name = os.path.splitext(label_filename)[0]
+        files = os.listdir(self.label_dir)
+
+        jpg = f"{name}.jpg"
+        png = f"{name}.png"
+
+        if jpg in files:
+            return jpg
+
+        elif png in files:
+            return png
+        else:
+            raise ValueError(f"No img found for {label_filename}")
 
 
 # transition occurs always with the clock (90°)
@@ -364,7 +477,7 @@ label_transition_flip = {
     "cross": "cross",
 }
 
-label_dir_files_to_ignore = [
+files_to_ignore = [
     "classes.names",
     "classes.txt",
     "train.txt",
@@ -379,21 +492,47 @@ if __name__ == "__main__":
 
     if len(sys.argv) == 1 or sys.argv[1] == "train":
         print("Augmenting train files, this may take some time...")
-        YoloAugmentator(
+        augmentator = YoloAugmentator(
             config.label_dir,
             config.preprocessed_dir,
-            label_dir_files_to_ignore,
+            files_to_ignore,
             label_transition_rotation,
             label_transition_flip,
+        )
+        augmentator.run()
+
+        print("Stripping classes from train_preprocessed...")
+        ClassStripper(
+            config.preprocessed_dir,
+            config.labels_to_remove,
+            config.labels_and_files_to_remove,
+            files_to_ignore,
         ).run()
+
+        augmentator.create_train()
+        augmentator.summary()
+
     elif sys.argv[1] == "valid":
         print("Augmenting valid files, this may take some time...")
-        YoloAugmentator(
+        augmentator = YoloAugmentator(
             config.valid_dir,
             config.preprocessed_valid_dir,
-            label_dir_files_to_ignore,
+            files_to_ignore,
             label_transition_rotation,
             label_transition_flip,
+        )
+        augmentator.run()
+
+        print("Stripping classes from valid_preprocessed...")
+        ClassStripper(
+            config.preprocessed_valid_dir,
+            config.labels_to_remove,
+            config.labels_and_files_to_remove,
+            files_to_ignore,
         ).run()
+
+        augmentator.create_train()
+        augmentator.summary()
+
     else:
         print("./augment.py <valid/train>")

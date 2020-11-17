@@ -444,10 +444,6 @@ class LTBuilder:
         return LTClass(name, x, y, rotation)
 
 
-ROW = 9
-COL = 10
-
-
 class BFS:
     _yneighbors = [-1, 0, 0, 1]
     _xneighbors = [0, -1, 1, 0]
@@ -626,17 +622,16 @@ if __name__ == "__main__":
         if tuple(edges[-1]) != end:
             edges.append(end)
 
+
+        # pop start and end
+        # replace with LTCoordinates from corresponding component
+
         print(edges)
         for i in range(len(edges) - 1):
             cimg = cv.line(
                 cimg, tuple(edges[i][::-1]), tuple(edges[i + 1][::-1]), (255, 0, 0), 1
             )
         utils.show(cimg)
-
-
-
-
-
 
     # ccomp = np.uint8(connected_components.copy())
     # ccomp[ccomp == 1] = 255

@@ -1,0 +1,5 @@
+classes = 30
+train = data/preprocessed_valid/train_yolo.txt
+valid = data/preprocessed_valid/train_yolo.txt
+names = data/preprocessed_valid/classes.txt
+backup = checkpoints

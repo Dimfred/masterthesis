@@ -1,3 +1,4 @@
+import abc
 from easydict import EasyDict
 from pathlib import Path
 
@@ -32,3 +33,33 @@ config.yolo.safe_classes = str(config.labeled_safe_dir / "classes.txt")
 config.yolo.weights_type = "yolo"
 config.yolo.label_weights = str(config.weights_dir / "label.weights")
 config.yolo.safe_label_weights = str(config.weights_dir / "safe_label.weights")
+
+# TODO only supports backward rightnow
+
+# classes to strip
+config.labels_to_remove = [
+    "edge_tl",
+    "edge_tr",
+    "edge_br",
+    "edge_bl",
+    "t_left",
+    "t_top",
+    "t_right",
+    "t_bot",
+    "cross"
+]
+
+config.labels_and_files_to_remove = [
+    "bat_left",
+    "bat_top",
+    "bat_right",
+    "bat_bot",
+    "res_us_hor",
+    "res_us_ver",
+    "lamp_de_hor",
+    "lamp_de_ver",
+    "lamp_us_hor",
+    "lamp_us_ver",
+    "ind_us_hor",
+    "ind_us_ver",
+]
