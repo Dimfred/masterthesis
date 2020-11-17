@@ -98,7 +98,7 @@ class YoloAugmentator:
                 label_file.write(" ".join(str(i) for i in c))
                 label_file.write("\n")
 
-            print("Augmented: ", label_filename)
+            # print("Augmented: ", label_filename)
 
     def create_train(self):
         yolo_files = self._get_label_files()
@@ -258,7 +258,7 @@ class YoloAugmentator:
         )
 
         for img_filename in self._get_imgs_to_augment(self.label_dir):
-            label_filepath = label_dir / "{}.txt".format(
+            label_filepath = self.label_dir / "{}.txt".format(
                 os.path.splitext(img_filename)[0]
             )
 
@@ -270,7 +270,7 @@ class YoloAugmentator:
             # flipped img => 7 more imgs per original_img
             original_labels = self._parse_labels(label_filepath)
             original_image = cv.imread(
-                str(label_dir / img_filename), cv.IMREAD_GRAYSCALE
+                str(self.label_dir / img_filename), cv.IMREAD_GRAYSCALE
             )
             self.augment(img_filename, original_image, original_labels)
 
@@ -377,22 +377,23 @@ label_dir_files_to_ignore = [
 
 if __name__ == "__main__":
 
-    if len(sys.argv) < 1:
-        print("./augment.py <train/valid>")
-        sys.exit()
-
-    augment_type = sys.argv[1]
-    if augment_type == "train":
-        label_dir = config.label_dir
-        preprocessed_dir = config.preprocessed_dir
+    if len(sys.argv) == 1 or sys.argv[1] == "train":
+        print("Augmenting train files, this may take some time...")
+        YoloAugmentator(
+            config.label_dir,
+            config.preprocessed_dir,
+            label_dir_files_to_ignore,
+            label_transition_rotation,
+            label_transition_flip,
+        ).run()
+    elif sys.argv[1] == "valid":
+        print("Augmenting valid files, this may take some time...")
+        YoloAugmentator(
+            config.valid_dir,
+            config.preprocessed_valid_dir,
+            label_dir_files_to_ignore,
+            label_transition_rotation,
+            label_transition_flip,
+        ).run()
     else:
-        label_dir = config.valid_dir
-        preprocessed_dir = config.valid_preprocessed_dir
-
-    YoloAugmentator(
-        label_dir,
-        preprocessed_dir,
-        label_dir_files_to_ignore,
-        label_transition_rotation,
-        label_transition_flip,
-    ).run()
+        print("./augment.py <valid/train>")

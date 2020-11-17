@@ -31,3 +31,4 @@ config.yolo.safe_classes = str(config.labeled_safe_dir / "classes.txt")
 # misc
 config.yolo.weights_type = "yolo"
 config.yolo.label_weights = str(config.weights_dir / "label.weights")
+config.yolo.safe_label_weights = str(config.weights_dir / "safe_label.weights")

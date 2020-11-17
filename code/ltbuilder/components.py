@@ -13,6 +13,13 @@ class CIRCUIT_COMPONENTS(enum.Enum):
     GROUND = 6
 
 
+class CONNECTION_ORIENTATION(enum.Enum):
+    TOP = 0
+    BOTTOM = 1
+    LEFT = 2
+    RIGHT = 3
+
+
 class LTSpiceUnit:
     def __init__(self, value):
         # our coordinate system considers values in 1 steps. The ltspice coordinate
@@ -104,6 +111,32 @@ class Component:
 
         return x.value, y.value
 
+    @property
+    def connections(self):
+        # returns either top, bottom OR left, right
+        # depending on the orientation of the component
+        if self.rotation == 0 or self.rotation == 270:
+            return self.start, self.end
+        # TODO could be else but maybe other rotations
+        elif self.rotation == 90 or self.rotation == 180:
+            return self.end, self.start
+
+    @property
+    def left(self):
+        return self.connections[0]
+
+    @property
+    def right(self):
+        return self.connections[1]
+
+    @property
+    def top(self):
+        return self.connections[0]
+
+    @property
+    def bottom(self):
+        return self.connections[1]
+
     def write(self, fd):
         print(self.symbol, file=fd)
 
@@ -154,7 +187,7 @@ class Source(Component):
 class Current(Component):
     def __init__(self, name, x, y, rotation):
         super().__init__(
-            name, x, y, rotation, "current", 0, 1, 5, 5, CIRCUIT_COMPONENTS.CURRENT
+            name, x, y, rotation, "current", 0, 0, 4, 5, CIRCUIT_COMPONENTS.CURRENT
         )
 
 
@@ -179,7 +212,7 @@ class Wire:
 
 
 class Ground:
-    def __init__(self, x, y, *args):
+    def __init__(self, name, x, y, *args):
         self.x, self.y = LTSpiceUnit(x), LTSpiceUnit(y)
 
     @property
@@ -188,6 +221,52 @@ class Ground:
 
     def write(self, fd):
         print(self.symbol, file=fd)
+
+    @property
+    def connections(self):
+        # returns either top, bottom OR left, right
+        # depending on the orientation of the component
+        if self.rotation == 0 or self.rotation == 270:
+            return self.start, self.end
+        # TODO could be else but maybe other rotations
+        elif self.rotation == 90 or self.rotation == 180:
+            return self.end, self.start
+
+    @property
+    def start(self):
+        return self.x.value, self.y.value
+
+    @property
+    def end(self):
+        return self.start
+
+    @property
+    def left(self):
+        return self.start
+
+    @property
+    def right(self):
+        return self.left
+
+    @property
+    def top(self):
+        return self.left
+
+    @property
+    def bottom(self):
+        return self.left
+
+    def write(self, fd):
+        print(self.symbol, file=fd)
+
+    @property
+    def is_horizontal(self):
+        return False
+
+    @property
+    def is_vertical(self):
+        return True
+
 
 
 class LTWriter:

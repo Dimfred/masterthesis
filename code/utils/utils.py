@@ -1,0 +1,54 @@
+import cv2 as cv
+import numpy as np
+import math
+
+WINDOW_NAME = "img"
+
+
+def show(img, size=1000, max_axis=True):
+    cv.namedWindow(WINDOW_NAME)
+    cv.moveWindow(WINDOW_NAME, 100, 100)
+
+    if max_axis:
+        img = resize_max_axis(img, size)
+    else:
+        img = resize(img, width=size)
+
+    cv.imshow(WINDOW_NAME, img)
+    while not ord("q") == cv.waitKey(200):
+        pass
+    cv.destroyAllWindows()
+
+
+def resize(img, width: int = None, height: int = None, interpolation=cv.INTER_AREA):
+    h, w = img.shape[:2]
+
+    if width is None and height is None:
+        raise ValueError("Specify either width or height.")
+
+    if width is None:
+        r = height / float(h)
+        dim = (int(w * r), height)
+    else:
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    len_shape_before = len(img.shape)
+    img = cv.resize(img, dim, interpolation=interpolation)
+
+    if len(img.shape) != len_shape_before:
+        img = np.expand_dims(img, axis=2)
+
+    return img
+
+
+def resize_max_axis(img, size):
+    h, w = img.shape[:2]
+    if h > w:
+        return resize(img, height=size)
+    else:
+        return resize(img, width=size)
+
+def uniquecolors(n):
+    from unique_color import unique_color as uc
+    return uc.unique_color_rgb()[:n]
