@@ -28,15 +28,17 @@ config.yolo.small = True
 # classes
 config.yolo.classes = str(config.label_dir / "classes.txt")
 config.yolo.safe_classes = str(config.labeled_safe_dir / "classes.txt")
+config.yolo.stripped_classes = str(config.preprocessed_valid_dir / "classes.txt")
 
 # misc
 config.yolo.weights_type = "yolo"
 config.yolo.label_weights = str(config.weights_dir / "label.weights")
 config.yolo.safe_label_weights = str(config.weights_dir / "safe_label.weights")
+config.yolo.stripped_weights = str(config.weights_dir / "stripped_best.weights")
 
-# TODO only supports backward rightnow
 
-# classes to strip
+
+# removes classes from dataset
 config.labels_to_remove = [
     "edge_tl",
     "edge_tr",
@@ -49,6 +51,7 @@ config.labels_to_remove = [
     "cross"
 ]
 
+# removes classes and the file where the class is present from dataset
 config.labels_and_files_to_remove = [
     "bat_left",
     "bat_top",

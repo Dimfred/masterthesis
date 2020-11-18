@@ -1,4 +1,6 @@
+# 40$ my ass
 plain_cnn: https://www.inderscienceonline.com/doi/pdf/10.1504/IJCAT.2020.103905
+
 plain_cnn2: https://ieeexplore.ieee.org/abstract/document/9152866?casa_token=FzqmFuiRqv0AAAAA:34fmM82uzCwd_Wc_QhljbIBbolR-t0lNDySeZKw8icovPLVnCV2YppfEBHOu4Czbv83kX-Im7w
 not_handdrawn: https://ieeexplore.ieee.org/abstract/document/7951826
 diagram shit: https://ieeexplore.ieee.org/abstract/document/860185?casa_token=Mua-P-9Q7L4AAAAA:F0Z8d7_sR0dXzsrglmTMK_oORMX-Zj8c2zUX4zNfBjaNfmAoXLCEG1vA32UVS_U2LeZe9eoU9w

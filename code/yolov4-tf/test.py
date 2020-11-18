@@ -21,16 +21,26 @@ from config import config
 # default 0.25, 0.3
 # inference_params = {"score_threshold": 0.8, "iou_threshold": 0.8}
 
-use_safe = False
+#         less cls    with edges     without edges
+# values: stripped    label          safe
+# TODO move config probably
+model_type = "stripped"
 
+weights = {
+    "stripped": config.yolo.stripped_weights,
+    "safe": config.yolo.safe_label_weights,
+    "edges": config.yolo.label_weights,
+}
+
+classes = {
+    "stripped": config.yolo.stripped_classes,
+    "safe": config.yolo.safe_classes,
+    "edges": config.yolo.classes,
+}
 
 # small will use yolov4 head with 3 yolo layers
 yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-if use_safe:
-    yolo.classes = config.yolo.safe_classes
-else:
-    yolo.classes = config.yolo.classes
-
+yolo.classes = classes[model_type]
 yolo.input_size = config.yolo.input_size
 yolo.channels = config.yolo.channels
 yolo.make_model()
@@ -43,16 +53,9 @@ if test_dataset:
     sys.exit()
 
 
-if use_safe:
-# non edge_weights
-    yolo.load_weights(
-        config.yolo.label.safe_label_weights, weights_type=config.yolo.weights_type
-    )
-# edge_weights
-else:
-    yolo.load_weights(config.yolo.label_weights, weights_type=config.yolo.weights_type)
+yolo.load_weights(weights[model_type], weights_type=config.yolo.weights_type)
 
-for file_ in os.listdir(config.valid_dir):
+for file_ in os.listdir(config.preprocessed_valid_dir):
     if ".png" in file_ or ".jpg" in file_:
         print(file_)
-        yolo.inference(str(config.valid_dir / file_))
+        yolo.inference(str(config.preprocessed_valid_dir / file_))
