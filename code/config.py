@@ -36,8 +36,6 @@ config.yolo.label_weights = str(config.weights_dir / "label.weights")
 config.yolo.safe_label_weights = str(config.weights_dir / "safe_label.weights")
 config.yolo.stripped_weights = str(config.weights_dir / "stripped_best.weights")
 
-
-
 # removes classes from dataset
 config.labels_to_remove = [
     "edge_tl",
