@@ -1,5 +1,5 @@
-classes = 30
+classes = 18
 train = data/preprocessed/train_yolo.txt
 valid = data/preprocessed_valid/train_yolo.txt
-names = data/preprocessed_train/classes.txt
-backup = checkpoints
+names = data/preprocessed/classes.txt
+backup = checkpoints_cip
