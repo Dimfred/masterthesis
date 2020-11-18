@@ -26,7 +26,7 @@ augmentation
 - NO flip
 - NO cutout
 
-nicht ausgecheck
+nicht ausgecheckt
 
 - anchor recalculation
 - yolo layer (nms, jitter, scale_x_y, resize, beta_nms, greedynms)
@@ -83,7 +83,7 @@ nicht ausgecheck
 ## Literatur
 
 - ANN (ann_geometric_features, nicht sehr gut)
-    - Bauteil und Annotations extraktion
+    - Bauteil und Annotations extraction
     - Einfach nur NN
     - Image Moments als features
     - 0.86 Precision
@@ -100,4 +100,17 @@ nicht ausgecheck
     - no segmentation, class modeled through n consecutive strokes
         - könnte man bestimmt mit RNN / CRNN auch machen
 
--
+- yolo approach
+    - yolo: Bauteile only (accuracy 48%?)
+    - Hough um lines zu erkennen mit komplizierten Regeln, aber 100%
+
+- cnn
+    - compare different cnns (n_layers)
+
+- netlist (netlist_in_grid)
+    - grid based approach
+
+- set, knn, bfs line trace (knn_seg_bfs_trace)
+    - pixel density based segmentation
+    - knn after seg
+    - trace lines with bfs
