@@ -48,15 +48,19 @@ from ltbuilder import (
 
 def init_yolo():
     yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-    yolo.classes = config.yolo.safe_classes
+    # yolo.classes = config.yolo.safe_classes
     # yolo.classes = config.yolo.classes
+    yolo.classes = config.yolo.stripped_classes
     yolo.input_size = config.yolo.input_size
     yolo.channels = config.yolo.channels
     yolo.make_model()
 
     # yolo.load_weights(config.yolo.label_weights, weights_type=config.yolo.weights_type)
+    # yolo.load_weights(
+    #     config.yolo.safe_label_weights, weights_type=config.yolo.weights_type
+    # )
     yolo.load_weights(
-        config.yolo.safe_label_weights, weights_type=config.yolo.weights_type
+        config.yolo.stripped_weights, weights_type=config.yolo.weights_type
     )
 
     return yolo
@@ -254,7 +258,7 @@ def get_connected_bounding_boxes(
             if label not in connected_bounding_box_idx_orientation:
                 connected_bounding_box_idx_orientation[label] = {}
 
-            connection_orientation, cony, conx = get_connection_orientation(y, x, bbox)
+            connection_orientation = get_connection_orientation(y, x, bbox)
             if connection_orientation is None:
                 continue
 
@@ -495,16 +499,16 @@ def angle(p1, p2):
     return angle
 
 
-dinfe = False
-dorig = False
-dprep = False
-dremb = False
-dclos = False
-dconn = False
-dmask = False
-dinte = False
-dbidx = False
-dskel = False
+dinfe = True
+dorig = True
+dprep = True
+dremb = True
+dclos = True
+dconn = True
+dmask = True
+dinte = True
+dbidx = True
+dskel = True
 
 lt_file = "ltbuilder/circuits/g.asc"
 
