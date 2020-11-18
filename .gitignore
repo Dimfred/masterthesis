@@ -13,3 +13,4 @@ yolo_labeled
 predictions*
 chart*
 preprocessed_valid
+train_yolo.txt
