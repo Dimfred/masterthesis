@@ -7,8 +7,8 @@
 
 - in: 608x608x1
 - 3 yolo layer (yolo small conf)
-- batch_size: 21
-- momentum: 0.9
+- batch_size: 21 32 / 64
+- momentum: 0.9 / 0.95
 - decay: 0.0005
 - lr: 0.00026 (default 0.0026)
 - wenn loss plateut lr / 10
@@ -28,7 +28,8 @@ augmentation
 
 nicht ausgecheckt
 
-- anchor recalculation
+- !!!!!!!!!!!!
+- anchor recalculation TODO checken
 - yolo layer (nms, jitter, scale_x_y, resize, beta_nms, greedynms)
 
 ## Trainierte Netze
@@ -36,7 +37,7 @@ nicht ausgecheckt
 - mit edges
 - ohne edges
 - classes stripped
-- TODO classes tripped edges
+- TODO classes stripped edges
 
 ## Performance
 
@@ -67,18 +68,27 @@ nicht ausgecheckt
 ## TODO
 
 - Mehr Daten mit dickem Stift
+- !!!!!!!!!!!!!!!!!!!!!!!!!
+- train in tensorflow
 - Metriken auslagern? Checken wie darknet es macht
 - Avg class confidence
 - Backgrounds
     1. Karo projecten
-    1.
+
+- !!!!!!!!!!!!!!!!!!!!!!!!
+- TODO check avg precision why
+
+- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+- strip background (can be used for augmenting on different backgrounds)
+- foreground background segmentation
 
 - OCR the shit out of the circuits
     1. ocr plain
     1. project letters on the dataset
     1. test: yolo with ocr directly? (model complexity)
 
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+- perform majority vote when classifying an image by also classifying all possible augmentations
 
 ## Literatur
 
@@ -114,3 +124,8 @@ nicht ausgecheckt
     - pixel density based segmentation
     - knn after seg
     - trace lines with bfs
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+TODO next time
+task problem solution results

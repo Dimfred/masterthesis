@@ -48,20 +48,20 @@ from ltbuilder import (
 
 def init_yolo():
     yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-    # yolo.classes = config.yolo.safe_classes
+    yolo.classes = config.yolo.safe_classes
     # yolo.classes = config.yolo.classes
-    yolo.classes = config.yolo.stripped_classes
+    # yolo.classes = config.yolo.stripped_classes
     yolo.input_size = config.yolo.input_size
     yolo.channels = config.yolo.channels
     yolo.make_model()
 
     # yolo.load_weights(config.yolo.label_weights, weights_type=config.yolo.weights_type)
-    # yolo.load_weights(
-    #     config.yolo.safe_label_weights, weights_type=config.yolo.weights_type
-    # )
     yolo.load_weights(
-        config.yolo.stripped_weights, weights_type=config.yolo.weights_type
+        config.yolo.safe_label_weights, weights_type=config.yolo.weights_type
     )
+    # yolo.load_weights(
+    #     config.yolo.stripped_weights, weights_type=config.yolo.weights_type
+    # )
 
     return yolo
 
@@ -319,7 +319,9 @@ def get_min_bbox_coord(bounding_boxes):
     return min_
 
 
+
 def skeletonize(img, debug=False):
+    # TODO algoname
     img = img.copy()
     skel = img.copy()
     skel[:, :] = 0
