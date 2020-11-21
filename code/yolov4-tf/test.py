@@ -55,10 +55,9 @@ if test_dataset:
 
 yolo.load_weights(weights[model_type], weights_type=config.yolo.weights_type)
 
-#dir_ = config.preprocessed_valid_dir
-#dir_ = config.valid_dir
-dir_ = config.data / "tmp"
-for file_ in os.listdir(dir_):
-    if ".png" in file_ or ".jpg" in file_:
-        print(file_)
-        yolo.inference(str(dir_ / file_))
+dirs = [config.data / "tmp", config.preprocessed_valid_dir]
+for dir_ in dirs:
+    for file_ in os.listdir(dir_):
+        if ".png" in file_ or ".jpg" in file_:
+            print(file_)
+            yolo.inference(str(dir_ / file_))
