@@ -26,21 +26,10 @@ from config import config
 # TODO move config probably
 model_type = "stripped"
 
-weights = {
-    "stripped": config.yolo.stripped_weights,
-    "safe": config.yolo.safe_label_weights,
-    "edges": config.yolo.label_weights,
-}
-
-classes = {
-    "stripped": config.yolo.stripped_classes,
-    "safe": config.yolo.safe_classes,
-    "edges": config.yolo.classes,
-}
 
 # small will use yolov4 head with 3 yolo layers
 yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-yolo.classes = classes[model_type]
+yolo.classes = config.yolo.classes
 yolo.input_size = config.yolo.input_size
 yolo.channels = config.yolo.channels
 yolo.make_model()
@@ -53,7 +42,7 @@ if test_dataset:
     sys.exit()
 
 
-yolo.load_weights(weights[model_type], weights_type=config.yolo.weights_type)
+yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
 dirs = [config.data / "tmp", config.preprocessed_valid_dir]
 for dir_ in dirs:

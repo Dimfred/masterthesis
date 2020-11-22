@@ -16,7 +16,9 @@ config.preprocessed_valid_dir = config.data / "preprocessed_valid"
 config.yolo_labeled_dir = config.data / "yolo_labeled"
 config.weights_dir = Path("weights")
 
-# yolo
+########
+# yolo #
+########
 config.yolo = EasyDict()
 
 ## architecture
@@ -24,17 +26,40 @@ config.yolo.input_size = 832  # 608, 736, 832, 928, 960, 1120, 1280, 1600
 config.yolo.channels = 1
 config.yolo.tiny = True
 config.yolo.small = True
-
-# classes
-config.yolo.classes = str(config.label_dir / "classes.txt")
-config.yolo.safe_classes = str(config.labeled_safe_dir / "classes.txt")
-config.yolo.stripped_classes = str(config.preprocessed_valid_dir / "classes.txt")
-
-# misc
 config.yolo.weights_type = "yolo"
-config.yolo.label_weights = str(config.weights_dir / "label.weights")
-config.yolo.safe_label_weights = str(config.weights_dir / "safe_label.weights")
-config.yolo.stripped_weights = str(config.weights_dir / "stripped_best.weights")
+
+config.yolo.architecture_type = "stripped"
+
+# classes and corresponding trained weights
+architecture_type = {
+    "stripped": (
+        str(config.preprocessed_dir / "classes.txt"),
+        str(config.weights_dir / "stripped_best.weights"),
+    ),
+    "safe": (
+        str(config.labeled_safe_dir / "classes.txt"),
+        str(config.weights_dir / "safe_label.weights"),
+    ),
+    # contains edges, T's, crosses and old stuff like US shit
+    "edges": (
+        str(config.label_dir / "classes.txt"),
+        str(config.weights_dir / "label.weights"),
+    ),
+}
+
+classes, weights = architecture_type[config.yolo.architecture_type]
+config.yolo.classes = classes
+config.yolo.weights = weights
+config.yolo.full_classes = architecture_type["edges"][0]
+
+
+#################
+# augmentations #
+#################
+
+config.augment = EasyDict()
+config.augment.resize = 1000
+
 
 # removes classes from dataset
 config.labels_to_remove = [
@@ -46,7 +71,7 @@ config.labels_to_remove = [
     "t_top",
     "t_right",
     "t_bot",
-    "cross"
+    "cross",
 ]
 
 # removes classes and the file where the class is present from dataset

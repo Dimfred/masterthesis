@@ -27,10 +27,21 @@ yolo.input_size = config.yolo.input_size
 yolo.channels = config.yolo.channels
 yolo.make_model()
 
-yolo.load_weights(config.yolo.label_weights, weights_type=config.yolo.weights_type)
+yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
 img_dir = Path(sys.argv[1])
 label_dir = config.yolo_labeled_dir
+
+# we convert the detected labels based on the full_classes.txt
+with open(config.yolo.full_classes, "r") as f:
+    full_classes = f.readlines()
+    full_classes = [cls_.strip() for cls_ in full_classes]
+
+# currently used classes
+with open(config.yolo.classes, "r") as f:
+    current_classes = f.readlines()
+    current_classes = [cls_.strip() for cls_ in current_classes]
+
 for img_name in sys.argv[2:]:
     img_path = str(img_dir / img_name)
     img = cv.imread(img_path, cv.IMREAD_GRAYSCALE)
@@ -42,5 +53,11 @@ for img_name in sys.argv[2:]:
 
     # write labels
     with open(f"{os.path.splitext(label_dir / img_name)[0]}.txt", "w") as label_file:
-        for x, y, w, h, cls_, _ in bounding_boxes:
-            print(f"{int(cls_)} {x} {y} {w} {h}", file=label_file)
+        for x, y, w, h, current_cls_idx, _ in bounding_boxes:
+            current_cls_idx = int(current_cls_idx)
+            # cls_name is always the same for the old and the new version
+            cls_name = current_classes[current_cls_idx]
+
+            converted_cls_idx = full_classes.index(cls_name)
+
+            print(f"{int(converted_cls_idx)} {x} {y} {w} {h}", file=label_file)

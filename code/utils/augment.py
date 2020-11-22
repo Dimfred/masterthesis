@@ -12,6 +12,7 @@ import copy
 
 from typing import List
 from config import config
+import utils
 
 
 class YoloAugmentator:
@@ -275,6 +276,7 @@ class YoloAugmentator:
             original_image = cv.imread(
                 str(self.label_dir / img_filename), cv.IMREAD_GRAYSCALE
             )
+            original_image = utils.resize_max_axis(original_image, config.augment.resize)
             self.augment(img_filename, original_image, original_labels)
 
 
