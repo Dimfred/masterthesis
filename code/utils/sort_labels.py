@@ -27,6 +27,8 @@ def sort(fn):
         lines = f.readlines()
 
     lines = sorted(lines)
+    with open(fn, "w") as f:
+        f.writelines(lines)
 
 if __name__ == "__main__":
     dir_ = Path(sys.argv[1])
