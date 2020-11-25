@@ -23,6 +23,7 @@ class YoloAugmentator:
         files_to_ignore: List[str],
         rot_transition: dict,
         flip_transition: dict,
+        perform_augmentation: bool
     ):
         self.label_dir = label_dir
         self.preprocessed_dir = preprocessed_dir
@@ -30,6 +31,7 @@ class YoloAugmentator:
         self.classes = self._parse_classes(label_dir)
         self.rot_transition = rot_transition
         self.flip_transition = flip_transition
+        self.perform_augmentation = perform_augmentation
 
     def augment(self, file: str, oimg, ocontent):
         # rotate original image
@@ -38,6 +40,9 @@ class YoloAugmentator:
 
         # store the original_img
         self.write(file, img, content, 0)
+
+        if not self.perform_augmentation:
+            return
 
         for degree in (90, 180, 270):
             img = self.rotate(img)
@@ -500,6 +505,7 @@ if __name__ == "__main__":
             files_to_ignore,
             label_transition_rotation,
             label_transition_flip,
+            config.augment.perform_train
         )
         augmentator.run()
 
@@ -522,6 +528,7 @@ if __name__ == "__main__":
             files_to_ignore,
             label_transition_rotation,
             label_transition_flip,
+            config.augment.perform_valid
         )
         augmentator.run()
 

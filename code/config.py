@@ -58,11 +58,55 @@ config.yolo.full_classes = architecture_type["edges"][0]
 #################
 
 config.augment = EasyDict()
+
 config.augment.resize = 1000
+config.augment.perform_train = False
+config.augment.perform_valid = True
 
 
 # removes classes from dataset
 config.labels_to_remove = [
+    "edge_tl",
+    "edge_tr",
+    "edge_br",
+    "edge_bl",
+    "t_left",
+    "t_top",
+    "t_right",
+    "t_bot",
+    "cross",
+
+    ### ALL ###
+    "diode_left",
+    "diode_top",
+    "diode_right",
+    "diode_bot",
+    "bat_left",
+    "bat_top",
+    "bat_right",
+    "bat_bot",
+    "res_de_hor",
+    "res_de_ver",
+    "res_us_hor",
+    "res_us_ver",
+    "cap_hor",
+    "cap_ver",
+    "gr_left",
+    "gr_top",
+    "gr_right",
+    "gr_bot",
+    "lamp_de_hor",
+    "lamp_de_ver",
+    "lamp_us_hor",
+    "lamp_us_ver",
+    "ind_de_hor",
+    "ind_de_ver",
+    "ind_us_hor",
+    "ind_us_ver",
+    # "source_hor",
+    # "source_ver",
+    # "current_hor",
+    # "current_ver",
     "edge_tl",
     "edge_tr",
     "edge_br",
