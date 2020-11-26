@@ -35,8 +35,10 @@ metrics = utils.Metrics(yolo.classes, dir_, iou_thresh=0.1)
 
 errors = []
 
+filter_ = lambda file_: ("00_20" in file_ or "00_19" in file_)
+
 for file_ in os.listdir(dir_):
-    if utils.is_img(file_):
+    if utils.is_img(file_) and filter_(file_):
         print(file_)
         img_path = str(dir_ / file_)
         ground_truth_path = utils.label_file_from_img(img_path)
