@@ -48,10 +48,12 @@ config.yolo.architecture_type = "stripped"
 
 # classes and corresponding trained weights
 architecture_type = {
+    # uses only german symbols without edges and T's
     "stripped": (
         str(config.preprocessed_dir / "classes.txt"),
         str(config.weights_dir / "stripped_best.weights"),
     ),
+    # contains all labels without edges
     "safe": (
         str(config.labeled_safe_dir / "classes.txt"),
         str(config.weights_dir / "safe_label.weights"),

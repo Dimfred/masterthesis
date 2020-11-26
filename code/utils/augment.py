@@ -24,7 +24,7 @@ class YoloAugmentator:
         rot_transition: dict,
         flip_transition: dict,
         perform_augmentation: bool,
-        clean: bool = True
+        clean: bool = True,
     ):
         self.label_dir = label_dir
         self.preprocessed_dir = preprocessed_dir
@@ -285,14 +285,18 @@ class YoloAugmentator:
             original_image = cv.imread(
                 str(self.label_dir / img_filename), cv.IMREAD_GRAYSCALE
             )
-            original_image = utils.resize_max_axis(original_image, config.augment.resize)
+            original_image = utils.resize_max_axis(
+                original_image, config.augment.resize
+            )
             self.augment(img_filename, original_image, original_labels)
 
 
 class ClassStripper:
-    def __init__(self, label_dir, labels_to_remove, labels_and_files_to_remove, gc):
+    def __init__(
+        self, label_dir, labels_to_remove, labels_and_files_to_remove, files_to_ignore
+    ):
         self.label_dir = label_dir
-        self.gc = files_to_ignore
+        self.files_to_ignore = files_to_ignore
 
         with open(self.label_dir / "classes.txt", "r") as f:
             lines = f.readlines()
@@ -382,7 +386,9 @@ class ClassStripper:
     def get_label_filenames(self):
         label_filenames = os.listdir(self.label_dir)
         label_filenames = [label for label in label_filenames if label.endswith(".txt")]
-        label_filenames = [label for label in label_filenames if label not in self.gc]
+        label_filenames = [
+            label for label in label_filenames if label not in self.files_to_ignore
+        ]
 
         return label_filenames
 
@@ -510,7 +516,7 @@ if __name__ == "__main__":
             label_transition_rotation,
             label_transition_flip,
             config.augment.perform_train,
-            clean=True
+            clean=True,
         )
         augmentator.run()
 
@@ -522,7 +528,7 @@ if __name__ == "__main__":
             label_transition_rotation,
             label_transition_flip,
             config.augment.perform_merged,
-            clean=False
+            clean=False,
         )
         augmentator.run()
 
@@ -546,7 +552,7 @@ if __name__ == "__main__":
             label_transition_rotation,
             label_transition_flip,
             config.augment.perform_valid,
-            clean=True
+            clean=True,
         )
         augmentator.run()
 
