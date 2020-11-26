@@ -8,14 +8,21 @@ from typing import Union, Tuple
 from copy import deepcopy
 import os
 
-# TODO
+# TODO remove this import
 import utils
 
 
 class Hotkeys:
     crop = ord("c")
     background = ord("b")
+    probably_background = ord("1")
+    # TODO
+    # probably_background = ord("B")
     foreground = ord("f")
+    probably_foreground = ord("2")
+    # TODO
+    # probably_foreground = ord("B")
+
     inc_brush = ord("=")
     dec_brush = ord("-")
     grabcut = ord("g")
@@ -32,7 +39,10 @@ class colors:
     green = (0, 255, 0)
     red = (0, 0, 255)
     black = (0, 0, 0)
+    # TODO
+    pink = (247, 7, 203)[::-1]
     white = (255, 255, 255)
+    cyan = (7, 163, 247)[::-1]
 
 
 class Mask:
@@ -86,6 +96,9 @@ class Crop(AppState):
         self.done = False
 
     def __call__(self):
+        if self.done:
+            return self.app.prev_app_state
+
         return self
 
     @store_cursor_pos
@@ -96,6 +109,7 @@ class Crop(AppState):
         elif event == cv.EVENT_LBUTTONUP:
             self.drawing = False
             self.crop()
+            self.done = True
         elif event == cv.EVENT_MOUSEMOVE and self.drawing:
             self.update_rect(x, y)
 
@@ -109,10 +123,6 @@ class Crop(AppState):
         self.render()
 
     def crop(self):
-        cv.setMouseCallback(self.app.inwin_name, lambda *args: None)
-
-        self.app.app_state = BaseState(self.app)
-
         img = self.app.img
 
         x1, y1 = self.p1
@@ -121,10 +131,13 @@ class Crop(AppState):
         xmin, xmax = min(x1, x2), max(x1, x2)
         ymin, ymax = min(y1, y2), max(y1, y2)
 
-        # the inside of the crop
+        # region of interest; the inside of the crop
         roi = img[ymin:ymax, xmin:xmax]
+
+        # everything background, except roi
         img = np.zeros_like(img)
         img[y1:y2, x1:x2] = roi
+
         self.app.img = img
 
         if self.app._mask is None:
@@ -208,17 +221,25 @@ class DrawGround(AppState):
 
 class DrawForeground(DrawGround):
     def __init__(self, app):
-        super().__init__(app, colors.green, Mask.fg, DrawForeground)
+        super().__init__(app, colors.blue, Mask.fg, DrawForeground)
         self.name = "foreground"
+
+
+class DrawProbablyForeground(DrawGround):
+    def __init__(self, app):
+        super().__init__(app, colors.cyan, Mask.probably_fg, DrawProbablyForeground)
+        self.name = "probably foreground"
 
 
 class DrawBackground(DrawGround):
     def __init__(self, app):
-        super().__init__(app, colors.black, Mask.bg, DrawBackground)
+        super().__init__(app, colors.red, Mask.bg, DrawBackground)
         self.name = "background"
 
-
-# TODO draw probably
+class DrawProbablyBackground(DrawGround):
+    def __init__(self, app):
+        super().__init__(app, colors.pink, Mask.bg, DrawProbablyBackground)
+        self.name = "probably background"
 
 
 class Reset(AppState):
@@ -253,11 +274,18 @@ class Grabcut(AppState):
             cv.GC_INIT_WITH_MASK,
         )
 
-        # TODO what is happening here?
-        mask = np.uint8(np.where((mask == Mask.bg) | (mask == Mask.probably_bg), 0, 1))
+        # TODO what is happening here? seems kinda wrong
+        # mask = np.uint8(np.where((mask == Mask.bg) | (mask == Mask.probably_bg), 0, 1))
         # mask = np.logical_or(mask[mask == Mask.fg], mask[mask == Mask.probably_fg])
+        mask = np.uint8((mask == Mask.fg) | (mask == Mask.probably_fg))
+        mask = mask[..., np.newaxis]
 
-        self.app._fg_img = self.app._original_img * mask[..., np.newaxis]
+        # store mask in the app
+        self.app._saved_mask = mask.copy()
+
+        self.app._fg_img = self.app._original_img * mask
+        self.app._fg_img[np.logical_not(mask[:, :, 0])] = colors.red
+
 
         return self.app.prev_app_state if not self.app.auto_save else Save(self.app)
 
@@ -302,11 +330,12 @@ class Save(AppState):
         basename = os.path.basename(self.app._img_path)
         name, ext = os.path.splitext(basename)
 
-        path = Path(self.app.output_dir) / f"{name}_fg{ext}"
-        cv.imwrite(str(path), self.app._fg_img)
+        path = Path(self.app.output_dir) / f"{name}_fg_mask{ext}"
+        cv.imwrite(str(path), self.app._saved_mask)
         print(f"Saving to {path}.")
 
         return self.app.prev_app_state
+
 
 class Delete(AppState):
     def __init__(self, app):
@@ -330,7 +359,6 @@ class Delete(AppState):
 
 class BaseState(AppState):
     """ State to switch between states """
-
 
     _states = {
         Hotkeys.crop: Crop,
@@ -357,13 +385,33 @@ class BaseState(AppState):
 
 
 class IGrabcut:
+    # fmt: off
+    _states = {
+        Hotkeys.grabcut: Grabcut,
+        Hotkeys.crop: Crop,
+        Hotkeys.foreground: DrawForeground,
+        Hotkeys.probably_foreground: DrawProbablyForeground,
+        Hotkeys.background: DrawBackground,
+        Hotkeys.probably_background: DrawProbablyBackground,
+        Hotkeys.mask_generator: GenerateMask,
+
+        Hotkeys.inc_brush: IncreseBrush,
+        Hotkeys.dec_brush: DecreaseBrush,
+
+        Hotkeys.save: Save,
+        Hotkeys.delete: Delete,
+        Hotkeys.reset: Reset,
+        Hotkeys.close: Close,
+    }
+    # fmt: on
+
     def __init__(
         self,
         output_dir: Union[Path, str],
         auto_save: bool = True,
         inwin_name="input",
         outwin_name="output",
-        waitkey_delay=50,
+        waitkey_delay=1,
     ):
         self.app_state = None
         self.waitkey_delay = waitkey_delay
@@ -373,7 +421,7 @@ class IGrabcut:
         self.outwin_name = outwin_name
 
         # output
-        self.auto_save = True
+        self.auto_save = auto_save
         self.output_dir = output_dir
 
         # TODO naming function
@@ -384,6 +432,7 @@ class IGrabcut:
         self._img = None
         self._show_img = None
         self._fg_img = None
+        # TODO ?
         self._bg_img = None
 
         # ui
@@ -417,7 +466,8 @@ class IGrabcut:
 
         self.app_state = BaseState(self)
 
-        while True:
+        while self.app_state.name != "close":
+
             img = self._show_img.copy()
             img = self.render_state(img)
             img = self.render_brush(img)
@@ -440,9 +490,6 @@ class IGrabcut:
 
             # initialize the new state
             self.app_state = State(self)
-
-            if self.app_state.name == "close":
-                break
 
     @property
     def pressed_key(self):
@@ -488,21 +535,3 @@ class IGrabcut:
         img = cv.line(img, top, bot, colors.red, 1)
 
         return img
-
-    # fmt: off
-    _states = {
-        Hotkeys.crop: Crop,
-        Hotkeys.mask_generator: GenerateMask,
-        Hotkeys.grabcut: Grabcut,
-        Hotkeys.foreground: DrawForeground,
-        Hotkeys.background: DrawBackground,
-
-        Hotkeys.inc_brush: IncreseBrush,
-        Hotkeys.dec_brush: DecreaseBrush,
-
-        Hotkeys.save: Save,
-        Hotkeys.delete: Delete,
-        Hotkeys.reset: Reset,
-        Hotkeys.close: Close,
-    }
-    # fmt: on

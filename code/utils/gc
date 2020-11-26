@@ -11,6 +11,7 @@ import os
 from config import config
 import utils
 
+
 def mask_generator(img):
     img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     img = np.uint8(img)
@@ -21,7 +22,7 @@ def mask_generator(img):
         adaptiveMethod=cv.ADAPTIVE_THRESH_GAUSSIAN_C,
         thresholdType=cv.THRESH_BINARY_INV,
         blockSize=11,
-        C=2
+        C=2,
     )
 
     kernel = cv.getStructuringElement(cv.MORPH_CROSS, (3, 3))
@@ -39,9 +40,9 @@ def mask_generator(img):
 
 
 if __name__ == "__main__":
-    gc = IGrabcut(output_dir=config.foregrounds_dir)
-    gc.mask_generator = mask_generator
-
     for file_ in os.listdir(config.label_dir):
-        if utils.is_img(file_):
+        if utils.is_img(file_) and not utils.has_mask(config.foregrounds_dir, file_):
+            print("Grabcut:", file_)
+            gc = IGrabcut(output_dir=config.foregrounds_dir)
+            gc.mask_generator = mask_generator
             gc.run(config.label_dir / file_)

@@ -110,6 +110,26 @@ def label_file_from_img(img_file):
     name, ext = os.path.splitext(img_file)
     return f"{name}.txt"
 
+def has_mask(mask_dir, img_file):
+    name, ext = os.path.splitext(img_file)
+    mask_name = f"{name}_fg_mask{ext}"
+    return mask_name in os.listdir(mask_dir)
+
+def img_from_mask(dir_, mask):
+    name, _ = os.path.splitext(mask)
+    name = name.replace("_fg_mask", "")
+
+    img_names = [name for name in os.listdir(dir_) if ".txt" not in name]
+
+    for img_name in img_names:
+        if name in img_name:
+            return dir_ / img_name
+
+def merged_name(img_name, bg_name):
+    img_name, ext = os.path.splitext(img_name)
+    bg_name, _ = os.path.splitext(bg_name)
+    return f"{img_name}_{bg_name}{ext}"
+
 
 class YoloBBox:
     def __init__(self, img_dim):
@@ -190,10 +210,8 @@ class Metrics:
         used_pred = set()
 
         error_wrong_label = []
-        missclassified = False
 
         # first find pairs of matching iou
-        iou_matched = []
         for gt in gt_bboxes:
             for pred in pred_bboxes:
                 iou = calc_iou(gt.abs(), pred.abs())
