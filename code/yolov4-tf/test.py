@@ -38,7 +38,15 @@ yolo.make_model()
 # test dataset
 test_dataset = len(sys.argv) > 1
 if test_dataset:
-    utils.test_dataset(yolo, config.label_dir)
+    yolo.classes = config.yolo.full_classes
+    yolo.make_model()
+
+    to_test = sys.argv[1]
+    if to_test == "labeled":
+        utils.test_dataset(yolo, config.label_dir)
+    elif to_test == "merged":
+        utils.test_dataset(yolo, config.merged_dir)
+
     sys.exit()
 
 
@@ -48,5 +56,6 @@ dirs = [config.data / "tmp", config.preprocessed_valid_dir]
 for dir_ in dirs:
     for file_ in os.listdir(dir_):
         if ".png" in file_ or ".jpg" in file_:
-            print(file_)
-            yolo.inference(str(dir_ / file_))
+            if "08_04" in file_:
+                print(file_)
+                yolo.inference(str(dir_ / file_))

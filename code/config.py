@@ -5,15 +5,31 @@ from pathlib import Path
 config = EasyDict()
 
 
+# base
 config.data = Path("data")
+
+# training / augmented training
 config.label_dir = config.data / "labeled"
+config.preprocessed_dir = config.data / "preprocessed"
+
+# validation / augmented validation
 config.valid_dir = config.data / "valid"
+config.preprocessed_valid_dir = config.data / "preprocessed_valid"
+
+# preprocessing stuff
+config.yolo_labeled_dir = config.data / "yolo_labeled"
 config.unlabeled_dir = config.data / "unlabeled"
+
+# bg fg
+config.foregrounds_dir = config.data / "foregrounds"
+config.backgrounds_dir = config.data / "backgrounds"
+config.merged_dir = config.data / "merged"
+
+# other
 config.noise_dir = config.data / "noise"
 config.labeled_safe_dir = config.data / "labeled_safe"
-config.preprocessed_dir = config.data / "preprocessed"
-config.preprocessed_valid_dir = config.data / "preprocessed_valid"
-config.yolo_labeled_dir = config.data / "yolo_labeled"
+
+# weights
 config.weights_dir = Path("weights")
 
 ########
@@ -58,7 +74,13 @@ config.yolo.full_classes = architecture_type["edges"][0]
 #################
 
 config.augment = EasyDict()
+
 config.augment.resize = 1000
+
+# whether to perform flip and rotation on the dataset
+config.augment.perform_train = True
+config.augment.perform_valid = True
+config.augment.perform_merged = True
 
 
 # removes classes from dataset
@@ -72,6 +94,46 @@ config.labels_to_remove = [
     "t_right",
     "t_bot",
     "cross",
+    ### ALL ###
+    # "diode_left",
+    # "diode_top",
+    # "diode_right",
+    # "diode_bot",
+    # "bat_left",
+    # "bat_top",
+    # "bat_right",
+    # "bat_bot",
+    # "res_de_hor",
+    # "res_de_ver",
+    # "res_us_hor",
+    # "res_us_ver",
+    # "cap_hor",
+    # "cap_ver",
+    # "gr_left",
+    # "gr_top",
+    # "gr_right",
+    # "gr_bot",
+    # "lamp_de_hor",
+    # "lamp_de_ver",
+    # "lamp_us_hor",
+    # "lamp_us_ver",
+    # "ind_de_hor",
+    # "ind_de_ver",
+    # "ind_us_hor",
+    # "ind_us_ver",
+    # "source_hor",
+    # "source_ver",
+    # "current_hor",
+    # "current_ver",
+    # "edge_tl",
+    # "edge_tr",
+    # "edge_br",
+    # "edge_bl",
+    # "t_left",
+    # "t_top",
+    # "t_right",
+    # "t_bot",
+    # "cross",
 ]
 
 # removes classes and the file where the class is present from dataset

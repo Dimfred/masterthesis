@@ -23,6 +23,8 @@ class YoloAugmentator:
         files_to_ignore: List[str],
         rot_transition: dict,
         flip_transition: dict,
+        perform_augmentation: bool,
+        clean: bool = True
     ):
         self.label_dir = label_dir
         self.preprocessed_dir = preprocessed_dir
@@ -30,6 +32,8 @@ class YoloAugmentator:
         self.classes = self._parse_classes(label_dir)
         self.rot_transition = rot_transition
         self.flip_transition = flip_transition
+        self.perform_augmentation = perform_augmentation
+        self.clean = clean
 
     def augment(self, file: str, oimg, ocontent):
         # rotate original image
@@ -38,6 +42,9 @@ class YoloAugmentator:
 
         # store the original_img
         self.write(file, img, content, 0)
+
+        if not self.perform_augmentation:
+            return
 
         for degree in (90, 180, 270):
             img = self.rotate(img)
@@ -240,7 +247,8 @@ class YoloAugmentator:
             try:
                 imgs_to_augment.pop(imgs_to_augment.index(file))
             except Exception as e:
-                print(e)
+                # print(e)
+                pass
 
         # exclude already augmented files
         # files_to_augment = [f for f in files_to_augment if not "aug" in f]
@@ -250,8 +258,9 @@ class YoloAugmentator:
         return imgs_to_augment
 
     def run(self):
-        for filename in os.listdir(self.preprocessed_dir):
-            os.remove(self.preprocessed_dir / filename)
+        if self.clean:
+            for filename in os.listdir(self.preprocessed_dir):
+                os.remove(self.preprocessed_dir / filename)
 
         # os.symlink(
         #     os.path.abspath(self.label_dir / "classes.txt"),
@@ -500,10 +509,24 @@ if __name__ == "__main__":
             files_to_ignore,
             label_transition_rotation,
             label_transition_flip,
+            config.augment.perform_train,
+            clean=True
         )
         augmentator.run()
 
-        print("Stripping classes from train_preprocessed...")
+        print("Augmenting train_merged files, this may take some time...")
+        augmentator = YoloAugmentator(
+            config.merged_dir,
+            config.preprocessed_dir,
+            files_to_ignore,
+            label_transition_rotation,
+            label_transition_flip,
+            config.augment.perform_merged,
+            clean=False
+        )
+        augmentator.run()
+
+        print("Stripping classes from train preprocessed...\n")
         ClassStripper(
             config.preprocessed_dir,
             config.labels_to_remove,
@@ -522,6 +545,8 @@ if __name__ == "__main__":
             files_to_ignore,
             label_transition_rotation,
             label_transition_flip,
+            config.augment.perform_valid,
+            clean=True
         )
         augmentator.run()
 

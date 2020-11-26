@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+
+import cv2 as cv
+import numpy as np
+
+from igrabcut import IGrabcut, Mask
+
+from pathlib import Path
+import os
+
+from config import config
+import utils
+
+
+def mask_generator(img):
+    img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    img = np.uint8(img)
+    img = cv.GaussianBlur(img, (5, 5), 10)
+    img = cv.adaptiveThreshold(
+        img,
+        maxValue=255,
+        adaptiveMethod=cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+        thresholdType=cv.THRESH_BINARY_INV,
+        blockSize=11,
+        C=2,
+    )
+
+    kernel = cv.getStructuringElement(cv.MORPH_CROSS, (3, 3))
+    img = cv.morphologyEx(img, cv.MORPH_OPEN, kernel, iterations=1)
+    img = cv.dilate(img, kernel, iterations=4)
+
+    # 255 = circuit = probably_fg
+    # 0 = rest = bg
+
+    img[img == 255] = Mask.probably_fg
+    img[img == 0] = Mask.bg
+
+    mask = img
+    return mask
+
+
+if __name__ == "__main__":
+    for file_ in os.listdir(config.label_dir):
+        if utils.is_img(file_) and not utils.has_mask(config.foregrounds_dir, file_):
+            print("Grabcut:", file_)
+            gc = IGrabcut(output_dir=config.foregrounds_dir)
+            gc.mask_generator = mask_generator
+            gc.run(config.label_dir / file_)
