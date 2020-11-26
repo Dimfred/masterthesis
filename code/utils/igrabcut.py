@@ -22,6 +22,7 @@ class Hotkeys:
     mask_generator = ord("a")
 
     save = ord("s")
+    delete = ord("d")
     close = ord("q")
     reset = ord("r")
 
@@ -258,7 +259,7 @@ class Grabcut(AppState):
 
         self.app._fg_img = self.app._original_img * mask[..., np.newaxis]
 
-        return self.app.prev_app_state
+        return self.app.prev_app_state if not self.app.auto_save else Save(self.app)
 
 
 class Close(AppState):
@@ -268,6 +269,7 @@ class Close(AppState):
 
     def __call__(self):
         cv.destroyAllWindows()
+        return self
 
 
 class GenerateMask(AppState):
@@ -297,18 +299,38 @@ class Save(AppState):
         self.name = "save"
 
     def __call__(self):
-        print(f"Saving to {self.app.output_dir}.")
         basename = os.path.basename(self.app._img_path)
         name, ext = os.path.splitext(basename)
 
         path = Path(self.app.output_dir) / f"{name}_fg{ext}"
-        cv.imwrite(path, self.app._fg_img)
+        cv.imwrite(str(path), self.app._fg_img)
+        print(f"Saving to {path}.")
+
+        return self.app.prev_app_state
+
+class Delete(AppState):
+    def __init__(self, app):
+        super().__init__(app)
+        self.name = "delete"
+
+    def __call__(self):
+        # TODO merge with save
+        basename = os.path.basename(self.app._img_path)
+        name, ext = os.path.splitext(basename)
+
+        path = Path(self.app.output_dir) / f"{name}_fg{ext}"
+        if os.path.exists(path):
+            os.remove(path)
+            print(f"Deleted {path}.")
+        else:
+            print(f"{path} does not exist.")
 
         return self.app.prev_app_state
 
 
 class BaseState(AppState):
     """ State to switch between states """
+
 
     _states = {
         Hotkeys.crop: Crop,
@@ -338,9 +360,10 @@ class IGrabcut:
     def __init__(
         self,
         output_dir: Union[Path, str],
+        auto_save: bool = True,
         inwin_name="input",
         outwin_name="output",
-        waitkey_delay=10,
+        waitkey_delay=50,
     ):
         self.app_state = None
         self.waitkey_delay = waitkey_delay
@@ -350,6 +373,7 @@ class IGrabcut:
         self.outwin_name = outwin_name
 
         # output
+        self.auto_save = True
         self.output_dir = output_dir
 
         # TODO naming function
@@ -417,6 +441,9 @@ class IGrabcut:
             # initialize the new state
             self.app_state = State(self)
 
+            if self.app_state.name == "close":
+                break
+
     @property
     def pressed_key(self):
         return 0xFF & cv.waitKey(self.waitkey_delay)
@@ -474,6 +501,7 @@ class IGrabcut:
         Hotkeys.dec_brush: DecreaseBrush,
 
         Hotkeys.save: Save,
+        Hotkeys.delete: Delete,
         Hotkeys.reset: Reset,
         Hotkeys.close: Close,
     }
