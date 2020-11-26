@@ -1,1 +1,0 @@
-/home/dimfred/workspaces/uni/ma/code/utils/data/valid/valid_yolo.txt
