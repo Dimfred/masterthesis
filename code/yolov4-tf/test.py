@@ -42,8 +42,8 @@ if test_dataset:
     yolo.make_model()
 
     to_test = sys.argv[1]
-    if to_test == "labeled":
-        utils.test_dataset(yolo, config.label_dir)
+    if to_test == "train":
+        utils.test_dataset(yolo, config.train_dir)
     elif to_test == "merged":
         utils.test_dataset(yolo, config.merged_dir)
 
@@ -52,7 +52,7 @@ if test_dataset:
 
 yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
-dirs = [config.data / "tmp", config.preprocessed_valid_dir]
+dirs = [config.data / "tmp", config.valid_preprocessed_dir]
 for dir_ in dirs:
     for file_ in os.listdir(dir_):
         if ".png" in file_ or ".jpg" in file_:

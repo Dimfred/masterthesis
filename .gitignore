@@ -1,18 +1,26 @@
+# code
+.vscode
+
+# python
 *__pycache__*
 *.pytest_cache*
 *.pth
-preprocessed
-checkpoints
-log*
-weights
-result.png
-models
-bad.list
-.vscode
+
+# label_dirs
+train_preprocessed
+valid_preprocessed
 yolo_labeled
-predictions*
-chart*
-preprocessed_valid
-train_yolo.txt
 merged
+
+# training
+checkpoints
+weights
 *.weights
+
+result.png
+bad.list
+log*
+models
+predictions*
+train_yolo.txt
+chart*

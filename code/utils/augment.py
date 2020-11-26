@@ -510,8 +510,8 @@ if __name__ == "__main__":
     if len(sys.argv) == 1 or sys.argv[1] == "train":
         print("Augmenting train files, this may take some time...")
         augmentator = YoloAugmentator(
-            config.label_dir,
-            config.preprocessed_dir,
+            config.train_dir,
+            config.train_preprocessed_dir,
             files_to_ignore,
             label_transition_rotation,
             label_transition_flip,
@@ -523,7 +523,7 @@ if __name__ == "__main__":
         print("Augmenting train_merged files, this may take some time...")
         augmentator = YoloAugmentator(
             config.merged_dir,
-            config.preprocessed_dir,
+            config.train_preprocessed_dir,
             files_to_ignore,
             label_transition_rotation,
             label_transition_flip,
@@ -534,7 +534,7 @@ if __name__ == "__main__":
 
         print("Stripping classes from train preprocessed...\n")
         ClassStripper(
-            config.preprocessed_dir,
+            config.train_preprocessed_dir,
             config.labels_to_remove,
             config.labels_and_files_to_remove,
             files_to_ignore,
@@ -547,7 +547,7 @@ if __name__ == "__main__":
         print("Augmenting valid files, this may take some time...")
         augmentator = YoloAugmentator(
             config.valid_dir,
-            config.preprocessed_valid_dir,
+            config.valid_preprocessed_dir,
             files_to_ignore,
             label_transition_rotation,
             label_transition_flip,
@@ -558,7 +558,7 @@ if __name__ == "__main__":
 
         print("Stripping classes from valid_preprocessed...")
         ClassStripper(
-            config.preprocessed_valid_dir,
+            config.valid_preprocessed_dir,
             config.labels_to_remove,
             config.labels_and_files_to_remove,
             files_to_ignore,

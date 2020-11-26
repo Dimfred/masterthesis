@@ -111,7 +111,7 @@ if __name__ == "__main__":
         for fg_mask in fg_masks:
             print("\tFG:", fg_mask)
 
-            img_name = utils.img_from_mask(config.label_dir, fg_mask)
+            img_name = utils.img_from_mask(config.train_dir, fg_mask)
             fg_mask = config.foregrounds_dir / fg_mask
 
             merger = BackgroundMerger(img_name, fg_mask, bg)

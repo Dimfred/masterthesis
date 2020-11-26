@@ -29,7 +29,7 @@ yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
 
 
-dir_ = config.preprocessed_valid_dir
+dir_ = config.valid_preprocessed_dir
 metrics = utils.Metrics(yolo.classes, dir_, iou_thresh=0.1)
 
 
