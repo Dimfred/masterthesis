@@ -6,6 +6,7 @@ import numpy as np
 from igrabcut import IGrabcut, Mask
 
 from config import config
+from pathlib import Path
 
 # dir_ = config.label_dir
 
@@ -41,6 +42,7 @@ if __name__ == "__main__":
     # gc = GrabCut()
     # gc.load_image("05_00.jpg")
     # gc.matte()
-    gc = IGrabcut()
+    output_dir = Path("data/foregrounds")
+    gc = IGrabcut(output_dir=output_dir)
     gc.mask_generator = mask_generator
     gc.run("05_00.jpg")

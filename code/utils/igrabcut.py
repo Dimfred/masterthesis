@@ -6,6 +6,7 @@ import numpy as np
 from pathlib import Path
 from typing import Union, Tuple
 from copy import deepcopy
+import os
 
 # TODO
 import utils
@@ -20,7 +21,7 @@ class Hotkeys:
     grabcut = ord("g")
     mask_generator = ord("a")
 
-    cancel = ord("c")
+    save = ord("s")
     close = ord("q")
     reset = ord("r")
 
@@ -262,7 +263,8 @@ class Grabcut(AppState):
 
 class Close(AppState):
     def __init__(self, app):
-        pass
+        super().__init__(app)
+        self.name = "close"
 
     def __call__(self):
         cv.destroyAllWindows()
@@ -282,8 +284,25 @@ class GenerateMask(AppState):
         mask = self.app.mask_generator(self.app.img)
 
         self.app._mask = mask
+        # TODO only if img has 3 channels
         self.app._img = self.app._img * (mask != 0)[..., np.newaxis]
         self.app._show_img = self.app.img
+
+        return self.app.prev_app_state
+
+
+class Save(AppState):
+    def __init__(self, app):
+        super().__init__(app)
+        self.name = "save"
+
+    def __call__(self):
+        print(f"Saving to {self.app.output_dir}.")
+        basename = os.path.basename(self.app._img_path)
+        name, ext = os.path.splitext(basename)
+
+        path = Path(self.app.output_dir) / f"{name}_fg{ext}"
+        cv.imwrite(path, self.app._fg_img)
 
         return self.app.prev_app_state
 
@@ -316,18 +335,32 @@ class BaseState(AppState):
 
 
 class IGrabcut:
-    def __init__(self, inwin_name="input", outwin_name="output", waitkey_delay=10):
+    def __init__(
+        self,
+        output_dir: Union[Path, str],
+        inwin_name="input",
+        outwin_name="output",
+        waitkey_delay=10,
+    ):
         self.app_state = None
         self.waitkey_delay = waitkey_delay
-
-        # images
-        self._original_img = None
-        self._img = None
-        self._show_img = None
 
         # windows
         self.inwin_name = inwin_name
         self.outwin_name = outwin_name
+
+        # output
+        self.output_dir = output_dir
+
+        # TODO naming function
+
+        # images
+        self._img_path = None
+        self._original_img = None
+        self._img = None
+        self._show_img = None
+        self._fg_img = None
+        self._bg_img = None
 
         # ui
         self._cursor_pos = (0, 0)
@@ -340,9 +373,11 @@ class IGrabcut:
         self._bg_model = np.zeros((1, 65), dtype=np.float64)
         self._fg_model = np.zeros((1, 65), dtype=np.float64)
 
-    def imread(self, path: Union[Path, str], resize: int, channels: int=3):
+    def imread(self, path: Union[Path, str], resize: int, channels: int = 3):
+        self._img_path = str(path)
+
         color_type = cv.IMREAD_GRAYSCALE if channels == 1 else None
-        img = cv.imread(str(path), color_type)
+        img = cv.imread(self._img_path, color_type)
         img = utils.resize_max_axis(img, resize)
 
         self._img = img
@@ -438,6 +473,7 @@ class IGrabcut:
         Hotkeys.inc_brush: IncreseBrush,
         Hotkeys.dec_brush: DecreaseBrush,
 
+        Hotkeys.save: Save,
         Hotkeys.reset: Reset,
         Hotkeys.close: Close,
     }
