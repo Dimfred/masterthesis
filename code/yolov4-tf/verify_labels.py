@@ -109,8 +109,8 @@ if __name__ == "__main__":
                 end = (i_row + 1) * max_width
 
                 if i_page > 0:
-                    start += samples_per_page
-                    end += samples_per_page
+                    start += samples_per_page * i_page
+                    end += samples_per_page * i_page
 
                 row = np.hstack([ex_bbox for _, ex_bbox, _ in cls_[start:end]])
                 page.append(row)
