@@ -63,6 +63,22 @@ def is_img(path: str):
     return ".jpg" in path or ".png" in path
 
 
+def color(s: str, color: int):
+    CSI = "\x1B["
+    return f"{CSI}31;{color}m{s}{CSI}0m"
+
+
+def red(s: str):
+    return color(s, 31)
+
+
+def green(s: str):
+    return color(s, 32)
+
+def white(s: str):
+    return color(s, 37)
+
+
 # @njit
 def calc_iou(b1, b2):
     # b1: x1, y1, x2, y2
@@ -110,10 +126,12 @@ def label_file_from_img(img_file):
     name, ext = os.path.splitext(img_file)
     return f"{name}.txt"
 
+
 def has_mask(mask_dir, img_file):
     name, ext = os.path.splitext(img_file)
     mask_name = f"{name}_fg_mask{ext}"
     return mask_name in os.listdir(mask_dir)
+
 
 def img_from_mask(dir_, mask):
     name, _ = os.path.splitext(mask)
@@ -124,6 +142,7 @@ def img_from_mask(dir_, mask):
     for img_name in img_names:
         if name in img_name:
             return dir_ / img_name
+
 
 def merged_name(img_name, bg_name):
     img_name, ext = os.path.splitext(img_name)
@@ -238,7 +257,9 @@ class Metrics:
     def confusion(self):
         pretty = [["GT/PR"] + list(range(len(self._labels)))]
         for idx, (label, row) in enumerate(zip(self._labels, self._confusion)):
-            pretty_row = [f"{idx}: {label}"] + [int(n) for n in row]
+            pretty_row = [f"{idx}: {label}"] + [
+                green(str(int(n))) if int(n) != 0 else white(str(int(n))) for n in row
+            ]
             pretty.append(pretty_row)
 
         print(tabulate(pretty))

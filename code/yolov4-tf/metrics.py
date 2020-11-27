@@ -28,25 +28,26 @@ yolo.make_model()
 yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
 
-
 dir_ = config.valid_preprocessed_dir
-metrics = utils.Metrics(yolo.classes, dir_, iou_thresh=0.1)
-
+metrics = utils.Metrics(yolo.classes, dir_, iou_thresh=0.3)
 
 errors = []
 
-filter_ = lambda file_: ("00_20" in file_ or "00_19" in file_)
-
+# filter_ = lambda file_: ("00_20" in file_ or "00_19" in file_)
+# is checkered
+filter_ = lambda file_: sum(
+    [(name in file_) for name in ("00_19", "00_20", "07_05", "07_06", "07_07", "07_08")]
+)
+# filter_ = lambda file_: True
 for file_ in os.listdir(dir_):
     if utils.is_img(file_) and filter_(file_):
-        print(file_)
+        # print(file_)
         img_path = str(dir_ / file_)
         ground_truth_path = utils.label_file_from_img(img_path)
 
         img = cv.imread(img_path, cv.IMREAD_GRAYSCALE)
         img = utils.resize_max_axis(img, 1000)
         img = np.expand_dims(img, axis=2)
-
 
         ground_truth = utils.load_ground_truth(ground_truth_path)
         predictions = yolo.predict(img)

@@ -80,9 +80,12 @@ config.augment = EasyDict()
 config.augment.resize = 1000
 
 # whether to perform flip and rotation on the dataset
-config.augment.perform_train = True
-config.augment.perform_valid = True
-config.augment.perform_merged = True
+config.augment.perform_train = False
+config.augment.perform_valid = False
+config.augment.perform_merged = False
+
+# will exclude merged entirelly
+config.augment.exclude_merged = True
 
 
 # removes classes from dataset

@@ -520,17 +520,18 @@ if __name__ == "__main__":
         )
         augmentator.run()
 
-        print("Augmenting train_merged files, this may take some time...")
-        augmentator = YoloAugmentator(
-            config.merged_dir,
-            config.train_preprocessed_dir,
-            files_to_ignore,
-            label_transition_rotation,
-            label_transition_flip,
-            config.augment.perform_merged,
-            clean=False,
-        )
-        augmentator.run()
+        if not config.augment.exclude_merged:
+            print("Augmenting train_merged files, this may take some time...")
+            augmentator = YoloAugmentator(
+                config.merged_dir,
+                config.train_preprocessed_dir,
+                files_to_ignore,
+                label_transition_rotation,
+                label_transition_flip,
+                config.augment.perform_merged,
+                clean=False,
+            )
+            augmentator.run()
 
         print("Stripping classes from train preprocessed...\n")
         ClassStripper(

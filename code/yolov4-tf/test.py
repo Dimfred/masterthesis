@@ -56,6 +56,6 @@ dirs = [config.data / "tmp", config.valid_preprocessed_dir]
 for dir_ in dirs:
     for file_ in os.listdir(dir_):
         if ".png" in file_ or ".jpg" in file_:
-            if "00_19" in file_: #or "00_20" in file_:
+            if "07_" in file_:
                 print(file_)
                 yolo.inference(str(dir_ / file_))
