@@ -3,7 +3,7 @@
 from pathlib import Path
 from sys import maxsize
 import cv2 as cv
-import cv2.ximgproc
+# import cv2.ximgproc
 import numpy as np
 from numba import njit
 import sys
@@ -48,16 +48,14 @@ from ltbuilder import (
 
 def init_yolo():
     yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-    yolo.classes = config.yolo.safe_classes
-    # yolo.classes = config.yolo.classes
-    # yolo.classes = config.yolo.stripped_classes
+    yolo.classes = config.yolo.classes
     yolo.input_size = config.yolo.input_size
     yolo.channels = config.yolo.channels
     yolo.make_model()
 
     # yolo.load_weights(config.yolo.label_weights, weights_type=config.yolo.weights_type)
     yolo.load_weights(
-        config.yolo.safe_label_weights, weights_type=config.yolo.weights_type
+        config.yolo.weights, weights_type=config.yolo.weights_type
     )
     # yolo.load_weights(
     #     config.yolo.stripped_weights, weights_type=config.yolo.weights_type
@@ -105,28 +103,35 @@ def preprocess(img, debug=False):
     # TODO move this shit to config!
 
     # blur the shit out of the image
-    img = cv.GaussianBlur(img, (5, 5), 10)
+    img = cv.GaussianBlur(img, (3, 3), 1)
     if debug:
         utils.show(img)
 
     # bin threshold
-    img = cv.adaptiveThreshold(
-        img,
-        maxValue=255,
-        adaptiveMethod=cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-        thresholdType=cv.THRESH_BINARY_INV,
-        blockSize=11,
-        C=2,
-    )
+    # img = cv.adaptiveThreshold(
+    #     img,
+    #     maxValue=255,
+    #     adaptiveMethod=cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+    #     thresholdType=cv.THRESH_BINARY_INV,
+    #     blockSize=11,
+    #     C=2,
+    # )
+    # if debug:
+    #     utils.show(img)
+
+    # kernel = cv.getStructuringElement(cv.MORPH_CROSS, (3, 3))
+
+    low_thresh = 80
+    high_thresh = 2 * low_thresh
+    img = cv.Canny(img, low_thresh, high_thresh, None, 3)
     if debug:
         utils.show(img)
 
-    kernel = cv.getStructuringElement(cv.MORPH_CROSS, (3, 3))
+    # # remove noise
+    # img = cv.morphologyEx(img, cv.MORPH_OPEN, kernel, iterations=1)
+    # if debug:
+    #     utils.show(img)
 
-    # remove noise
-    img = cv.morphologyEx(img, cv.MORPH_OPEN, kernel, iterations=1)
-    if debug:
-        utils.show(img)
 
     return img
 
@@ -139,9 +144,9 @@ def close_wire_holes(img, debug=False):
         img,
         cv.MORPH_CLOSE,
         kernel,
-        iterations=10,
+        iterations=3,
     )
-    img = cv.dilate(img, kernel, iterations=2)
+    img = cv.dilate(img, kernel, iterations=1)
     if debug:
         utils.show(img)
 
@@ -517,6 +522,7 @@ lt_file = "ltbuilder/circuits/g.asc"
 if __name__ == "__main__":
     imgs = ["00_13.jpg"]  # , "00_11_00.jpg"]
     imgs = [config.unlabeled_dir / img for img in imgs]
+    imgs = [str(config.valid_dir / "08_08.png")]
 
     # imgs = ["07_00.png"]  # , "00_11_00.jpg"]
     # imgs = [config.valid_dir / img for img in imgs]

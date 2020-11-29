@@ -3,21 +3,27 @@ import numpy as np
 import os
 from numba import njit
 from tabulate import tabulate
+import math
 
 
 WINDOW_NAME = "img"
 
 
-def show(img, size=1000, max_axis=True):
-    cv.namedWindow(WINDOW_NAME)
-    cv.moveWindow(WINDOW_NAME, 100, 100)
+def show(*imgs, size=1000, max_axis=True):
+    for i in range(len(imgs)):
+        cv.namedWindow(str(i))
+        cv.moveWindow(str(i), 100, 100)
 
-    if max_axis:
-        img = resize_max_axis(img, size)
-    else:
-        img = resize(img, width=size)
+    imgs = list(imgs)
+    for i, img in enumerate(imgs):
+        if max_axis:
+            imgs[i] = resize_max_axis(img, size)
+        else:
+            imgs[i] = resize(img, width=size)
 
-    cv.imshow(WINDOW_NAME, img)
+    for i, img in enumerate(imgs):
+        cv.imshow(str(i), img)
+
     while not ord("q") == cv.waitKey(200):
         pass
     cv.destroyAllWindows()
@@ -78,6 +84,14 @@ def green(s: str):
 def white(s: str):
     return color(s, 37)
 
+def angle(p1, p2):
+    v = math.atan2(*(p2 - p1))
+    angle = v * (180.0 / math.pi)
+
+    # if angle < 0:
+    #     angle += 360
+
+    return angle
 
 # @njit
 def calc_iou(b1, b2):
