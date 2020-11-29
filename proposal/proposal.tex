@@ -28,28 +28,50 @@
 \rhead{Florian Thamm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Document 
+% Document
 
 
 \begin{document}
 \begin{center}
-\textbf{\huge{Ischemic Stroke Segmentation  on CT-Perfusion Data using Deep Learning Methods} \\~\\ {\large Segmentierung von isch\"amischen Schlaganf\"allen auf CT-Perfusionsdaten mithilfe von Deep Learning Methoden \\~\\ Florian Thamm\footnotemark[1]\footnotemark[2]}} \\~\\
-Supervisors: Leonid Mill\footnotemark[1] M.Sc, Dr. Markus J\"urgens\footnotemark[2], Prof. Dr. Andreas Maier\footnotemark[1]\\~\\
-\footnotemark[1]{Pattern Recognition Lab, Friedrich-Alexander-University, Erlangen-Nuremberg}\\
-\footnotemark[2]{Siemens Healthineers AG, Computed Tomography, Research \& Developement, Forchheim}
-\end{center}
+
+\textbf{
+        \huge{Recognition of hand-drawn electrical circuit schematics and conversion into LTSpice format using Deep Learning Methods}
+        \\-\\
+        \large{Erkennung von handgezeichneten elektrischen Schaltungen und Konvertierung in LTSpice Format mithilfe von Deep Learning Methoden}
+        \\-\\
+        Dmitrij Vinokour
+        %TODO footnotes?
+        \\-\\
+        Supervisors: Florian Thamm M.Sc., Felix Denzinger M.Sc., Prof. Dr. Andreas Maier
+        \\-\\
+        Pattern Recognition Lab, Friedrich-Alexander-University, Erlangen-Nuremberg
+}
 \noindent\rule{\textwidth}{1pt}
+
+\section*{Thesis Description}
+Despite the growing digitilization hand-drawn electrical circuit schematics are still thaught in schools and universities nowadays. Various calculation are performed to identfy values of voltage or current flowing through those components. Often without having the solution for the calculation students are not able to verify their results. It is jedoch possible to redraw the circuit in dedicated circuit simulation tools to obtain the right values for the calculation. This requires knowledge of the
+
+
+
+
+
+
 \section*{Thesis Description}
 The global second leading cause of death and the third leading cause of disability are cerebrovascular accidents, also known as strokes \cite{JohnsonStroke, DONNAN20081612}. According to the American Heart Association, the majority of all strokes are of ischemic nature with a share of 87\% \cite{mozaffarian2016heart}. The treatment of patients suffering acute ischemic strokes using thrombolytics remains limited, since thrombolysis involves higher hemorrhagic risks and therefore in cases of large occluded arteries the mechanical/surgical thrombectomy can be the the superior and the preferred method \cite{torbey2013stroke, el2017thrombolysis}. As a consequence the ability of localizing the ischemic stroke lesion on artery-level is crucial for a successful mechanical recanalization and therefore for the whole treatment by its clinical outcome.\cite{torbey2013stroke, palaniswami2015mechanical}.\\\\
+
 Computed tomography (CT) and magnetic resonance imaging (MRI) represent the most important modalities addressing the diagnosis, management and in particular the exact localization of acute strokes. MRI has gained high acceptance in the evaluation of acute stroke, specifically diffusion-weighted imaging (DWI), which outperforms typical CT applications in terms of precision, but is rather difficult in clinical practice \cite{schaefer2002diffusion, lansberg2000comparison}. On the other hand, several CT applications exist: 1) Unenhanced CT is widely used as a first-line imaging tool to identify hemorrhagic insults. 2) CT Angiography (CTA) is mainly used in the identification of  intravascular thrombi that can be targeted for thrombolysis and/or mechanical thrombectomy \cite{torbey2013stroke, gonzalez2011acute}. 3) CT Perfusion (CTP), as well as DWI and in contradiction to unenhanced CT and CTA, is commonly used to localize stroke lesions, by characterizing the bloodflow on tissue-level. This flow is described by a variety of parameters, including the cerebral blood flow (CBF), the cerebral blood volume (CBV), the mean transit time (MTT) and other measures like time to peak (TTP) or time to drain (TTD). These parameters provide an insight into the delivery of blood to the brain parenchyma and enable the distinction between penumbra and the "core" of the critically infarcted tissue, which is of high importance for further revascularization procedures. Therefore, CTP and DWI can be considered as methods, to identify patients thought to be optimal candidates for reperfusion therapies, like the mechanical thrombectomy \cite{gonzalez2011acute, lin2016imaging, torbey2013stroke}. \\\\
+
 Since the segmentation of the core and the penumbra on CTP image data is not standardized, different thresholds for either, the core and the penumbra, have been proposed as state-of-the art methods, while many of them are compared with the DWI as gold standard \cite{wintermark2007comparison, wintermark2006perfusion, schaefer2008quantitative, soares2010reperfusion, campbell2011cerebral}. These methods do not only differ in their threshold levels, but also on which parameters (typically CBV, CBF, MTT and TTP) they are working on. However, these thresholding methods do neither consider anatomical structures nor spatial relations of the infarcted tissue itself, which may introduce artifacts in terms of small noisy clusters, causing a mismatch between CTP and DWI. It is not unusual to extend the segmentation process by clustering methods in order to avoid this \cite{bivard2011defining, bivard2013perfusion}. \\\\
+
 Image segmentation in general, is a well studied field in image processing and still it remains challenging for many applications. Especially in advanced applications like the segmentation of ischemic infarcted tissues, high precision results are required to provide the best possible patient care and treatment \cite{rastgarpour2013problems, szeliski2010computer}. As a result of the high difficulty, many algorithms and methods were invented in the last years, but deep learning methods first and foremost gained higher attention for their superior performance, e.g \cite{badrinarayanan2017segnet, ciresan2012deep, long2015fully, ronneberger2015u}. In contradiction to threshold approaches, deep learning methods incooperate spatial information and context into the segmentation.\\\\
+
 This thesis aims to combine both, robustly extract the segmentation of the ischemic stroke lesion with the use of Deep Learning Methods based on CTP data. Other recently published approaches achieved promising results, but were either using non state-of-the-art segmentation architectures \cite{robben2018prediction} or were using a small number of different perfusion parameters \cite{lucas2018learning, abulnaga2018ischemic}. The thesis at hand, explores the performance of state-of-the-art deep learning models, by not only involving the typical perfusion parameters (CBV, CBF, MTT and TTP), but also by comprising the base line volume (BASE), the maximum intensity projection (MIP) and the average intensity projection (AVG), in order to achieve the best possible segmentation. The thesis also covers a detailed analysis of the network combined with an anlysis of the positiv or negative impact which comes along with the additional parameters. In summary, the thesis deals with the following points:
+
 \begin{enumerate}
-\item Segmentation of the Critically Infarcted Tissue 
+\item Segmentation of the Critically Infarcted Tissue
 \begin{enumerate}
-\item Pre-Processing 
-\item Segmentation with Deep Learning 
+\item Pre-Processing
+\item Segmentation with Deep Learning
 \item \textit{Possibly: Post-Processing}
 \end{enumerate}
 \item Systematic Parametrization of the Model
@@ -59,7 +81,7 @@ This thesis aims to combine both, robustly extract the segmentation of the ische
 \item \textit{Possibly: Evaluation of the Artifact-freedom of the Segmentation}
 \end{enumerate}
 \end{enumerate}
-   
+
 \bibliographystyle{unsrt}
 \bibliography{proposal}
 \end{document}
