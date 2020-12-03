@@ -12,7 +12,7 @@ WINDOW_NAME = "img"
 def show(*imgs, size=1000, max_axis=True):
     for i in range(len(imgs)):
         cv.namedWindow(str(i))
-        cv.moveWindow(str(i), 100, 100)
+        cv.moveWindow(str(i), 0, 0)
 
     imgs = list(imgs)
     for i, img in enumerate(imgs):
@@ -81,8 +81,10 @@ def red(s: str):
 def green(s: str):
     return color(s, 32)
 
+
 def white(s: str):
     return color(s, 37)
+
 
 def angle(p1, p2):
     v = math.atan2(*(p2 - p1))
@@ -92,6 +94,7 @@ def angle(p1, p2):
     #     angle += 360
 
     return angle
+
 
 # @njit
 def calc_iou(b1, b2):
