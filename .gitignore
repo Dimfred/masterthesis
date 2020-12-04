@@ -11,6 +11,7 @@ train_preprocessed
 valid_preprocessed
 yolo_labeled
 merged
+tmp
 
 # training
 checkpoints
