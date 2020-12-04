@@ -150,6 +150,17 @@ def has_mask(mask_dir, img_file):
     return mask_name in os.listdir(mask_dir)
 
 
+def has_unet_label(label_dir, img_file):
+    name, ext = os.path.splitext(img_file)
+    label_name = f"{name}.npy"
+    return label_name in os.listdir(label_dir)
+
+def unet_label_from_img(img_file):
+    name, ext = os.path.splitext(img_file)
+    label_name = f"{name}.npy"
+    return label_name
+
+
 def img_from_mask(dir_, mask):
     name, _ = os.path.splitext(mask)
     name = name.replace("_fg_mask", "")

@@ -40,7 +40,7 @@ def mask_generator(img):
 
 
 if __name__ == "__main__":
-    for file_ in os.listdir(config.train_dir):
+    for file_ in sorted(os.listdir(config.train_dir)):
         if utils.is_img(file_) and not utils.has_mask(config.foregrounds_dir, file_):
             print("Grabcut:", file_)
             gc = IGrabcut(output_dir=config.foregrounds_dir)
