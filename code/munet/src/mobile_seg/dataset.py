@@ -24,7 +24,6 @@ def get_img_files(path: Path) -> np.ndarray:
     # mask_files = sorted(DATA_LFW_DIR.glob('**/*.ppm'))
     # return np.array(list(map(_mask_to_img, mask_files)))
     img_files = [*path.glob("**/*.jpg", *path.glob("**/*.png"))]
-    img_files = sorted(img_files)
     return np.array(img_files)
 
 
@@ -44,15 +43,18 @@ class MaskDataset(Dataset):
         img = Image.open(self.img_files[idx])
         img = np.array(img)
 
+
         # mask = Image.open(self.mask_files[idx])
         mask = np.load(self.mask_files[idx])
         # mask = np.array(mask)
-        mask = mask[:, :, self.mask_axis]
-
+        # mask = mask[:, :, self.mask_axis]
         augmented = self.transform(image=img, mask=mask)
 
-        img = np.array(augmented["image"]).astype(np.float32).transpose((2, 0, 1))
         mask = np.array(augmented["mask"]).astype(np.float32)
+        img = np.array(augmented["image"]).astype(np.float32)
+        if len(img.shape) == 3:
+            img = img.transpose((2, 0, 1))
+
 
         return img / 255.0, mask  # / 255.
 

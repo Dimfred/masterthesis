@@ -75,11 +75,19 @@ config.yolo.full_classes = architecture_type["edges"][0]
 #################
 
 config.augment = EasyDict()
+config.augment.yolo = EasyDict()
+config.augment.unet = EasyDict()
 
-config.augment.img_params = EasyDict()
-config.augment.img_params.channels = 1
-config.augment.img_params.keep_ar = True
-config.augment.img_params.resize = 1000
+
+config.augment.yolo.img_params = EasyDict()
+config.augment.yolo.img_params.channels = 1
+config.augment.yolo.img_params.keep_ar = True
+config.augment.yolo.img_params.resize = 1000
+
+config.augment.unet.img_params = EasyDict()
+config.augment.unet.img_params.channels = 3
+config.augment.unet.img_params.keep_ar = True
+config.augment.unet.img_params.resize = 1000
 
 # whether to perform flip and rotation on the dataset
 config.augment.perform_train = True
@@ -89,6 +97,91 @@ config.augment.perform_merged = True
 # will exclude merged entirelly
 config.augment.exclude_merged = True
 
+# transition occurs always with the clock (90°)
+config.augment.label_transition_rotation = {
+    "diode_left": "diode_top",
+    "diode_top": "diode_right",
+    "diode_right": "diode_bot",
+    "diode_bot": "diode_left",
+    "bat_left": "bat_top",
+    "bat_top": "bat_right",
+    "bat_right": "bat_bot",
+    "bat_bot": "bat_left",
+    "res_de_hor": "res_de_ver",
+    "res_de_ver": "res_de_hor",
+    "res_us_hor": "res_us_ver",
+    "res_us_ver": "res_us_hor",
+    "cap_hor": "cap_ver",
+    "cap_ver": "cap_hor",
+    "gr_left": "gr_top",
+    "gr_top": "gr_right",
+    "gr_right": "gr_bot",
+    "gr_bot": "gr_left",
+    "lamp_de_hor": "lamp_de_ver",
+    "lamp_de_ver": "lamp_de_hor",
+    "lamp_us_hor": "lamp_us_ver",
+    "lamp_us_ver": "lamp_us_hor",
+    "ind_de_hor": "ind_de_ver",
+    "ind_de_ver": "ind_de_hor",
+    "ind_us_hor": "ind_us_ver",
+    "ind_us_ver": "ind_us_hor",
+    "source_hor": "source_ver",
+    "source_ver": "source_hor",
+    "current_hor": "current_ver",
+    "current_ver": "current_hor",
+    "edge_tl": "edge_tr",
+    "edge_tr": "edge_br",
+    "edge_br": "edge_bl",
+    "edge_bl": "edge_tl",
+    "t_left": "t_top",
+    "t_top": "t_right",
+    "t_right": "t_bot",
+    "t_bot": "t_left",
+    "cross": "cross",
+}
+
+# flip over y axis
+config.augment.label_transition_flip = {
+    "diode_left": "diode_right",
+    "diode_top": "diode_top",
+    "diode_right": "diode_left",
+    "diode_bot": "diode_bot",
+    "bat_left": "bat_right",
+    "bat_top": "bat_top",
+    "bat_right": "bat_left",
+    "bat_bot": "bat_bot",
+    "res_de_hor": "res_de_hor",
+    "res_de_ver": "res_de_ver",
+    "res_us_hor": "res_us_hor",
+    "res_us_ver": "res_us_ver",
+    "cap_hor": "cap_hor",
+    "cap_ver": "cap_ver",
+    "gr_left": "gr_right",
+    "gr_top": "gr_top",
+    "gr_right": "gr_left",
+    "gr_bot": "gr_bot",
+    "lamp_de_hor": "lamp_de_hor",
+    "lamp_de_ver": "lamp_de_ver",
+    "lamp_us_hor": "lamp_us_hor",
+    "lamp_us_ver": "lamp_us_ver",
+    "ind_de_hor": "ind_de_hor",
+    "ind_de_ver": "ind_de_ver",
+    "ind_us_hor": "ind_us_hor",
+    "ind_us_ver": "ind_us_ver",
+    "source_hor": "source_hor",
+    "source_ver": "source_ver",
+    "current_hor": "current_hor",
+    "current_ver": "current_ver",
+    "edge_tl": "edge_tr",
+    "edge_tr": "edge_tl",
+    "edge_br": "edge_bl",
+    "edge_bl": "edge_br",
+    "t_left": "t_right",
+    "t_top": "t_top",
+    "t_right": "t_left",
+    "t_bot": "t_bot",
+    "cross": "cross",
+}
 
 # removes classes from dataset
 # fmt: off

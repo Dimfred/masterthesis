@@ -361,13 +361,14 @@ class Metrics:
         return np.array([val for _, val in pretty])
 
     def label_stats(self):
-        label_counter = [0 for _ in range(len(self.classes))]
-        for file_ in os.listdir(self.label_dir):
-            if not is_img(file_):
-                continue
+        from . import YoloAugmentator
 
-            label_file = label_file_from_img(self.label_dir / file_)
-            labels = load_ground_truth(label_file)
+        label_counter = [0 for _ in range(len(self.classes))]
+
+        img_label_paths = YoloAugmentator.fileloader(self.label_dir)
+
+        for img_path, label_path in img_label_paths:
+            labels = load_ground_truth(label_path)
 
             for label, *_ in labels:
                 label_counter[label] += 1

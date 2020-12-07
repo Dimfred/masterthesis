@@ -132,10 +132,9 @@ class YoloAugmentator(CircuitAugmentator):
         merged_dir: Path,
         img_params: EasyDict,
         # receives label_dir, returns List[(abs_img_path, abs_label_path)]
-        fileloader: Callable[[Path], List[Tuple[Path, Path]]],
         rot_transition: dict,
         flip_transition: dict,
-        perform_augmentation: bool,
+        # perform_augmentation: bool,
         clean: bool = True,
     ):
         super().__init__(
@@ -151,7 +150,8 @@ class YoloAugmentator(CircuitAugmentator):
 
         self.rot_transition = rot_transition
         self.flip_transition = flip_transition
-        self.perform_augmentation = perform_augmentation
+        # self.perform_augmentation = perform_augmentation
+        self.classes = self._parse_classes(self.train_dir)
 
     @staticmethod
     def fileloader(path: Path):
@@ -176,12 +176,13 @@ class YoloAugmentator(CircuitAugmentator):
         self,
         files: List[Tuple[Path, Path]],
         output_dir: Path,
-        peform_augmentation: bool,
+        perform_augmentation: bool,
     ):
         for img_path, label_path in files:
             labels = self._parse_labels(label_path)
+
             img = self.imread(img_path)
-            self.augment(img_path, img, labels, output_dir, peform_augmentation)
+            self.augment(img_path, img, labels, output_dir, perform_augmentation)
 
     def copy_classes(self, src_dir: Path, dst_dir: Path):
         sh.copy(src_dir / "classes.txt", dst_dir / "classes.txt")
@@ -197,7 +198,7 @@ class YoloAugmentator(CircuitAugmentator):
         self.write(file, img, content, 0, False, output_dir)
 
         # normally we don't perform valid augmentation hence just cpy
-        if perform_augmentation:
+        if not perform_augmentation:
             return
 
         for degree in (90, 180, 270):
@@ -269,37 +270,92 @@ class YoloAugmentator(CircuitAugmentator):
                 print(img_path, file=f)
 
     def summary(self):
-        self.classes = self._parse_classes(self.preprocessed_dir)
-        # just some summary how much of each class we have
-        summary_real = {}
-        summary_augmented = {}
+        # reparse classes after stripper hits
+        classes = self._parse_classes(self.train_out_dir)
 
-        label_files = self._get_label_files()
-        for f in label_files:
-            with open(str(self.preprocessed_dir / f), "r") as yolo_file:
-                lines = yolo_file.readlines()
-                for line in lines:
-                    label = int(line.split(" ")[0])
-                    name = self.classes[label]
-                    if name not in summary_augmented:
-                        summary_augmented[name] = 0
-                        summary_real[name] = 0
+        real_train, aug_train = self._summary(classes, self.train_out_dir)
+        real_valid, aug_valid = self._summary(classes, self.valid_out_dir)
 
-                    summary_augmented[name] += 1
+        class_names = sorted(real_train.keys())
 
-                    # is original
-                    if "_000_nflip_" in f:
-                        summary_real[name] += 1
-
-        summary = sorted(
+        summary_count = np.vstack(
             [
-                (name, summary_real[name], summary_augmented[name])
-                for name in summary_augmented.keys()
-            ],
-            key=lambda x: x[0],
+                (
+                    real_train[class_name],
+                    real_valid[class_name],
+                    aug_train[class_name],
+                    aug_valid[class_name],
+                )
+                for class_name in class_names
+            ]
         )
-        summary = [("Labels", "Real", "Augmented")] + summary
+
+        trains = summary_count[:, 0]
+        valids = summary_count[:, 1]
+        ratios = valids / trains
+
+        reals = summary_count[:, :2].copy()
+        augs = summary_count[:, 2:].copy()
+        summary_count = np.append(reals, ratios[:, np.newaxis], axis=1)
+        summary_count = np.append(summary_count, augs, axis=1)
+
+        # accumulate summary idxs with common base class
+        idxs_to_combine = {}
+        for idx, sub_class_name in enumerate(class_names):
+            class_name, *_ = sub_class_name.split("_", 1)
+
+            if class_name not in idxs_to_combine:
+                idxs_to_combine[class_name] = []
+
+            idxs_to_combine[class_name].append(idx)
+
+        # merge base classes
+        new_class_names = sorted(idxs_to_combine.keys())
+        new_rows = []
+        for class_name in new_class_names:
+            idxs = idxs_to_combine[class_name]
+            stacked = np.vstack([summary_count[idx] for idx in idxs])
+
+            real = stacked[:, 0:2].sum(axis=0)
+            ratio = stacked[:, 2].sum(axis=0) / len(idxs)
+            aug = stacked[:, 3:5].sum(axis=0)
+
+            new_row = [class_name]
+            new_row += list(real.astype("uint16"))
+            new_row += ["{:.3f}".format(ratio)]
+            new_row += list(aug.astype("uint16"))
+
+            new_rows.append(new_row)
+
+        summary_header = [
+            ["Labels", "Train", "Valid", "Val/Train", "AugTrain", "AugValid"]
+        ]
+        summary = summary_header + new_rows
+
         print(tabulate(summary))
+
+    def _summary(self, classes: List[str], label_path: Path):
+        real = {}
+        augmented = {}
+
+        img_label_paths = YoloAugmentator.fileloader(label_path)
+        for _, label_path in img_label_paths:
+            labels = self._parse_labels(label_path)
+
+            slabel_path = str(label_path)
+            for label_value, *_ in labels:
+                class_name = classes[label_value]
+                if class_name not in augmented:
+                    augmented[class_name] = 0
+                    real[class_name] = 0
+
+                augmented[class_name] += 1
+
+                # is original
+                if "_000_nflip_" in slabel_path and not "_checkered_" in slabel_path:
+                    real[class_name] += 1
+
+        return real, augmented
 
     def rotate(self, img):
         return cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
@@ -328,7 +384,7 @@ class YoloAugmentator(CircuitAugmentator):
     """
 
     def calc_rotations(self, yolo_content: list):
-        return list(map(self.calc_rotation, yolo_content))
+        return [self.calc_rotation(content) for content in yolo_content]
 
     def calc_rotation(
         self, content
@@ -477,92 +533,6 @@ class ClassStripper:
             raise ValueError(f"No img found for {label_filename}")
 
 
-# transition occurs always with the clock (90°)
-label_transition_rotation = {
-    "diode_left": "diode_top",
-    "diode_top": "diode_right",
-    "diode_right": "diode_bot",
-    "diode_bot": "diode_left",
-    "bat_left": "bat_top",
-    "bat_top": "bat_right",
-    "bat_right": "bat_bot",
-    "bat_bot": "bat_left",
-    "res_de_hor": "res_de_ver",
-    "res_de_ver": "res_de_hor",
-    "res_us_hor": "res_us_ver",
-    "res_us_ver": "res_us_hor",
-    "cap_hor": "cap_ver",
-    "cap_ver": "cap_hor",
-    "gr_left": "gr_top",
-    "gr_top": "gr_right",
-    "gr_right": "gr_bot",
-    "gr_bot": "gr_left",
-    "lamp_de_hor": "lamp_de_ver",
-    "lamp_de_ver": "lamp_de_hor",
-    "lamp_us_hor": "lamp_us_ver",
-    "lamp_us_ver": "lamp_us_hor",
-    "ind_de_hor": "ind_de_ver",
-    "ind_de_ver": "ind_de_hor",
-    "ind_us_hor": "ind_us_ver",
-    "ind_us_ver": "ind_us_hor",
-    "source_hor": "source_ver",
-    "source_ver": "source_hor",
-    "current_hor": "current_ver",
-    "current_ver": "current_hor",
-    "edge_tl": "edge_tr",
-    "edge_tr": "edge_br",
-    "edge_br": "edge_bl",
-    "edge_bl": "edge_tl",
-    "t_left": "t_top",
-    "t_top": "t_right",
-    "t_right": "t_bot",
-    "t_bot": "t_left",
-    "cross": "cross",
-}
-
-# flip over y axis
-label_transition_flip = {
-    "diode_left": "diode_right",
-    "diode_top": "diode_top",
-    "diode_right": "diode_left",
-    "diode_bot": "diode_bot",
-    "bat_left": "bat_right",
-    "bat_top": "bat_top",
-    "bat_right": "bat_left",
-    "bat_bot": "bat_bot",
-    "res_de_hor": "res_de_hor",
-    "res_de_ver": "res_de_ver",
-    "res_us_hor": "res_us_hor",
-    "res_us_ver": "res_us_ver",
-    "cap_hor": "cap_hor",
-    "cap_ver": "cap_ver",
-    "gr_left": "gr_right",
-    "gr_top": "gr_top",
-    "gr_right": "gr_left",
-    "gr_bot": "gr_bot",
-    "lamp_de_hor": "lamp_de_hor",
-    "lamp_de_ver": "lamp_de_ver",
-    "lamp_us_hor": "lamp_us_hor",
-    "lamp_us_ver": "lamp_us_ver",
-    "ind_de_hor": "ind_de_hor",
-    "ind_de_ver": "ind_de_ver",
-    "ind_us_hor": "ind_us_hor",
-    "ind_us_ver": "ind_us_ver",
-    "source_hor": "source_hor",
-    "source_ver": "source_ver",
-    "current_hor": "current_hor",
-    "current_ver": "current_ver",
-    "edge_tl": "edge_tr",
-    "edge_tr": "edge_tl",
-    "edge_br": "edge_bl",
-    "edge_bl": "edge_br",
-    "t_left": "t_right",
-    "t_top": "t_top",
-    "t_right": "t_left",
-    "t_bot": "t_bot",
-    "cross": "cross",
-}
-
 files_to_ignore = [
     "classes.names",
     "classes.txt",
@@ -592,11 +562,30 @@ def augment(target):
             config.valid_dir,
             config.valid_out_dir,
             config.merged_dir,
-            config.augmen.img_params,
-            label_transition_rotation,
-            label_transition_flip,
+            config.augment.yolo.img_params,
+            config.augment.label_transition_rotation,
+            config.augment.label_transition_flip,
             clean=True,
         )
+        augmentator.run()
+
+        ClassStripper(
+            config.train_out_dir,
+            config.labels_to_remove,
+            config.labels_and_files_to_remove,
+            files_to_ignore,
+        ).run()
+        ClassStripper(
+            config.valid_out_dir,
+            config.labels_to_remove,
+            config.labels_and_files_to_remove,
+            files_to_ignore,
+        ).run()
+
+        augmentator.create_labels_file(augmentator.train_out_dir)
+        augmentator.create_labels_file(augmentator.valid_out_dir)
+        augmentator.summary()
+
     elif target == "unet":
         augmentator = UNetAugmentator(
             config.train_dir,
@@ -604,7 +593,7 @@ def augment(target):
             config.valid_dir,
             config.valid_out_dir,
             config.merged_dir,
-            config.augment.img_params,
+            config.augment.unet.img_params,
             clean=True,
         )
         augmentator.run()

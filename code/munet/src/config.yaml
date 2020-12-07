@@ -1,0 +1,20 @@
+note: 'Default training'
+
+data_params:
+  train_dir: data/train_preprocessed
+  valid_dir: data/valid_preprocessed
+  fold: 0
+  n_splits: 5
+  seed: 42
+
+module_params:
+  optim: radam
+  lr: 3e-4
+  weight_decay: 0.
+  batch_size: 8
+  drop_rate: 0.2
+  drop_path_rate: 0.2
+
+trainer_params:
+  epochs: 200
+  gpus: -1

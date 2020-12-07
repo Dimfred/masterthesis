@@ -46,9 +46,6 @@ class DataModule(pl.LightningDataModule):
         train_imgs = utils.list_imgs(config.train_out_dir)
         valid_imgs = utils.list_imgs(config.valid_out_dir)
 
-        print(train_imgs)
-        print(valid_imgs)
-
         # folds = KFold(
         #     n_splits=self.params.n_splits,
         #     random_state=self.params.seed,

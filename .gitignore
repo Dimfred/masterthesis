@@ -19,6 +19,7 @@ tmp
 checkpoints
 weights
 *.weights
+*/munet/experimets/*
 
 result.png
 bad.list
