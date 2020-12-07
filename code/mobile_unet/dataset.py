@@ -95,6 +95,7 @@ class MaskDataset(Dataset):
         random.seed(seed)
         mask = Image.fromarray(mask)
         mask = self.mask_transform(mask)
+        mask = np.array(mask)
 
         return img, mask
 
