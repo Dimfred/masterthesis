@@ -1,11 +1,20 @@
 import cv2 as cv
 import numpy as np
 import os
-from numba import njit
 from tabulate import tabulate
 import math
 
 from pathlib import Path
+
+try:
+    from numba import njit
+except:
+    def njit(f):
+        def decorator(*args, **kwargs):
+            return f(*args, **kwargs)
+
+        return decorator
+
 
 WINDOW_NAME = "img"
 
