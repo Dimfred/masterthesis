@@ -6,7 +6,7 @@ import numpy as np
 from pathlib import Path
 from typing import Union
 import os
-import shutil
+import shutil as sh
 
 import utils
 from config import config
@@ -101,31 +101,53 @@ class BackgroundMerger:
             self.bg_img = self.bg_img[:fgh, :fgw]
 
 
+by_path = lambda path: str(path)
+
+
+def list_backgrounds():
+    bg_paths = config.backgrounds_dir.glob("**/*.*")
+    return sorted(bg_paths, key=by_path)
+
+
+def list_foregrounds():
+    fg_paths = config.foregrounds_dir.glob("**/*.*")
+    return sorted(fg_paths, key=by_path)
+
 if __name__ == "__main__":
-    bgs = os.listdir(config.backgrounds_dir)
-    fg_masks = os.listdir(config.foregrounds_dir)
+    # clear before applying anything
+    dir_list = config.merged_dir.glob("**/*.*")
+    for f in dir_list:
+        os.remove(str(f))
 
-    for bg in bgs:
-        print("Projecting on: ", bg)
-        bg = config.backgrounds_dir / bg
-        for fg_mask in fg_masks:
-            print("\tFG:", fg_mask)
 
-            img_name = utils.img_from_mask(config.train_dir, fg_mask)
-            fg_mask = config.foregrounds_dir / fg_mask
+    bg_paths = list_backgrounds()
+    fg_paths = list_foregrounds()
 
-            merger = BackgroundMerger(img_name, fg_mask, bg)
+    for bg_path in bg_paths:
+        print("Projecting on: ", bg_path)
+        for fg_path in fg_paths:
+            print("\tFG:", fg_path)
+
+            img_path = utils.img_from_fg(config.train_dir, fg_path)
+            if not img_path.exists():
+                print("IMG_NAME NOT FOUND SHOULD NOT HAPPEN")
+                continue
+
+            merger = BackgroundMerger(img_path, fg_path, bg_path)
             merged_img = merger.merge(debug=False)
 
-            merged_name = utils.merged_name(
-                os.path.basename(img_name), os.path.basename(bg)
-            )
-            cv.imwrite(str(config.merged_dir / merged_name), merged_img)
+            # save the merged img
+            merged_path = config.merged_dir / utils.merged_name(img_path, bg_path)
+            cv.imwrite(str(merged_path), merged_img)
 
-            # copy the label file
-            original_label_file = utils.label_file_from_img(img_name)
-            merged_label_file = utils.label_file_from_img(merged_name)
-            shutil.copy(
-                original_label_file,
-                config.merged_dir / merged_label_file,
-            )
+            # copy the corresponding yolo label to the merged_dir
+            yolo_label_path = utils.yolo_label_from_img(img_path)
+            merged_yolo_label_path = utils.yolo_label_from_img(merged_path)
+            sh.copy(yolo_label_path, merged_yolo_label_path)
+
+            # copy the corresponding segmentation label to the merged_dir
+            seg_label_path = utils.segmentation_label_from_img(img_path)
+            merged_seg_label_path = utils.segmentation_label_from_img(merged_path)
+            # only if the seg label exists copy it
+            if seg_label_path.exists():
+                sh.copy(seg_label_path, merged_seg_label_path)

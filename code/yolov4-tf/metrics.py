@@ -52,7 +52,7 @@ for input_size in (608, 832):
     yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
 
-    dir_ = config.valid_preprocessed_dir
+    dir_ = config.valid_out_dir
     metrics = utils.Metrics(yolo.classes, dir_, iou_thresh=0.2)
 
     errors = []

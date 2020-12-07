@@ -5,6 +5,7 @@ from numba import njit
 from tabulate import tabulate
 import math
 
+from pathlib import Path
 
 WINDOW_NAME = "img"
 
@@ -139,9 +140,21 @@ def load_ground_truth(file_):
     return ground_truth
 
 
-def label_file_from_img(img_file):
-    name, ext = os.path.splitext(img_file)
-    return f"{name}.txt"
+def list_imgs(path: Path):
+    # TODO unified pattern
+    jpgs = path.glob("**/*.jpg")
+    pngs = path.glob("**/*.png")
+
+    img_paths = list(jpgs)
+    img_paths.extend(pngs)
+
+    by_path = lambda path: str(path)
+    return sorted(img_paths, key=by_path)
+
+
+def yolo_label_from_img(img_file: Path):
+    label_path = img_file.parent / f"{img_file.stem}.txt"
+    return label_path
 
 
 def has_mask(mask_dir, img_file):
@@ -150,32 +163,21 @@ def has_mask(mask_dir, img_file):
     return mask_name in os.listdir(mask_dir)
 
 
-def has_unet_label(label_dir, img_file):
-    name, ext = os.path.splitext(img_file)
-    label_name = f"{name}.npy"
-    return label_name in os.listdir(label_dir)
-
-def unet_label_from_img(img_file):
-    name, ext = os.path.splitext(img_file)
-    label_name = f"{name}.npy"
-    return label_name
+def segmentation_label_from_img(img_file: Path) -> Path:
+    # e.g. img_file = /a/b/img.jpg
+    # /a/b / img.npy"
+    label_path = img_file.parent / f"{img_file.stem}.npy"
+    return label_path
 
 
-def img_from_mask(dir_, mask):
-    name, _ = os.path.splitext(mask)
-    name = name.replace("_fg_mask", "")
-
-    img_names = [name for name in os.listdir(dir_) if ".txt" not in name]
-
-    for img_name in img_names:
-        if name in img_name:
-            return dir_ / img_name
+def img_from_fg(img_path: Path, fg_path: Path) -> Path:
+    name = fg_path.name
+    name = str(name).replace("_fg_mask", "")
+    return img_path / name
 
 
-def merged_name(img_name, bg_name):
-    img_name, ext = os.path.splitext(img_name)
-    bg_name, _ = os.path.splitext(bg_name)
-    return f"{img_name}_{bg_name}{ext}"
+def merged_name(img_path, bg_path):
+    return f"{img_path.stem}_{bg_path.stem}{img_path.suffix}"
 
 
 class YoloBBox:

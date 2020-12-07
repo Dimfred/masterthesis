@@ -1,39 +1,185 @@
 #!/usr/bin/env python3
 
-import os
-from pathlib import Path
+
 import cv2 as cv
-import sys
+import numpy as np
+
 import os
-import shutil
-from numpy.core.defchararray import endswith
+import shutil as sh
+from pathlib import Path
+import click
 from tabulate import tabulate
 import copy
 
-from typing import List
+from typing import List, Union, Tuple, Callable
+from easydict import EasyDict
+
 from config import config
 import utils
 
 
-class YoloAugmentator:
+class CircuitAugmentator:
     def __init__(
         self,
-        label_dir: Path,
-        preprocessed_dir: Path,
-        files_to_ignore: List[str],
+        train_dir: Path,
+        train_out_dir: Path,
+        valid_dir: Path,
+        valid_out_dir: Path,
+        merged_dir: Path,
+        img_params: EasyDict,
+        fileloader: Callable[[Path], List[Tuple[Path, Path]]],
+        # receives path to labels, returns List[(abs_img_path, abs_label_path)]
+        clean: bool = True,
+    ):
+        self.train_dir = train_dir
+        self.train_out_dir = train_out_dir
+
+        self.valid_dir = valid_dir
+        self.valid_out_dir = valid_out_dir
+
+        self.merged_dir = merged_dir
+
+        self.img_params = img_params
+
+        self.train_files = fileloader(self.train_dir)
+        if self.merged_dir is not None:
+            self.train_files.extend(fileloader(self.merged_dir))
+
+            by_img_name = lambda x: x[0]
+            self.train_files = sorted(self.train_files, key=by_img_name)
+
+        self.valid_files = fileloader(self.valid_dir)
+
+        if clean:
+            self.clean(self.train_out_dir)
+            self.clean(self.valid_out_dir)
+
+    def imread(self, path: Path):
+        _imread_type = (
+            cv.IMREAD_COLOR if self.img_params.channels == 3 else cv.IMREAD_GRAYSCALE
+        )
+        img = cv.imread(str(path), _imread_type)
+
+        # TODO else
+        if self.img_params.keep_ar and self.img_params.resize:
+            img = utils.resize_max_axis(img, self.img_params.resize)
+
+        return img
+
+    def imwrite(self, path: Path, img: np.ndarray):
+        cv.imwrite(str(path), img)
+
+    def clean(self, path: Path):
+        # TODO sucks
+        for filename in os.listdir(path):
+            os.remove(path / filename)
+
+
+class UNetAugmentator(CircuitAugmentator):
+    def __init__(
+        self,
+        train_dir: Path,
+        train_out_dir: Path,
+        valid_dir: Path,
+        valid_out_dir: Path,
+        merged_dir: Path,
+        img_params: EasyDict,
+        # receives label_dir, returns List[(abs_img_path, abs_label_path)]
+        clean: bool = True,
+    ):
+        super().__init__(
+            train_dir,
+            train_out_dir,
+            valid_dir,
+            valid_out_dir,
+            merged_dir,
+            img_params,
+            UNetAugmentator.fileloader,
+            clean,
+        )
+
+    @staticmethod
+    def fileloader(path: Path):
+        img_paths = utils.list_imgs(path)
+
+        img_label_paths = []
+        for img_path in img_paths:
+            label_path = utils.segmentation_label_from_img(img_path)
+            if label_path.exists():
+                img_label_paths.append((img_path, label_path))
+
+        return img_label_paths
+
+    def perform(self, files: List[Tuple[Path, Path]], output_dir: Path):
+        for img_path, label_path in files:
+            img = self.imread(img_path)
+
+            self.imwrite(output_dir / img_path.name, img)
+            sh.copy(label_path, output_dir / label_path.name)
+
+    def run(self):
+        self.perform(self.train_files, self.train_out_dir)
+        self.perform(self.valid_files, self.valid_out_dir)
+
+
+class YoloAugmentator(CircuitAugmentator):
+    def __init__(
+        self,
+        train_dir: Path,
+        train_out_dir: Path,
+        valid_dir: Path,
+        valid_out_dir: Path,
+        merged_dir: Path,
+        img_params: EasyDict,
+        # receives label_dir, returns List[(abs_img_path, abs_label_path)]
+        fileloader: Callable[[Path], List[Tuple[Path, Path]]],
         rot_transition: dict,
         flip_transition: dict,
         perform_augmentation: bool,
         clean: bool = True,
     ):
-        self.label_dir = label_dir
-        self.preprocessed_dir = preprocessed_dir
-        self.files_to_ignore = files_to_ignore
-        self.classes = self._parse_classes(label_dir)
+        super().__init__(
+            train_dir,
+            train_out_dir,
+            valid_dir,
+            valid_out_dir,
+            merged_dir,
+            img_params,
+            YoloAugmentator.fileloader,
+            clean,
+        )
+
         self.rot_transition = rot_transition
         self.flip_transition = flip_transition
         self.perform_augmentation = perform_augmentation
-        self.clean = clean
+
+    @staticmethod
+    def fileloader(path: Path):
+        img_paths = utils.list_imgs(path)
+
+        img_label_paths = []
+        for img_path in img_paths:
+            label_path = utils.yolo_label_from_img(img_path)
+            if label_path.exists():
+                img_label_paths.append((img_path, label_path))
+
+        return img_label_paths
+
+    def run(self):
+        self.copy_classes(self.train_dir, self.train_out_dir)
+        self.perform(self.train_files, self.train_out_dir)
+
+        self.copy_classes(self.valid_dir, self.valid_out_dir)
+        self.perform(self.valid_files, self.valid_out_dir)
+
+    def perform(self, files: List[Tuple[Path, Path]], output_dir: Path):
+        for img_path, label_path in files:
+            labels = self._parse_labels(label_path)
+            img = self.imread(img_path)
+            self.augment(img_path, img, labels)
+
+    def copy_classes(self, src_dir: Path, dst_dir: Path):
+        sh.copy(src_dir / "classes.txt", dst_dir / "classes.txt")
 
     def augment(self, file: str, oimg, ocontent):
         # rotate original image
@@ -186,13 +332,6 @@ class YoloAugmentator:
         new_h = w
         return new_label, new_x, new_y, new_w, new_h
 
-    def _get_label_files(self):
-        return [
-            f
-            for f in os.listdir(self.preprocessed_dir)
-            if f.endswith(".txt") and f not in self.files_to_ignore
-        ]
-
     def summary(self):
         self.classes = self._parse_classes(self.preprocessed_dir)
         # just some summary how much of each class we have
@@ -239,56 +378,6 @@ class YoloAugmentator:
                 content.append((int(l), float(x), float(y), float(w), float(h)))
 
         return content
-
-    def _get_imgs_to_augment(self, label_dir: Path):
-        imgs_to_augment = os.listdir(str(label_dir))
-
-        for file in self.files_to_ignore:
-            try:
-                imgs_to_augment.pop(imgs_to_augment.index(file))
-            except Exception as e:
-                # print(e)
-                pass
-
-        # exclude already augmented files
-        # files_to_augment = [f for f in files_to_augment if not "aug" in f]
-
-        # exclude label files
-        imgs_to_augment = [f for f in imgs_to_augment if not f.endswith(".txt")]
-        return imgs_to_augment
-
-    def run(self):
-        if self.clean:
-            for filename in os.listdir(self.preprocessed_dir):
-                os.remove(self.preprocessed_dir / filename)
-
-        # os.symlink(
-        #     os.path.abspath(self.label_dir / "classes.txt"),
-        #     self.preprocessed_dir / "classes.txt",
-        # )
-        shutil.copy(
-            self.label_dir / "classes.txt", self.preprocessed_dir / "classes.txt"
-        )
-
-        for img_filename in self._get_imgs_to_augment(self.label_dir):
-            label_filepath = self.label_dir / "{}.txt".format(
-                os.path.splitext(img_filename)[0]
-            )
-
-            # create symlinks for the original image and labels in the preprocessed
-            # directory
-            # self.make_symlink(img_filename)
-
-            # create 3 rotations of the original img + flip and 3 rotations of the
-            # flipped img => 7 more imgs per original_img
-            original_labels = self._parse_labels(label_filepath)
-            original_image = cv.imread(
-                str(self.label_dir / img_filename), cv.IMREAD_GRAYSCALE
-            )
-            original_image = utils.resize_max_axis(
-                original_image, config.augment.resize
-            )
-            self.augment(img_filename, original_image, original_labels)
 
 
 class ClassStripper:
@@ -505,68 +594,105 @@ files_to_ignore = [
     "log",
 ]
 
-if __name__ == "__main__":
 
-    if len(sys.argv) == 1 or sys.argv[1] == "train":
-        print("Augmenting train files, this may take some time...")
+@click.command()
+@click.argument(
+    "target",
+    # help="Values: <yolo/unet>"
+    # "--target",
+    # "-t",
+    # multiple=False,
+    # help="Values: <yolo/unet>"
+)
+def augment(target):
+    if target == "yolo":
         augmentator = YoloAugmentator(
             config.train_dir,
-            config.train_preprocessed_dir,
-            files_to_ignore,
-            label_transition_rotation,
-            label_transition_flip,
-            config.augment.perform_train,
-            clean=True,
-        )
-        augmentator.run()
-
-        if not config.augment.exclude_merged:
-            print("Augmenting train_merged files, this may take some time...")
-            augmentator = YoloAugmentator(
-                config.merged_dir,
-                config.train_preprocessed_dir,
-                files_to_ignore,
-                label_transition_rotation,
-                label_transition_flip,
-                config.augment.perform_merged,
-                clean=False,
-            )
-            augmentator.run()
-
-        print("Stripping classes from train preprocessed...\n")
-        ClassStripper(
-            config.train_preprocessed_dir,
-            config.labels_to_remove,
-            config.labels_and_files_to_remove,
-            files_to_ignore,
-        ).run()
-
-        augmentator.create_train()
-        augmentator.summary()
-
-    elif sys.argv[1] == "valid":
-        print("Augmenting valid files, this may take some time...")
-        augmentator = YoloAugmentator(
+            config.train_out_dir,
             config.valid_dir,
-            config.valid_preprocessed_dir,
-            files_to_ignore,
+            config.valid_out_dir,
+            config.merged_dir,
+            config.augmen.img_params,
             label_transition_rotation,
             label_transition_flip,
-            config.augment.perform_valid,
+            clean=True,
+        )
+    elif target == "unet":
+        augmentator = UNetAugmentator(
+            config.train_dir,
+            config.train_out_dir,
+            config.valid_dir,
+            config.valid_out_dir,
+            config.merged_dir,
+            config.augment.img_params,
             clean=True,
         )
         augmentator.run()
 
-        print("Stripping classes from valid_preprocessed...")
-        ClassStripper(
-            config.valid_preprocessed_dir,
-            config.labels_to_remove,
-            config.labels_and_files_to_remove,
-            files_to_ignore,
-        ).run()
 
-        augmentator.create_train()
-        augmentator.summary()
+if __name__ == "__main__":
+    augment()
 
-    else:
-        print("./augment.py <valid/train>")
+    # if len(sys.argv) == 1 or sys.argv[1] == "train":
+    #     print("Augmenting train files, this may take some time...")
+    #     augmentator = YoloAugmentator(
+    #         config.train_dir,
+    #         config.train_out_dir
+    #         files_to_ignore,
+    #         label_transition_rotation,
+    #         label_transition_flip,
+    #         config.augment.perform_train,
+    #         clean=True,
+    #     )
+    #     augmentator.run()
+
+    #     if not config.augment.exclude_merged:
+    #         print("Augmenting train_merged files, this may take some time...")
+    #         augmentator = YoloAugmentator(
+    #             config.merged_dir,
+    #             config.train_out_dir
+    #             files_to_ignore,
+    #             label_transition_rotation,
+    #             label_transition_flip,
+    #             config.augment.perform_merged,
+    #             clean=False,
+    #         )
+    #         augmentator.run()
+
+    #     print("Stripping classes from train preprocessed...\n")
+    #     ClassStripper(
+    #         config.train_out_dir
+    #         config.labels_to_remove,
+    #         config.labels_and_files_to_remove,
+    #         files_to_ignore,
+    #     ).run()
+
+    #     augmentator.create_train()
+    #     augmentator.summary()
+
+    # elif sys.argv[1] == "valid":
+    #     print("Augmenting valid files, this may take some time...")
+    #     augmentator = YoloAugmentator(
+    #         config.valid_dir,
+    #         config.valid_out_dir,
+    #         files_to_ignore,
+    #         label_transition_rotation,
+    #         label_transition_flip,
+    #         config.augment.perform_valid,
+    #         clean=True,
+    #     )
+    #     augmentator.run()
+
+    #     print("Stripping classes from valid_preprocessed...")
+    #     ClassStripper(
+    #         config.valid_out_dir,
+    #         config.labels_to_remove,
+    #         config.labels_and_files_to_remove,
+    #         files_to_ignore,
+    #     ).run()
+
+    #     augmentator.create_train()
+    #     augmentator.summary()
+
+    # else:
+    #     print("./augment.py <valid/train>")

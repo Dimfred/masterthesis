@@ -357,7 +357,7 @@ class LabelAdjuster:
 
         # ui
         self._cursor_pos = (0, 0)
-        self._brush_size = 9
+        self._brush_size = 35
 
         # grabcut
         self.mask_generator = None
@@ -465,14 +465,14 @@ class LabelAdjuster:
 
 if __name__ == "__main__":
     # label_dir = config.train_dir
-    label_dir = config.valid_dir
+    #label_dir = config.valid_dir
+    label_dir = config.train_out_dir
     # label_dir = config.data / "tmp"
-    for file_ in sorted(os.listdir(label_dir)):
-        if not utils.is_img(file_) or not utils.has_unet_label(label_dir, file_):
+    for img_path in utils.list_imgs(label_dir):
+        label_path = utils.segmentation_label_from_img(img_path)
+        if not label_path.exists():
             continue
 
-        img_name = file_
-        unet_label_file = utils.unet_label_from_img(img_name)
-
+        print(label_path)
         adjuster = LabelAdjuster(label_dir)
-        adjuster.run(label_dir / img_name, label_dir / unet_label_file)
+        adjuster.run(img_path, label_path)

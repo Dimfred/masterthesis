@@ -9,11 +9,11 @@ config.data = Path("data")
 
 # training / augmented training
 config.train_dir = config.data / "train"
-config.train_preprocessed_dir = config.data / "train_preprocessed"
+config.train_out_dir = config.data / "train_out"
 
 # validation / augmented validation
 config.valid_dir = config.data / "valid"
-config.valid_preprocessed_dir = config.data / "valid_preprocessed"
+config.valid_out_dir = config.data / "valid_out"
 
 # preprocessing stuff
 config.yolo_labeled_dir = config.data / "yolo_labeled"
@@ -49,7 +49,7 @@ config.yolo.architecture_type = "stripped"
 architecture_type = {
     # uses only german symbols without edges and T's
     "stripped": (
-        str(config.train_preprocessed_dir / "classes.txt"),
+        str(config.train_out_dir),
         str(config.weights_dir / "stripped_best.weights"),
     ),
     # contains all labels without edges
@@ -76,7 +76,10 @@ config.yolo.full_classes = architecture_type["edges"][0]
 
 config.augment = EasyDict()
 
-config.augment.resize = 1000
+config.augment.img_params = EasyDict()
+config.augment.img_params.channels = 1
+config.augment.img_params.keep_ar = True
+config.augment.img_params.resize = 1000
 
 # whether to perform flip and rotation on the dataset
 config.augment.perform_train = True

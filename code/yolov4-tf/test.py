@@ -53,7 +53,7 @@ if test_dataset:
 yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
 dirs = [config.data / "tmp"]
-dirs = [config.valid_preprocessed_dir]
+dirs = [config.valid_out_dir]
 for dir_ in dirs:
     for file_ in os.listdir(dir_):
         if ".png" in file_ or ".jpg" in file_:
