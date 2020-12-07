@@ -45,7 +45,7 @@ class MaskDataset(Dataset):
 
 
         # mask = Image.open(self.mask_files[idx])
-        mask = np.load(self.mask_files[idx])
+        mask = np.load(self.mask_files[idx])[..., np.newaxis]
         # mask = np.array(mask)
         # mask = mask[:, :, self.mask_axis]
         augmented = self.transform(image=img, mask=mask)

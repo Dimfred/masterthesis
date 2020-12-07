@@ -10,7 +10,11 @@ import torchvision
 # from config import IMG_DIR
 from pathlib import Path
 import os
+import albumentations as A
 
+from torchvision.transforms.transforms import ToTensor
+
+import utils
 
 # def _mask_to_img(mask_file):
 #     img_file = re.sub('^{}/masks'.format(IMG_DIR), '{}/images'.format(IMG_DIR), mask_file)
@@ -76,28 +80,22 @@ class MaskDataset(Dataset):
 
     def __getitem__(self, idx):
         # print(self.img_files)
-        img = cv2.imread(self.img_files[idx]) #, cv2.IMREAD_GRAYSCALE)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = Image.open(self.img_files[idx])
+        img = np.array(img)
 
-        # mask = cv2.imread(self.mask_files[idx])
         mask = np.load(self.mask_files[idx])
-        # mask = cv2.cvtColor(mask, cv2.COLOR_BGR2RGB)
-        # mask = mask[:, :, self.mask_axis]
 
-        seed = random.randint(0, 2 ** 32)
+        augmented = self.transform(image=img, mask=mask)
 
-        # Apply transform to img
-        random.seed(seed)
-        img = Image.fromarray(img)
-        img = self.transform(img)
+        mask = np.array(augmented["mask"]).astype(np.float32)
+        img = np.array(augmented["image"]).astype(np.float32)
 
-        # Apply same transform to mask
-        random.seed(seed)
-        mask = Image.fromarray(mask)
-        mask = self.mask_transform(mask)
-        mask = np.array(mask)
+        # DEBUG
+        utils.show(cv2.cvtColor(np.uint8(img), cv2.COLOR_RGB2BGR) * np.uint8(mask)[..., np.newaxis])
 
-        return img, mask
+        img = img.transpose((2, 0, 1))
+
+        return img / 255.0, mask
 
     def __len__(self):
         return len(self.img_files)

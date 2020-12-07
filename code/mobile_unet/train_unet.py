@@ -21,6 +21,7 @@ from torchvision.transforms import (
     RandomAffine,
     ColorJitter,
 )
+import albumentations as A
 
 from dataset import MaskDataset, get_img_files
 from loss import dice_loss
@@ -33,7 +34,7 @@ torch.manual_seed(1)
 
 # %%
 N_CV = 5
-BATCH_SIZE = 32
+BATCH_SIZE = 1  # 32
 LR = 1e-4
 
 N_EPOCHS = 1000
@@ -50,46 +51,68 @@ from config import config
 
 # %%
 def get_data_loaders(train_files, val_files, img_size=224):
-    train_base_transform = [
-        ColorJitter(0.3, 0.3, 0.3, 0.3),
-        Resize((img_size, img_size)),
-        RandomResizedCrop(img_size, scale=(0.5, 1.0)),
-        # RandomAffine(10.0),
-        RandomRotation(360),
-        RandomHorizontalFlip(),
-    ]
-    train_transform = Compose(
-        [
-            *train_base_transform,
-            ToTensor(),
-        ]
-    )
-    train_mask_transform = Compose(train_base_transform)
+    # train_transform = Compose(
+    #     [
+    #         # ColorJitter(0.3, 0.3, 0.3, 0.3),
+    #         Resize((img_size, img_size)),
+    #         # RandomResizedCrop(img_size, scale=(0.8, 1)),
+    #         # RandomAffine(10.0),
+    #         # RandomRotation(360),
+    #         # RandomHorizontalFlip(),
+    #     ]
+    # )
+    # val_transform = Compose(
+    #     [
+    #         Resize((img_size, img_size)),
+    #     ]
+    # )
 
-    val_transform = Compose(
+    train_transform = A.Compose(
         [
-            Resize((img_size, img_size)),
-            ToTensor(),
+            A.RandomResizedCrop(
+                img_size,
+                img_size,
+            ),
+            A.Rotate(360),
+            A.HorizontalFlip(),
+            A.RandomBrightnessContrast(),
+            A.HueSaturationValue(),
+            A.RGBShift(),
+            A.RandomGamma(),
+            # A.CLAHE(),
+            # MyCoarseDropout(
+            #     min_holes=1,
+            #     max_holes=8,
+            #     max_height=32,
+            #     max_width=32,
+            # ),
+            # A.Resize(img_size, img_size, interpolation=cv2.INTER_CUBIC),
+            # A.Normalize(
+            #     mean=[0.485, 0.456, 0.406],
+            #     std=[0.229, 0.224, 0.225],
+            # ),
+            # ToTensorV2(),
         ]
     )
-    val_mask_transform = Compose([Resize((img_size, img_size))])
+
+    valid_transform = A.Compose([A.Resize(img_size, img_size)])
 
     train_loader = DataLoader(
-        MaskDataset(train_files, train_transform, mask_transform=train_mask_transform),
+        MaskDataset(train_files, train_transform),
         batch_size=BATCH_SIZE,
         shuffle=True,
         pin_memory=True,
         num_workers=4,
     )
-    val_loader = DataLoader(
-        MaskDataset(val_files, val_transform, mask_transform=val_mask_transform),
+    valid_loader = DataLoader(
+        MaskDataset(val_files, valid_transform),
         batch_size=BATCH_SIZE,
         shuffle=False,
         pin_memory=True,
         num_workers=4,
     )
 
-    return train_loader, val_loader
+    return train_loader, valid_loader
 
 
 def save_best_model(cv, model, df_hist):
