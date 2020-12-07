@@ -34,7 +34,7 @@ torch.manual_seed(1)
 
 # %%
 N_CV = 5
-BATCH_SIZE = 1  # 32
+BATCH_SIZE = 32
 LR = 1e-4
 
 N_EPOCHS = 1000
