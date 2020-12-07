@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-from functools import cached_property, partial
+# from functools import cached_property, partial
+from functools import partial
+from cached_property import cached_property
+
 from logging import getLogger, FileHandler
 from multiprocessing import cpu_count
 from os import cpu_count
