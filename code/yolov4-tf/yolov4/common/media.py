@@ -90,7 +90,7 @@ def resize_image(
         padded_image = np.full(
             (target_size[1], target_size[0], image.shape[2]), 255, dtype=np.uint8
         )
-        print("RESIZED", resized_image.shape)
+        # print("RESIZED", resized_image.shape)
         padded_image[dh : height + dh, dw : width + dw, :] = resized_image
     else:
         padded_image = resized_image

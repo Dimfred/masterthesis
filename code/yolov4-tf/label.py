@@ -16,7 +16,7 @@ if len(physical_devices) > 0:
 
 # usage
 if len(sys.argv) < 3:
-    print("Usage: ./label.py img_dir img_name1 img_name2...")
+    print("Usage: ./label.py img_input_dir img_name1 img_name2...")
     sys.exit()
 
 from yolov4.tf import YOLOv4

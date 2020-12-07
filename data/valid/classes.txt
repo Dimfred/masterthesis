@@ -1,1 +1,1 @@
-../labeled/classes.txt
+../train/classes.txt

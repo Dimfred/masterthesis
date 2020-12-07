@@ -3,6 +3,7 @@
 import cv2 as cv
 import sys
 
-img = cv.imread(sys.argv[1])
-img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
-cv.imwrite(sys.argv[1], img)
+for img_name in sys.argv[1:]:
+    img = cv.imread(img_name)
+    img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
+    cv.imwrite(img_name, img)

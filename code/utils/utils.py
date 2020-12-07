@@ -3,21 +3,28 @@ import numpy as np
 import os
 from numba import njit
 from tabulate import tabulate
+import math
 
+from pathlib import Path
 
 WINDOW_NAME = "img"
 
 
-def show(img, size=1000, max_axis=True):
-    cv.namedWindow(WINDOW_NAME)
-    cv.moveWindow(WINDOW_NAME, 100, 100)
+def show(*imgs, size=1000, max_axis=True):
+    for i in range(len(imgs)):
+        cv.namedWindow(str(i))
+        cv.moveWindow(str(i), 0, 0)
 
-    if max_axis:
-        img = resize_max_axis(img, size)
-    else:
-        img = resize(img, width=size)
+    imgs = list(imgs)
+    for i, img in enumerate(imgs):
+        if max_axis:
+            imgs[i] = resize_max_axis(img, size)
+        else:
+            imgs[i] = resize(img, width=size)
 
-    cv.imshow(WINDOW_NAME, img)
+    for i, img in enumerate(imgs):
+        cv.imshow(str(i), img)
+
     while not ord("q") == cv.waitKey(200):
         pass
     cv.destroyAllWindows()
@@ -63,6 +70,33 @@ def is_img(path: str):
     return ".jpg" in path or ".png" in path
 
 
+def color(s: str, color: int):
+    CSI = "\x1B["
+    return f"{CSI}31;{color}m{s}{CSI}0m"
+
+
+def red(s: str):
+    return color(s, 31)
+
+
+def green(s: str):
+    return color(s, 32)
+
+
+def white(s: str):
+    return color(s, 37)
+
+
+def angle(p1, p2):
+    v = math.atan2(*(p2 - p1))
+    angle = v * (180.0 / math.pi)
+
+    # if angle < 0:
+    #     angle += 360
+
+    return angle
+
+
 # @njit
 def calc_iou(b1, b2):
     # b1: x1, y1, x2, y2
@@ -106,29 +140,44 @@ def load_ground_truth(file_):
     return ground_truth
 
 
-def label_file_from_img(img_file):
-    name, ext = os.path.splitext(img_file)
-    return f"{name}.txt"
+def list_imgs(path: Path):
+    # TODO unified pattern
+    jpgs = path.glob("**/*.jpg")
+    pngs = path.glob("**/*.png")
+
+    img_paths = list(jpgs)
+    img_paths.extend(pngs)
+
+    by_path = lambda path: str(path)
+    return sorted(img_paths, key=by_path)
+
+
+def yolo_label_from_img(img_file: Path):
+    label_path = img_file.parent / f"{img_file.stem}.txt"
+    return label_path
+
 
 def has_mask(mask_dir, img_file):
     name, ext = os.path.splitext(img_file)
     mask_name = f"{name}_fg_mask{ext}"
     return mask_name in os.listdir(mask_dir)
 
-def img_from_mask(dir_, mask):
-    name, _ = os.path.splitext(mask)
-    name = name.replace("_fg_mask", "")
 
-    img_names = [name for name in os.listdir(dir_) if ".txt" not in name]
+def segmentation_label_from_img(img_file: Path) -> Path:
+    # e.g. img_file = /a/b/img.jpg
+    # /a/b / img.npy"
+    label_path = img_file.parent / f"{img_file.stem}.npy"
+    return label_path
 
-    for img_name in img_names:
-        if name in img_name:
-            return dir_ / img_name
 
-def merged_name(img_name, bg_name):
-    img_name, ext = os.path.splitext(img_name)
-    bg_name, _ = os.path.splitext(bg_name)
-    return f"{img_name}_{bg_name}{ext}"
+def img_from_fg(img_path: Path, fg_path: Path) -> Path:
+    name = fg_path.name
+    name = str(name).replace("_fg_mask", "")
+    return img_path / name
+
+
+def merged_name(img_path, bg_path):
+    return f"{img_path.stem}_{bg_path.stem}{img_path.suffix}"
 
 
 class YoloBBox:
@@ -238,7 +287,9 @@ class Metrics:
     def confusion(self):
         pretty = [["GT/PR"] + list(range(len(self._labels)))]
         for idx, (label, row) in enumerate(zip(self._labels, self._confusion)):
-            pretty_row = [f"{idx}: {label}"] + [int(n) for n in row]
+            pretty_row = [f"{idx}: {label}"] + [
+                green(str(int(n))) if int(n) != 0 else white(str(int(n))) for n in row
+            ]
             pretty.append(pretty_row)
 
         print(tabulate(pretty))
@@ -310,13 +361,14 @@ class Metrics:
         return np.array([val for _, val in pretty])
 
     def label_stats(self):
-        label_counter = [0 for _ in range(len(self.classes))]
-        for file_ in os.listdir(self.label_dir):
-            if not is_img(file_):
-                continue
+        from . import YoloAugmentator
 
-            label_file = label_file_from_img(self.label_dir / file_)
-            labels = load_ground_truth(label_file)
+        label_counter = [0 for _ in range(len(self.classes))]
+
+        img_label_paths = YoloAugmentator.fileloader(self.label_dir)
+
+        for img_path, label_path in img_label_paths:
+            labels = load_ground_truth(label_path)
 
             for label, *_ in labels:
                 label_counter[label] += 1

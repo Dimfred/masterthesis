@@ -330,6 +330,7 @@ class Save(AppState):
         basename = os.path.basename(self.app._img_path)
         name, ext = os.path.splitext(basename)
 
+        # TODO name into init
         path = Path(self.app.output_dir) / f"{name}_fg_mask{ext}"
         cv.imwrite(str(path), self.app._saved_mask)
         print(f"Saving to {path}.")

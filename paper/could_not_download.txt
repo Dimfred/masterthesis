@@ -4,3 +4,6 @@ not_handdrawn: https://ieeexplore.ieee.org/abstract/document/7951826
 
 diagram shit: https://ieeexplore.ieee.org/abstract/document/860185?casa_token=Mua-P-9Q7L4AAAAA:F0Z8d7_sR0dXzsrglmTMK_oORMX-Zj8c2zUX4zNfBjaNfmAoXLCEG1vA32UVS_U2LeZe9eoU9w
 boolean_expr_from_circtui: https://ieeexplore.ieee.org/abstract/document/9063264?casa_token=as2EV3lNE6AAAAAA:ftnquMcrbpnV59vrFfpM0hOCaIDDwYeq9u5JmGqb8wQ1rh-vOtNW0dgri5UyLAhKkBRKC_qnfw
+
+rotation invariant cnn: https://ieeexplore.ieee.org/abstract/document/7560644?casa_token=DqUogXfV03IAAAAA:nATEy7LkvCPRTa6ul9zcihLzB1b0JPinim47h-uhyuRgowzOVmUhVq8cHW9xM7C1TcsAUM31vQ
+rotation layer for hand pose estimation: https://ieeexplore.ieee.org/abstract/document/8128503?casa_token=uSFNjivXP5QAAAAA:Uc007Z-kJ7VetRSBX07kqPHpuLdPcZSHRMN0t27qUyKzjziw6HcT4ad9SdRRlvmcdi1wmR0WVA
