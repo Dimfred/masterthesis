@@ -167,46 +167,80 @@ class YoloAugmentator(CircuitAugmentator):
 
     def run(self):
         self.copy_classes(self.train_dir, self.train_out_dir)
-        self.perform(self.train_files, self.train_out_dir)
+        self.perform(self.train_files, self.train_out_dir, perform_augmentation=True)
 
         self.copy_classes(self.valid_dir, self.valid_out_dir)
-        self.perform(self.valid_files, self.valid_out_dir)
+        self.perform(self.valid_files, self.valid_out_dir, perform_augmentation=False)
 
-    def perform(self, files: List[Tuple[Path, Path]], output_dir: Path):
+    def perform(
+        self,
+        files: List[Tuple[Path, Path]],
+        output_dir: Path,
+        peform_augmentation: bool,
+    ):
         for img_path, label_path in files:
             labels = self._parse_labels(label_path)
             img = self.imread(img_path)
-            self.augment(img_path, img, labels)
+            self.augment(img_path, img, labels, output_dir, peform_augmentation)
 
     def copy_classes(self, src_dir: Path, dst_dir: Path):
         sh.copy(src_dir / "classes.txt", dst_dir / "classes.txt")
 
-    def augment(self, file: str, oimg, ocontent):
+    def augment(
+        self, file: str, oimg, ocontent, output_dir: Path, perform_augmentation: bool
+    ):
         # rotate original image
         img = oimg.copy()
         content = copy.deepcopy(ocontent)
 
         # store the original_img
-        self.write(file, img, content, 0)
+        self.write(file, img, content, 0, False, output_dir)
 
-        if not self.perform_augmentation:
+        # normally we don't perform valid augmentation hence just cpy
+        if perform_augmentation:
             return
 
         for degree in (90, 180, 270):
             img = self.rotate(img)
             content = self.calc_rotations(content)
-            self.write(file, img, content, degree)
+            self.write(file, img, content, degree, False, output_dir)
 
         # flip
         img = self.flip(oimg)
         content = self.calc_flips(ocontent)
-        self.write(file, img, content, 0, True)
+        self.write(file, img, content, 0, True, output_dir)
 
         # rotate flipped image
         for degree in (90, 180, 270):
             img = self.rotate(img)
             content = self.calc_rotations(content)
-            self.write(file, img, content, degree, True)
+            self.write(file, img, content, degree, True, output_dir)
+
+    def write(
+        self,
+        img_path: Path,
+        img,
+        content: list,
+        degree: int,
+        flip: bool,
+        output_dir: Path,
+    ):
+        # {name}_{XXX: degree}_{flip/""}_aug.ext
+        filename = "{filename}_{degree:03d}_{flip}aug".format(
+            filename=img_path.stem,
+            degree=degree,
+            flip=("hflip_" if flip else "nflip_"),
+        )
+
+        img_filename = f"{filename}{img_path.suffix}"
+        label_filename = f"{filename}.txt"
+
+        cv.imwrite(str(output_dir / img_filename), img)
+
+        with open(str(output_dir / label_filename), "w") as label_file:
+            for c in content:
+                label_file.write(" ".join(str(i) for i in c))
+                label_file.write("\n")
 
     def make_symlink(self, img_filename):
         img_sym = str(self.preprocessed_dir / img_filename)
@@ -226,67 +260,46 @@ class YoloAugmentator(CircuitAugmentator):
         label_abs = os.path.abspath(str(self.label_dir / label_filename))
         os.symlink(label_abs, label_sym)
 
-    def write(
-        self,
-        filename: str,
-        img,
-        content: list,
-        degree: int,
-        flip: bool = False,
-    ):
-        filename, ext = os.path.splitext(filename)
+    def create_labels_file(self, output_dir: Path):
+        img_label_paths = YoloAugmentator.fileloader(output_dir)
 
-        # {name}_{XXX: degree}_{flip/""}_aug.ext
-        filename = "{filename}_{degree:03d}_{flip}aug".format(
-            filename=filename, degree=degree, flip=("hflip_" if flip else "nflip_")
+        label_file = "labels.txt"
+        with open(str(output_dir / label_file), "w") as f:
+            for img_path, _ in img_label_paths:
+                print(img_path, file=f)
+
+    def summary(self):
+        self.classes = self._parse_classes(self.preprocessed_dir)
+        # just some summary how much of each class we have
+        summary_real = {}
+        summary_augmented = {}
+
+        label_files = self._get_label_files()
+        for f in label_files:
+            with open(str(self.preprocessed_dir / f), "r") as yolo_file:
+                lines = yolo_file.readlines()
+                for line in lines:
+                    label = int(line.split(" ")[0])
+                    name = self.classes[label]
+                    if name not in summary_augmented:
+                        summary_augmented[name] = 0
+                        summary_real[name] = 0
+
+                    summary_augmented[name] += 1
+
+                    # is original
+                    if "_000_nflip_" in f:
+                        summary_real[name] += 1
+
+        summary = sorted(
+            [
+                (name, summary_real[name], summary_augmented[name])
+                for name in summary_augmented.keys()
+            ],
+            key=lambda x: x[0],
         )
-
-        img_filename = f"{filename}{ext}"
-        label_filename = f"{filename}.txt"
-
-        cv.imwrite(str(self.preprocessed_dir / img_filename), img)
-
-        with open(str(self.preprocessed_dir / label_filename), "w") as label_file:
-            for c in content:
-                label_file.write(" ".join(str(i) for i in c))
-                label_file.write("\n")
-
-            # print("Augmented: ", label_filename)
-
-    def create_train(self):
-        yolo_files = self._get_label_files()
-
-        imgs = []
-        for label_file in yolo_files:
-            file_name = os.path.splitext(label_file)[0]
-            jpg = f"{file_name}.jpg"
-            if os.path.exists(self.preprocessed_dir / jpg):
-                imgs.append(jpg)
-            else:
-                png = f"{file_name}.png"
-                imgs.append(png)
-
-        train_yolo = "train_yolo.txt"
-        with open(str(self.label_dir / train_yolo), "w") as f:
-            for img in imgs:
-                if "aug" in img:
-                    f.write(str(self.preprocessed_dir / img) + "\n")
-
-        os.symlink(
-            os.path.abspath(self.label_dir / train_yolo),
-            self.preprocessed_dir / train_yolo,
-        )
-
-        valid_yolo = "valid_yolo.txt"
-        with open(str(self.label_dir / valid_yolo), "w") as f:
-            for img in imgs:
-                if "aug" not in img:
-                    f.write(str(self.preprocessed_dir / img) + "\n")
-
-        os.symlink(
-            os.path.abspath(self.label_dir / valid_yolo),
-            self.preprocessed_dir / valid_yolo,
-        )
+        summary = [("Labels", "Real", "Augmented")] + summary
+        print(tabulate(summary))
 
     def rotate(self, img):
         return cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
@@ -331,39 +344,6 @@ class YoloAugmentator(CircuitAugmentator):
         new_w = h
         new_h = w
         return new_label, new_x, new_y, new_w, new_h
-
-    def summary(self):
-        self.classes = self._parse_classes(self.preprocessed_dir)
-        # just some summary how much of each class we have
-        summary_real = {}
-        summary_augmented = {}
-
-        label_files = self._get_label_files()
-        for f in label_files:
-            with open(str(self.preprocessed_dir / f), "r") as yolo_file:
-                lines = yolo_file.readlines()
-                for line in lines:
-                    label = int(line.split(" ")[0])
-                    name = self.classes[label]
-                    if name not in summary_augmented:
-                        summary_augmented[name] = 0
-                        summary_real[name] = 0
-
-                    summary_augmented[name] += 1
-
-                    # is original
-                    if "_000_nflip_" in f:
-                        summary_real[name] += 1
-
-        summary = sorted(
-            [
-                (name, summary_real[name], summary_augmented[name])
-                for name in summary_augmented.keys()
-            ],
-            key=lambda x: x[0],
-        )
-        summary = [("Labels", "Real", "Augmented")] + summary
-        print(tabulate(summary))
 
     def _parse_classes(self, label_dir: Path):
         with open(str(label_dir / "classes.txt"), "r") as f:
