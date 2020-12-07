@@ -91,7 +91,7 @@ class MaskDataset(Dataset):
         img = np.array(augmented["image"]).astype(np.float32)
 
         # DEBUG
-        utils.show(cv2.cvtColor(np.uint8(img), cv2.COLOR_RGB2BGR) * np.uint8(mask)[..., np.newaxis])
+        #utils.show(cv2.cvtColor(np.uint8(img), cv2.COLOR_RGB2BGR) * np.uint8(mask)[..., np.newaxis])
 
         img = img.transpose((2, 0, 1))
 
