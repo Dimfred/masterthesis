@@ -50,39 +50,29 @@ from config import config
 
 # %%
 def get_data_loaders(train_files, val_files, img_size=224):
+    train_base_transform = [
+        ColorJitter(0.3, 0.3, 0.3, 0.3),
+        Resize((img_size, img_size)),
+        RandomResizedCrop(img_size, scale=(0.5, 1.0)),
+        # RandomAffine(10.0),
+        RandomRotation(360),
+        RandomHorizontalFlip(),
+    ]
     train_transform = Compose(
         [
-            # ColorJitter(0.3, 0.3, 0.3, 0.3),
-            Resize((img_size, img_size)),
-            # RandomResizedCrop(img_size, scale=(1.0, 1.0)),
-            # RandomAffine(10.),
-            # RandomRotation(13.),
-            # RandomHorizontalFlip(),
+            *train_base_transform,
             ToTensor(),
         ]
     )
-    # TODO maybe ToTensor has no effect on the mask
-    train_mask_transform = Compose(
-        [
-            Resize((img_size, img_size))
-    #     RandomResizedCrop(img_size, scale=(0.8, 1.2)),
-    #     RandomAffine(10.),
-    #     RandomRotation(13.),
-    #     RandomHorizontalFlip(),
-    #     ToTensor(),
-        ]
-    )
+    train_mask_transform = Compose(train_base_transform)
+
     val_transform = Compose(
         [
             Resize((img_size, img_size)),
             ToTensor(),
         ]
     )
-    val_mask_transform = Compose(
-        [
-            Resize((img_size, img_size))
-        ]
-    )
+    val_mask_transform = Compose([Resize((img_size, img_size))])
 
     train_loader = DataLoader(
         MaskDataset(train_files, train_transform, mask_transform=train_mask_transform),
@@ -137,8 +127,8 @@ def run_cv(img_size, pre_trained):
     # device = "cpu"
 
     # for n, (train_idx, val_idx) in enumerate(kf.split(image_files)):
-        # train_files = image_files[train_idx]
-        # val_files = image_files[val_idx]
+    # train_files = image_files[train_idx]
+    # val_files = image_files[val_idx]
 
     train_files = utils.list_imgs(config.train_out_dir)
     val_files = utils.list_imgs(config.valid_out_dir)
@@ -165,7 +155,7 @@ def run_cv(img_size, pre_trained):
 
     writer.close()
 
-        # break
+    # break
 
 
 if __name__ == "__main__":
