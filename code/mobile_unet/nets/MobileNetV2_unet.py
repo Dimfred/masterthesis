@@ -39,12 +39,12 @@ class MobileNetV2_unet(nn.Module):
         # dimfred
         self.dconv5 = nn.ConvTranspose2d(16, 8, 4, padding=1, stride=2)
         self.invres5 = InvertedResidual(16, 8, 1, 6)
-        self.conv_last = nn.Conv2d(8, 3, 1)
+        self.conv_last = nn.Conv2d(8, 4, 1)
 
         # original
         # self.conv_last = nn.Conv2d(16, 3, 1)
 
-        self.conv_score = nn.Conv2d(3, 1, 1)
+        self.conv_score = nn.Conv2d(4, n_class, 1)
 
         self._init_weights()
 

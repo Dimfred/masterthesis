@@ -38,10 +38,8 @@ class MaskDataset(Dataset):
             self.mask_transform = mask_transform
 
     def __getitem__(self, idx):
-        # print(self.img_files)
         img = Image.open(self.img_files[idx])
         img = np.array(img)
-        # utils.show(img)
 
         mask = np.load(self.mask_files[idx])
 
@@ -52,10 +50,10 @@ class MaskDataset(Dataset):
 
         if utils.isme():
             # DEBUG
-            utils.show(
-               cv.cvtColor(np.uint8(img), cv.COLOR_RGB2BGR)
-               * np.uint8(mask)[..., np.newaxis]
-            )
+            # utils.show(
+            #    cv.cvtColor(np.uint8(img), cv.COLOR_RGB2BGR)
+            #    * np.uint8(mask)[..., np.newaxis]
+            # )
             pass
 
         img = img.transpose((2, 0, 1)) / 255.0

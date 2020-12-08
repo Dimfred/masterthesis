@@ -35,12 +35,15 @@ class Trainer:
 
         for inputs, labels in data_loader:
             inputs = inputs.to(self.device)
+            # labels = one_hot()
             labels = labels.to(self.device)
 
             optimizer.zero_grad()
 
             with torch.set_grad_enabled(True):
                 outputs = model(inputs)
+                # outputs = outputs.to("cpu")
+                # labels = labels.to("cpu")
                 loss = self.criterion(outputs, labels)
                 loss.backward()
                 optimizer.step()
