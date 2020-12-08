@@ -41,6 +41,10 @@ class Trainer:
 
             with torch.set_grad_enabled(True):
                 outputs = model(inputs)
+                loss = self.criterion(outputs, labels)
+                loss.backward()
+                optimizer.step()
+
                 # TODO why the fuck does the model not output the same size???
                 # labels = torch.nn.functional.interpolate(
                 #     labels, scale_factor=0.5, mode="linear", align_corners=False
@@ -48,11 +52,7 @@ class Trainer:
                 # outputs = torch.nn.functional.interpolate(
                 #     outputs, scale_factor=2, mode="bilinear", align_corners=False
                 # )
-                print("outputs.shape\n{}".format(outputs.shape))
-                loss = self.criterion(outputs, labels)
-                loss.backward()
-                # print(loss)
-                optimizer.step()
+                # print("outputs.shape\n{}".format(outputs.shape))
 
             running_loss += loss.item() * inputs.size(0)
 

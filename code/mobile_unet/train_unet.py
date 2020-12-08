@@ -134,8 +134,8 @@ def run_training(img_size, pretrained):
     ##########
     ## LOSS ##
     ##########
-    # loss = myloss.dice_loss(scale=2)
-    loss = losses.dice.DiceLoss()
+    loss = myloss.dice_loss(scale=1)
+    # loss = losses.dice.DiceLoss()
     # loss = losses.focal.FocalLoss(
     #     config.unet.focal_alpha,
     #     config.unet.focal_gamma,

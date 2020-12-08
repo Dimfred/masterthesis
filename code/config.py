@@ -78,12 +78,12 @@ config.yolo.full_classes = architecture_type["edges"][0]
 config.unet = EasyDict()
 
 # net
-config.unet.n_classes = 1000
-config.unet.input_size = 224
+config.unet.n_classes = 2
+config.unet.input_size = 416
 
 # training
 config.unet.lr = 1e-4
-config.unet.batch_size = 32 if not utils.isme() else 8
+config.unet.batch_size = 32 if not utils.isme() else 4
 config.unet.n_epochs = 10000
 
 # loss functions
@@ -103,10 +103,7 @@ config.unet.output_dir = Path("output")
 
 # utility
 config.unet.random_state = 42
-config.unet.n_workers = config.unet.batch_size if not utils.isme() else 1
-
-#################
-# augmentations #
+config.unet.n_workers = config.unet.batch_size
 #################
 
 config.augment = EasyDict()

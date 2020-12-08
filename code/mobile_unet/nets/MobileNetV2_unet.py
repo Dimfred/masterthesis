@@ -56,11 +56,11 @@ class MobileNetV2_unet(nn.Module):
         x = self.backbone.dense1(x)
         x = self.backbone.dense2(x)
         x0 = x
-        print("dense_output\n{}".format(x.shape))
+        # print("dense_output\n{}".format(x.shape))
 
         for n in range(0, 2):
             x = self.backbone.features[n](x)
-            print("x.shape\n{}".format(x.shape))
+            # print("x.shape\n{}".format(x.shape))
 
         x1 = x
         logging.debug((x1.shape, "x1"))
