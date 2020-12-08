@@ -5,6 +5,7 @@ from tabulate import tabulate
 import math
 
 from pathlib import Path
+from cached_property import cached_property
 
 try:
     from numba import njit
@@ -70,10 +71,10 @@ def resize_max_axis(img, size):
         return resize(img, width=size)
 
 
+import socket
+_is_me = socket.gethostname() == "dimfred-schlap"
 def isme():
-    import socket
-
-    return socket.gethostname() == "dimfred-schlap"
+    return _is_me
 
 
 def uniquecolors(n):

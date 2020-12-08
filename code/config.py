@@ -79,11 +79,11 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 224
+config.unet.input_size = 320
 
 # training
 config.unet.lr = 1e-4
-config.unet.batch_size = 24 if not utils.isme() else 4
+config.unet.batch_size = 16 if not utils.isme() else 4
 config.unet.n_epochs = 10000
 
 # loss functions
@@ -102,7 +102,7 @@ config.unet.output_dir = Path("output")
 
 # utility
 config.unet.random_state = 42
-config.unet.n_workers = 16 # config.unet.batch_size
+config.unet.n_workers = 16 if not utils.isme() else 1
 
 ###################
 ## augmentations ##
