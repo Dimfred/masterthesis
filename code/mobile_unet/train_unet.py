@@ -40,17 +40,19 @@ def get_data_loaders(train_files, val_files, img_size=224):
         [
             A.Resize(img_size, img_size, always_apply=True),
             A.Cutout(num_holes=8, max_h_size=8, max_w_size=8, fill_value=0, p=0.3),
+            # rotation
             A.RandomRotate90(p=1.0),
-            A.HorizontalFlip(p=0.5),
             A.Rotate(30, border_mode=cv.BORDER_CONSTANT, p=0.3),
+            A.HorizontalFlip(p=0.5),
+            # pixel augmentation
             A.RandomBrightnessContrast(),
-            A.RandomGamma((90, 110), p=1.0),
+            A.RandomGamma((90, 110), p=0.3),
             A.CLAHE(),
             A.GaussianBlur((3, 3), sigma_limit=1.2, p=0.3),
             A.HueSaturationValue(
-                hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10, p=1
+                hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10, p=0.3
             ),
-            A.RGBShift(r_shift_limit=10, g_shift_limit=10, b_shift_limit=10, p=1),
+            A.RGBShift(r_shift_limit=10, g_shift_limit=10, b_shift_limit=10, p=0.3),
             # TODO cutout
             # A.Resize(img_size, img_size, interpolation=cv2.INTER_CUBIC),
             # TODO
