@@ -3,7 +3,7 @@
 import argparse
 import logging
 import os
-from albumentations.augmentations.transforms import RandomResizedCrop
+from albumentations.augmentations.transforms import Cutout, RandomResizedCrop
 
 import numpy as np
 import pandas as pd
@@ -17,6 +17,7 @@ from tensorboardX import SummaryWriter
 from torch.utils.data import DataLoader
 
 import albumentations as A
+import cv2 as cv
 import loss as myloss
 
 from dataset import MaskDataset
@@ -37,16 +38,19 @@ from config import config
 def get_data_loaders(train_files, val_files, img_size=224):
     train_transform = A.Compose(
         [
-            A.RandomResizedCrop(img_size, img_size),
-            # A.Resize(img_size, img_size),
-            # A.RandomCrop(img_size, img_size),
-            A.Rotate(360),
-            A.HorizontalFlip(),
+            A.Resize(img_size, img_size, always_apply=True),
+            A.Cutout(num_holes=8, max_h_size=8, max_w_size=8, fill_value=0, p=0.3),
+            A.RandomRotate90(p=1.0),
+            A.HorizontalFlip(p=0.5),
+            A.Rotate(30, border_mode=cv.BORDER_CONSTANT, p=0.3),
             A.RandomBrightnessContrast(),
-            A.HueSaturationValue(),
-            A.RGBShift(),
-            A.RandomGamma(),
-            # A.CLAHE(),
+            A.RandomGamma((90, 110), p=1.0),
+            A.CLAHE(),
+            A.GaussianBlur((3, 3), sigma_limi=1.2, p=0.3),
+            A.HueSaturationValue(
+                hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10, p=1
+            ),
+            A.RGBShift(r_shift_limit=10, g_shift_limit=10, b_shift_limit=10, p=1),
             # TODO cutout
             # A.Resize(img_size, img_size, interpolation=cv2.INTER_CUBIC),
             # TODO
