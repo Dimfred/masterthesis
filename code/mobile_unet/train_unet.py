@@ -46,7 +46,7 @@ def get_data_loaders(train_files, val_files, img_size=224):
             A.RandomBrightnessContrast(),
             A.RandomGamma((90, 110), p=1.0),
             A.CLAHE(),
-            A.GaussianBlur((3, 3), sigma_limi=1.2, p=0.3),
+            A.GaussianBlur((3, 3), sigma_limit=1.2, p=0.3),
             A.HueSaturationValue(
                 hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10, p=1
             ),
