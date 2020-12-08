@@ -79,11 +79,11 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 288
+config.unet.input_size = 224
 
 # training
 config.unet.lr = 1e-4
-config.unet.batch_size = 32 if not utils.isme() else 4
+config.unet.batch_size = 24 if not utils.isme() else 4
 config.unet.n_epochs = 10000
 
 # loss functions
@@ -100,16 +100,17 @@ config.unet.pretrained_path = None
 # config.unet.pretrained_path = Path("weights/mobilenetv2.pth.tar")
 config.unet.output_dir = Path("output")
 
-
 # utility
 config.unet.random_state = 42
-config.unet.n_workers = config.unet.batch_size
-#################
+config.unet.n_workers = 16 # config.unet.batch_size
+
+###################
+## augmentations ##
+###################
 
 config.augment = EasyDict()
 config.augment.yolo = EasyDict()
 config.augment.unet = EasyDict()
-
 
 config.augment.yolo.img_params = EasyDict()
 config.augment.yolo.img_params.channels = 1
