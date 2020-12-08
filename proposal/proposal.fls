@@ -28,9 +28,11 @@ INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT /home/dimfred/workspaces/uni/ma/proposal/proposal.bbl
+INPUT /home/dimfred/workspaces/uni/ma/proposal/proposal.bbl
+INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmti10.tfm
 OUTPUT /home/dimfred/workspaces/uni/ma/proposal/proposal.pdf
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
-INPUT /usr/share/texmf-dist/fonts/tfm/public/cm/cmti10.tfm
 INPUT /home/dimfred/workspaces/uni/ma/proposal/proposal.aux
 INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb

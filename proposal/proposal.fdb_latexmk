@@ -1,7 +1,14 @@
 # Fdb version 3
-["pdflatex"] 1607086690 "/home/dimfred/workspaces/uni/ma/proposal/proposal.tex" "/home/dimfred/workspaces/uni/ma/proposal/proposal.pdf" "proposal" 1607101589
-  "/home/dimfred/workspaces/uni/ma/proposal/proposal.aux" 1607086690 8 a94a2480d3289e625eea47cd1b285758 ""
-  "/home/dimfred/workspaces/uni/ma/proposal/proposal.tex" 1607101589 4492 9d39499384e8d41705e4ded5cb26fdb1 ""
+["bibtex proposal"] 1607439100 "proposal.aux" "proposal.bbl" "proposal" 1607439178
+  "/usr/share/texmf-dist/bibtex/bst/base/unsrt.bst" 1591545468 18030 1376b4b231b50c66211e47e42eda2875 ""
+  "proposal.aux" 1607439100 358 6e54ec8990b21a28a72376b2872d8e78 "pdflatex"
+  "proposal.bib" 1607438969 3338 997dc6b819994828b4546da9f52ab374 ""
+  (generated)
+  "proposal.blg"
+  "proposal.bbl"
+["pdflatex"] 1607439100 "/home/dimfred/workspaces/uni/ma/proposal/proposal.tex" "/home/dimfred/workspaces/uni/ma/proposal/proposal.pdf" "proposal" 1607439178
+  "/home/dimfred/workspaces/uni/ma/proposal/proposal.aux" 1607439100 358 6e54ec8990b21a28a72376b2872d8e78 ""
+  "/home/dimfred/workspaces/uni/ma/proposal/proposal.tex" 1607439178 4839 e4a22c2c24cdea43273881254239a9b5 ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1591545468 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1591545468 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1591545468 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -21,11 +28,12 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1591545468 33301 a3134070eacafb10b1f371612ce2650d ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1607073228 4727905 1b81189106e2406a827797a37162c1c0 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1607073223 2514053 f64f033c490698d39fc9f6c28c7ed5f1 ""
-  "proposal.aux" 1607086690 8 a94a2480d3289e625eea47cd1b285758 "pdflatex"
-  "proposal.tex" 1607101589 4492 9d39499384e8d41705e4ded5cb26fdb1 ""
+  "proposal.aux" 1607439100 358 6e54ec8990b21a28a72376b2872d8e78 "pdflatex"
+  "proposal.bbl" 1607439100 2094 936627e3fcede628fd2243ecea232cad "bibtex proposal"
+  "proposal.tex" 1607439178 4839 e4a22c2c24cdea43273881254239a9b5 ""
   (generated)
+  "/home/dimfred/workspaces/uni/ma/proposal/proposal.pdf"
+  "/home/dimfred/workspaces/uni/ma/proposal/proposal.log"
   "proposal.aux"
   "proposal.log"
   "proposal.pdf"
-  "/home/dimfred/workspaces/uni/ma/proposal/proposal.log"
-  "/home/dimfred/workspaces/uni/ma/proposal/proposal.pdf"

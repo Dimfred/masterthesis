@@ -9,6 +9,7 @@ from pathlib import Path
 try:
     from numba import njit
 except:
+
     def njit(f):
         def decorator(*args, **kwargs):
             return f(*args, **kwargs)
@@ -67,6 +68,12 @@ def resize_max_axis(img, size):
         return resize(img, height=size)
     else:
         return resize(img, width=size)
+
+
+def isme():
+    import socket
+
+    return socket.gethostname() == "dimfred-schlap"
 
 
 def uniquecolors(n):

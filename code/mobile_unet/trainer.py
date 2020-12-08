@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import torch
 
 
@@ -16,9 +17,9 @@ class Trainer:
             val_epoch_loss = self._val_on_epoch(model, optimizer)
 
             hist = {
-                'epoch': epoch,
-                'train_loss': train_epoch_loss,
-                'val_loss': val_epoch_loss,
+                "epoch": epoch,
+                "train_loss": train_epoch_loss,
+                "val_loss": val_epoch_loss,
             }
             self.history.append(hist)
 
@@ -40,8 +41,17 @@ class Trainer:
 
             with torch.set_grad_enabled(True):
                 outputs = model(inputs)
+                # TODO why the fuck does the model not output the same size???
+                # labels = torch.nn.functional.interpolate(
+                #     labels, scale_factor=0.5, mode="linear", align_corners=False
+                # )
+                # outputs = torch.nn.functional.interpolate(
+                #     outputs, scale_factor=2, mode="bilinear", align_corners=False
+                # )
+                print("outputs.shape\n{}".format(outputs.shape))
                 loss = self.criterion(outputs, labels)
                 loss.backward()
+                # print(loss)
                 optimizer.step()
 
             running_loss += loss.item() * inputs.size(0)

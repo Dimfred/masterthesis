@@ -1,0 +1,51 @@
+\begin{thebibliography}{1}
+
+\bibitem{ctxindependentsvm}
+K.~S. {Refaat}, W.~N. {Helmy}, A.~H. {Ali}, M.~S. {AbdelGhany}, and A.~F.
+  {Atiya}.
+\newblock A new approach for context-independent handwritten offline diagram
+  recognition using support vector machines.
+\newblock In {\em 2008 IEEE International Joint Conference on Neural Networks
+  (IEEE World Congress on Computational Intelligence)}, pages 177--182, 2008.
+
+\bibitem{anngeo}
+Mahdi Rabbani, Reza Khoshkangini, H.S. Nagendraswamy, and Mauro Conti.
+\newblock Hand drawn optical circuit recognition.
+\newblock {\em Procedia Computer Science}, 84:41 -- 48, 2016.
+\newblock Proceeding of the Seventh International Conference on Intelligent
+  Human Computer Interaction (IHCI 2015).
+
+\bibitem{basecnn}
+M.~{Günay}, M.~{Köseoğlu}, and Ö. {Yıldırım}.
+\newblock Classification of hand-drawn basic circuit components using
+  convolutional neural networks.
+\newblock In {\em 2020 International Congress on Human-Computer Interaction,
+  Optimization and Robotic Applications (HORA)}, pages 1--5, 2020.
+
+\bibitem{texturesmo}
+Sarkar N. et~al. Roy~S., Bhattacharya~A.
+\newblock Offline hand-drawn circuit component recognition using texture and
+  shape-based features.
+\newblock {\em Springer Science+Business Media}, August 2020.
+
+\bibitem{seghogsvm}
+Momina Moetesum, Syed~Waqar Younus, Muhammad~Ali Warsi, and Imran Siddiqi.
+\newblock Segmentation and recognition of electronic components in hand-drawn
+  circuit diagrams.
+\newblock {\em EAI Endorsed Transactions on Scalable Information Systems},
+  5(16), 4 2018.
+
+\bibitem{fouriersvm}
+Mayuri~D. Patare and M.~Joshi.
+\newblock Hand-drawn digital logic circuit component recognition using svm.
+\newblock {\em International Journal of Computer Applications}, 143:24--28,
+  2016.
+
+\bibitem{knnfull}
+B.~{Edwards} and V.~{Chandran}.
+\newblock Machine recognition of hand-drawn circuit diagrams.
+\newblock In {\em 2000 IEEE International Conference on Acoustics, Speech, and
+  Signal Processing. Proceedings (Cat. No.00CH37100)}, volume~6, pages
+  3618--3621 vol.6, 2000.
+
+\end{thebibliography}

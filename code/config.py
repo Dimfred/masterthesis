@@ -1,5 +1,6 @@
 from easydict import EasyDict
 from pathlib import Path
+import utils
 
 config = EasyDict()
 
@@ -69,6 +70,40 @@ config.yolo.classes = classes
 config.yolo.weights = weights
 config.yolo.full_classes = architecture_type["edges"][0]
 
+
+###############
+# mobile_unet #
+###############
+
+config.unet = EasyDict()
+
+# net
+config.unet.n_classes = 1000
+config.unet.input_size = 224
+
+# training
+config.unet.lr = 1e-4
+config.unet.batch_size = 32 if not utils.isme() else 8
+config.unet.n_epochs = 10000
+
+# loss functions
+config.unet.focal_alpha = 0.8
+config.unet.focal_gamma = 2
+config.unet.focal_reduction = "sum"
+
+# optimizers
+config.unet.amsgrad = True
+# config.unet.weight_decay = 0.07
+# config.unet.betas = (0.9, 0.999)
+
+config.unet.pretrained_path = None
+# config.unet.pretrained_path = Path("weights/mobilenetv2.pth.tar")
+config.unet.output_dir = Path("output")
+
+
+# utility
+config.unet.random_state = 42
+config.unet.n_workers = config.unet.batch_size if not utils.isme() else 1
 
 #################
 # augmentations #

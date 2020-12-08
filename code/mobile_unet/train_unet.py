@@ -3,45 +3,29 @@
 import argparse
 import logging
 import os
+from albumentations.augmentations.transforms import RandomResizedCrop
 
 import numpy as np
 import pandas as pd
 import torch
+from torch import optim as optimizers
+from torchgeometry import losses
+
 from sklearn.model_selection import KFold
 from tensorboardX import SummaryWriter
-from torch.optim import Adam
-from torch.utils.data import DataLoader
-from torchvision.transforms import (
-    Compose,
-    RandomResizedCrop,
-    RandomRotation,
-    RandomHorizontalFlip,
-    ToTensor,
-    Resize,
-    RandomAffine,
-    ColorJitter,
-)
-import albumentations as A
 
-from dataset import MaskDataset, get_img_files
-from loss import dice_loss
+from torch.utils.data import DataLoader
+
+import albumentations as A
+import loss as myloss
+
+from dataset import MaskDataset
+
 from nets.MobileNetV2_unet import MobileNetV2_unet
 from trainer import Trainer
 
-np.random.seed(1)
-torch.backends.cudnn.deterministic = True
-torch.manual_seed(1)
 
-# %%
-N_CV = 5
-BATCH_SIZE = 32
-LR = 1e-4
-
-N_EPOCHS = 1000
-IMG_SIZE = 224
-RANDOM_STATE = 1
-
-EXPERIMENT = "train_unet"
+EXPERIMENT = "unet"
 OUT_DIR = "outputs/{}".format(EXPERIMENT)
 
 # dimfred
@@ -51,28 +35,11 @@ from config import config
 
 # %%
 def get_data_loaders(train_files, val_files, img_size=224):
-    # train_transform = Compose(
-    #     [
-    #         # ColorJitter(0.3, 0.3, 0.3, 0.3),
-    #         Resize((img_size, img_size)),
-    #         # RandomResizedCrop(img_size, scale=(0.8, 1)),
-    #         # RandomAffine(10.0),
-    #         # RandomRotation(360),
-    #         # RandomHorizontalFlip(),
-    #     ]
-    # )
-    # val_transform = Compose(
-    #     [
-    #         Resize((img_size, img_size)),
-    #     ]
-    # )
-
     train_transform = A.Compose(
         [
-            A.RandomResizedCrop(
-                img_size,
-                img_size,
-            ),
+            A.RandomResizedCrop(img_size, img_size),
+            # A.Resize(img_size, img_size),
+            # A.RandomCrop(img_size, img_size),
             A.Rotate(360),
             A.HorizontalFlip(),
             A.RandomBrightnessContrast(),
@@ -80,17 +47,14 @@ def get_data_loaders(train_files, val_files, img_size=224):
             A.RGBShift(),
             A.RandomGamma(),
             # A.CLAHE(),
-            # MyCoarseDropout(
-            #     min_holes=1,
-            #     max_holes=8,
-            #     max_height=32,
-            #     max_width=32,
-            # ),
+            # TODO cutout
             # A.Resize(img_size, img_size, interpolation=cv2.INTER_CUBIC),
+            # TODO
             # A.Normalize(
             #     mean=[0.485, 0.456, 0.406],
             #     std=[0.229, 0.224, 0.225],
             # ),
+            # TODO ???
             # ToTensorV2(),
         ]
     )
@@ -99,17 +63,17 @@ def get_data_loaders(train_files, val_files, img_size=224):
 
     train_loader = DataLoader(
         MaskDataset(train_files, train_transform),
-        batch_size=BATCH_SIZE,
+        batch_size=config.unet.batch_size,
         shuffle=True,
         pin_memory=True,
-        num_workers=4,
+        num_workers=config.unet.n_workers,
     )
     valid_loader = DataLoader(
         MaskDataset(val_files, valid_transform),
-        batch_size=BATCH_SIZE,
+        batch_size=config.unet.batch_size,
         shuffle=False,
         pin_memory=True,
-        num_workers=4,
+        num_workers=config.unet.n_workers,
     )
 
     return train_loader, valid_loader
@@ -142,21 +106,13 @@ def log_hist(df_hist):
     logger.debug("")
 
 
-def run_cv(img_size, pre_trained):
-    # image_files = get_img_files()
-    # kf = KFold(n_splits=N_CV, random_state=RANDOM_STATE, shuffle=True)
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    # device = "cpu"
-
-    # for n, (train_idx, val_idx) in enumerate(kf.split(image_files)):
-    # train_files = image_files[train_idx]
-    # val_files = image_files[val_idx]
-
-    train_files = utils.list_imgs(config.train_out_dir)
-    val_files = utils.list_imgs(config.valid_out_dir)
+def run_training(img_size, pretrained):
+    np.random.seed(config.unet.random_state)
+    torch.manual_seed(config.unet.random_state)
+    torch.backends.cudnn.deterministic = True
 
     writer = SummaryWriter()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def on_after_epoch(m, df_hist):
         # save_best_model(n, m, df_hist)
@@ -164,26 +120,47 @@ def run_cv(img_size, pre_trained):
         write_on_board(writer, df_hist)
         log_hist(df_hist)
 
-    criterion = dice_loss(scale=2)
-    data_loaders = get_data_loaders(train_files, val_files, img_size)
-    trainer = Trainer(data_loaders, criterion, device, on_after_epoch)
+    train_files = utils.list_imgs(config.train_out_dir)
+    val_files = utils.list_imgs(config.valid_out_dir)
+    data_loaders = get_data_loaders(train_files, val_files, config.unet.input_size)
 
-    model = MobileNetV2_unet(pre_trained=pre_trained)
+    model = MobileNetV2_unet(
+        n_class=config.unet.n_classes,
+        input_size=config.unet.input_size,
+        pretrained=config.unet.pretrained_path,
+    )
     model.to(device)
-    optimizer = Adam(model.parameters(), lr=LR)
 
-    hist = trainer.train(model, optimizer, num_epochs=N_EPOCHS)
-    # hist.to_csv("{}/{}-hist.csv".format(OUT_DIR, n), index=False)
+    ##########
+    ## LOSS ##
+    ##########
+    # loss = myloss.dice_loss(scale=2)
+    loss = losses.dice.DiceLoss()
+    # loss = losses.focal.FocalLoss(
+    #     config.unet.focal_alpha,
+    #     config.unet.focal_gamma,
+    #     config.unet.focal_reduction,
+    # )
+    # TODO tversky
+
+    ###############
+    ## OPTIMIZER ##
+    ###############
+    optimizer = optimizers.Adam(
+        model.parameters(), lr=config.unet.lr, amsgrad=config.unet.amsgrad
+    )
+    # TODO sgd
+
+    trainer = Trainer(data_loaders, loss, device, on_after_epoch)
+    hist = trainer.train(model, optimizer, num_epochs=config.unet.n_epochs)
+
     hist.to_csv("{}/{}-hist.csv".format(OUT_DIR, 0), index=False)
-
     writer.close()
-
-    # break
 
 
 if __name__ == "__main__":
-    if not os.path.exists(OUT_DIR):
-        os.makedirs(OUT_DIR)
+    if not config.unet.output_dir.exists():
+        os.makedirs(config.unet.output_dir)
 
     logger = logging.getLogger("logger")
     logger.setLevel(logging.DEBUG)
@@ -200,10 +177,12 @@ if __name__ == "__main__":
         help="image size",
     )
     parser.add_argument(
-        "--pre_trained",
+        "--pretrained",
         type=str,
         help="path of pre trained weight",
     )
     args, _ = parser.parse_known_args()
     print(args)
-    run_cv(**vars(args))
+    run_training(**vars(args))
+
+# %%

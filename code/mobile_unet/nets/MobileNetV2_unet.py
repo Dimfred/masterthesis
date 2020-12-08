@@ -10,11 +10,19 @@ from nets.MobileNetV2 import MobileNetV2, InvertedResidual
 
 
 class MobileNetV2_unet(nn.Module):
-    def __init__(self, pre_trained='weights/mobilenet_v2.pth.tar', mode='train'):
+    def __init__(
+        self,
+        n_class=1000,
+        input_size=224,
+        pretrained="weights/mobilenet_v2.pth.tar",
+        mode="train",
+    ):
         super(MobileNetV2_unet, self).__init__()
 
         self.mode = mode
-        self.backbone = MobileNetV2()
+        self.backbone = MobileNetV2(
+            n_class=n_class, input_size=input_size, width_mult=1.0
+        )
 
         self.dconv1 = nn.ConvTranspose2d(1280, 96, 4, padding=1, stride=2)
         self.invres1 = InvertedResidual(192, 96, 1, 6)
@@ -28,79 +36,84 @@ class MobileNetV2_unet(nn.Module):
         self.dconv4 = nn.ConvTranspose2d(24, 16, 4, padding=1, stride=2)
         self.invres4 = InvertedResidual(32, 16, 1, 6)
 
-        self.conv_last = nn.Conv2d(16, 3, 1)
+        # dimfred
+        self.dconv5 = nn.ConvTranspose2d(16, 8, 4, padding=1, stride=2)
+        self.invres5 = InvertedResidual(16, 8, 1, 6)
+        self.conv_last = nn.Conv2d(8, 3, 1)
+
+        # original
+        # self.conv_last = nn.Conv2d(16, 3, 1)
 
         self.conv_score = nn.Conv2d(3, 1, 1)
 
         self._init_weights()
 
-        if pre_trained is not None:
+        if pretrained is not None:
             # self.backbone.load_state_dict(torch.load(pre_trained, map_location="cpu"))
-            self.backbone.load_state_dict(torch.load(pre_trained))
+            self.backbone.load_state_dict(torch.load(pretrained))
 
-    def forward(self, x):
+    def forward(self, x, *args, **kwargs):
+        x = self.backbone.dense1(x)
+        x = self.backbone.dense2(x)
+        x0 = x
+        print("dense_output\n{}".format(x.shape))
+
         for n in range(0, 2):
             x = self.backbone.features[n](x)
+            print("x.shape\n{}".format(x.shape))
+
         x1 = x
-        logging.debug((x1.shape, 'x1'))
+        logging.debug((x1.shape, "x1"))
 
         for n in range(2, 4):
             x = self.backbone.features[n](x)
         x2 = x
-        logging.debug((x2.shape, 'x2'))
+        logging.debug((x2.shape, "x2"))
 
         for n in range(4, 7):
             x = self.backbone.features[n](x)
         x3 = x
-        logging.debug((x3.shape, 'x3'))
+        logging.debug((x3.shape, "x3"))
 
         for n in range(7, 14):
             x = self.backbone.features[n](x)
         x4 = x
-        logging.debug((x4.shape, 'x4'))
+        logging.debug((x4.shape, "x4"))
 
         for n in range(14, 19):
             x = self.backbone.features[n](x)
         x5 = x
-        logging.debug((x5.shape, 'x5'))
+        logging.debug((x5.shape, "x5"))
 
-        up1 = torch.cat([
-            x4,
-            self.dconv1(x)
-        ], dim=1)
+        up1 = torch.cat([x4, self.dconv1(x)], dim=1)
         up1 = self.invres1(up1)
-        logging.debug((up1.shape, 'up1'))
+        logging.debug((up1.shape, "up1"))
 
-        up2 = torch.cat([
-            x3,
-            self.dconv2(up1)
-        ], dim=1)
+        up2 = torch.cat([x3, self.dconv2(up1)], dim=1)
         up2 = self.invres2(up2)
-        logging.debug((up2.shape, 'up2'))
+        logging.debug((up2.shape, "up2"))
 
-        up3 = torch.cat([
-            x2,
-            self.dconv3(up2)
-        ], dim=1)
+        up3 = torch.cat([x2, self.dconv3(up2)], dim=1)
         up3 = self.invres3(up3)
-        logging.debug((up3.shape, 'up3'))
+        logging.debug((up3.shape, "up3"))
 
-        up4 = torch.cat([
-            x1,
-            self.dconv4(up3)
-        ], dim=1)
+        up4 = torch.cat([x1, self.dconv4(up3)], dim=1)
         up4 = self.invres4(up4)
-        logging.debug((up4.shape, 'up4'))
 
-        x = self.conv_last(up4)
-        logging.debug((x.shape, 'conv_last'))
+        # dimfred
+        up5 = torch.cat([x0, self.dconv5(up4)], dim=1)
+        up5 = self.invres5(up5)
+
+        # x = self.conv_last(up4)
+        x = self.conv_last(up5)
+        logging.debug((x.shape, "conv_last"))
 
         x = self.conv_score(x)
-        logging.debug((x.shape, 'conv_score'))
+        logging.debug((x.shape, "conv_score"))
 
         if self.mode == "eval":
-            x = interpolate(x, scale_factor=2, mode='bilinear', align_corners=False)
-            logging.debug((x.shape, 'interpolate'))
+            x = interpolate(x, scale_factor=2, mode="bilinear", align_corners=False)
+            logging.debug((x.shape, "interpolate"))
 
         x = torch.sigmoid(x)
         # x = torch.nn.Softmax(x)
@@ -111,7 +124,7 @@ class MobileNetV2_unet(nn.Module):
         for m in self.modules():
             if isinstance(m, nn.Conv2d) or isinstance(m, nn.ConvTranspose2d):
                 n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
-                m.weight.data.normal_(0, math.sqrt(2. / n))
+                m.weight.data.normal_(0, math.sqrt(2.0 / n))
                 if m.bias is not None:
                     m.bias.data.zero_()
             elif isinstance(m, nn.BatchNorm2d):
@@ -122,7 +135,7 @@ class MobileNetV2_unet(nn.Module):
                 m.bias.data.zero_()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Debug
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     net = MobileNetV2_unet(pre_trained=None)
