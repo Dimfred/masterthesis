@@ -79,7 +79,7 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 416
+config.unet.input_size = 288
 
 # training
 config.unet.lr = 1e-4
