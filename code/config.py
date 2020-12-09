@@ -83,8 +83,8 @@ config.unet.input_size = 288
 
 # training
 config.unet.lr = 5e-4
-config.unet.batch_size = 64 if not utils.isme() else 64
-config.unet.subdivision = 4 if not utils.isme() else 16
+config.unet.batch_size = 32 if not utils.isme() else 64
+config.unet.subdivision = 2 if not utils.isme() else 16
 config.unet.n_epochs = 10000
 
 # loss functions
