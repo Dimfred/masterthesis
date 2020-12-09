@@ -122,9 +122,14 @@ class MobileNetV2_unet(nn.Module):
         #     logging.debug((x.shape, "interpolate"))
 
         if self.mode == "eval":
-            x[x < 0.5] = 0
-            x[x >= 0.5] = 1
-            return x
+            mask_bg = x[0, 0]
+            mask_fg = x[0, 1]
+
+            mask = (1 * mask_bg + (1 - mask_fg)) / 2
+            mask[mask < 0.5] = 0
+            mask[mask >= 0.5] = 1
+            mask = torch.logical_not(mask)
+            return torch.unsqueeze(mask, 0)
 
         return x
 

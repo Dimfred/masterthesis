@@ -98,7 +98,7 @@ def evaluate():
                 i = i.cpu().numpy().transpose((1, 2, 0)) * 255
                 # l = l.cpu().numpy().reshape(*img_size)
                 l = l.cpu().numpy() * 255
-                o = o.cpu().numpy()
+                o = o.cpu().numpy() * 255
                 print(o.shape)
                 # o = o.cpu().numpy().reshape(int(IMG_SIZE / 2), int(IMG_SIZE / 2)) * 255
                 # o = o.cpu().numpy().reshape(int(IMG_SIZE), int(IMG_SIZE)) #* 255

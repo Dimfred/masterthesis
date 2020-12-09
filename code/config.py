@@ -79,7 +79,7 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 320
+config.unet.input_size = 288
 
 # training
 config.unet.lr = 1e-4
@@ -97,8 +97,8 @@ config.unet.amsgrad = True
 # config.unet.weight_decay = 0.07
 # config.unet.betas = (0.9, 0.999)
 
-config.unet.pretrained_path = None
-# config.unet.pretrained_path = Path("weights/mobilenetv2.pth.tar")
+# config.unet.pretrained_path = None
+config.unet.pretrained_path = Path("outputs/unet/0-best.pth")
 config.unet.output_dir = Path("outputs")
 
 # utility

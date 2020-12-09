@@ -140,8 +140,10 @@ def run_training(img_size, pretrained):
     model = MobileNetV2_unet(
         n_class=config.unet.n_classes,
         input_size=config.unet.input_size,
-        pretrained=config.unet.pretrained_path,
+        pretrained=None
     )
+    if config.unet.pretrained_path is not None:
+        model.load_state_dict(torch.load(str(config.unet.pretrained_path)))
     model.to(device)
 
     ##########
