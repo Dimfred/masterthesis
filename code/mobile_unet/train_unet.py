@@ -92,9 +92,9 @@ def get_data_loaders(train_files, val_files, img_size=224):
     return train_loader, valid_loader
 
 
-def save_best_model(cv, model, df_hist):
+def save_best_model(model, df_hist):
     if df_hist["val_loss"].tail(1).iloc[0] <= df_hist["val_loss"].min():
-        torch.save(model.state_dict(), "{}/{}-best.pth".format(OUT_DIR, cv))
+        torch.save(model.state_dict(), "{}/best.pth".format(OUT_DIR))
 
 
 def write_on_board(writer, df_hist):
@@ -129,7 +129,7 @@ def run_training(img_size, pretrained):
 
     def on_after_epoch(m, df_hist):
         # save_best_model(n, m, df_hist)
-        save_best_model(0, m, df_hist)
+        save_best_model(m, df_hist)
         write_on_board(writer, df_hist)
         log_hist(df_hist)
 

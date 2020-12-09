@@ -78,7 +78,7 @@ def evaluate():
     # CPU version
     # model.load_state_dict(torch.load('{}/{}-best.pth'.format(OUT_DIR, n), map_location="cpu"))
     # GPU version
-    loaded = torch.load("weights/{}-best.pth".format(N))
+    loaded = torch.load("weights/best.pth")
     model.load_state_dict(loaded)
     model.to(device)
     model.eval()
