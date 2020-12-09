@@ -83,12 +83,13 @@ config.unet.input_size = 320
 
 # training
 config.unet.lr = 1e-4
-config.unet.batch_size = 16 if not utils.isme() else 4
+config.unet.batch_size = 64 if not utils.isme() else 64
+config.unet.subdivision = 4 if not utils.isme() else 16
 config.unet.n_epochs = 10000
 
 # loss functions
 config.unet.focal_alpha = 0.8
-config.unet.focal_gamma = 2
+config.unet.focal_gamma = 3
 config.unet.focal_reduction = "sum"
 
 # optimizers
@@ -98,7 +99,7 @@ config.unet.amsgrad = True
 
 config.unet.pretrained_path = None
 # config.unet.pretrained_path = Path("weights/mobilenetv2.pth.tar")
-config.unet.output_dir = Path("output")
+config.unet.output_dir = Path("outputs")
 
 # utility
 config.unet.random_state = 42

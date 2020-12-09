@@ -81,6 +81,7 @@ class MobileNetV2(nn.Module):
             [6, 320, 1, 1],
         ]
 
+        # maybe without batchnorm
         self.dense1 = conv_bn(3, 8, 1)
         self.dense2 = conv_bn(8, 8, 1)
 
@@ -120,6 +121,8 @@ class MobileNetV2(nn.Module):
         self._initialize_weights()
 
     def forward(self, x):
+        x = self.dense1(x)
+        x = self.dense2(x)
         x = self.features(x)
         x = x.mean(3).mean(2)
         x = self.classifier(x)

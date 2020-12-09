@@ -4,12 +4,17 @@ import torch
 
 
 class Trainer:
-    def __init__(self, data_loaders, criterion, device, on_after_epoch=None):
+    def __init__(self, data_loaders, criterion, device, subdivision=1, on_after_epoch=None):
         self.data_loaders = data_loaders
         self.criterion = criterion
         self.device = device
         self.history = []
         self.on_after_epoch = on_after_epoch
+
+        self.subdivision = subdivision
+        assert subdivision > 0
+
+        self.batch_counter = 0
 
     def train(self, model, optimizer, num_epochs):
         for epoch in range(num_epochs):
@@ -33,20 +38,35 @@ class Trainer:
         data_loader = self.data_loaders[0]
         running_loss = 0.0
 
+        optimizer.zero_grad()
         for inputs, labels in data_loader:
+            self.batch_counter += 1
+
             inputs = inputs.to(self.device)
             # labels = one_hot()
             labels = labels.to(self.device)
 
-            optimizer.zero_grad()
+            pred = model(inputs)
+            loss = self.criterion(pred, labels)
+            loss.backward()
 
-            with torch.set_grad_enabled(True):
-                outputs = model(inputs)
+            if (self.batch_counter+1) % self.subdivision == 0:
+                with torch.set_grad_enabled(True):
+                    optimizer.step()
+
+                optimizer.zero_grad()
+
+            running_loss += loss.item() #* inputs.size(0)
+
+
+            # with torch.set_grad_enabled(True):
                 # outputs = outputs.to("cpu")
                 # labels = labels.to("cpu")
-                loss = self.criterion(outputs, labels)
-                loss.backward()
-                optimizer.step()
+                # outputs = torch.cat([outputs, 1 - outputs], 1)
+                # print(outputs.shape)
+                # loss = self.criterion(pred, labels)
+                # loss.backward()
+                # optimizer.step()
 
                 # TODO why the fuck does the model not output the same size???
                 # labels = torch.nn.functional.interpolate(
@@ -57,7 +77,7 @@ class Trainer:
                 # )
                 # print("outputs.shape\n{}".format(outputs.shape))
 
-            running_loss += loss.item() * inputs.size(0)
+            # running_loss += loss.item() #* inputs.size(0)
 
         epoch_loss = running_loss / len(data_loader.dataset)
 
@@ -78,7 +98,7 @@ class Trainer:
                 outputs = model(inputs)
                 loss = self.criterion(outputs, labels)
 
-            running_loss += loss.item() * inputs.size(0)
+            running_loss += loss.item() #* inputs.size(0)
 
         epoch_loss = running_loss / len(data_loader.dataset)
 

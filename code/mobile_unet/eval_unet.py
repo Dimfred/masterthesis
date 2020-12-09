@@ -73,7 +73,12 @@ def evaluate():
     val_files = utils.list_imgs(config.valid_out_dir)
     data_loader = get_data_loaders(val_files)
 
-    model = MobileNetV2_unet(mode="eval", pre_trained=None)
+    model = MobileNetV2_unet(
+        mode="eval",
+        n_class=config.unet.n_classes,
+        input_size=config.unet.input_size,
+        pretrained=config.unet.pretrained_path,
+    )
     # CPU version
     # model.load_state_dict(torch.load('{}/{}-best.pth'.format(OUT_DIR, n), map_location="cpu"))
     # GPU version
@@ -89,16 +94,24 @@ def evaluate():
             outputs = model(inputs)
 
             for i, l, o in zip(inputs, labels, outputs):
+                # move channels back
                 i = i.cpu().numpy().transpose((1, 2, 0)) * 255
-                l = l.cpu().numpy().reshape(*img_size) * 255
+                # l = l.cpu().numpy().reshape(*img_size)
+                l = l.cpu().numpy() * 255
+                o = o.cpu().numpy()
+                print(o.shape)
                 # o = o.cpu().numpy().reshape(int(IMG_SIZE / 2), int(IMG_SIZE / 2)) * 255
-                o = o.cpu().numpy().reshape(int(IMG_SIZE), int(IMG_SIZE)) * 255
+                # o = o.cpu().numpy().reshape(int(IMG_SIZE), int(IMG_SIZE)) #* 255
 
-                i = cv2.resize(i.astype(np.uint8), img_size)
-                l = cv2.resize(l.astype(np.uint8), img_size)
-                o = cv2.resize(o.astype(np.uint8), img_size)
+                # i = cv2.resize(i.astype(np.uint8), img_size)
+                # l = cv2.resize(l.astype(np.uint8), img_size)
+                # o = cv2.resize(o.astype(np.uint8), img_size)
 
-                utils.show(i, l, o)
+                i = np.uint8(i)
+                l = np.uint8(l)
+                o = np.uint8(o)
+
+                utils.show(i, l, o[..., np.newaxis])
 
                 # plt.subplot(131)
                 # plt.imshow(i)

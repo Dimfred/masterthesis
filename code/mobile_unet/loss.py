@@ -1,4 +1,5 @@
 from torch.nn.functional import interpolate
+import torch
 
 
 def dice_loss(scale=None):

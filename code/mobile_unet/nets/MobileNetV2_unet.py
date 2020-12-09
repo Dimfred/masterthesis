@@ -39,12 +39,15 @@ class MobileNetV2_unet(nn.Module):
         # dimfred
         self.dconv5 = nn.ConvTranspose2d(16, 8, 4, padding=1, stride=2)
         self.invres5 = InvertedResidual(16, 8, 1, 6)
-        self.conv_last = nn.Conv2d(8, 4, 1)
+        self.conv_last = nn.Conv2d(8, 3, 1)
 
         # original
         # self.conv_last = nn.Conv2d(16, 3, 1)
 
-        self.conv_score = nn.Conv2d(4, n_class, 1)
+        # for > 2 classes
+        self.conv_score = nn.Conv2d(3, n_class, 1)
+
+        # self.conv_score = nn.Conv2d(3, 1, 1)
 
         self._init_weights()
 
@@ -111,12 +114,17 @@ class MobileNetV2_unet(nn.Module):
         x = self.conv_score(x)
         logging.debug((x.shape, "conv_score"))
 
-        if self.mode == "eval":
-            x = interpolate(x, scale_factor=2, mode="bilinear", align_corners=False)
-            logging.debug((x.shape, "interpolate"))
-
-        x = torch.sigmoid(x)
+        # x = torch.sigmoid(x)
         # x = torch.nn.Softmax(x)
+
+        # if self.mode == "eval":
+        #     x = interpolate(x, scale_factor=2, mode="bilinear", align_corners=False)
+        #     logging.debug((x.shape, "interpolate"))
+
+        if self.mode == "eval":
+            x[x < 0.5] = 0
+            x[x >= 0.5] = 1
+            return x
 
         return x
 

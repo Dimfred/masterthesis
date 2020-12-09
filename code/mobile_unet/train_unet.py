@@ -76,14 +76,14 @@ def get_data_loaders(train_files, val_files, img_size=224):
 
     train_loader = DataLoader(
         MaskDataset(train_files, train_transform),
-        batch_size=config.unet.batch_size,
+        batch_size=int(config.unet.batch_size / config.unet.subdivision),
         shuffle=True,
         pin_memory=True,
         num_workers=config.unet.n_workers,
     )
     valid_loader = DataLoader(
         MaskDataset(val_files, valid_transform),
-        batch_size=config.unet.batch_size,
+        batch_size=int(config.unet.batch_size / config.unet.subdivision),
         shuffle=False,
         pin_memory=True,
         num_workers=config.unet.n_workers,
@@ -163,7 +163,13 @@ def run_training(img_size, pretrained):
     )
     # TODO sgd
 
-    trainer = Trainer(data_loaders, loss, device, on_after_epoch)
+    trainer = Trainer(
+        data_loaders,
+        loss,
+        device,
+        subdivision=config.unet.subdivision,
+        on_after_epoch=on_after_epoch,
+    )
     hist = trainer.train(model, optimizer, num_epochs=config.unet.n_epochs)
 
     hist.to_csv("{}/{}-hist.csv".format(OUT_DIR, 0), index=False)
