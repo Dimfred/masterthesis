@@ -37,15 +37,17 @@ class MobileNetV2_unet(nn.Module):
         self.invres4 = InvertedResidual(32, 16, 1, 6)
 
         # dimfred
-        self.dconv5 = nn.ConvTranspose2d(16, 8, 4, padding=1, stride=2)
-        self.invres5 = InvertedResidual(16, 8, 1, 6)
-        self.conv_last = nn.Conv2d(8, 3, 1)
+        self.dconv5 = nn.ConvTranspose2d(16, n_class, 4, padding=1, stride=2)
+        # self.invres5 = InvertedResidual(16, 8, 1, 6)
+        # self.conv_last = nn.Conv2d(8, 3, 1)
+
+        self.softmax = nn.Softmax(dim=1)
 
         # original
         # self.conv_last = nn.Conv2d(16, 3, 1)
 
         # for > 2 classes
-        self.conv_score = nn.Conv2d(3, n_class, 1)
+        # self.conv_score = nn.Conv2d(3, n_class, 1)
 
         # self.conv_score = nn.Conv2d(3, 1, 1)
 
@@ -56,9 +58,9 @@ class MobileNetV2_unet(nn.Module):
             self.backbone.load_state_dict(torch.load(pretrained))
 
     def forward(self, x, *args, **kwargs):
-        x = self.backbone.dense1(x)
-        x = self.backbone.dense2(x)
-        x0 = x
+        # x = self.backbone.dense1(x)
+        # x = self.backbone.dense2(x)
+        # x0 = x
         # print("dense_output\n{}".format(x.shape))
 
         for n in range(0, 2):
@@ -103,16 +105,19 @@ class MobileNetV2_unet(nn.Module):
         up4 = torch.cat([x1, self.dconv4(up3)], dim=1)
         up4 = self.invres4(up4)
 
+        up5 = self.dconv5(up4)
+        x = self.softmax(up5)
+
         # dimfred
-        up5 = torch.cat([x0, self.dconv5(up4)], dim=1)
-        up5 = self.invres5(up5)
+        # up5 = torch.cat([x0, self.dconv5(up4)], dim=1)
+        # up5 = self.invres5(up5)
 
         # x = self.conv_last(up4)
-        x = self.conv_last(up5)
-        logging.debug((x.shape, "conv_last"))
+        # x = self.conv_last(up5)
+        # logging.debug((x.shape, "conv_last"))
 
-        x = self.conv_score(x)
-        logging.debug((x.shape, "conv_score"))
+        # x = self.conv_score(x)
+        # logging.debug((x.shape, "conv_score"))
 
         # x = torch.sigmoid(x)
         # x = torch.nn.Softmax(x)
@@ -126,6 +131,7 @@ class MobileNetV2_unet(nn.Module):
             mask_fg = x[0, 1]
 
             mask = (1 * mask_bg + (1 - mask_fg)) / 2
+            # mask = mask_fg
             mask[mask < 0.5] = 0
             mask[mask >= 0.5] = 1
             mask = torch.logical_not(mask)

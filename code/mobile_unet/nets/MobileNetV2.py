@@ -82,8 +82,8 @@ class MobileNetV2(nn.Module):
         ]
 
         # maybe without batchnorm
-        self.dense1 = conv_bn(3, 8, 1)
-        self.dense2 = conv_bn(8, 8, 1)
+        # self.dense1 = conv_bn(3, 8, 1)
+        # self.dense2 = conv_bn(8, 8, 1)
 
 
         # building first layer
@@ -92,7 +92,7 @@ class MobileNetV2(nn.Module):
         self.last_channel = (
             int(last_channel * width_mult) if width_mult > 1.0 else last_channel
         )
-        self.features = [conv_bn(8, input_channel, 2)]
+        self.features = [conv_bn(3, input_channel, 2)]
         # building inverted residual blocks
         for t, c, n, s in interverted_residual_setting:
             output_channel = int(c * width_mult)
@@ -121,8 +121,8 @@ class MobileNetV2(nn.Module):
         self._initialize_weights()
 
     def forward(self, x):
-        x = self.dense1(x)
-        x = self.dense2(x)
+        # x = self.dense1(x)
+        # x = self.dense2(x)
         x = self.features(x)
         x = x.mean(3).mean(2)
         x = self.classifier(x)
