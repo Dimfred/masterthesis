@@ -56,7 +56,7 @@ class Trainer:
 
                 optimizer.zero_grad()
 
-            running_loss += loss.item() #* inputs.size(0)
+            running_loss += loss.item() * inputs.size(0)
 
 
             # with torch.set_grad_enabled(True):
@@ -98,7 +98,7 @@ class Trainer:
                 outputs = model(inputs)
                 loss = self.criterion(outputs, labels)
 
-            running_loss += loss.item() #* inputs.size(0)
+            running_loss += loss.item() * inputs.size(0)
 
         epoch_loss = running_loss / len(data_loader.dataset)
 
