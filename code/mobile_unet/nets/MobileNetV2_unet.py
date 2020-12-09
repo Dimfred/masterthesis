@@ -126,6 +126,7 @@ class MobileNetV2_unet(nn.Module):
             mask_fg = x[0, 1]
 
             mask = (1 * mask_bg + (1 - mask_fg)) / 2
+            # mask = mask_fg
             mask[mask < 0.5] = 0
             mask[mask >= 0.5] = 1
             mask = torch.logical_not(mask)
