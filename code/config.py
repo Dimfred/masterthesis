@@ -82,7 +82,7 @@ config.unet.n_classes = 2
 config.unet.input_size = 288
 
 # training
-config.unet.lr = 1e-4
+config.unet.lr = 1e-3
 config.unet.batch_size = 64 if not utils.isme() else 64
 config.unet.subdivision = 4 if not utils.isme() else 16
 config.unet.n_epochs = 10000
@@ -97,10 +97,10 @@ config.unet.amsgrad = True
 config.unet.decay = 0.0005
 config.unet.betas = (0.95, 0.999)
 
-# config.unet.pretrained_path = None
-config.unet.pretrained_path = Path("outputs/unet/0-best.pth")
+config.unet.pretrained_path = None
+# config.unet.pretrained_path = Path("outputs/unet/0-best.pth")
 config.unet.checkpoint_path = None
-config.unet.checkpoint_path = Path("weights/checkpoint.pth")
+# config.unet.checkpoint_path = Path("weights/checkpoint.pth")
 config.unet.output_dir = Path("outputs")
 
 # utility
