@@ -53,7 +53,7 @@ class MaskDataset(Dataset):
             #    cv.cvtColor(np.uint8(img), cv.COLOR_RGB2BGR)
             #    * np.uint8(mask)[..., np.newaxis]
             # )
-            utils.show(cv.cvtColor(np.uint8(img), cv.COLOR_RGB2BGR))
+            # utils.show(cv.cvtColor(np.uint8(img), cv.COLOR_RGB2BGR))
             pass
 
         img = img.transpose((2, 0, 1)) / 255.0
