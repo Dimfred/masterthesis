@@ -94,11 +94,13 @@ config.unet.focal_reduction = "sum"
 
 # optimizers
 config.unet.amsgrad = True
-# config.unet.weight_decay = 0.07
-# config.unet.betas = (0.9, 0.999)
+config.unet.decay = 0.0005
+config.unet.betas = (0.95, 0.999)
 
 # config.unet.pretrained_path = None
 config.unet.pretrained_path = Path("outputs/unet/0-best.pth")
+config.unet.checkpoint_path = None
+config.unet.checkpoint_path = Path("weights/checkpoint.pth")
 config.unet.output_dir = Path("outputs")
 
 # utility

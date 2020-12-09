@@ -20,12 +20,9 @@ torch.backends.cudnn.deterministic = True
 torch.manual_seed(1)
 
 # %%
-N_CV = 5
-IMG_SIZE = 224
 
-RANDOM_STATE = 1
 
-EXPERIMENT = "train_unet"
+EXPERIMENT = "unet"
 # EXPERIMENT = '10000_day'
 # OUT_DIR = 'outputs/{}/first_shot'.format(EXPERIMENT)
 # OUT_DIR = 'outputs/{}'.format(EXPERIMENT)
@@ -40,7 +37,7 @@ from config import config
 def get_data_loaders(val_files):
     val_transform = A.Compose(
         [
-            A.Resize(IMG_SIZE, IMG_SIZE),
+            A.Resize(config.unet.input_size, config.unet.input_size),
         ]
     )
 
@@ -56,7 +53,6 @@ def get_data_loaders(val_files):
 
 
 def evaluate():
-    img_size = (IMG_SIZE, IMG_SIZE)
     n_shown = 0
 
     # image_files = ["imgs/path"]
@@ -77,7 +73,7 @@ def evaluate():
         mode="eval",
         n_class=config.unet.n_classes,
         input_size=config.unet.input_size,
-        pretrained=config.unet.pretrained_path,
+        pretrained=None
     )
     # CPU version
     # model.load_state_dict(torch.load('{}/{}-best.pth'.format(OUT_DIR, n), map_location="cpu"))

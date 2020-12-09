@@ -140,10 +140,10 @@ def run_training(img_size, pretrained):
     model = MobileNetV2_unet(
         n_class=config.unet.n_classes,
         input_size=config.unet.input_size,
-        pretrained=None
+        pretrained=None,
     )
-    if config.unet.pretrained_path is not None:
-        model.load_state_dict(torch.load(str(config.unet.pretrained_path)))
+    if config.unet.checkpoint_path is not None:
+        model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
     model.to(device)
 
     ##########
@@ -161,7 +161,11 @@ def run_training(img_size, pretrained):
     ## OPTIMIZER ##
     ###############
     optimizer = optimizers.Adam(
-        model.parameters(), lr=config.unet.lr, amsgrad=config.unet.amsgrad
+        model.parameters(),
+        lr=config.unet.lr,
+        betas=config.unet.betas,
+        weight_decay=config.unet.decay,
+        amsgrad=config.unet.amsgrad,
     )
     # TODO sgd
 
