@@ -73,6 +73,7 @@ def evaluate():
         mode="eval",
         n_class=config.unet.n_classes,
         input_size=config.unet.input_size,
+        channels=config.unet.channels,
         pretrained=None
     )
     # CPU version

@@ -7,13 +7,15 @@ import torch.nn as nn
 from torch.nn.functional import interpolate
 
 from nets.MobileNetV2 import MobileNetV2, InvertedResidual
+from nets.MobileNetV2 import conv_1x1_bn
 
 
 class MobileNetV2_unet(nn.Module):
     def __init__(
         self,
-        n_class=1000,
+        n_classes=1000,
         input_size=224,
+        channels=3,
         pretrained="weights/mobilenet_v2.pth.tar",
         mode="train",
     ):
@@ -21,8 +23,11 @@ class MobileNetV2_unet(nn.Module):
 
         self.mode = mode
         self.backbone = MobileNetV2(
-            n_class=n_class, input_size=input_size, width_mult=1.0
+            n_classes=1000, input_size=input_size, channels=channels, width_mult=1.0
         )
+
+        # input_channel, last_channel
+        # self.dense0 = conv_1x1_bn(320, 1280)
 
         self.dconv1 = nn.ConvTranspose2d(1280, 96, 4, padding=1, stride=2)
         self.invres1 = InvertedResidual(192, 96, 1, 6)
@@ -37,7 +42,7 @@ class MobileNetV2_unet(nn.Module):
         self.invres4 = InvertedResidual(32, 16, 1, 6)
 
         # dimfred
-        self.dconv5 = nn.ConvTranspose2d(16, n_class, 4, padding=1, stride=2)
+        self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
         # self.invres5 = InvertedResidual(16, 8, 1, 6)
         # self.conv_last = nn.Conv2d(8, 3, 1)
 
@@ -54,19 +59,16 @@ class MobileNetV2_unet(nn.Module):
         self._init_weights()
 
         if pretrained is not None:
+            print("Loading pretrained weights...")
             # self.backbone.load_state_dict(torch.load(pre_trained, map_location="cpu"))
             self.backbone.load_state_dict(torch.load(pretrained))
+            print("Done loading weights.")
 
     def forward(self, x, *args, **kwargs):
-        # x = self.backbone.dense1(x)
-        # x = self.backbone.dense2(x)
-        # x0 = x
-        # print("dense_output\n{}".format(x.shape))
-
         for n in range(0, 2):
-            x = self.backbone.features[n](x)
             # print("x.shape\n{}".format(x.shape))
-
+            x = self.backbone.features[n](x)
+        # print("x.shape\n{}".format(x.shape))
         x1 = x
         logging.debug((x1.shape, "x1"))
 
@@ -85,10 +87,13 @@ class MobileNetV2_unet(nn.Module):
         x4 = x
         logging.debug((x4.shape, "x4"))
 
-        for n in range(14, 19):
+        # TODO 1x1 layer removed hence 18 instead of 19
+        for n in range(14, 18):
             x = self.backbone.features[n](x)
-        x5 = x
-        logging.debug((x5.shape, "x5"))
+        # x5 = x
+        # logging.debug((x5.shape, "x5"))
+
+        x = self.backbone.conv(x)
 
         up1 = torch.cat([x4, self.dconv1(x)], dim=1)
         up1 = self.invres1(up1)

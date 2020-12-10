@@ -79,7 +79,8 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 416  #288
+config.unet.input_size = 448 #224 #608 #416  #288
+config.unet.channels = 3
 
 # training
 config.unet.lr = 5e-4
@@ -90,15 +91,16 @@ config.unet.n_epochs = 10000
 # loss functions
 config.unet.focal_alpha = 0.8
 config.unet.focal_gamma = 5
-config.unet.focal_reduction = "sum"
+config.unet.focal_reduction = "mean"
 
 # optimizers
 config.unet.amsgrad = True
-config.unet.decay = 0.0005
+config.unet.decay = 0.00005
 config.unet.betas = (0.95, 0.999)
 
+# pretrained > checkpoint
 config.unet.pretrained_path = None
-# config.unet.pretrained_path = Path("outputs/unet/0-best.pth")
+config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
 config.unet.checkpoint_path = None
 # config.unet.checkpoint_path = Path("weights/checkpoint.pth")
 config.unet.output_dir = Path("outputs")
@@ -121,9 +123,9 @@ config.augment.yolo.img_params.keep_ar = True
 config.augment.yolo.img_params.resize = 1000
 
 config.augment.unet.img_params = EasyDict()
-config.augment.unet.img_params.channels = 3
+config.augment.unet.img_params.channels = 1 #config.unet.channels
 config.augment.unet.img_params.keep_ar = True
-config.augment.unet.img_params.resize = 1000
+config.augment.unet.img_params.resize = 640
 
 # whether to perform flip and rotation on the dataset
 config.augment.perform_train = True

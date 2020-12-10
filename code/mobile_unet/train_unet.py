@@ -51,12 +51,12 @@ def get_data_loaders(train_files, val_files, img_size=224):
             A.RandomGamma((90, 110), p=0.3),
             A.CLAHE(),
             A.GaussianBlur((3, 3), sigma_limit=1.2, p=0.3),
-            A.HueSaturationValue(
-                hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10, p=0.3
-            ),
-            A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.3),
+            # A.HueSaturationValue(
+            #     hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10, p=0.3
+            # ),
+            # A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.3),
             # removal
-            A.Cutout(num_holes=8, max_h_size=8, max_w_size=8, fill_value=0, p=0.3),
+            A.Cutout(num_holes=8, max_h_size=32, max_w_size=32, fill_value=0, p=0.3),
             A.RandomCrop(
                 img_size,
                 img_size,
@@ -119,12 +119,13 @@ def log_hist(df_hist):
     logger.debug("")
 
 
+# TODO print training params at the beginning
 def run_training(img_size, pretrained):
     np.random.seed(config.unet.random_state)
     torch.manual_seed(config.unet.random_state)
     torch.backends.cudnn.deterministic = True
 
-    writer = SummaryWriter()
+    writer = SummaryWriter(flush_secs=10)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def on_after_epoch(m, df_hist):
@@ -138,11 +139,12 @@ def run_training(img_size, pretrained):
     data_loaders = get_data_loaders(train_files, val_files, config.unet.input_size)
 
     model = MobileNetV2_unet(
-        n_class=config.unet.n_classes,
+        n_classes=config.unet.n_classes,
         input_size=config.unet.input_size,
-        pretrained=None,
+        channels=config.unet.channels,
+        pretrained=config.unet.pretrained_path,
     )
-    if config.unet.checkpoint_path is not None:
+    if config.unet.checkpoint_path is not None and config.unet.pretrained_path is None:
         model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
     model.to(device)
 
@@ -206,7 +208,7 @@ if __name__ == "__main__":
         help="path of pre trained weight",
     )
     args, _ = parser.parse_known_args()
-    print(args)
+    # print(args)
     run_training(**vars(args))
 
 # %%
