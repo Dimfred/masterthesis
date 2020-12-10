@@ -40,7 +40,7 @@ class Trainer:
 
         optimizer.zero_grad()
         for inputs, labels in data_loader:
-            if self.lr_scheduler is not None:
+            # if self.lr_scheduler is not None:
 
             self.batch_counter += 1
 
