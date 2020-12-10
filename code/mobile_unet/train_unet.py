@@ -195,7 +195,7 @@ def lr_scheduler(optimizer, epoch, iteration, num_iter):
 
     warmup_iter = warmup_epoch * num_iter
     current_iter = iteration + epoch * num_iter
-    max_iter = args.epochs * num_iter
+    max_iter = config.unet.n_epochs * num_iter
 
     if config.unet.lr_decay == "step":
         # TODO args
@@ -226,6 +226,8 @@ def lr_scheduler(optimizer, epoch, iteration, num_iter):
 
     for param_group in optimizer.param_groups:
         param_group["lr"] = lr
+
+    return lr
 
 
 if __name__ == "__main__":

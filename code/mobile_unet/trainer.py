@@ -4,7 +4,15 @@ import torch
 
 
 class Trainer:
-    def __init__(self, data_loaders, criterion, device, subdivision=1, on_after_epoch=None, lr_scheduler=None):
+    def __init__(
+        self,
+        data_loaders,
+        criterion,
+        device,
+        subdivision=1,
+        on_after_epoch=None,
+        lr_scheduler=None,
+    ):
         self.data_loaders = data_loaders
         self.criterion = criterion
         self.device = device
@@ -15,6 +23,7 @@ class Trainer:
         assert subdivision > 0
 
         self.batch_counter = 0
+        self.lr_scheduler = lr_scheduler
 
     def train(self, model, optimizer, num_epochs):
         for epoch in range(num_epochs):
@@ -43,8 +52,8 @@ class Trainer:
         data_loader_len = len(data_loader)
         for batch_idx, (inputs, labels) in enumerate(data_loader):
             if self.lr_scheduler is not None:
-                self.lr_scheduler(optimizer, epoch, batch_idx, data_loader_len)
-
+                lr = self.lr_scheduler(optimizer, epoch, batch_idx, data_loader_len)
+                print("Learning_rate:", lr)
 
             self.batch_counter += 1
 
@@ -56,7 +65,7 @@ class Trainer:
             loss = self.criterion(pred, labels)
             loss.backward()
 
-            if (self.batch_counter+1) % self.subdivision == 0:
+            if (self.batch_counter + 1) % self.subdivision == 0:
                 with torch.set_grad_enabled(True):
                     optimizer.step()
 
@@ -64,24 +73,23 @@ class Trainer:
 
             running_loss += loss.item() * inputs.size(0)
 
-
             # with torch.set_grad_enabled(True):
-                # outputs = outputs.to("cpu")
-                # labels = labels.to("cpu")
-                # outputs = torch.cat([outputs, 1 - outputs], 1)
-                # print(outputs.shape)
-                # loss = self.criterion(pred, labels)
-                # loss.backward()
-                # optimizer.step()
+            # outputs = outputs.to("cpu")
+            # labels = labels.to("cpu")
+            # outputs = torch.cat([outputs, 1 - outputs], 1)
+            # print(outputs.shape)
+            # loss = self.criterion(pred, labels)
+            # loss.backward()
+            # optimizer.step()
 
-                # TODO why the fuck does the model not output the same size???
-                # labels = torch.nn.functional.interpolate(
-                #     labels, scale_factor=0.5, mode="linear", align_corners=False
-                # )
-                # outputs = torch.nn.functional.interpolate(
-                #     outputs, scale_factor=2, mode="bilinear", align_corners=False
-                # )
-                # print("outputs.shape\n{}".format(outputs.shape))
+            # TODO why the fuck does the model not output the same size???
+            # labels = torch.nn.functional.interpolate(
+            #     labels, scale_factor=0.5, mode="linear", align_corners=False
+            # )
+            # outputs = torch.nn.functional.interpolate(
+            #     outputs, scale_factor=2, mode="bilinear", align_corners=False
+            # )
+            # print("outputs.shape\n{}".format(outputs.shape))
 
             # running_loss += loss.item() #* inputs.size(0)
 
