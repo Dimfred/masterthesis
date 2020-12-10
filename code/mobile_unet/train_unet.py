@@ -54,10 +54,10 @@ def get_data_loaders(train_files, val_files, img_size=224):
             A.RandomGamma((90, 110), p=0.3),
             A.CLAHE(),
             A.GaussianBlur((3, 3), sigma_limit=1.2, p=0.3),
-            # A.HueSaturationValue(
-            #     hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10, p=0.3
-            # ),
-            # A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.3),
+            A.HueSaturationValue(
+                hue_shift_limit=10, sat_shift_limit=10, val_shift_limit=10, p=0.3
+            ),
+            A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.3),
             # removal
             A.Cutout(num_holes=8, max_h_size=32, max_w_size=32, fill_value=0, p=0.3),
             A.RandomCrop(

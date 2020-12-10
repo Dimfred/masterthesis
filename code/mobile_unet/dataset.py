@@ -60,7 +60,9 @@ class MaskDataset(Dataset):
         # utils.show(img)
         # img = np.expand_dims(img, axis=2)
 
-        img = np.repeat(img[..., np.newaxis], 3, -1)
+        # when using grayscale
+        # img = np.repeat(img[..., np.newaxis], 3, -1)
+
         img = img.transpose((2, 0, 1))
         img = img / 255.0
 

@@ -86,11 +86,11 @@ config.unet.channels = 3
 config.unet.lr = 5e-4
 config.unet.batch_size = 32 if not utils.isme() else 64
 config.unet.subdivision = 4 if not utils.isme() else 16
-config.unet.n_epochs = 300
+config.unet.n_epochs = 200
 
 # lr scheduler
 config.unet.lr_decay = "cos" # "linear", "schedule", step
-config.unet.lr_burn_in = 15
+config.unet.lr_burn_in = 10
 
 # loss functions
 config.unet.focal_alpha = 0.8
@@ -127,7 +127,7 @@ config.augment.yolo.img_params.keep_ar = True
 config.augment.yolo.img_params.resize = 1000
 
 config.augment.unet.img_params = EasyDict()
-config.augment.unet.img_params.channels = 1 #config.unet.channels
+config.augment.unet.img_params.channels = 3 #config.unet.channels
 config.augment.unet.img_params.keep_ar = True
 config.augment.unet.img_params.resize = 640
 
