@@ -93,8 +93,8 @@ config.unet.lr_decay = "cos" # "linear", "schedule", step
 config.unet.lr_burn_in = 10
 
 # loss functions
-config.unet.focal_alpha = 0.25 #0.8
-config.unet.focal_gamma = 5
+config.unet.focal_alpha = 0.8
+config.unet.focal_gamma = 2
 config.unet.focal_reduction = "mean"
 
 # optimizers
