@@ -71,7 +71,7 @@ class Trainer:
 
                 optimizer.zero_grad()
 
-            running_loss += loss.item() * inputs.size(0)
+                running_loss += loss.item() * inputs.size(0)
 
             # with torch.set_grad_enabled(True):
             # outputs = outputs.to("cpu")
