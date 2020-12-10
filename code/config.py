@@ -90,7 +90,7 @@ config.unet.n_epochs = 10000
 
 # loss functions
 config.unet.focal_alpha = 0.8
-config.unet.focal_gamma = 5
+config.unet.focal_gamma = 2
 config.unet.focal_reduction = "mean"
 
 # optimizers
