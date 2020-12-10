@@ -60,7 +60,7 @@ class MaskDataset(Dataset):
         # utils.show(img)
 
         # grayscale
-        img = np.expand_dims(img, axis=2)
+        #img = np.expand_dims(img, axis=2)
 
         # grayscale and rgb pretrained
         # img = np.repeat(img[..., np.newaxis], 3, -1)

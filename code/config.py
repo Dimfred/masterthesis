@@ -80,7 +80,7 @@ config.unet = EasyDict()
 # net
 config.unet.n_classes = 2
 config.unet.input_size = 448 #224 #608 #416  #288
-config.unet.channels = 1
+config.unet.channels = 3
 
 # training
 config.unet.lr = 5e-4
@@ -94,7 +94,7 @@ config.unet.lr_burn_in = 10
 
 # loss functions
 config.unet.focal_alpha = 0.8
-config.unet.focal_gamma = 2
+config.unet.focal_gamma = 10
 config.unet.focal_reduction = "mean"
 
 # optimizers
@@ -104,9 +104,9 @@ config.unet.betas = (0.95, 0.999)
 
 # priority[pretrained] > priority[checkpoint]
 config.unet.pretrained_path = None
-#config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
+config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
 config.unet.checkpoint_path = None
-# config.unet.checkpoint_path = Path("weights/checkpoint.pth")
+#config.unet.checkpoint_path = Path("weights/checkpoint.pth")
 config.unet.output_dir = Path("outputs")
 
 # utility
@@ -122,12 +122,12 @@ config.augment.yolo = EasyDict()
 config.augment.unet = EasyDict()
 
 config.augment.yolo.img_params = EasyDict()
-config.augment.yolo.img_params.channels = 1
+config.augment.yolo.img_params.channels = 3
 config.augment.yolo.img_params.keep_ar = True
 config.augment.yolo.img_params.resize = 1000
 
 config.augment.unet.img_params = EasyDict()
-config.augment.unet.img_params.channels = 1 #config.unet.channels
+config.augment.unet.img_params.channels = 3 #config.unet.channels
 config.augment.unet.img_params.keep_ar = True
 config.augment.unet.img_params.resize = 640
 
