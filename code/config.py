@@ -80,11 +80,11 @@ config.unet = EasyDict()
 # net
 config.unet.n_classes = 2
 config.unet.input_size = 448 #224 #608 #416  #288
-config.unet.channels = 3
+config.unet.channels = 1
 
 # training
 config.unet.lr = 5e-4
-config.unet.batch_size = 32 if not utils.isme() else 64
+config.unet.batch_size = 32 if not utils.isme() else 32
 config.unet.subdivision = 4 if not utils.isme() else 16
 config.unet.n_epochs = 200
 
@@ -93,7 +93,7 @@ config.unet.lr_decay = "cos" # "linear", "schedule", step
 config.unet.lr_burn_in = 10
 
 # loss functions
-config.unet.focal_alpha = 0.8
+config.unet.focal_alpha = 0.25 #0.8
 config.unet.focal_gamma = 5
 config.unet.focal_reduction = "mean"
 
@@ -104,7 +104,7 @@ config.unet.betas = (0.95, 0.999)
 
 # priority[pretrained] > priority[checkpoint]
 config.unet.pretrained_path = None
-config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
+#config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
 config.unet.checkpoint_path = None
 # config.unet.checkpoint_path = Path("weights/checkpoint.pth")
 config.unet.output_dir = Path("outputs")
