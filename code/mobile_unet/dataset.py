@@ -58,9 +58,11 @@ class MaskDataset(Dataset):
             pass
 
         # utils.show(img)
-        # img = np.expand_dims(img, axis=2)
 
-        # when using grayscale
+        # grayscale
+        img = np.expand_dims(img, axis=2)
+
+        # grayscale and rgb pretrained
         # img = np.repeat(img[..., np.newaxis], 3, -1)
 
         img = img.transpose((2, 0, 1))
