@@ -464,9 +464,9 @@ class LabelAdjuster:
 
 
 if __name__ == "__main__":
-    # label_dir = config.train_dir
+    label_dir = config.train_dir
     #label_dir = config.valid_dir
-    label_dir = config.train_out_dir
+    # label_dir = config.train_out_dir
     # label_dir = config.data / "tmp"
     for img_path in utils.list_imgs(label_dir):
         label_path = utils.segmentation_label_from_img(img_path)

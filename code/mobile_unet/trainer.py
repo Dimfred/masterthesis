@@ -18,7 +18,7 @@ class Trainer:
 
     def train(self, model, optimizer, num_epochs):
         for epoch in range(num_epochs):
-            train_epoch_loss = self._train_on_epoch(model, optimizer)
+            train_epoch_loss = self._train_on_epoch(model, optimizer, epoch)
             val_epoch_loss = self._val_on_epoch(model, optimizer)
 
             hist = {
@@ -33,14 +33,18 @@ class Trainer:
 
         return pd.DataFrame(self.history)
 
-    def _train_on_epoch(self, model, optimizer):
+    def _train_on_epoch(self, model, optimizer, epoch):
         model.train()
         data_loader = self.data_loaders[0]
         running_loss = 0.0
 
         optimizer.zero_grad()
-        for inputs, labels in data_loader:
-            # if self.lr_scheduler is not None:
+
+        data_loader_len = len(data_loader)
+        for batch_idx, (inputs, labels) in enumerate(data_loader):
+            if self.lr_scheduler is not None:
+                self.lr_scheduler(optimizer, epoch, batch_idx, data_loader_len)
+
 
             self.batch_counter += 1
 

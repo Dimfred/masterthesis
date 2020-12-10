@@ -153,6 +153,8 @@ for img_name in [
     # "17_00.jpg"
     # "17_01.jpg"
     # "17_02.jpg"
+    # "17_03.jpg"
+    # "17_04.jpg"
 ]:
     low = 30
     high = 2 * low

@@ -6,11 +6,14 @@ import os
 
 import numpy as np
 import pandas as pd
+import math
+
 import torch
 from torch import optim as optimizers
 from torchgeometry import losses
 
 from sklearn.model_selection import KFold
+
 # from tensorboardX import SummaryWriter
 # from tensorboard import SummaryWriter
 from torch.utils.tensorboard import SummaryWriter
@@ -184,32 +187,46 @@ def run_training(img_size, pretrained):
     hist.to_csv("{}/{}-hist.csv".format(OUT_DIR, 0), index=False)
     writer.close()
 
-def lr_scheduler(optimizer, epoch, iteration, num_iter):
-    lr = optimizer.param_groups[0]['lr']
 
-    warmup_epoch = 5 if args.warmup else 0
+def lr_scheduler(optimizer, epoch, iteration, num_iter):
+    lr = optimizer.param_groups[0]["lr"]
+
+    warmup_epoch = config.unet.lr_burn_in
+
     warmup_iter = warmup_epoch * num_iter
     current_iter = iteration + epoch * num_iter
     max_iter = args.epochs * num_iter
 
-    if args.lr_decay == 'step':
-        lr = args.lr * (args.gamma ** ((current_iter - warmup_iter) // (max_iter - warmup_iter)))
-    elif args.lr_decay == 'cos':
-        lr = args.lr * (1 + cos(pi * (current_iter - warmup_iter) / (max_iter - warmup_iter))) / 2
-    elif args.lr_decay == 'linear':
+    if config.unet.lr_decay == "step":
+        # TODO args
+        lr = args.lr * (
+            args.gamma ** ((current_iter - warmup_iter) // (max_iter - warmup_iter))
+        )
+    elif config.unet.lr_decay == "cos":
+        lr = (
+            config.unet.lr
+            * (
+                1
+                + math.cos(
+                    math.pi * (current_iter - warmup_iter) / (max_iter - warmup_iter)
+                )
+            )
+            / 2
+        )
+    elif config.unet.lr_decay == "linear":
         lr = args.lr * (1 - (current_iter - warmup_iter) / (max_iter - warmup_iter))
-    elif args.lr_decay == 'schedule':
+    elif args.lr_decay == "schedule":
         count = sum([1 for s in args.schedule if s <= epoch])
         lr = args.lr * pow(args.gamma, count)
     else:
-        raise ValueError('Unknown lr mode {}'.format(args.lr_decay))
+        raise ValueError("Unknown lr mode {}".format(args.lr_decay))
 
     if epoch < warmup_epoch:
-        lr = args.lr * current_iter / warmup_iter
-
+        lr = config.unet.lr * current_iter / warmup_iter
 
     for param_group in optimizer.param_groups:
-        param_group['lr'] = lr
+        param_group["lr"] = lr
+
 
 if __name__ == "__main__":
     if not config.unet.output_dir.exists():

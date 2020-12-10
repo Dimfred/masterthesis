@@ -88,6 +88,10 @@ config.unet.batch_size = 32 if not utils.isme() else 64
 config.unet.subdivision = 4 if not utils.isme() else 16
 config.unet.n_epochs = 10000
 
+# lr scheduler
+config.unet.lr_decay = "cos" # "linear", "schedule", step
+config.unet.lr_burn_in = 30
+
 # loss functions
 config.unet.focal_alpha = 0.8
 config.unet.focal_gamma = 5
