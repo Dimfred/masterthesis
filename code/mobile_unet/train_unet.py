@@ -3,7 +3,6 @@
 import argparse
 import logging
 import os
-from albumentations.augmentations.transforms import Cutout, RandomResizedCrop
 
 import numpy as np
 import pandas as pd
@@ -20,7 +19,6 @@ from torch.utils.data import DataLoader
 
 import albumentations as A
 import cv2 as cv
-import loss as myloss
 
 from dataset import MaskDataset
 
@@ -179,12 +177,39 @@ def run_training(img_size, pretrained):
         device,
         subdivision=config.unet.subdivision,
         on_after_epoch=on_after_epoch,
+        lr_scheduler=lr_scheduler,
     )
     hist = trainer.train(model, optimizer, num_epochs=config.unet.n_epochs)
 
     hist.to_csv("{}/{}-hist.csv".format(OUT_DIR, 0), index=False)
     writer.close()
 
+def lr_scheduler(optimizer, epoch, iteration, num_iter):
+    lr = optimizer.param_groups[0]['lr']
+
+    warmup_epoch = 5 if args.warmup else 0
+    warmup_iter = warmup_epoch * num_iter
+    current_iter = iteration + epoch * num_iter
+    max_iter = args.epochs * num_iter
+
+    if args.lr_decay == 'step':
+        lr = args.lr * (args.gamma ** ((current_iter - warmup_iter) // (max_iter - warmup_iter)))
+    elif args.lr_decay == 'cos':
+        lr = args.lr * (1 + cos(pi * (current_iter - warmup_iter) / (max_iter - warmup_iter))) / 2
+    elif args.lr_decay == 'linear':
+        lr = args.lr * (1 - (current_iter - warmup_iter) / (max_iter - warmup_iter))
+    elif args.lr_decay == 'schedule':
+        count = sum([1 for s in args.schedule if s <= epoch])
+        lr = args.lr * pow(args.gamma, count)
+    else:
+        raise ValueError('Unknown lr mode {}'.format(args.lr_decay))
+
+    if epoch < warmup_epoch:
+        lr = args.lr * current_iter / warmup_iter
+
+
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr
 
 if __name__ == "__main__":
     if not config.unet.output_dir.exists():

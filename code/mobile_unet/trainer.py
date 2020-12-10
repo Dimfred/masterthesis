@@ -4,7 +4,7 @@ import torch
 
 
 class Trainer:
-    def __init__(self, data_loaders, criterion, device, subdivision=1, on_after_epoch=None):
+    def __init__(self, data_loaders, criterion, device, subdivision=1, on_after_epoch=None, lr_scheduler=None):
         self.data_loaders = data_loaders
         self.criterion = criterion
         self.device = device
@@ -40,6 +40,8 @@ class Trainer:
 
         optimizer.zero_grad()
         for inputs, labels in data_loader:
+            if self.lr_scheduler is not None:
+
             self.batch_counter += 1
 
             inputs = inputs.to(self.device)

@@ -71,7 +71,7 @@ def evaluate():
 
     model = MobileNetV2_unet(
         mode="eval",
-        n_class=config.unet.n_classes,
+        n_classes=config.unet.n_classes,
         input_size=config.unet.input_size,
         channels=config.unet.channels,
         pretrained=None
