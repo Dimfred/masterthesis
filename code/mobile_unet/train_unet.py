@@ -12,7 +12,9 @@ from torch import optim as optimizers
 from torchgeometry import losses
 
 from sklearn.model_selection import KFold
-from tensorboardX import SummaryWriter
+# from tensorboardX import SummaryWriter
+# from tensorboard import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 
 from torch.utils.data import DataLoader
 

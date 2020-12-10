@@ -98,7 +98,7 @@ config.unet.amsgrad = True
 config.unet.decay = 0.00005
 config.unet.betas = (0.95, 0.999)
 
-# pretrained > checkpoint
+# priority[pretrained] > priority[checkpoint]
 config.unet.pretrained_path = None
 config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
 config.unet.checkpoint_path = None
