@@ -128,7 +128,7 @@ config.augment.yolo.img_params.resize = 1000
 
 config.augment.unet = EasyDict()
 config.augment.unet.img_params = EasyDict()
-config.augment.unet.img_params.channels = 1 #config.unet.channels
+config.augment.unet.img_params.channels = 3 #config.unet.channels
 config.augment.unet.img_params.keep_ar = True
 config.augment.unet.img_params.resize = 640
 
