@@ -34,6 +34,7 @@ class Trainer:
                 "epoch": epoch,
                 "train_loss": train_epoch_loss,
                 "val_loss": val_epoch_loss,
+                "lr": optimizer.param_groups[0]["lr"]
             }
             self.history.append(hist)
 
@@ -53,7 +54,6 @@ class Trainer:
         for batch_idx, (inputs, labels) in enumerate(data_loader):
             if self.lr_scheduler is not None:
                 lr = self.lr_scheduler(optimizer, epoch, batch_idx, data_loader_len)
-                print("Learning_rate:", lr)
 
             self.batch_counter += 1
 

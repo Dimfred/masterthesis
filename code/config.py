@@ -79,22 +79,23 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 448 #224 #608 #416  #288
+config.unet.input_size = 448 #448 #224 #608 #416  #288
 config.unet.channels = 3
 
 # training
 config.unet.lr = 5e-4
 config.unet.batch_size = 32 if not utils.isme() else 32
 config.unet.subdivision = 4 if not utils.isme() else 16
-config.unet.n_epochs = 200
+config.unet.n_epochs = 1000
 
 # lr scheduler
-config.unet.lr_decay = "cos" # "linear", "schedule", step
+config.unet.lr_decay = "fixed" #"cos" # "linear", "schedule", step
+config.unet.lr_decay_fixed = [80, 160]
 config.unet.lr_burn_in = 10
 
 # loss functions
-config.unet.focal_alpha = 0.8
-config.unet.focal_gamma = 10
+config.unet.focal_alpha = 2.0
+config.unet.focal_gamma = 4
 config.unet.focal_reduction = "mean"
 
 # optimizers
@@ -121,13 +122,13 @@ config.augment = EasyDict()
 
 config.augment.yolo = EasyDict()
 config.augment.yolo.img_params = EasyDict()
-config.augment.yolo.img_params.channels = 3
+config.augment.yolo.img_params.channels = 1
 config.augment.yolo.img_params.keep_ar = True
 config.augment.yolo.img_params.resize = 1000
 
 config.augment.unet = EasyDict()
 config.augment.unet.img_params = EasyDict()
-config.augment.unet.img_params.channels = 3 #config.unet.channels
+config.augment.unet.img_params.channels = 1 #config.unet.channels
 config.augment.unet.img_params.keep_ar = True
 config.augment.unet.img_params.resize = 640
 

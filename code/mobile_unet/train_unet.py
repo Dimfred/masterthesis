@@ -75,7 +75,12 @@ def get_data_loaders(train_files, val_files, img_size=224):
         ]
     )
 
-    valid_transform = A.Compose([A.Resize(img_size, img_size)])
+    valid_transform = A.Compose(
+        [
+            A.Resize(img_size, img_size),
+            # A.GaussianBlur(limit=(5, 5), sigma_limit=1.2, always_apply=True),
+        ]
+    )
 
     train_loader = DataLoader(
         MaskDataset(train_files, train_transform),
@@ -108,6 +113,7 @@ def write_on_board(writer, df_hist):
         {
             "train": row.train_loss,
             "val": row.val_loss,
+            "lr": row.lr,
         },
         row.epoch,
     )
@@ -213,6 +219,10 @@ def lr_scheduler(optimizer, epoch, iteration, num_iter):
             )
             / 2
         )
+    elif config.unet.lr_decay == "fixed":
+        if config.unet.lr_decay_fixed and epoch == config.unet.lr_decay_fixed[0]:
+            lr = lr / 10
+            config.unet.lr_decay_fixed.pop()
     elif config.unet.lr_decay == "linear":
         lr = args.lr * (1 - (current_iter - warmup_iter) / (max_iter - warmup_iter))
     elif args.lr_decay == "schedule":

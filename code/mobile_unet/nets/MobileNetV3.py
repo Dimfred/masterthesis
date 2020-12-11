@@ -139,24 +139,26 @@ class InvertedResidual(nn.Module):
             return self.conv(x)
 
 
+# fmt:off
 cfg_large = [
-    # k, t, c, SE, HS, s
-    [3, 1, 16, 0, 0, 1],
-    [3, 4, 24, 0, 0, 2],
-    [3, 3, 24, 0, 0, 1],
-    [5, 3, 40, 1, 0, 2],
-    [5, 3, 40, 1, 0, 1],
-    [5, 3, 40, 1, 0, 1],
-    [3, 6, 80, 0, 1, 2],
-    [3, 2.5, 80, 0, 1, 1],
-    [3, 2.3, 80, 0, 1, 1],
-    [3, 2.3, 80, 0, 1, 1],
-    [3, 6, 112, 1, 1, 1],
-    [3, 6, 112, 1, 1, 1],
-    [5, 6, 160, 1, 1, 2],
-    [5, 6, 160, 1, 1, 1],
-    [5, 6, 160, 1, 1, 1],
+    # k, t,   c,   SE, HS, s
+    [ 3, 1,   16,  0,  0,  1],
+    [ 3, 4,   24,  0,  0,  2],
+    [ 3, 3,   24,  0,  0,  1],
+    [ 5, 3,   40,  1,  0,  2],
+    [ 5, 3,   40,  1,  0,  1],
+    [ 5, 3,   40,  1,  0,  1],
+    [ 3, 6,   80,  0,  1,  2],
+    [ 3, 2.5, 80,  0,  1,  1],
+    [ 3, 2.3, 80,  0,  1,  1],
+    [ 3, 2.3, 80,  0,  1,  1],
+    [ 3, 6,   112, 1,  1,  1],
+    [ 3, 6,   112, 1,  1,  1],
+    [ 5, 6,   160, 1,  1,  2],
+    [ 5, 6,   160, 1,  1,  1],
+    [ 5, 6,   160, 1,  1,  1],
 ]
+# fmt:on
 
 
 class MobileNetV3(nn.Module):
@@ -166,7 +168,7 @@ class MobileNetV3(nn.Module):
         mode="large",
         input_size=224,
         channels=3,
-        num_classes=1000,
+        n_classes=1000,
         width_mult=1.0,
     ):
         super(MobileNetV3, self).__init__()
@@ -201,7 +203,7 @@ class MobileNetV3(nn.Module):
             nn.Linear(exp_size, output_channel),
             h_swish(),
             nn.Dropout(0.2),
-            nn.Linear(output_channel, num_classes),
+            nn.Linear(output_channel, n_classes),
         )
 
         self._initialize_weights()

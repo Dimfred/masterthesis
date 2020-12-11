@@ -9,7 +9,9 @@ from torch.nn.functional import interpolate
 from nets.MobileNetV2 import MobileNetV2, InvertedResidual
 from nets.MobileNetV2 import conv_1x1_bn
 
+# logging.basicConfig(level=logging.DEBUG)
 
+# paper implementation
 class MobileNetV2_unet(nn.Module):
     def __init__(
         self,
@@ -65,10 +67,10 @@ class MobileNetV2_unet(nn.Module):
             print("Done loading weights.")
 
     def forward(self, x, *args, **kwargs):
+        logging.debug((x.shape, "input"))
         for n in range(0, 2):
-            # print("x.shape\n{}".format(x.shape))
             x = self.backbone.features[n](x)
-        # print("x.shape\n{}".format(x.shape))
+
         x1 = x
         logging.debug((x1.shape, "x1"))
 
@@ -90,46 +92,40 @@ class MobileNetV2_unet(nn.Module):
         # TODO 1x1 layer removed hence 18 instead of 19
         for n in range(14, 18):
             x = self.backbone.features[n](x)
-        # x5 = x
-        # logging.debug((x5.shape, "x5"))
 
         x = self.backbone.conv(x)
+        x5 = x
+        logging.debug((x5.shape, "x5"))
 
-        up1 = torch.cat([x4, self.dconv1(x)], dim=1)
+        dc1 = self.dconv1(x)
+        up1 = torch.cat([x4, dc1], dim=1)
         up1 = self.invres1(up1)
+        logging.debug((dc1.shape, "dc1"))
         logging.debug((up1.shape, "up1"))
 
-        up2 = torch.cat([x3, self.dconv2(up1)], dim=1)
+        dc2 = self.dconv2(up1)
+        up2 = torch.cat([x3, dc2], dim=1)
         up2 = self.invres2(up2)
+        logging.debug((dc2.shape, "dc2"))
         logging.debug((up2.shape, "up2"))
 
-        up3 = torch.cat([x2, self.dconv3(up2)], dim=1)
+        dc3 = self.dconv3(up2)
+        up3 = torch.cat([x2, dc3], dim=1)
         up3 = self.invres3(up3)
+        logging.debug((dc3.shape, "dc3"))
         logging.debug((up3.shape, "up3"))
 
-        up4 = torch.cat([x1, self.dconv4(up3)], dim=1)
+        dc4 = self.dconv4(up3)
+        up4 = torch.cat([x1, dc4], dim=1)
         up4 = self.invres4(up4)
+        logging.debug((dc4.shape, "dc4"))
+        logging.debug((up4.shape, "up4"))
 
         up5 = self.dconv5(up4)
+        logging.debug((up5.shape, "up5"))
+
         x = self.softmax(up5)
-
-        # dimfred
-        # up5 = torch.cat([x0, self.dconv5(up4)], dim=1)
-        # up5 = self.invres5(up5)
-
-        # x = self.conv_last(up4)
-        # x = self.conv_last(up5)
-        # logging.debug((x.shape, "conv_last"))
-
-        # x = self.conv_score(x)
-        # logging.debug((x.shape, "conv_score"))
-
-        # x = torch.sigmoid(x)
-        # x = torch.nn.Softmax(x)
-
-        # if self.mode == "eval":
-        #     x = interpolate(x, scale_factor=2, mode="bilinear", align_corners=False)
-        #     logging.debug((x.shape, "interpolate"))
+        logging.debug((x.shape, "softmax"))
 
         if self.mode == "eval":
             mask_bg = x[0, 0]

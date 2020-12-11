@@ -29,7 +29,8 @@ def show(*imgs, size=1000, max_axis=True):
     imgs = list(imgs)
     for i, img in enumerate(imgs):
         if max_axis:
-            imgs[i] = resize_max_axis(img, size)
+            # imgs[i] = resize_max_axis(img, size)
+            pass
         else:
             imgs[i] = resize(img, width=size)
 
