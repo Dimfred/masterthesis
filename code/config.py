@@ -118,14 +118,14 @@ config.unet.n_workers = 16 if not utils.isme() else 1
 ###################
 
 config.augment = EasyDict()
-config.augment.yolo = EasyDict()
-config.augment.unet = EasyDict()
 
+config.augment.yolo = EasyDict()
 config.augment.yolo.img_params = EasyDict()
 config.augment.yolo.img_params.channels = 3
 config.augment.yolo.img_params.keep_ar = True
 config.augment.yolo.img_params.resize = 1000
 
+config.augment.unet = EasyDict()
 config.augment.unet.img_params = EasyDict()
 config.augment.unet.img_params.channels = 3 #config.unet.channels
 config.augment.unet.img_params.keep_ar = True
