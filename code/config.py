@@ -83,7 +83,7 @@ config.unet.input_size = 448 #448 #224 #608 #416  #288
 config.unet.channels = 3
 
 # training
-config.unet.lr = 5e-4
+config.unet.lr = 3e-4
 config.unet.batch_size = 32 if not utils.isme() else 8
 config.unet.subdivision = 4 if not utils.isme() else 2
 # minibatch_size = batch_size / subdivision
@@ -102,7 +102,7 @@ config.unet.focal_reduction = "mean"
 # optimizers
 config.unet.amsgrad = True
 config.unet.decay = 0.00005
-config.unet.betas = (0.95, 0.999)
+config.unet.betas = (0.90, 0.999)
 
 # priority[pretrained] > priority[checkpoint]
 config.unet.pretrained_path = None
@@ -129,7 +129,7 @@ config.augment.yolo.img_params.resize = 1000
 
 config.augment.unet = EasyDict()
 config.augment.unet.img_params = EasyDict()
-config.augment.unet.img_params.channels = 3 #config.unet.channels
+config.augment.unet.img_params.channels = 1 #config.unet.channels
 config.augment.unet.img_params.keep_ar = True
 config.augment.unet.img_params.resize = 640
 
