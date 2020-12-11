@@ -222,7 +222,7 @@ def lr_scheduler(optimizer, epoch, iteration, num_iter):
     elif config.unet.lr_decay == "fixed":
         if config.unet.lr_decay_fixed and epoch == config.unet.lr_decay_fixed[0]:
             lr = lr / 10
-            config.unet.lr_decay_fixed.pop()
+            config.unet.lr_decay_fixed.pop(0)
     elif config.unet.lr_decay == "linear":
         lr = args.lr * (1 - (current_iter - warmup_iter) / (max_iter - warmup_iter))
     elif args.lr_decay == "schedule":
