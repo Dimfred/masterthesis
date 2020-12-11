@@ -84,14 +84,14 @@ def get_data_loaders(train_files, val_files, img_size=224):
 
     train_loader = DataLoader(
         MaskDataset(train_files, train_transform),
-        batch_size=int(config.unet.batch_size / config.unet.subdivision),
+        batch_size=config.unet.batch_size,
         shuffle=True,
         pin_memory=True,
         num_workers=config.unet.n_workers,
     )
     valid_loader = DataLoader(
         MaskDataset(val_files, valid_transform),
-        batch_size=int(config.unet.batch_size / config.unet.subdivision),
+        batch_size=config.unet.batch_size,
         shuffle=False,
         pin_memory=True,
         num_workers=config.unet.n_workers,
@@ -184,6 +184,7 @@ def run_training(img_size, pretrained):
         data_loaders,
         loss,
         device,
+        batch_size=config.unet.batch_size,
         subdivision=config.unet.subdivision,
         on_after_epoch=on_after_epoch,
         lr_scheduler=lr_scheduler,

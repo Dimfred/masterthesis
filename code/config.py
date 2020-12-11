@@ -84,8 +84,9 @@ config.unet.channels = 3
 
 # training
 config.unet.lr = 5e-4
-config.unet.batch_size = 32 if not utils.isme() else 32
-config.unet.subdivision = 4 if not utils.isme() else 16
+config.unet.batch_size = 32 if not utils.isme() else 8
+config.unet.subdivision = 4 if not utils.isme() else 2
+# minibatch_size = batch_size / subdivision
 config.unet.n_epochs = 1000
 
 # lr scheduler
