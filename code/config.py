@@ -94,8 +94,8 @@ config.unet.lr_decay_fixed = [80, 160]
 config.unet.lr_burn_in = 10
 
 # loss functions
-config.unet.focal_alpha = 2.0
-config.unet.focal_gamma = 4
+config.unet.focal_alpha = 0.1
+config.unet.focal_gamma = 2
 config.unet.focal_reduction = "mean"
 
 # optimizers

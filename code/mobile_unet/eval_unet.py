@@ -38,7 +38,7 @@ def get_data_loaders(val_files):
     val_transform = A.Compose(
         [
             A.Resize(config.unet.input_size, config.unet.input_size),
-            A.GaussianBlur((5, 5), sigma_limit=1.2, always_apply=True),
+            # A.GaussianBlur((5, 5), sigma_limit=1.2, always_apply=True),
         ]
     )
 
