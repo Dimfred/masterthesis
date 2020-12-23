@@ -50,7 +50,7 @@ config.yolo.architecture_type = "stripped"
 architecture_type = {
     # uses only german symbols without edges and T's
     "stripped": (
-        str(config.train_out_dir),
+        str(config.train_out_dir / "classes.txt"),
         str(config.weights_dir / "stripped_best.weights"),
     ),
     # contains all labels without edges
@@ -81,6 +81,7 @@ config.unet = EasyDict()
 config.unet.n_classes = 2
 config.unet.input_size = 448 #448 #224 #608 #416  #288
 config.unet.channels = 3
+config.unet.weights = Path("mobile_unet/weights/best.pth")
 
 # training
 config.unet.lr = 3e-4
@@ -91,7 +92,7 @@ config.unet.n_epochs = 1000
 
 # lr scheduler
 config.unet.lr_decay = "fixed" #"cos" # "linear", "schedule", step
-config.unet.lr_decay_fixed = [80, 160]
+config.unet.lr_decay_fixed = [300, 500]
 config.unet.lr_burn_in = 10
 
 # loss functions

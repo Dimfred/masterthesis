@@ -155,11 +155,26 @@ class Trainer:
                         loss = self.criterion(pred, sub_labels)
                         loss.backward()
 
+                        # pred: minibatch, cls, y, x
+                        pred[pred < 0.5] = 0
+                        pred[pred >= 0.5] = 1
+
+                        fg_pred = pred[:, 0]
+                        bg_pred = pred[:, 1]
+
+                        pred = (bg_pred + (1 - fg_pred)) / 2
+
+                        # TODO
+                        tp = (pred == sub_labels).sum()
+
+
+
                 with torch.set_grad_enabled(False):
                     optimizer.step()
                 optimizer.zero_grad()
 
                 running_loss += loss.item() * inputs.size(0)
+
             else:
                 inputs = inputs.to(self.device)
                 labels = labels.to(self.device)

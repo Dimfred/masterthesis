@@ -11,8 +11,8 @@ from sklearn.model_selection import KFold
 from torch.utils.data import DataLoader
 from torchvision.transforms import Compose, Resize, ToTensor
 
-from dataset import MaskDataset #get_img_files, get_img_files_eval
-from nets.MobileNetV2_unet import MobileNetV2_unet
+from .dataset import MaskDataset #get_img_files, get_img_files_eval
+from .nets.MobileNetV2_unet import MobileNetV2_unet
 import albumentations as A
 
 np.random.seed(1)
@@ -38,6 +38,7 @@ def get_data_loaders(val_files):
     val_transform = A.Compose(
         [
             A.Resize(config.unet.input_size, config.unet.input_size),
+            # A.LongestMaxSize(config.unet.input_size, always_apply=True)
             # A.GaussianBlur((5, 5), sigma_limit=1.2, always_apply=True),
         ]
     )
@@ -80,6 +81,8 @@ def evaluate():
     # CPU version
     # model.load_state_dict(torch.load('{}/{}-best.pth'.format(OUT_DIR, n), map_location="cpu"))
     # GPU version
+    # unable to load it anymore
+    # loaded = torch.load("weights/non_transfer_best.pth")
     loaded = torch.load("weights/best.pth")
     model.load_state_dict(loaded)
     model.to(device)
@@ -109,7 +112,7 @@ def evaluate():
                 l = np.uint8(l)
                 o = np.uint8(o)
 
-                utils.show(i, l, o[..., np.newaxis])
+                utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
 
                 # plt.subplot(131)
                 # plt.imshow(i)

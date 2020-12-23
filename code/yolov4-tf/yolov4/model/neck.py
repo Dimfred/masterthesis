@@ -418,4 +418,8 @@ class PANetTiny(Model):
             x1 = self.conv22(x1)
             pred_s = self.conv23(x1)
 
+            # print("pred_s.shape\n{}".format(pred_s.shape))
+            # print("pred_m.shape\n{}".format(pred_m.shape))
+            # print("pred_l.shape\n{}".format(pred_l.shape))
+
             return pred_s, pred_m, pred_l

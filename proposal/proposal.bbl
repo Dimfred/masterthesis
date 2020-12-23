@@ -1,4 +1,9 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{iec60617}
+{IEC}-60617.
+\newblock \textit{https://webstore.iec.ch/publication/2723}.
+\newblock Accessed: 21-12-2020.
 
 \bibitem{ctxindependentsvm}
 K.~S. {Refaat}, W.~N. {Helmy}, A.~H. {Ali}, M.~S. {AbdelGhany}, and A.~F.
@@ -47,5 +52,21 @@ B.~{Edwards} and V.~{Chandran}.
 \newblock In {\em 2000 IEEE International Conference on Acoustics, Speech, and
   Signal Processing. Proceedings (Cat. No.00CH37100)}, volume~6, pages
   3618--3621 vol.6, 2000.
+
+\bibitem{yolobool}
+T.~{Dhanushika} and L.~{Ranathunga}.
+\newblock Fine-tuned line connection accompanied boolean expression generation
+  for hand-drawn logic circuits.
+\newblock In {\em 2019 14th Conference on Industrial and Information Systems
+  (ICIIS)}, pages 436--441, 2019.
+
+\bibitem{yolov1}
+Joseph Redmon, Santosh~Kumar Divvala, Ross~B. Girshick, and Ali Farhadi.
+\newblock You only look once: Unified, real-time object detection.
+\newblock {\em CoRR}, abs/1506.02640, 2015.
+
+\bibitem{yolov4}
+Alexey Bochkovskiy, Chien-Yao Wang, and Hong-Yuan~Mark Liao.
+\newblock Yolov4: Optimal speed and accuracy of object detection, 2020.
 
 \end{thebibliography}

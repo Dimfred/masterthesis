@@ -40,6 +40,7 @@ class MaskDataset(Dataset):
     def __getitem__(self, idx):
         img = Image.open(self.img_files[idx])
         img = np.array(img)
+        img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
         mask = np.load(self.mask_files[idx])
 
@@ -48,7 +49,9 @@ class MaskDataset(Dataset):
         mask = np.array(augmented["mask"]).astype(np.int64)
         img = np.array(augmented["image"]).astype(np.float32)
 
+
         if utils.isme():
+            print(self.img_files[idx])
             # utils.show(
             #    cv.cvtColor(np.uint8(img), cv.COLOR_RGB2BGR)
             #    * np.uint8(mask)[..., np.newaxis]

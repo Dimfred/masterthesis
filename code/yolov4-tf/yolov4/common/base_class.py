@@ -68,6 +68,11 @@ class BaseClass:
         else:
             self.xyscales = [1.2, 1.1, 1.05]
 
+    def unload(self):
+        from numba import cuda
+        cuda.select_device(0)
+        cuda.close()
+
     @property
     def anchors(self):
         """

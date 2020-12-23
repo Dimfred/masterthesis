@@ -5,9 +5,11 @@ import sys
 import torch
 import torch.nn as nn
 from torch.nn.functional import interpolate
+import cv2 as cv
+import numpy as np
 
-from nets.MobileNetV2 import MobileNetV2, InvertedResidual
-from nets.MobileNetV2 import conv_1x1_bn
+from .MobileNetV2 import MobileNetV2, InvertedResidual
+from .MobileNetV2 import conv_1x1_bn
 
 # logging.basicConfig(level=logging.DEBUG)
 
@@ -24,6 +26,8 @@ class MobileNetV2_unet(nn.Module):
         super(MobileNetV2_unet, self).__init__()
 
         self.mode = mode
+        self.input_size = input_size
+
         self.backbone = MobileNetV2(
             n_classes=1000, input_size=input_size, channels=channels, width_mult=1.0
         )
@@ -128,14 +132,15 @@ class MobileNetV2_unet(nn.Module):
         logging.debug((x.shape, "softmax"))
 
         if self.mode == "eval":
-            mask_bg = x[0, 0]
-            mask_fg = x[0, 1]
+            print("EVALTRUE")
+            mask_fg = x[0, 0]
+            mask_bg = x[0, 1]
 
             mask = (1 * mask_bg + (1 - mask_fg)) / 2
             # mask = mask_fg
             mask[mask < 0.5] = 0
             mask[mask >= 0.5] = 1
-            mask = torch.logical_not(mask)
+            # mask = torch.logical_not(mask)
             return torch.unsqueeze(mask, 0)
 
         return x
@@ -153,6 +158,38 @@ class MobileNetV2_unet(nn.Module):
             elif isinstance(m, nn.Linear):
                 m.weight.data.normal_(0, 0.01)
                 m.bias.data.zero_()
+
+    def predict(self, img):
+        img = cv.resize(img, (self.input_size, self.input_size))
+
+        is_gray = lambda img: len(img.shape) == 2
+        if is_gray(img):
+            img = np.repeat(img[..., np.newaxis], 3, -1)
+        else:
+            # TODO
+            pass
+
+        inputs = img
+        # normalize
+        inputs = inputs.astype(np.float32) / 255.0
+        # transpose spatial and color
+        inputs = inputs.transpose((2, 0, 1))
+        # add batch
+        inputs = np.expand_dims(inputs, axis=0)
+        inputs = torch.tensor(inputs)
+
+        with torch.no_grad():
+            inputs = inputs.to("cuda")
+            pred = self.forward(inputs)[0]
+            pred = np.uint8(pred.cpu().numpy() * 255)
+
+        return pred
+
+    def unload(self):
+        from numba import cuda
+
+        cuda.select_device(0)
+        cuda.close()
 
 
 if __name__ == "__main__":

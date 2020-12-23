@@ -1,11 +1,14 @@
 import cv2 as cv
 import numpy as np
+import sys
 import os
-from tabulate import tabulate
 import math
+from collections import deque
+# from numba import njit
 
 from pathlib import Path
 from cached_property import cached_property
+from tabulate import tabulate
 
 try:
     from numba import njit
@@ -73,7 +76,10 @@ def resize_max_axis(img, size):
 
 
 import socket
+
 _is_me = socket.gethostname() == "dimfred-schlap"
+
+
 def isme():
     return _is_me
 
@@ -158,6 +164,13 @@ def load_ground_truth(file_):
     return ground_truth
 
 
+def load_yolo_classes(path):
+    with open(path, "r") as f:
+        lines = f.readlines()
+
+    return [line.strip() for line in lines]
+
+
 def list_imgs(path: Path):
     # TODO unified pattern
     jpgs = path.glob("**/*.jpg")
@@ -197,6 +210,9 @@ def img_from_fg(img_path: Path, fg_path: Path) -> Path:
 def merged_name(img_path, bg_path):
     return f"{img_path.stem}_{bg_path.stem}{img_path.suffix}"
 
+def pairwise(iterable, offset=1):
+    return zip(iterable[:-offset], iterable[offset:])
+
 
 class YoloBBox:
     def __init__(self, img_dim):
@@ -233,6 +249,12 @@ class YoloBBox:
         y2, x2 = int(y_abs + 0.5 * h_abs), int(x_abs + 0.5 * w_abs)
 
         return x1, y1, x2, y2
+
+    def abs_mid(self):
+        ih, iw = self.img_dim
+        xm, ym = self.x * iw, self.y * ih
+
+        return xm, ym
 
     def yolo(self):
         return np.array((self.x, self.y, self.w, self.h, self.label))
@@ -422,3 +444,50 @@ class Metrics:
             print(tabulate(pretty))
 
         return pretty
+
+
+class BFS:
+    _yneighbors = [-1, 0, 0, 1]
+    _xneighbors = [0, -1, 1, 0]
+
+    def __init__(self, mat, value=255, early_stop=sys.maxsize):
+        self.mat = mat
+        self.visited = np.zeros_like(mat)
+        self.queue = deque()
+        self.value = value
+        self.early_stop = early_stop
+
+
+    def is_valid(self, p):
+        return self.mat[p] == self.value
+
+    # @njit
+    def fit(self, start: tuple, end: tuple):
+        xs, ys = start
+        self.visited[ys, xs] = True
+
+        # 0 distance
+
+        path = deque()
+        self.queue.append([start])
+        while self.queue:
+            path = self.queue.popleft()
+
+            if len(path) > self.early_stop:
+                return None
+
+            p = path[-1]
+            if p == end:
+                return path
+
+            for yoff, xoff in zip(self._yneighbors, self._xneighbors):
+                x, y = p
+                neighbor = (y + yoff, x + xoff)
+
+                if self.is_valid(neighbor) and not self.visited[neighbor]:
+                    self.visited[neighbor] = True
+                    new_path = list(path)
+                    new_path.append(neighbor[::-1])
+                    self.queue.append(new_path)
+
+        return None

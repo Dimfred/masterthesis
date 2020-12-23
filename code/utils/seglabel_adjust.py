@@ -464,8 +464,12 @@ class LabelAdjuster:
 
 
 if __name__ == "__main__":
-    # label_dir = config.train_dir
-    label_dir = config.valid_dir
+    import sys
+
+    if len(sys.argv) == 0 or sys.argv[1] == "train":
+        label_dir = config.train_dir
+    else:
+        label_dir = config.valid_dir
     # label_dir = config.train_out_dir
     # label_dir = config.data / "tmp"
     for img_path in utils.list_imgs(label_dir):
