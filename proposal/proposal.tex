@@ -39,7 +39,7 @@
 \textbf{
 \huge{Detection of Hand Drawn Electrical Circuit Diagrams and their Components using Deep Learning Methods and Conversion into LTspice Format}
 \\~\\
-\large{Detektion von Handgeschriebenen Elektrischen Schaltungen sowie deren Bauelemente mithilfe von Deep Learning Methoden und Konvertierung in LTspice Format}
+\large{Detektion von handgeschriebenen elektrischen Schaltungen sowie deren Bauelemente mithilfe von Deep Learning Methoden und Konvertierung in das LTspice Format}
 \\~\\
 Dmitrij Vinokour
 \\~\\
@@ -72,61 +72,59 @@ Supervisors: Florian Thamm M. Sc., Felix Denzinger M. Sc., Prof. Dr. Andreas Mai
 % pipeline bauteile rausnehmen
 
 \section*{Thesis Description}
-An electrical circuit diagram (ECD) is a graphical representation of an electrical
-circuit.
-ECDs consist of electrical circuit components, where for each electrical
-circuit component (ECC) a unique symbol is defined in the international standard \cite{iec60617}.
+ECDs consist of electrical circuit components (ECC), where for each ECC an unique symbol is defined in the international standard \cite{iec60617}.
 The ECCs are connected with lines, which correspond to wires in the real world.
-Furthermore ECCs are dimensioned by an annotation next to their symbol, which is formed by a digit followed by a unit.
-For instance a resistor can be denoted as "100 m{$\Omega$} (Milliohm)".
-Voltage sources and current sources are ECCs which provide either a voltage (U) flow or a current (I) flow through the circuit.
-While U and I provided by sources are given, U and I flowing through ECCs have to be obtained through calculations.
+Furthermore, ECCs are further specified by an annotation next to their symbol, which consists of a digit followed by a unit.
+For instance a resistor can be denoted as "100 m{$\Omega$}" (Milliohm).
+Voltage sources and current sources are ECCs, which provide either a voltage (U) or a current (I) through the circuit.
+While U and I provided by sources are given, U and I with respect to certain ECCs have to be obtained through calculations.
 For small circuits this can be done by hand, however the calculation complexity grows with the size of the circuit and even more when alternating U/I sources are used, since certain component calculations become dependent on the frequency of the used source.
-Therefore circuit simulation software (CSS) is used, where complex simulations can easily be performed in an automated way.
-Before a circuit can be simulated in a CSS, it first has to be built in the application.
-Refaat et al. \cite{ctxindependentsvm} have compared the drawing speed of structured diagrams by hand and with the diagram drawing tool Microsoft Visio.
+Therefore, often a circuit simulation software (CSS) is used, where complex simulations can easily be performed in an automated way.
+Before a circuit can be simulated in a CSS, it first has to be modeled in the application.
+Refaat et al. \cite{ctxindependentsvm} compared the drawing speed of structured diagrams by hand and with the diagram drawing tool Microsoft Visio.
 Their experiments have shown that drawing by hand was around 90\% faster than drawing with Microsoft Visio.
-Since ECDs are also structured diagrams it seems that a hand drawn approach could be more efficient than an application based drawing approach.
-Hence an automated method to convert an image of a hand drawn ECD into a digital format processable by a CSS, would ease the use of CSS.
+Since ECDs are also structured diagrams it seems that a hand drawn approach could be done more efficient than an application based drawing approach.
+Hence, an automated method to convert an image of a hand drawn ECD into a digital format processable by a CSS, would ease the use of CSS.
 \lf
-So far various researches have been conducted on the segmentation, recognition and the
-tracing of inter ECC connections, which will be briefly described in the following. The
-proposed approaches, can be structured in the following way:
-1) Classification of ECCs \cite{anngeo, basecnn, texturesmo}.
-2) Segmentation and classification of ECCs \cite{seghogsvm, fouriersvm}.
-3) Segmentation and classification of ECCs and ECD topology acquisition \cite{knnfull}.
-4) Object detection of ECCs and ECD topology acquisition \cite{yolobool}.
-All of the previously mentioned works were restricted to drawings on white
-paper only.
-As it is quite common to also draw on gridded paper, this might become too restrictive to the use in real word scenarios.
-Furthermore no method has been proposed so far, which aims to cover the full conversion, beginning with the image shot to the simulation based on a CSS formatted file.
+So far various researches have been conducted on the segmentation, recognition and the tracing of connections between ECCs, which will be briefly described in the following.
+The proposed approaches, can be structured as follows:
+1) classification of ECCs \cite{anngeo, basecnn, texturesmo},
+2) segmentation and classification of ECCs \cite{seghogsvm, fouriersvm},
+3) segmentation and classification of ECCs and ECD topology acquisition \cite{knnfull},
+4) object detection of ECCs and ECD topology acquisition \cite{yolobool}.
 Moetesum et al. \cite{seghogsvm} used computer vision methods to segment ECCs from an ECD, where for different ECC types different strategies were used to obtain a segmentation mask.
-For instance sources were segmented by filling the region inside the source symbol.
-Afterwards a bounding box has been drawn around the segmentation mask and a Histogram of Oriented Gradients was applied on the region inside the bounding box, to obtain a feature vector for a following Support Vector Machine classifier.
+For instance sources were segmented by filling the region inside the source symbol, followed by a bounding box drawn around the segmentation mask. A Histogram of Oriented Gradients was applied on the region inside the bounding box, to obtain a feature vector for a following Support Vector Machine classifier.
 While this approach yielded good classification results, it is only partially extendable.
-For ECCs which have a similar shape to components which are already covered by a segmentation strategy, the existing strategy can probably be reused, but for completely new shapes a new strategy has to be introduced.
-Therefore Dhanushika et al. \cite{yolobool} modeled the ECS classification in a more flexible way, by using the object detection algorithm YOLO (You Only Look Once) \cite{yolov1}, which localizes and classifies an object in a single step.
-Since YOLO is a deep-learning neural network architecture, it can be extended with new classes by providing data and labels for the training step, hence is more flexible in contrast to the mentioned methods by Moetesum et al. \cite{seghogsvm}.
-The idea of using an object detection algorithm should be reused in this thesis by applying the state-of-the-art YOLOv4-tiny architecture \cite{yolov4} on the object detection task of ECCs.
+For ECCs which have a similar shape to components which are already covered by a segmentation strategy, the existing strategy can probably be reused, but for completely new shapes, a new strategy has to be introduced.
+The aim of the proposed method by Dhanushika et al. \cite{yolobool} was to extract a boolean expression from an ECD made out of logical gate components (AND, OR, NOT, etc.).
+The ECS classification was modeled here by using the object detection algorithm YOLO (You Only Look Once) \cite{yolov1}, which localizes and classifies an object in a single step.
+The ECD topology was recognized, by removing the bounding boxes from the image and applying a Hough Transform on the remaining connections.
+Hough Lines and bounding box intersections were now used to form the ECD topology, from which the final boolean expression was generated.
 \lf
-Moreover, this thesis aims to cover the development of a full processing pipeline able to convert images of a hand drawn ECDs into an intermediate format, which reflects the topology of the ECD.
-The pipeline should be invariant to the used paper, at least considering white and grid paper.
-Furthermore the pipeline should contain the recognition of component annotations e.g. component values and voltage/current flow symbols.
+All of the above mentioned methods were restricted to drawings on white paper only.
+As it is quite common to also draw on gridded paper, this might become too restrictive for the use in real world scenarios.
+Furthermore, no method has been proposed so far, which aims to cover the full conversion, beginning with the image to the simulation based on a CSS formatted file.
+\lf
+Thus, this thesis aims to cover the development of a full processing pipeline able to convert images of hand drawn ECDs into an intermediate format, which reflects the topologies of the ECDs.
+Extensibility should be ensured by using an object detection deep neural network architecture, which is due to the nature of neural networks, simply extended by providing new data and labels for the training step.
+The pipeline should also be invariant to image quality (paper type, lighting conditions, background etc.), at least considering white and grid paper.
+Furthermore, the pipeline should contain the recognition of component annotations e.g. component values and voltage/current flow symbols.
 The conversion into a CSS format should be realized on the example of LTspice.
-Additionally the used methods should be chosen, such that the system could be executed on mobile hardware, thus the computational effort for the whole pipeline must be kept as low as possible.
+Additionally, the used methods should be chosen such that the pipeline could be executed on mobile hardware, thus the computational effort for the whole pipeline must be kept as low as possible.
 \lf
 The thesis will comprise of the following work items:
 \begin{enumerate}
-\item Object detection of ECCs and annotations in an image of a hand drawn ECD
-\item Segmentation of the ECD from the paper
+\item Collection of a suitable dataset
+\item Object detection of ECCs and annotations in images of a hand drawn ECDs
+\item Segmentation of the ECD from the drawing
 \item Identification of the ECD topology
 \item Postprocessing
         \begin{enumerate}
         \item Building the ECD topology
         \item Assigning annotations to corresponding ECCs
+        \item Embedding gathered information into a LTspice file
         \end{enumerate}
-\item Embedding gathered information into a LTspice file
-\item \textit{Optional: Mobile application}
+\item \textit{Optional: Mobile demo application}
 \end{enumerate}
 
 % The segmentation of the ECCs, through computer vision methods, as proposed by \cite{seghogsvm, fouriersvm, knnfull}, can be formulated as an object detection problem. In \cite{yolobool} an objection detection algorithm is used for the detection and classification of logical gate components. In this thesis this approach should be applied to extract the ECCs from the ECD, drawn on white or grid paper.

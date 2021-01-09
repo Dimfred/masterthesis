@@ -44,7 +44,6 @@ config.yolo.tiny = True
 config.yolo.small = True
 config.yolo.weights_type = "yolo"
 
-config.yolo.architecture_type = "stripped"
 
 # classes and corresponding trained weights
 architecture_type = {
@@ -65,6 +64,8 @@ architecture_type = {
     ),
 }
 
+# config.yolo.architecture_type = "edges"
+config.yolo.architecture_type = "stripped"
 classes, weights = architecture_type[config.yolo.architecture_type]
 config.yolo.classes = classes
 config.yolo.weights = weights
@@ -79,7 +80,7 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 448 #448 #224 #608 #416  #288
+config.unet.input_size = 448  # 448 #224 #608 #416  #288
 config.unet.channels = 3
 config.unet.weights = Path("mobile_unet/weights/best.pth")
 
@@ -91,7 +92,7 @@ config.unet.subdivision = 4 if not utils.isme() else 2
 config.unet.n_epochs = 1000
 
 # lr scheduler
-config.unet.lr_decay = "fixed" #"cos" # "linear", "schedule", step
+config.unet.lr_decay = "fixed"  # "cos" # "linear", "schedule", step
 config.unet.lr_decay_fixed = [300, 500]
 config.unet.lr_burn_in = 10
 
@@ -109,7 +110,7 @@ config.unet.betas = (0.90, 0.999)
 config.unet.pretrained_path = None
 config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
 config.unet.checkpoint_path = None
-#config.unet.checkpoint_path = Path("weights/checkpoint.pth")
+# config.unet.checkpoint_path = Path("weights/checkpoint.pth")
 config.unet.output_dir = Path("outputs")
 
 # utility
@@ -130,7 +131,7 @@ config.augment.yolo.img_params.resize = 1000
 
 config.augment.unet = EasyDict()
 config.augment.unet.img_params = EasyDict()
-config.augment.unet.img_params.channels = 1 #config.unet.channels
+config.augment.unet.img_params.channels = 1  # config.unet.channels
 config.augment.unet.img_params.keep_ar = True
 config.augment.unet.img_params.resize = 640
 

@@ -56,14 +56,12 @@ for input_size in (608, 832):
     metrics = utils.Metrics(yolo.classes, dir_, iou_thresh=0.2)
 
     errors = []
-
-    for file_ in os.listdir(dir_):
-        if utils.is_img(file_) and filter_(file_):
+    for img_path in utils.list_imgs(dir_):
+        if filter_(img_path):
             # print(file_)
-            img_path = str(dir_ / file_)
-            ground_truth_path = utils.label_file_from_img(img_path)
+            ground_truth_path = utils.yolo_label_from_img(img_path)
 
-            img = cv.imread(img_path, cv.IMREAD_GRAYSCALE)
+            img = cv.imread(str(img_path), cv.IMREAD_GRAYSCALE)
             img = utils.resize_max_axis(img, 1000)
             img = np.expand_dims(img, axis=2)
 

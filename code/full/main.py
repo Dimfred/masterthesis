@@ -105,18 +105,22 @@ if __name__ == "__main__":
 
     for img_name in [
         # valid
+        # "07_00.png"
         # "07_05.png",
         # "07_06.png",
         # "07_07.png",
         "08_01.png",
+        # "08_02.png",
         # "08_05.png",
         # "08_07.png",
         # "08_08.png",
+        # "08_09.png",
         # train
         # "00_11.jpg",
         # "00_19.jpg",
         # "08_08.png",
         # "00_13.jpg",
+        # "00_20.jpg",
     ]:
         img_path = config.valid_dir / img_name
         # img_path = config.train_dir / img_name
@@ -130,7 +134,7 @@ if __name__ == "__main__":
         # yolo predictions
         yolo = init_yolo()
         # DEBUG
-        yolo.inference(str(img_path))
+        # yolo.inference(str(img_path))
 
         prediction_params = {"iou_threshold": 0.3, "score_threshold": 0.25}
         yolo_prediction = yolo.predict(img)
@@ -162,17 +166,15 @@ if __name__ == "__main__":
             C=2,
         )
         # DEBUG
-        utils.show(bin_img)
+        # utils.show(bin_img)
 
         segmentation[segmentation > 0] = 1
 
         segmentation = segmentation * bin_img
         # DEBUG
-        utils.show(segmentation)
+        # utils.show(segmentation)
 
         # segmentation = cv.dilate(segmentation, kernel, iterations=2)
-
-
 
         postprocessor = Postprocessor(bboxes, segmentation)
         topology = postprocessor.make_topology()
@@ -184,7 +186,7 @@ if __name__ == "__main__":
 
         ltbuilder = LTBuilderAdapter(config.yolo.classes, grid_size)
         ltbuilder.make_ltcomponents(bboxes)
-        ltbuilder.make_wires(topology, postprocessor.connected_components)
+        ltbuilder.make_wires(topology, postprocessor.connected_components, segmentation)
 
         writer = LTWriter()
         writer.write(lt_file, ltbuilder.ltcomponents)

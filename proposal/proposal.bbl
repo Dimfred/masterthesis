@@ -6,15 +6,14 @@
 \newblock Accessed: 21-12-2020.
 
 \bibitem{ctxindependentsvm}
-K.~S. {Refaat}, W.~N. {Helmy}, A.~H. {Ali}, M.~S. {AbdelGhany}, and A.~F.
-  {Atiya}.
+K.~{Refaat}, W.~{Helmy}, A.~{Ali}, M.~{AbdelGhany}, and A.~{Atiya}.
 \newblock A new approach for context-independent handwritten offline diagram
   recognition using support vector machines.
 \newblock In {\em 2008 IEEE International Joint Conference on Neural Networks
   (IEEE World Congress on Computational Intelligence)}, pages 177--182, 2008.
 
 \bibitem{anngeo}
-Mahdi Rabbani, Reza Khoshkangini, H.S. Nagendraswamy, and Mauro Conti.
+M.~Rabbani, R.~Khoshkangini, H.S. Nagendraswamy, and M.~Conti.
 \newblock Hand drawn optical circuit recognition.
 \newblock {\em Procedia Computer Science}, 84:41 -- 48, 2016.
 \newblock Proceeding of the Seventh International Conference on Intelligent
@@ -28,20 +27,20 @@ M.~{Günay}, M.~{Köseoğlu}, and Ö. {Yıldırım}.
   Optimization and Robotic Applications (HORA)}, pages 1--5, 2020.
 
 \bibitem{texturesmo}
-Sarkar N. et~al. Roy~S., Bhattacharya~A.
+S.~Roy, A.~Bhattacharya, and N.~Sarkar et~al.
 \newblock Offline hand-drawn circuit component recognition using texture and
   shape-based features.
 \newblock {\em Springer Science+Business Media}, August 2020.
 
 \bibitem{seghogsvm}
-Momina Moetesum, Syed~Waqar Younus, Muhammad~Ali Warsi, and Imran Siddiqi.
+M.~Moetesum, S.~Waqar Younus, M.~Ali Warsi, and I.~Siddiqi.
 \newblock Segmentation and recognition of electronic components in hand-drawn
   circuit diagrams.
 \newblock {\em EAI Endorsed Transactions on Scalable Information Systems},
   5(16), 4 2018.
 
 \bibitem{fouriersvm}
-Mayuri~D. Patare and M.~Joshi.
+M.~D. Patare and M.~Joshi.
 \newblock Hand-drawn digital logic circuit component recognition using svm.
 \newblock {\em International Journal of Computer Applications}, 143:24--28,
   2016.
@@ -61,12 +60,8 @@ T.~{Dhanushika} and L.~{Ranathunga}.
   (ICIIS)}, pages 436--441, 2019.
 
 \bibitem{yolov1}
-Joseph Redmon, Santosh~Kumar Divvala, Ross~B. Girshick, and Ali Farhadi.
+J.~Redmon, S.~K. Divvala, R.~B. Girshick, and A.~Farhadi.
 \newblock You only look once: Unified, real-time object detection.
 \newblock {\em CoRR}, abs/1506.02640, 2015.
-
-\bibitem{yolov4}
-Alexey Bochkovskiy, Chien-Yao Wang, and Hong-Yuan~Mark Liao.
-\newblock Yolov4: Optimal speed and accuracy of object detection, 2020.
 
 \end{thebibliography}

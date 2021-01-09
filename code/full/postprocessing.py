@@ -87,12 +87,12 @@ class Utils:
         return mask
 
     @staticmethod
-    def close(img, debug=False):
+    def close(img, iterations=4, debug=False):
         img = cv.morphologyEx(
             img,
             cv.MORPH_CLOSE,
             Utils.cross,
-            iterations=4,
+            iterations=iterations,
         )
 
         if debug:
@@ -109,7 +109,14 @@ class Utils:
 
         return img
 
+    @staticmethod
+    def erode(img, iterations=2, debug=False):
+        img = cv.erode(img, Utils.cross, iterations=iterations)
 
+        if debug:
+            utils.show(img)
+
+        return img
 
 
 class BBoxConnection:
@@ -175,16 +182,16 @@ class BBoxConnector:
                 if orientation is None:
                     continue
 
-                if bbox_idx == 1 and label == 7:
-                    # DEBUG
-                    print("LABEL", label)
-                    cimg = np.uint8(self.connected_components.copy())
-                    cimg[cimg > 0] = 255
-                    cimg = cv.cvtColor(cimg, cv.COLOR_GRAY2BGR)
-                    cimg[y, x] = (0, 0, 255)
-                    cv.circle(cimg, (x, y), 5, (0, 0, 255), 2)
-                    utils.show(cimg)
-                    print("DAFUUUQ")
+                # if bbox_idx == 1 and label == 7:
+                # DEBUG
+                # print("LABEL", label)
+                # cimg = np.uint8(self.connected_components.copy())
+                # cimg[cimg > 0] = 255
+                # cimg = cv.cvtColor(cimg, cv.COLOR_GRAY2BGR)
+                # cimg[y, x] = (0, 0, 255)
+                # cv.circle(cimg, (x, y), 5, (0, 0, 255), 2)
+                # utils.show(cimg)
+                # print("DAFUUUQ")
 
                 # create an orientation counter for this bounding box inside that label
                 if bbox_idx not in self.topology[label]:
@@ -194,7 +201,6 @@ class BBoxConnector:
                 self.topology[label][bbox_idx].orientation[orientation.value] += 1
                 # TODO normally a point can only be associated with one bbox
                 break
-
 
         self.topology = self.nms(self.topology)
 
@@ -207,8 +213,7 @@ class BBoxConnector:
                     ", ".join(
                         f"{utils.green(idx)}:{bbox_connection.orientation}"
                         for idx, bbox_connection in sub_topology.items()
-                    )
-
+                    ),
                 )
 
         return self.topology
@@ -248,7 +253,9 @@ class BBoxConnector:
 
 
 class WireTracer:
-    def __init__(self, topology, connected_components, angle_threshold=10, angle_step=5):
+    def __init__(
+        self, topology, connected_components, angle_threshold=10, angle_step=5
+    ):
         self.topology = topology
         self.connected_components = connected_components
 
@@ -259,24 +266,33 @@ class WireTracer:
         pass
 
 
+class NodeBuilder:
+    # TODO creates fake nodes
+    pass
+
+
 class Postprocessor:
+    # TODO topology builder
     def __init__(self, bboxes: List[YoloBBox], segmentation: np.ndarray):
         self.bboxes = bboxes
-        self.segmentation = segmentation
+        self.segmentation_orig = segmentation
 
     def make_topology(self):
         self.segmentation = Utils.rm_bboxes(
-            self.segmentation, self.abs_bboxes, debug=True
+            self.segmentation_orig, self.abs_bboxes, debug=False
         )
 
-        self.segmentation = Utils.close(self.segmentation, debug=True)
-        self.segmentation = Utils.dilate(self.segmentation, debug=True)
+        self.segmentation = Utils.close(self.segmentation, debug=False)
+        self.segmentation = Utils.dilate(self.segmentation, debug=False)
 
-        self.n_connected_components, self.connected_components = Utils.connected_components(
-            self.segmentation, debug=True
+        _, self.connected_components = Utils.connected_components(
+            self.segmentation, debug=False
         )
+
+        # split connected components in sub components create new bboxes and run
+        # connected components again
         bbox_mask = Utils.make_bbox_mask(
-            self.segmentation, self.abs_bboxes, debug=True
+            self.segmentation, self.abs_bboxes, debug=False
         )
         bbox_wire_mask = np.logical_and(bbox_mask, self.connected_components)
         # DEBUG

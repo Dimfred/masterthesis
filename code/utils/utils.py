@@ -213,6 +213,19 @@ def merged_name(img_path, bg_path):
 def pairwise(iterable, offset=1):
     return zip(iterable[:-offset], iterable[offset:])
 
+def hough_inter(line1, line2):
+    rho1, theta1 = line1
+    rho2, theta2 = line2
+
+    A = np.array([
+        [np.cos(theta1), np.sin(theta1)],
+        [np.cos(theta2), np.sin(theta2)]
+    ])
+    b = np.array([[rho1], [rho2]])
+
+    x0, y0 = np.linalg.solve(A, b)
+    x0, y0 = int(np.round(x0)), int(np.round(y0))
+    return x0, y0
 
 class YoloBBox:
     def __init__(self, img_dim):
@@ -401,7 +414,7 @@ class Metrics:
         return np.array([val for _, val in pretty])
 
     def label_stats(self):
-        from . import YoloAugmentator
+        from .augment import YoloAugmentator
 
         label_counter = [0 for _ in range(len(self.classes))]
 
