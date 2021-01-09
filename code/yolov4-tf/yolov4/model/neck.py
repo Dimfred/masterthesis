@@ -395,6 +395,7 @@ class PANetTiny(Model):
 
             return pred_m, pred_l
         else:
+            print("call small neck")
             route1, route2, route3 = x
 
             x1 = self.conv15(route3)

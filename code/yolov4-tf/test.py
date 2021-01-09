@@ -21,11 +21,6 @@ from config import config
 # default 0.25, 0.3
 # inference_params = {"score_threshold": 0.8, "iou_threshold": 0.8}
 
-#         less cls    with edges     without edges
-# values: stripped    label          safe
-# TODO move config probably
-model_type = "stripped"
-
 
 # small will use yolov4 head with 3 yolo layers
 yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)

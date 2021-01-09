@@ -38,11 +38,13 @@ config.weights_dir = Path("weights")
 config.yolo = EasyDict()
 
 ## architecture
-config.yolo.input_size = 832  # 608, 736, 832, 928, 960, 1120, 1280, 1600
+config.yolo.input_size = 608  # 608, 736, 832, 928, 960, 1120, 1280, 1600
 config.yolo.channels = 1
 config.yolo.tiny = True
 config.yolo.small = True
 config.yolo.weights_type = "yolo"
+config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights"
+config.yolo.checkpoint_dir = Path("checkpoints")
 
 
 # classes and corresponding trained weights

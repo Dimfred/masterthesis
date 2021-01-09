@@ -232,6 +232,7 @@ class YOLOv4(BaseClass):
             image_path_prefix=image_path_prefix,
             strides=self.strides,
             xyscales=self.xyscales,
+            channels=self.channels
         )
 
     def compile(

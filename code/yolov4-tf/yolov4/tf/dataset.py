@@ -33,6 +33,8 @@ import numpy as np
 from . import train
 from ..common import media
 
+import tensorflow as tf
+
 
 class Dataset:
     def __init__(
@@ -48,6 +50,7 @@ class Dataset:
         image_path_prefix: str = None,
         strides: np.ndarray = None,
         xyscales: np.ndarray = None,
+        channels: int = 3,
     ):
         # anchors / width
         self.anchors_ratio = anchors / input_size[0]
@@ -61,6 +64,8 @@ class Dataset:
             (strides, strides), axis=-1
         )
         self.input_size = input_size
+        self.channels = channels
+
         self.label_smoothing = label_smoothing
         self.image_path_prefix = image_path_prefix
         self.num_classes = num_classes
@@ -249,8 +254,7 @@ class Dataset:
         """
         # pylint: disable=bare-except
         try:
-            image = cv2.imread(dataset[0])
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            image = self._imread(dataset[0])
         except:
             return None
 
@@ -261,8 +265,20 @@ class Dataset:
             image, output_size, dataset[1]
         )
         resized_image = np.expand_dims(resized_image / 255.0, axis=0)
+        print("resized:", resized_image.shape)
 
         return resized_image, resized_bboxes
+
+    def _imread(self, path):
+        if self.channels == 3:
+            image = cv2.imread(path)
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        else:
+            image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+            image = np.expand_dims(image, axis=2)
+
+        print(image.shape)
+        return image
 
     def _next_data(self):
         for _ in range(5):
@@ -329,6 +345,9 @@ class Dataset:
 
         # batch_x == Dim(batch, input_size, input_size, channels)
         # batch_y[0] == Dim(batch, grid_size, grid_size, anchors, bboxes)
+        # for b in batch_y:
+        #     print(b.shape)
+
         return batch_x, batch_y
 
     def __len__(self):

@@ -120,12 +120,13 @@ class YOLOv4Tiny(Model):
             small=small,
         )
 
-        if not small:
-            self.yolov3_head_tiny = YOLOv3HeadTiny(
+        if small:
+            print("using big head")
+            self.yolov3_head_tiny = YOLOv3Head(
                 anchors=anchors, num_classes=num_classes, xysclaes=xyscales
             )
         else:
-            self.yolov3_head_tiny = YOLOv3Head(
+            self.yolov3_head_tiny = YOLOv3HeadTiny(
                 anchors=anchors, num_classes=num_classes, xysclaes=xyscales
             )
 

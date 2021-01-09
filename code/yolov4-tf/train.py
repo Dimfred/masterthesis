@@ -2,7 +2,6 @@ import cv2 as cv
 import tensorflow as tf
 from tensorflow.keras import optimizers, callbacks
 from pathlib import Path
-
 from yolov4.tf.train import SaveWeightsCallback
 
 from utils.test_dataset import test_dataset
@@ -13,9 +12,9 @@ if len(physical_devices) > 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 from yolov4.tf import YOLOv4
+from config import config
 
-
-data = Path("data/preprocessed")
+data = config.train_out_dir
 checkpoints = Path("checkpoints")
 weights = Path("weights")
 
@@ -28,15 +27,13 @@ weights = Path("weights")
 yolo = YOLOv4(tiny=True, small=True)
 yolo.classes = str(data / "classes.txt")
 yolo.input_size = (608, 608)
-yolo.channels = 1
+yolo.channels = 3
 # TODO normally 64 and subdivision 3
 yolo.batch_size = 16
 # TODO check other params
 
 yolo.make_model()
-yolo.load_weights(
-    weights / "yolov4-tiny-custom.weights", weights_type="yolo"
-)
+yolo.load_weights(weights / "yolov4-tiny-small.weights", weights_type="yolo")
 
 
 #############
@@ -53,9 +50,7 @@ train_dataset = yolo.load_dataset(
 # test_dataset(yolo, dataset)
 
 valid_dataset = yolo.load_dataset(
-    dataset_path=str(data / "train_yolo.txt"),
-    dataset_type="yolo",
-    training=False
+    dataset_path=str(data / "train_yolo.txt"), dataset_type="yolo", training=False
 )
 
 ##############

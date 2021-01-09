@@ -20,7 +20,7 @@ import utils
 from config import config
 
 
-check_errors = True
+check_errors = False
 
 # filter_ = lambda file_: ("00_20" in file_ or "00_19" in file_)
 # is checkered
@@ -53,7 +53,7 @@ for input_size in (608, 832):
 
 
     dir_ = config.valid_out_dir
-    metrics = utils.Metrics(yolo.classes, dir_, iou_thresh=0.2)
+    metrics = utils.Metrics(yolo.classes, dir_, iou_thresh=0.5)
 
     errors = []
     for img_path in utils.list_imgs(dir_):
