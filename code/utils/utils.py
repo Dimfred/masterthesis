@@ -551,6 +551,22 @@ class A:
         to_front = lambda bbox: [bbox[-1]] + list(bbox[:-1])
         return [to_front(bbox) for bbox in bboxes]
 
+def seed(*args):
+    # fmt: off
+    if "tf" in args:
+        import tensorflow as tf
+        tf.random.set_seed(42)
+
+    if "np" in args:
+        import numpy as np
+        np.random.seed(1337)
+
+    if "imgaug" in args:
+        import imgaug
+        imgaug.random.seed(0xDEADBEEF)
+
+    # fmt: on
+
     # @staticmethod
     # def ClassToBack(image=None, bbox=None, **kwargs):
     #     return A.Lambda(

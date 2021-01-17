@@ -10,6 +10,7 @@ import cv2 as cv
 
 from tqdm import tqdm
 
+
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 # has to be called right after tf import
@@ -19,13 +20,10 @@ if len(physical_devices) > 0:
 
 from yolov4.tf import YOLOv4
 from yolov4.tf.train import SaveWeightsCallback
+import utils
 from config import config
 
-
-def seed():
-    np.random.seed(1337)
-    imgaug.random.seed(1337)
-    tf.random.set_seed(1337)
+utils.seed("tf", "np", "imgaug")
 
 
 yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
@@ -156,7 +154,6 @@ _callbacks = [
     ),
 ]
 
-seed()
 yolo.fit(
     train_dataset,
     validation_data=valid_dataset,

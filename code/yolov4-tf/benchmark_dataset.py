@@ -97,24 +97,27 @@ normal_ds = yolo.load_dataset(
     augmentations=train_augmentations,
 )
 
-# for img, labels in normal_ds.generator():
-#     for inner in labels:
-#         print(inner.shape)
+start = time.perf_counter()
+for img, labels in normal_ds:
+    end = time.perf_counter()
+    print("1 item took:", end - start)
+    start = time.perf_counter()
 
-tf_ds = tf.data.Dataset.from_generator(
-    normal_ds.generator,
-    output_types=(tf.float32, tf.float32, tf.float32, tf.float32),
-    output_shapes=(
-        (2, config.yolo.input_size, config.yolo.input_size, 1), # batch, y, x, chan
-        (16, 76, 76, 3, 23), # labels
-        (16, 38, 38, 3, 23), # labels
-        (16, 19, 19, 3, 23), # labels
-    )
-)
-# benchmark("NORMAL", tf_ds)
 
-for sample in tf_ds.repeat().batch(2).take(10):
-    print("yes")
+# tf_ds = tf.data.Dataset.from_generator(
+#     normal_ds.generator,
+#     output_types=(tf.float32, tf.float32, tf.float32, tf.float32),
+#     output_shapes=(
+#         (2, config.yolo.input_size, config.yolo.input_size, 1), # batch, y, x, chan
+#         (16, 76, 76, 3, 23), # labels
+#         (16, 38, 38, 3, 23), # labels
+#         (16, 19, 19, 3, 23), # labels
+#     )
+# )
+# # benchmark("NORMAL", tf_ds)
+
+# for sample in tf_ds.repeat().batch(2).take(10):
+#     print("yes")
 
 
 # ds = yolo.load_tfdataset(

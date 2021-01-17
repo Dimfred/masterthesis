@@ -173,7 +173,7 @@ class Dataset:
         return _dataset
 
     # @njit
-    # @utils.stopwatch("bbox_to_gt")
+    # @utils.stopwatch("bboxes_to_ground_truth")
     def bboxes_to_ground_truth(self, bboxes):
         """
         @param bboxes: [[b_x, b_y, b_w, b_h, class_id], ...]
@@ -226,13 +226,14 @@ class Dataset:
                 iou_mask = iou > 0.3
 
                 if np.any(iou_mask):
+                    exist_positive = True
+
                     xy_grid = xywh[0:2] * (
                         self.grid_size[i][1],
                         self.grid_size[i][0],
                     )
                     xy_index = np.floor(xy_grid)
 
-                    exist_positive = True
                     for j, mask in enumerate(iou_mask):
                         if mask:
                             _x, _y = int(xy_index[0]), int(xy_index[1])
@@ -276,12 +277,13 @@ class Dataset:
         if output_size is None:
             output_size = self.input_size
 
-        # resized_image, resized_bboxes = media.resize_image(
-        #     image, output_size, dataset[1]
-        # )
+        resized_image, resized_bboxes = media.resize_image(
+            image, output_size, dataset[1]
+        )
 
-        # return resized_image, resized_bboxes
+        return resized_image, resized_bboxes
 
+    # @utils.stopwatch("_imread")
     def _imread(self, path):
         if self.channels == 3:
             image = cv2.imread(path)
@@ -305,6 +307,7 @@ class Dataset:
 
         return img, labels
 
+    # @utils.stopwatch("_next_data")
     def _next_data(self):
         _dataset = self.dataset[self.count]
 
@@ -333,6 +336,7 @@ class Dataset:
         """
         return self._next_batch()
 
+    # @utils.stopwatch("_next_item")
     def _next_item(self):
         x, y = self._next_data()
         if self.augmentations is not None:
@@ -343,7 +347,7 @@ class Dataset:
 
         return x, y
 
-    # @utils.stopwatch("next_batch")
+    # @utils.stopwatch("_next_batch")
     def _next_batch(self):
         batch_x = []
         _batch_y = [[] for _ in range(len(self.grid_size))]
@@ -376,10 +380,6 @@ class Dataset:
 
     def __len__(self):
         return len(self.dataset)
-
-    def generator(self):
-        for item in self:
-            yield item
 
 
 
