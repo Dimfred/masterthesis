@@ -119,6 +119,14 @@ class YOLOv4(BaseClass):
         # optimize the shit out of the model
         self.model.optimizer.apply_gradients(zip(accu_grads, train_vars))
 
+        logs = {
+            "sum": sum(output_losses),
+            "l_loss": output_losses[0],
+            "m_loss": output_losses[1],
+            "s_loss": output_losses[2],
+        }
+        return logs
+
 
     @tf.function
     def valid_step(self, data):

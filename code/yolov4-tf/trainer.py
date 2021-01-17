@@ -25,7 +25,6 @@ from config import config
 
 utils.seed("tf", "np", "imgaug")
 
-
 yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
 # yolo = YOLOv4()
 # yolo = YOLOv4(tiny=config.yolo.tiny)
@@ -143,14 +142,14 @@ def lr_scheduler(epoch):
 
 
 _callbacks = [
-    callbacks.LearningRateScheduler(lr_scheduler),
+    # callbacks.LearningRateScheduler(lr_scheduler),
     callbacks.TerminateOnNaN(),
     callbacks.TensorBoard(log_dir="./log"),
     SaveWeightsCallback(
         yolo=yolo,
         dir_path=config.yolo.checkpoint_dir,
         weights_type=config.yolo.weights_type,
-        epoch_per_save=100,
+        epoch_per_save=1,
     ),
 ]
 
@@ -159,8 +158,8 @@ yolo.fit(
     validation_data=valid_dataset,
     epochs=config.yolo.epochs,
     callbacks=_callbacks,
-    validation_steps=2,
-    validation_freq=config.yolo.batch_size / 2,
+    validation_steps=config.yolo.validation_steps,
+    validation_freq=config.yolo.validation_frequency,
     steps_per_epoch=config.yolo.batch_size,  # config.yolo.batch_size,
     workers=16,
 )

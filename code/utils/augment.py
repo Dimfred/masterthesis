@@ -557,6 +557,9 @@ files_to_ignore = [
     # help="Values: <yolo/unet>"
 )
 def augment(target):
+    import time
+
+    start = time.perf_counter()
     if target == "yolo":
         augmentator = YoloAugmentator(
             config.train_dir,
@@ -600,6 +603,9 @@ def augment(target):
         )
         augmentator.run()
 
+    end = time.perf_counter()
+
+    print("Took:", end - start)
 
 if __name__ == "__main__":
     augment()

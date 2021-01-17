@@ -54,11 +54,12 @@ config.yolo.run_eagerly = (
 )
 config.yolo.checkpoint_dir = Path("checkpoints")
 config.yolo.preload_dataset = True
-config.yolo.batch_size = 64
-config.yolo.subdivisions = 32 if utils.isme() else 8
+config.yolo.batch_size = 4 if utils.isme() else 64
+config.yolo.subdivisions = 2 if utils.isme() else 8
+config.yolo.validation_steps = 1 if utils.isme() else 2
+config.yolo.validation_frequency = 1 if utils.isme() else 10
 config.yolo.loss = "ciou"
 config.yolo.lr = 1e-4
-config.yolo.step_size = 35
 config.yolo.epochs = 4000
 config.yolo.workers = 12 if utils.isme() else 16
 
