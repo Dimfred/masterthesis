@@ -170,7 +170,6 @@ class YOLOv4Loss(Loss):
 
         return total_loss
 
-
 def bbox_iou(bboxes1, bboxes2):
     """
     @param bboxes1: (a, b, ..., 4)

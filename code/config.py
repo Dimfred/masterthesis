@@ -47,10 +47,10 @@ config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights
 
 ## training
 config.yolo.run_eagerly = (
-    True
-    if utils.isme()
-    else False
-    # False
+    # True
+    # if utils.isme()
+    # else False
+    False
 )
 config.yolo.checkpoint_dir = Path("checkpoints")
 config.yolo.preload_dataset = True

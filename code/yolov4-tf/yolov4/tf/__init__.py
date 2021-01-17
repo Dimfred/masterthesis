@@ -102,7 +102,7 @@ class YOLOv4(BaseClass):
             sub_labels = (label[start:end] for label in labels)
 
             with tf.GradientTape() as tape:
-                prediction = self.model(sub_imgs)
+                prediction = self.model(sub_imgs, training=True)
 
                 # TODO check!!!
                 total_loss = 0
@@ -118,6 +118,7 @@ class YOLOv4(BaseClass):
         accu_grads = [grad / self.batch_size for grad in accu_grads]
         # optimize the shit out of the model
         self.model.optimizer.apply_gradients(zip(accu_grads, train_vars))
+
 
     @tf.function
     def valid_step(self, data):

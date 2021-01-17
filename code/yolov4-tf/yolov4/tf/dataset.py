@@ -23,6 +23,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from concurrent.futures.thread import ThreadPoolExecutor
 from os import path
 import random
 from typing import Union
@@ -35,8 +36,97 @@ from ..common import media
 
 import tensorflow as tf
 import utils
+import time
 
 from numba import njit
+
+
+@utils.stopwatch("bbox_to_ground_truth_njit")
+@njit
+def bboxes_to_ground_truth_njit(
+    bboxes, num_classes, grid_size, grid_xy, label_smoothing, anchors_ratio
+):
+    """
+    @param bboxes: [[b_x, b_y, b_w, b_h, class_id], ...]
+
+    @return [s, m, l] or [s, l]
+        Dim(1, grid_y, grid_x, anchors,
+                            (b_x, b_y, b_w, b_h, conf, prob_0, prob_1, ...))
+    """
+    ground_truth = [
+        np.zeros(
+            (
+                1,
+                _size[0],
+                _size[1],
+                3,
+                5 + num_classes,
+            ),
+            dtype=np.float32,
+        )
+        for _size in grid_size
+    ]
+
+    for i, _grid in enumerate(grid_xy):
+        ground_truth[i][..., 0:2] = _grid
+
+    for bbox in bboxes:
+        # [b_x, b_y, b_w, b_h, class_id]
+        xywh = np.array(bbox[:4], dtype=np.float32)
+        class_id = int(bbox[4])
+
+        # smooth_onehot = [0.xx, ... , 1-(0.xx*(n-1)), 0.xx, ...]
+        onehot = np.zeros(num_classes, dtype=np.float32)
+        onehot[class_id] = 1.0
+        uniform_distribution = np.full(num_classes, 1.0 / num_classes, dtype=np.float32)
+        smooth_onehot = (
+            1 - label_smoothing
+        ) * onehot + label_smoothing * uniform_distribution
+
+        ious = []
+        exist_positive = False
+        for i in range(len(grid_xy)):
+            # Dim(anchors, xywh)
+            anchors_xywh = np.zeros((3, 4), dtype=np.float32)
+            anchors_xywh[:, 0:2] = xywh[0:2]
+            anchors_xywh[:, 2:4] = anchors_ratio[i]
+            iou = train.bbox_iou(xywh, anchors_xywh)
+            ious.append(iou)
+            iou_mask = iou > 0.3
+
+            if np.any(iou_mask):
+                exist_positive = True
+
+                xy_grid = xywh[0:2] * (
+                    grid_size[i][1],
+                    grid_size[i][0],
+                )
+                xy_index = np.floor(xy_grid)
+
+                for j, mask in enumerate(iou_mask):
+                    if mask:
+                        _x, _y = int(xy_index[0]), int(xy_index[1])
+                        ground_truth[i][0, _y, _x, j, 0:4] = xywh
+                        ground_truth[i][0, _y, _x, j, 4:5] = 1.0
+                        ground_truth[i][0, _y, _x, j, 5:] = smooth_onehot
+
+        if not exist_positive:
+            index = np.argmax(np.array(ious))
+            i = index // 3
+            j = index % 3
+
+            xy_grid = xywh[0:2] * (
+                grid_size[i][1],
+                grid_size[i][0],
+            )
+            xy_index = np.floor(xy_grid)
+
+            _x, _y = int(xy_index[0]), int(xy_index[1])
+            ground_truth[i][0, _y, _x, j, 0:4] = xywh
+            ground_truth[i][0, _y, _x, j, 4:5] = 1.0
+            ground_truth[i][0, _y, _x, j, 5:] = smooth_onehot
+
+    return ground_truth
 
 
 class Dataset:
@@ -162,13 +252,21 @@ class Dataset:
         #         raise ValueError("`class_id` is an integer greater than or equal to 0.")
 
         if self.preload:
-            print("Preloading dataset...")
-            for idx, item in enumerate(_dataset):
-                img_path = item[0]
-                img = self._imread(img_path)
-                # TODO maybe store only img_and_labels
+            def _read_and_store(path, idx):
+                img = self._imread(path)
                 _dataset[idx][0] = img
-            print("Dataset preloaded.")
+
+            print("Preloading dataset...")
+            start = time.perf_counter()
+            with ThreadPoolExecutor(max_workers=16) as executor:
+                for idx, item in enumerate(_dataset):
+                    img_path = item[0]
+                    executor.submit(_read_and_store, img_path, idx)
+
+            end = time.perf_counter()
+            print("Dataset preloaded. Took:", end - start)
+
+
 
         return _dataset
 
@@ -351,17 +449,12 @@ class Dataset:
     def _next_batch(self):
         batch_x = []
         _batch_y = [[] for _ in range(len(self.grid_size))]
-        for _ in range(self.batch_size):
-            x, y = self._next_data()
-            # TODO perform augmentation here
-            if self.augmentations is not None:
-                # try:
-                x, y = self.augmentations(x, y)
-                # except:
-                #     # print(y)
-                #     print("valid:", self.data_augmentation)
-                #     utils.show_bboxes(x, utils.A.class_to_front(y))
-                    # raise
+        augmentations = self.augmentations
+        next_data = self._next_data
+        for batch_idx in range(self.batch_size):
+            x, y = next_data()
+            if augmentations is not None:
+                x, y = augmentations(x, y)
 
             x = np.expand_dims(x / 255.0, axis=0)
             y = self.bboxes_to_ground_truth(y)
@@ -378,9 +471,17 @@ class Dataset:
 
         return batch_x, batch_y
 
+        # y = bboxes_to_ground_truth_njit(
+        #     y,
+        #     self.num_classes,
+        #     self.grid_size,
+        #     self.grid_xy,
+        #     self.label_smoothing,
+        #     self.anchors_ratio
+        # )
+
     def __len__(self):
         return len(self.dataset)
-
 
 
 def cut_out(dataset):
