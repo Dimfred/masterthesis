@@ -445,7 +445,6 @@ class CSPDarknet53Tiny(Model):
 
         # route3 will only be used by small (== conv9)
         if self.small:
-            print("call small backbone")
             return route1, route2, route3
         else:
             return route2, route3

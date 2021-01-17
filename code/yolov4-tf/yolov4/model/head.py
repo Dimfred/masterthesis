@@ -138,7 +138,6 @@ class YOLOv3Head(Model):
 
         return pred_s, pred_m, pred_l
 
-
 class YOLOv3HeadTiny(Model):
     def __init__(self, anchors, num_classes, xysclaes):
         super(YOLOv3HeadTiny, self).__init__(name="YOLOv3HeadTiny")

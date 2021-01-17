@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+import tensorflow as tf
 from tensorflow.keras import Model
 
 from .backbone import CSPDarknet53, CSPDarknet53Tiny
@@ -110,6 +111,7 @@ class YOLOv4Tiny(Model):
         small=False,
     ):
         super(YOLOv4Tiny, self).__init__(name="YOLOv4Tiny")
+
         self.csp_darknet53_tiny = CSPDarknet53Tiny(
             activation=activation, kernel_regularizer=kernel_regularizer, small=small
         )
@@ -121,7 +123,6 @@ class YOLOv4Tiny(Model):
         )
 
         if small:
-            print("using big head")
             self.yolov3_head_tiny = YOLOv3Head(
                 anchors=anchors, num_classes=num_classes, xysclaes=xyscales
             )

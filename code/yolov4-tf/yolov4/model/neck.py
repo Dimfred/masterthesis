@@ -395,13 +395,12 @@ class PANetTiny(Model):
 
             return pred_m, pred_l
         else:
-            print("call small neck")
             route1, route2, route3 = x
 
             x1 = self.conv15(route3)
 
             x2 = self.conv16(x1)
-            pred_l = self.conv17(x2)
+            pred_s = self.conv17(x2)
 
             x1 = self.conv18(x1)
             x1 = self.upSampling18(x1)
@@ -417,10 +416,6 @@ class PANetTiny(Model):
             x1 = self.concat9_21([x1, route1])
 
             x1 = self.conv22(x1)
-            pred_s = self.conv23(x1)
+            pred_l = self.conv23(x1)
 
-            # print("pred_s.shape\n{}".format(pred_s.shape))
-            # print("pred_m.shape\n{}".format(pred_m.shape))
-            # print("pred_l.shape\n{}".format(pred_l.shape))
-
-            return pred_s, pred_m, pred_l
+            return pred_l, pred_m, pred_s

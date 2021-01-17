@@ -34,6 +34,9 @@ from . import train
 from ..common import media
 
 import tensorflow as tf
+import utils
+
+from numba import njit
 
 
 class Dataset:
@@ -43,7 +46,6 @@ class Dataset:
         batch_size: int = 2,
         dataset_path: str = None,
         dataset_type: str = "converted_coco",
-        data_augmentation: bool = True,
         input_size: Union[list, tuple] = None,
         label_smoothing: float = 0.1,
         num_classes: int = None,
@@ -51,6 +53,9 @@ class Dataset:
         strides: np.ndarray = None,
         xyscales: np.ndarray = None,
         channels: int = 3,
+        data_augmentation: bool = False,
+        augmentations=None,
+        preload=False,
     ):
         # anchors / width
         self.anchors_ratio = anchors / input_size[0]
@@ -58,7 +63,6 @@ class Dataset:
         self.dataset_path = dataset_path
         # "yolo", "converted_coco"
         self.dataset_type = dataset_type
-        self.data_augmentation = data_augmentation
         # (height, width)
         self.grid_size = (input_size[1], input_size[0]) // np.stack(
             (strides, strides), axis=-1
@@ -88,7 +92,10 @@ class Dataset:
             for _size in self.grid_size  # (height, width)
         ]
 
+        self.preload = preload
         self.dataset = self.load_dataset()
+        self.data_augmentation = data_augmentation
+        self.augmentations = augmentations
 
         self.count = 0
         if self.data_augmentation:
@@ -108,9 +115,7 @@ class Dataset:
                     bboxes = line.strip().split()
                     image_path = bboxes[0]
                     if self.image_path_prefix:
-                        image_path = path.join(
-                            self.image_path_prefix, image_path
-                        )
+                        image_path = path.join(self.image_path_prefix, image_path)
                     xywhc_s = np.zeros((len(bboxes) - 1, 5))
                     for i, bbox in enumerate(bboxes[1:]):
                         # bbox = class_id,x,y,w,h
@@ -126,9 +131,7 @@ class Dataset:
                     # line: "<image_path>"
                     image_path = line.strip()
                     if self.image_path_prefix:
-                        image_path = path.join(
-                            self.image_path_prefix, image_path
-                        )
+                        image_path = path.join(self.image_path_prefix, image_path)
                     root, _ = path.splitext(image_path)
                     with open(root + ".txt") as fd2:
                         bboxes = fd2.readlines()
@@ -147,21 +150,30 @@ class Dataset:
             raise FileNotFoundError("Failed to find images")
 
         # Select 5 sets randomly and check the data format
-        for _ in range(5):
-            _bbox = _dataset[random.randint(0, len(_dataset) - 1)][1][0]
-            for i in range(4):
-                if _bbox[i] < 0 or _bbox[i] > 1:
-                    raise ValueError(
-                        "`center_x`, `center_y`, `width`and `height` are "
-                        "between 0.0 and 1.0."
-                    )
-            if not -1e-6 < _bbox[4] - int(_bbox[4]) < 1e-6:
-                raise ValueError(
-                    "`class_id` is an integer greater than or equal to 0."
-                )
+        # for _ in range(5):
+        #     _bbox = _dataset[random.randint(0, len(_dataset) - 1)][1][0]
+        #     for i in range(4):
+        #         if _bbox[i] < 0 or _bbox[i] > 1:
+        #             raise ValueError(
+        #                 "`center_x`, `center_y`, `width`and `height` are "
+        #                 "between 0.0 and 1.0."
+        #             )
+        #     if not -1e-6 < _bbox[4] - int(_bbox[4]) < 1e-6:
+        #         raise ValueError("`class_id` is an integer greater than or equal to 0.")
+
+        if self.preload:
+            print("Preloading dataset...")
+            for idx, item in enumerate(_dataset):
+                img_path = item[0]
+                img = self._imread(img_path)
+                # TODO maybe store only img_and_labels
+                _dataset[idx][0] = img
+            print("Dataset preloaded.")
 
         return _dataset
 
+    # @njit
+    # @utils.stopwatch("bbox_to_gt")
     def bboxes_to_ground_truth(self, bboxes):
         """
         @param bboxes: [[b_x, b_y, b_w, b_h, class_id], ...]
@@ -254,20 +266,21 @@ class Dataset:
         """
         # pylint: disable=bare-except
         try:
-            image = self._imread(dataset[0])
+            if self.preload:
+                image = dataset[0]
+            else:
+                image = self._imread(dataset[0])
         except:
             return None
 
         if output_size is None:
             output_size = self.input_size
 
-        resized_image, resized_bboxes = media.resize_image(
-            image, output_size, dataset[1]
-        )
-        resized_image = np.expand_dims(resized_image / 255.0, axis=0)
-        print("resized:", resized_image.shape)
+        # resized_image, resized_bboxes = media.resize_image(
+        #     image, output_size, dataset[1]
+        # )
 
-        return resized_image, resized_bboxes
+        # return resized_image, resized_bboxes
 
     def _imread(self, path):
         if self.channels == 3:
@@ -277,37 +290,35 @@ class Dataset:
             image = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
             image = np.expand_dims(image, axis=2)
 
-        print(image.shape)
         return image
 
-    def _next_data(self):
-        for _ in range(5):
-            _dataset = self.dataset[self.count]
-            self.count += 1
-            if self.count == len(self.dataset):
-                if self.data_augmentation:
-                    np.random.shuffle(self.dataset)
-                self.count = 0
+    def load_img_and_labels(self, dataset):
+        try:
+            if self.preload:
+                img = dataset[0]
+            else:
+                img = self._imread(dataset[0])
+        except:
+            return None
 
-            ret = self.load_image_then_resize(_dataset)
-            if ret is not None:
-                return ret
+        labels = dataset[1]
+
+        return img, labels
+
+    def _next_data(self):
+        _dataset = self.dataset[self.count]
+
+        self.count += 1
+        if self.count == len(self.dataset):
+            if self.data_augmentation:
+                np.random.shuffle(self.dataset)
+            self.count = 0
+
+        ret = self.load_img_and_labels(_dataset)
+        if ret is not None:
+            return ret
 
         raise FileNotFoundError("Failed to find images")
-
-    def _next_random_augmentation_data(self):
-        if random.random() < 0.2:
-            _prob = random.random()
-            if _prob < 0.25:
-                _dataset = cut_out(self._next_data())
-            elif _prob < 0.5:
-                _dataset = mix_up(self._next_data(), self._next_data())
-            else:
-                _dataset = mosaic(*[self._next_data() for _ in range(4)])
-        else:
-            _dataset = self._next_data()
-
-        return _dataset
 
     def __iter__(self):
         self.count = 0
@@ -320,38 +331,56 @@ class Dataset:
         @return image, ground_truth
             ground_truth == (s_truth, m_truth, l_truth) or (s_truth, l_truth)
         """
-        if self.batch_size > 1:
-            batch_x = []
-            _batch_y = [[] for _ in range(len(self.grid_size))]
-            for _ in range(self.batch_size):
-                if self.data_augmentation:
-                    _dataset = self._next_random_augmentation_data()
-                else:
-                    _dataset = self._next_data()
-                x = _dataset[0]
-                y = self.bboxes_to_ground_truth(_dataset[1])
-                batch_x.append(x)
-                for i, _y in enumerate(y):
-                    _batch_y[i].append(_y)
-            batch_x = np.concatenate(batch_x, axis=0)
-            batch_y = [np.concatenate(b_y, axis=0) for b_y in _batch_y]
-        else:
-            if self.data_augmentation:
-                _dataset = self._next_random_augmentation_data()
-            else:
-                _dataset = self._next_data()
-            batch_x = _dataset[0]
-            batch_y = self.bboxes_to_ground_truth(_dataset[1])
+        return self._next_batch()
 
-        # batch_x == Dim(batch, input_size, input_size, channels)
-        # batch_y[0] == Dim(batch, grid_size, grid_size, anchors, bboxes)
-        # for b in batch_y:
-        #     print(b.shape)
+    def _next_item(self):
+        x, y = self._next_data()
+        if self.augmentations is not None:
+            x, y = self.augmentations(x, y)
+
+        x = np.expand_dims(x / 255.0, axis=0)
+        y = self.bboxes_to_ground_truth(y)
+
+        return x, y
+
+    # @utils.stopwatch("next_batch")
+    def _next_batch(self):
+        batch_x = []
+        _batch_y = [[] for _ in range(len(self.grid_size))]
+        for _ in range(self.batch_size):
+            x, y = self._next_data()
+            # TODO perform augmentation here
+            if self.augmentations is not None:
+                # try:
+                x, y = self.augmentations(x, y)
+                # except:
+                #     # print(y)
+                #     print("valid:", self.data_augmentation)
+                #     utils.show_bboxes(x, utils.A.class_to_front(y))
+                    # raise
+
+            x = np.expand_dims(x / 255.0, axis=0)
+            y = self.bboxes_to_ground_truth(y)
+
+            batch_x.append(x)
+            for i, _y in enumerate(y):
+                _batch_y[i].append(_y)
+
+        batch_x = np.concatenate(batch_x, axis=0)
+        batch_y = [np.concatenate(b_y, axis=0) for b_y in _batch_y]
+
+        if self.batch_size == 1:
+            batch_x, batch_y = batch_x[0], batch_y[0]
 
         return batch_x, batch_y
 
     def __len__(self):
         return len(self.dataset)
+
+    def generator(self):
+        for item in self:
+            yield item
+
 
 
 def cut_out(dataset):
@@ -370,12 +399,10 @@ def cut_out(dataset):
             _cut_out_width = _pixel_bbox[2] // 4
             _cut_out_height = _pixel_bbox[3] // 4
             _x_offset = (
-                int((_pixel_bbox[2] - _cut_out_width) * random.random())
-                + _x_min
+                int((_pixel_bbox[2] - _cut_out_width) * random.random()) + _x_min
             )
             _y_offset = (
-                int((_pixel_bbox[3] - _cut_out_height) * random.random())
-                + _y_min
+                int((_pixel_bbox[3] - _cut_out_height) * random.random()) + _y_min
             )
             dataset[0][
                 :,
@@ -455,9 +482,7 @@ def mosaic(dataset0, dataset1, dataset2, dataset3):
         :,
     ]
 
-    for i, _bboxes in enumerate(
-        (dataset0[1], dataset1[1], dataset2[1], dataset3[1])
-    ):
+    for i, _bboxes in enumerate((dataset0[1], dataset1[1], dataset2[1], dataset3[1])):
         for bbox in _bboxes:
             pixel_bbox = [
                 int(pos * size[(i + 1) % 2]) for i, pos in enumerate(bbox[0:4])

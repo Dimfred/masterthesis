@@ -39,6 +39,8 @@ class BaseClass:
         self.tiny = tiny
         self.tpu = tpu
         self.small = small
+        self._classes = None
+        self._input_size = None
 
         # properties
         if tiny and not small:
@@ -52,17 +54,15 @@ class BaseClass:
                 [[36, 75], [76, 55], [72, 146]],
                 [[142, 110], [192, 243], [459, 401]],
             ]
-        self._classes = None
-        self._input_size = None
 
-        if tiny:
+        if tiny and not small:
             self._strides = np.array([16, 32])
         else:
             self._strides = np.array([8, 16, 32])
 
         if tiny:
             if small:
-                self.xyscales = [1.05, 1.05, 1.05]
+                self.xyscales = [1.2, 1.1, 1.05]
             else:
                 self.xyscales = [1.05, 1.05]
         else:
@@ -70,6 +70,7 @@ class BaseClass:
 
     def unload(self):
         from numba import cuda
+
         cuda.select_device(0)
         cuda.close()
 

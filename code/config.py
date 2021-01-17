@@ -44,8 +44,18 @@ config.yolo.tiny = True
 config.yolo.small = True
 config.yolo.weights_type = "yolo"
 config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights"
-config.yolo.checkpoint_dir = Path("checkpoints")
 
+## training
+config.yolo.run_eagerly = True #False
+config.yolo.checkpoint_dir = Path("checkpoints")
+config.yolo.preload_dataset = True
+config.yolo.batch_size = 64
+config.yolo.subdivisions = 32 if utils.isme() else 8
+config.yolo.loss = "ciou"
+config.yolo.lr = 1e-4
+config.yolo.step_size = 35
+config.yolo.epochs = 4000
+config.yolo.workers = 12 if utils.isme() else 16
 
 # classes and corresponding trained weights
 architecture_type = {
@@ -72,6 +82,7 @@ classes, weights = architecture_type[config.yolo.architecture_type]
 config.yolo.classes = classes
 config.yolo.weights = weights
 config.yolo.full_classes = architecture_type["edges"][0]
+
 
 
 ###############

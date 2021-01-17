@@ -186,10 +186,11 @@ class MobileNetV2_unet(nn.Module):
         return pred
 
     def unload(self):
-        from numba import cuda
+        self.cpu()
+        # from numba import cuda
 
-        cuda.select_device(0)
-        cuda.close()
+        # cuda.select_device(0)
+        # cuda.close()
 
 
 if __name__ == "__main__":

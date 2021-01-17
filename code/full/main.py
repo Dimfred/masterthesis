@@ -13,14 +13,14 @@ import enum
 import itertools as it
 from typing import List
 
-tf.get_logger().setLevel("INFO")
+# tf.get_logger().setLevel("INFO")
 
-# has to be called right after tf import
-physical_devices = tf.config.experimental.list_physical_devices("GPU")
-if len(physical_devices) > 0:
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+# # has to be called right after tf import
+# physical_devices = tf.config.experimental.list_physical_devices("GPU")
+# if len(physical_devices) > 0:
+#     tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-from yolov4.tf import YOLOv4
+# from yolov4.tf import YOLOv4
 from mobile_unet import MobileNetV2_unet
 from mobile_unet.eval_unet import get_data_loaders
 
@@ -65,6 +65,48 @@ def init_unet():
     return unet
 
 
+def run_prediction(img_path):
+    import subprocess as sp
+
+    prediction_file = "prediction.npy"
+
+    sp.run(["python3.8", "-c",
+f"""
+import cv2 as cv
+import numpy as np
+import tensorflow as tf
+physical_devices = tf.config.experimental.list_physical_devices("GPU")
+if len(physical_devices) > 0:
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
+from yolov4.tf import YOLOv4
+import utils
+from config import config
+
+
+yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
+yolo.classes = config.yolo.classes
+yolo.input_size = config.yolo.input_size
+yolo.channels = config.yolo.channels
+yolo.make_model()
+
+# yolo.load_weights(config.yolo.label_weights, weights_type=config.yolo.weights_type)
+yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
+
+def imread(path):
+    img = cv.imread(str(path), cv.IMREAD_GRAYSCALE)
+    img = np.expand_dims(img, axis=2)
+    return img
+img = imread("{img_path}")
+img = utils.resize_max_axis(img, 1000)
+
+prediction = yolo.predict(img)
+np.save("{prediction_file}", prediction)
+"""
+    ])
+    return np.load(prediction_file)
+
+
 def imread(path):
     img = cv.imread(str(path), cv.IMREAD_GRAYSCALE)
     img = np.expand_dims(img, axis=2)
@@ -105,16 +147,16 @@ if __name__ == "__main__":
 
     for img_name in [
         # valid
-        # "07_00.png"
-        # "07_05.png",
-        # "07_06.png",
-        # "07_07.png",
+        "07_00.png",
+        "07_05.png",
+        "07_06.png",
+        "07_07.png",
         "08_01.png",
-        # "08_02.png",
-        # "08_05.png",
-        # "08_07.png",
-        # "08_08.png",
-        # "08_09.png",
+        "08_02.png",
+        "08_05.png",
+        "08_07.png",
+        "08_08.png",
+        "08_09.png",
         # train
         # "00_11.jpg",
         # "00_19.jpg",
@@ -132,17 +174,22 @@ if __name__ == "__main__":
         # utils.show(img)
 
         # yolo predictions
-        yolo = init_yolo()
+        # yolo = init_yolo()
+        # print("yolo inited")
         # DEBUG
         # yolo.inference(str(img_path))
 
-        prediction_params = {"iou_threshold": 0.3, "score_threshold": 0.25}
-        yolo_prediction = yolo.predict(img)
-        yolo.unload()
+        # prediction_params = {"iou_threshold": 0.3, "score_threshold": 0.25}
+        # yolo_prediction = yolo.predict(img)
+        # print("yolo predicted")
+        # yolo.unload()
+        yolo_prediction = run_prediction(img_path)
 
         # unet predictions
         unet = init_unet()
+        print("unet inited")
         output = unet.predict(img)
+        print("unet predicted")
         unet.unload()
 
         segmentation = cv.resize(output, img.shape[:2][::-1])
@@ -186,7 +233,7 @@ if __name__ == "__main__":
 
         ltbuilder = LTBuilderAdapter(config.yolo.classes, grid_size)
         ltbuilder.make_ltcomponents(bboxes)
-        ltbuilder.make_wires(topology, postprocessor.connected_components, segmentation)
+        ltbuilder.make_wires(topology, postprocessor.connected_components, segmentation, img)
 
         writer = LTWriter()
         writer.write(lt_file, ltbuilder.ltcomponents)

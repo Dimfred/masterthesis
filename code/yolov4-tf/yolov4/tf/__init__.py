@@ -34,6 +34,9 @@ from .train import SaveWeightsCallback
 from ..common.base_class import BaseClass
 from ..model import yolov4
 
+from tqdm import tqdm
+from cached_property import cached_property
+
 
 class YOLOv4(BaseClass):
     def __init__(self, tiny: bool = False, tpu: bool = False, small: bool = False):
@@ -43,6 +46,7 @@ class YOLOv4(BaseClass):
         super(YOLOv4, self).__init__(tiny=tiny, tpu=tpu, small=small)
 
         self.batch_size = 32
+        self.subdivisions = 1
         self._has_weights = False
         self.input_size = 608
         self.channels = 3
@@ -67,7 +71,7 @@ class YOLOv4(BaseClass):
                 xyscales=self.xyscales,
                 activation=activation1,
                 kernel_regularizer=kernel_regularizer,
-                small=self.small
+                small=self.small,
             )
         else:
             self.model = yolov4.YOLOv4(
@@ -79,6 +83,87 @@ class YOLOv4(BaseClass):
                 kernel_regularizer=kernel_regularizer,
             )
         self.model(inputs)
+        self.model.train_step = self.train_step
+        self.model.valid_step = self.valid_step
+
+    @tf.function
+    def train_step(self, data):
+        imgs, labels = data
+
+        # loss for this step
+        output_losses = [0 for _ in range(3)]
+        # get trainable variables
+        train_vars = self.model.trainable_variables
+        # Create empty gradient list (not a tf.Variable list)
+        accu_grads = [tf.zeros_like(var) for var in train_vars]
+
+        for start, end in tqdm(self.minibatch_idxs):
+            sub_imgs = imgs[start:end]
+            sub_labels = (label[start:end] for label in labels)
+
+            with tf.GradientTape() as tape:
+                prediction = self.model(sub_imgs)
+
+                # TODO check!!!
+                total_loss = 0
+                for lidx, (y_pred, y_true) in enumerate(zip(prediction, sub_labels)):
+                    loss = self.model.loss(y_pred=y_pred, y_true=y_true)
+                    total_loss += loss
+                    output_losses[lidx] += loss
+
+            grads = tape.gradient(total_loss, train_vars)
+            accu_grads = [(accu + grad) for accu, grad in zip(accu_grads, grads)]
+
+        # mean the grads
+        accu_grads = [grad / self.batch_size for grad in accu_grads]
+        # optimize the shit out of the model
+        self.model.optimizer.apply_gradients(zip(accu_grads, train_vars))
+
+    @tf.function
+    def valid_step(self, data):
+        imgs, labels = data
+
+        # loss for this step
+        output_losses = [0 for _ in range(3)]
+        # get trainable variables
+        train_vars = self.model.trainable_variables
+        # Create empty gradient list (not a tf.Variable list)
+        accu_grads = [tf.zeros_like(var) for var in train_vars]
+
+        for start, end in tqdm(self.minibatch_idxs):
+            sub_imgs = imgs[start:end]
+            sub_labels = (label[start:end] for label in labels)
+
+            with tf.GradientTape() as tape:
+                prediction = self.model(sub_imgs)
+
+                # TODO check!!!
+                total_loss = 0
+                for lidx, (y_pred, y_true) in enumerate(zip(prediction, sub_labels)):
+                    loss = self.model.loss(y_pred=y_pred, y_true=y_true)
+                    total_loss += loss
+                    output_losses[lidx] += loss
+
+            grads = tape.gradient(total_loss, train_vars)
+            accu_grads = [(accu + grad) for accu, grad in zip(accu_grads, grads)]
+
+        # mean the grads
+        accu_grads = [grad / self.batch_size for grad in accu_grads]
+
+
+    @cached_property
+    def minibatch_idxs(self):
+        minibatch_size = int(self.batch_size / self.subdivisions)
+
+        minibatch_idxs = [
+            (start, end)
+            for start, end in zip(
+                range(0, self.batch_size - 1, minibatch_size),
+                range(minibatch_size, self.batch_size + 1, minibatch_size),
+            )
+        ]
+
+        return minibatch_idxs
 
     def load_weights(self, weights_path: str, weights_type: str = "tf"):
         """
@@ -87,7 +172,9 @@ class YOLOv4(BaseClass):
             yolo.load_weights("checkpoints")
         """
         if weights_type == "yolo":
-            weights.load_weights(self.model, weights_path, tiny=self.tiny, small=self.small)
+            weights.load_weights(
+                self.model, weights_path, tiny=self.tiny, small=self.small
+            )
         elif weights_type == "tf":
             self.model.load_weights(weights_path)
 
@@ -149,9 +236,7 @@ class YOLOv4(BaseClass):
             converter.inference_input_type = tf.int8
             converter.inference_output_type = tf.int8
         elif quantization:
-            raise ValueError(
-                "YOLOv4: {} is not a valid option".format(quantization)
-            )
+            raise ValueError("YOLOv4: {} is not a valid option".format(quantization))
 
         converter.target_spec.supported_ops = _supported_ops
 
@@ -172,9 +257,7 @@ class YOLOv4(BaseClass):
         for candidate in candidates:
             grid_size = candidate.shape[1:3]
             _candidates.append(
-                tf.reshape(
-                    candidate[0], shape=(1, grid_size[0] * grid_size[1] * 3, -1)
-                )
+                tf.reshape(candidate[0], shape=(1, grid_size[0] * grid_size[1] * 3, -1))
             )
         return tf.concat(_candidates, axis=1)
 
@@ -218,21 +301,25 @@ class YOLOv4(BaseClass):
         dataset_type="converted_coco",
         label_smoothing=0.1,
         image_path_prefix=None,
-        training=True,
+        augmentations=None,
+        training=False,
+        preload=False,
     ):
         return dataset.Dataset(
             anchors=self.anchors,
             batch_size=self.batch_size,
             dataset_path=dataset_path,
             dataset_type=dataset_type,
-            data_augmentation=training,
             input_size=self.input_size,
             label_smoothing=label_smoothing,
             num_classes=len(self.classes),
             image_path_prefix=image_path_prefix,
             strides=self.strides,
             xyscales=self.xyscales,
-            channels=self.channels
+            channels=self.channels,
+            data_augmentation=training,
+            augmentations=augmentations,
+            preload=preload,
         )
 
     def compile(
@@ -240,6 +327,7 @@ class YOLOv4(BaseClass):
         loss_iou_type: str = "ciou",
         loss_verbose=1,
         optimizer=optimizers.Adam(learning_rate=1e-4),
+        **kwargs,
     ):
         self.model.compile(
             optimizer=optimizer,
@@ -248,6 +336,7 @@ class YOLOv4(BaseClass):
                 iou_type=loss_iou_type,
                 verbose=loss_verbose,
             ),
+            **kwargs,
         )
 
     def fit(
@@ -261,6 +350,7 @@ class YOLOv4(BaseClass):
         steps_per_epoch=None,
         validation_steps=None,
         validation_freq=1,
+        workers=1,
     ):
         self.model.fit(
             data_set,
@@ -279,7 +369,7 @@ class YOLOv4(BaseClass):
             validation_batch_size=None,
             validation_freq=validation_freq,
             max_queue_size=10,
-            workers=1,
+            workers=workers,
             use_multiprocessing=False,
         )
 
@@ -329,9 +419,7 @@ class YOLOv4(BaseClass):
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             height, width, _ = image.shape
 
-            _dataset[1] = _dataset[1] * np.array(
-                [width, height, width, height, 1]
-            )
+            _dataset[1] = _dataset[1] * np.array([width, height, width, height, 1])
 
             # ground-truth
             with open(
@@ -346,15 +434,11 @@ class YOLOv4(BaseClass):
                     right = int(xywhc[0] + xywhc[2] / 2)
                     bottom = int(xywhc[1] + xywhc[3] / 2)
                     fd.write(
-                        "{} {} {} {} {}\n".format(
-                            class_name, left, top, right, bottom
-                        )
+                        "{} {} {} {} {}\n".format(class_name, left, top, right, bottom)
                     )
 
             pred_bboxes = self.predict(image)
-            pred_bboxes = pred_bboxes * np.array(
-                [width, height, width, height, 1, 1]
-            )
+            pred_bboxes = pred_bboxes * np.array([width, height, width, height, 1, 1])
 
             # detection-results
             with open(

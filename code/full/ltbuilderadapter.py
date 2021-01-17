@@ -67,8 +67,8 @@ class LTBuilderAdapter:
             component = self.make_ltcomponent("TODO_NAME", x_grid, y_grid, bbox.label)
             self.ltcomponents.append(component)
 
-    def make_wires(self, topology, connected_components, segmentation):
-        self._create_subnodes(topology, connected_components, segmentation)
+    def make_wires(self, topology, connected_components, segmentation, original):
+        self._create_subnodes(topology, connected_components, segmentation, original)
 
         # use just the topology to create a clean trace
         for label, sub_topology in topology.items():
@@ -197,281 +197,352 @@ class LTBuilderAdapter:
                             self.ltcomponents.append(w2)
                             self.ltcomponents.append(w3)
 
-    def _create_subnodes(self, topology, connected_components, segmentation):
+    def _create_subnodes(self, topology, connected_components, segmentation, orig):
         # splits sub_topologies > 2 into pieces with len = 2
-        new_topology = {}
+
+        blurred = cv.GaussianBlur(orig, (3, 3), 1) * (segmentation > 0)
+        low_mag_th = 50
+
+        x_grad = cv.Sobel(
+            blurred,
+            cv.CV_64F,
+            1,
+            0,
+            ksize=3,
+            scale=1,
+            delta=0,
+            borderType=cv.BORDER_DEFAULT,
+        )
+        x_grad = x_grad * (np.abs(x_grad) > low_mag_th)
+
+        y_grad = cv.Sobel(
+            blurred,
+            cv.CV_64F,
+            0,
+            1,
+            ksize=3,
+            scale=1,
+            delta=0,
+            borderType=cv.BORDER_DEFAULT,
+        )
+        y_grad = y_grad * (np.abs(y_grad) > low_mag_th)
+
+        utils.show(np.uint8(np.abs(x_grad)), np.uint8(np.abs(y_grad)))
+
+
+        thinned = cv.ximgproc.thinning(segmentation)
+        x_grad = cv.Sobel(
+            thinned,
+            cv.CV_64F,
+            1,
+            0,
+            ksize=3,
+            scale=1,
+            delta=0,
+            borderType=cv.BORDER_DEFAULT,
+        )
+        x_grad = x_grad * (np.abs(x_grad) > low_mag_th)
+
+        y_grad = cv.Sobel(
+            thinned,
+            cv.CV_64F,
+            0,
+            1,
+            ksize=3,
+            scale=1,
+            delta=0,
+            borderType=cv.BORDER_DEFAULT,
+        )
+        y_grad = y_grad * (np.abs(y_grad) > low_mag_th)
+
+        utils.show(np.uint8(np.abs(x_grad)), np.uint8(np.abs(y_grad)))
+
+
+
         for label, sub_topology in topology.items():
             if len(sub_topology) == 2:
-                new_topology[label] = sub_topology
                 continue
 
-            connected_component_orig = np.uint8(connected_components == label) * 255
-            # DEBUG
-            # utils.show(connected_component)
+            # utils.show(orig)
 
-            connected_component = segmentation * (connected_component_orig == 255)
-            connected_component = Utils.close(connected_component, 2)
-            # utils.show(connected_component)
 
-            # connected_component = connected_component_orig.copy()
-            connected_component = cv.ximgproc.thinning(connected_component)
-            # DEBUG
-            # utils.show(connected_component)
+        ############### VERT HOR END #####################################
 
-            lines = cv.HoughLines(connected_component, 1, np.pi / 180, 20)
+        # new_topology = {}
+        # for label, sub_topology in topology.items():
+        #     if len(sub_topology) == 2:
+        #         new_topology[label] = sub_topology
+        #         continue
 
-            suppressed_lines = []
-            cimg = cv.cvtColor(connected_component, cv.COLOR_GRAY2BGR)
-            corig = cv.cvtColor(connected_component_orig, cv.COLOR_GRAY2BGR)
+        #     connected_component_orig = np.uint8(connected_components == label) * 255
+        #     # DEBUG
+        #     # utils.show(connected_component)
 
-            def make_line(rho, theta):
-                a, b = math.cos(theta), math.sin(theta)
-                x0, y0 = a * rho, b * rho
-                p1 = (int(x0 + 5000 * (-b)), int(y0 + 5000 * (a)))
-                p2 = (int(x0 - 5000 * (-b)), int(y0 - 5000 * (a)))
+        #     connected_component = segmentation * (connected_component_orig == 255)
+        #     connected_component = Utils.close(connected_component, 2)
+        #     # utils.show(connected_component)
 
-                return p1, p2
+        #     # connected_component = connected_component_orig.copy()
+        #     connected_component = cv.ximgproc.thinning(connected_component)
+        #     # DEBUG
+        #     # utils.show(connected_component)
 
-            # fmt:off
-            hor_kernel = np.array([
-                [0, 0, 0],
-                [1, 1, 1],
-                [0, 0, 0]~/scripts/run/rofipass
-            ])
-            min_line_len = max(*hor_kernel.shape)
-            # fmt:on
-            ver_kernel = hor_kernel.T
+        #     lines = cv.HoughLines(connected_component, 1, np.pi / 180, 20)
 
-            hor_lines = cv.filter2D(
-                np.uint8(connected_component == 255),
-                -1,
-                hor_kernel,
-                borderType=cv.BORDER_CONSTANT,
-            )
+        #     suppressed_lines = []
+        #     cimg = cv.cvtColor(connected_component, cv.COLOR_GRAY2BGR)
+        #     corig = cv.cvtColor(connected_component_orig, cv.COLOR_GRAY2BGR)
 
-            ver_lines = cv.filter2D(
-                np.uint8(connected_component == 255),
-                -1,
-                ver_kernel,
-                borderType=cv.BORDER_CONSTANT,
-            )
-            hor_lines = np.uint8(hor_lines == min_line_len)
-            ver_lines = np.uint8(ver_lines == min_line_len)
+        #     def make_line(rho, theta):
+        #         a, b = math.cos(theta), math.sin(theta)
+        #         x0, y0 = a * rho, b * rho
+        #         p1 = (int(x0 + 5000 * (-b)), int(y0 + 5000 * (a)))
+        #         p2 = (int(x0 - 5000 * (-b)), int(y0 - 5000 * (a)))
 
-            # fmt:off
-            ver_inc = [
-                np.array([
-                    [0, 0, 0],
-                    [0, 1, 0],
-                    [0, 1, 0]
-                ]),
-                np.array([
-                    [0, 1, 0],
-                    [0, 1, 0],
-                    [0, 0, 0]
-                ]),
-            ]
+        #         return p1, p2
 
-            hor_inc = [
-                np.array([
-                    [0, 0, 0],
-                    [1, 1, 0],
-                    [0, 0, 0]
-                ]),
-                np.array([
-                    [0, 0, 0],
-                    [0, 1, 1],
-                    [0, 0, 0]
-                ]),
-            ]
-            # fmt:on
+        #     # fmt:off
+        #     hor_kernel = np.array([
+        #         [0, 0, 0],
+        #         [1, 1, 1],
+        #         [0, 0, 0]
+        #     ])
+        #     min_line_len = max(*hor_kernel.shape)
+        #     # fmt:on
+        #     ver_kernel = hor_kernel.T
 
-            for i in range(20):
-                for inc in hor_inc:
-                    hor_ext = cv.filter2D(
-                        np.uint8(hor_lines), -1, inc, borderType=cv.BORDER_CONSTANT
-                    )
+        #     hor_lines = cv.filter2D(
+        #         np.uint8(connected_component == 255),
+        #         -1,
+        #         hor_kernel,
+        #         borderType=cv.BORDER_CONSTANT,
+        #     )
 
-                    hor_ext = np.argwhere(hor_ext == 2)
-                    for y, x in hor_ext:
-                        hor_lines[y, x - 1 : x + 2] = 1
+        #     ver_lines = cv.filter2D(
+        #         np.uint8(connected_component == 255),
+        #         -1,
+        #         ver_kernel,
+        #         borderType=cv.BORDER_CONSTANT,
+        #     )
+        #     hor_lines = np.uint8(hor_lines == min_line_len)
+        #     ver_lines = np.uint8(ver_lines == min_line_len)
 
-                for inc in ver_inc:
-                    ver_ext = cv.filter2D(
-                        np.uint8(ver_lines), -1, inc, borderType=cv.BORDER_CONSTANT
-                    )
+        #     # fmt:off
+        #     ver_inc = [
+        #         np.array([
+        #             [0, 0, 0],
+        #             [0, 1, 0],
+        #             [0, 1, 0]
+        #         ]),
+        #         np.array([
+        #             [0, 1, 0],
+        #             [0, 1, 0],
+        #             [0, 0, 0]
+        #         ]),
+        #     ]
 
-                    ver_ext = np.argwhere(ver_ext == 2)
-                    for y, x in ver_ext:
-                        ver_lines[y - 1 : y + 2, x] = 1
+        #     hor_inc = [
+        #         np.array([
+        #             [0, 0, 0],
+        #             [1, 1, 0],
+        #             [0, 0, 0]
+        #         ]),
+        #         np.array([
+        #             [0, 0, 0],
+        #             [0, 1, 1],
+        #             [0, 0, 0]
+        #         ]),
+        #     ]
+        #     # fmt:on
 
-                # DEBUG
-                # utils.show(hor_lines * 255, ver_lines * 255)
+        #     for i in range(20):
+        #         for inc in hor_inc:
+        #             hor_ext = cv.filter2D(
+        #                 np.uint8(hor_lines), -1, inc, borderType=cv.BORDER_CONSTANT
+        #             )
 
-            # hor_lines = Utils.dilate(hor_lines)
-            # ver_lines = Utils.dilate(ver_lines)
+        #             hor_ext = np.argwhere(hor_ext == 2)
+        #             for y, x in hor_ext:
+        #                 hor_lines[y, x - 1 : x + 2] = 1
 
-            horver_inter = np.uint8(np.logical_and(hor_lines, ver_lines))
-            inter_idxs = np.argwhere(horver_inter)
+        #         for inc in ver_inc:
+        #             ver_ext = cv.filter2D(
+        #                 np.uint8(ver_lines), -1, inc, borderType=cv.BORDER_CONSTANT
+        #             )
 
-            nms_inter_groups = []
-            for inter1, inter2 in it.combinations(inter_idxs, 2):
-                if np.linalg.norm(inter1 - inter2) > 10:
-                    continue
+        #             ver_ext = np.argwhere(ver_ext == 2)
+        #             for y, x in ver_ext:
+        #                 ver_lines[y - 1 : y + 2, x] = 1
 
-                inter1, inter2 = tuple(inter1), tuple(inter2)
+        #         # DEBUG
+        #         # utils.show(hor_lines * 255, ver_lines * 255)
 
-                appended = False
-                for group in nms_inter_groups:
-                    if inter1 in group:
-                        group.append(inter2)
-                        appended = True
-                        break
-                    elif inter2 in group:
-                        group.append(inter1)
-                        appended = True
-                        break
+        #     # hor_lines = Utils.dilate(hor_lines)
+        #     # ver_lines = Utils.dilate(ver_lines)
 
-                if not appended:
-                    nms_inter_groups.append([inter1, inter2])
+        #     horver_inter = np.uint8(np.logical_and(hor_lines, ver_lines))
+        #     inter_idxs = np.argwhere(horver_inter)
 
-            for inter in inter_idxs:
-                inter = tuple(inter)
-                exists = False
-                for group in nms_inter_groups:
-                    if inter in group:
-                        exists = True
-                        break
+        #     nms_inter_groups = []
+        #     for inter1, inter2 in it.combinations(inter_idxs, 2):
+        #         if np.linalg.norm(inter1 - inter2) > 10:
+        #             continue
 
-                if not exists:
-                    nms_inter_groups.append([inter])
+        #         inter1, inter2 = tuple(inter1), tuple(inter2)
 
-            nms_inter_idxs = []
-            for group in nms_inter_groups:
-                # TODO maybe mean or something
-                nms_inter_idxs.append(group[0])
-            inter_idxs = nms_inter_idxs
+        #         appended = False
+        #         for group in nms_inter_groups:
+        #             if inter1 in group:
+        #                 group.append(inter2)
+        #                 appended = True
+        #                 break
+        #             elif inter2 in group:
+        #                 group.append(inter1)
+        #                 appended = True
+        #                 break
 
-            # DEBUG
-            for y, x in inter_idxs:
-                cv.circle(cimg, (x, y), 5, (0, 0, 255))
-            #     cv.circle(corig, (x, y), 5, (0, 0, 255))
-            utils.show(cimg)
+        #         if not appended:
+        #             nms_inter_groups.append([inter1, inter2])
 
-            node_bboxes = []
-            # grow a bounding box around each point
-            for y, x in inter_idxs:
-                for i in range(100):
-                    # TODO maybe but actually components are perfectly seperated
-                    offset = 3
+        #     for inter in inter_idxs:
+        #         inter = tuple(inter)
+        #         exists = False
+        #         for group in nms_inter_groups:
+        #             if inter in group:
+        #                 exists = True
+        #                 break
 
-                    # TODO make cleverer; grow a square for now
-                    tl, tr = (y - i, x - i), (y - i, x + i)
-                    bl, br = (y + i, x - i), (y + i, x + i)
+        #         if not exists:
+        #             nms_inter_groups.append([inter])
 
-                    # if every coord is outside of the component
-                    if (
-                        not connected_component_orig[tl]
-                        and not connected_component_orig[tr]
-                        and not connected_component_orig[bl]
-                        and not connected_component_orig[br]
-                    ):
-                        y, x = tl
-                        tl = (x - offset, y - offset)
+        #     nms_inter_idxs = []
+        #     for group in nms_inter_groups:
+        #         # TODO maybe mean or something
+        #         nms_inter_idxs.append(group[0])
+        #     inter_idxs = nms_inter_idxs
 
-                        y, x = br
-                        br = (x + offset, y + offset)
-                        node_bboxes.append((tl, br))
-                        break
+        #     # DEBUG
+        #     for y, x in inter_idxs:
+        #         cv.circle(cimg, (x, y), 5, (0, 0, 255))
+        #     #     cv.circle(corig, (x, y), 5, (0, 0, 255))
+        #     utils.show(cimg)
 
-            # DEBUG
-            for p1, p2 in node_bboxes:
-                corig = cv.rectangle(corig, p1, p2, (0, 0, 255), 1)
-            utils.show(corig)
+        #     node_bboxes = []
+        #     # grow a bounding box around each point
+        #     for y, x in inter_idxs:
+        #         for i in range(100):
+        #             # TODO maybe but actually components are perfectly seperated
+        #             offset = 3
 
-            # utils.show(connected_component, hor_lines, ver_lines, horver_inter)
+        #             # TODO make cleverer; grow a square for now
+        #             tl, tr = (y - i, x - i), (y - i, x + i)
+        #             bl, br = (y + i, x - i), (y + i, x + i)
 
-            # inter_img = cimg.copy()
-            # mean_img = cimg.copy()
-            # for line in lines:
-            #     rho, theta = line[0]
+        #             # if every coord is outside of the component
+        #             if (
+        #                 not connected_component_orig[tl]
+        #                 and not connected_component_orig[tr]
+        #                 and not connected_component_orig[bl]
+        #                 and not connected_component_orig[br]
+        #             ):
+        #                 y, x = tl
+        #                 tl = (x - offset, y - offset)
 
-            #     # supressing non hor / ver lines
-            #     angle = theta * 180 / np.pi
-            #     if not ((-2 < angle and angle < 2) or (88 < angle and angle < 92)):
-            #         continue
+        #                 y, x = br
+        #                 br = (x + offset, y + offset)
+        #                 node_bboxes.append((tl, br))
+        #                 break
 
-            #     suppressed_lines.append((rho, theta))
+        #     # DEBUG
+        #     for p1, p2 in node_bboxes:
+        #         corig = cv.rectangle(corig, p1, p2, (0, 0, 255), 1)
+        #     utils.show(corig)
 
-            #     p1, p2 = make_line(rho, theta)
-            #     # DEBUG
-            #     cv.line(cimg, p1, p2, (0, 0, 255), 1)
+        ############### VERT HOR END #####################################
 
-            # print(len(suppressed_lines))
-            # thetas = np.array([theta for _, theta in suppressed_lines]).reshape(-1, 1)
+        # utils.show(connected_component, hor_lines, ver_lines, horver_inter)
 
-            # # split into two groups
-            # segmented_lines = sk.cluster.KMeans(n_clusters=2, random_state=0).fit(
-            #     thetas
-            # )
+        # inter_img = cimg.copy()
+        # mean_img = cimg.copy()
+        # for line in lines:
+        #     rho, theta = line[0]
 
-            # segment1, segment2 = [], []
-            # for idx, (label, line) in enumerate(
-            #     zip(segmented_lines.labels_, suppressed_lines)
-            # ):
-            #     _segment = segment1 if label else segment2
-            #     _segment.append(line)
+        #     # supressing non hor / ver lines
+        #     angle = theta * 180 / np.pi
+        #     if not ((-2 < angle and angle < 2) or (88 < angle and angle < 92)):
+        #         continue
 
-            # segment1, segment2 = np.vstack(segment1), np.vstack(segment2)
+        #     suppressed_lines.append((rho, theta))
 
-            # # CRAP
-            # # segment1[:, 1] = np.mean(segment1[:, 1])
-            # # segment2[:, 1] = np.mean(segment2[:, 1])
+        #     p1, p2 = make_line(rho, theta)
+        #     # DEBUG
+        #     cv.line(cimg, p1, p2, (0, 0, 255), 1)
 
-            # # for line1, line2 in zip(segment1, segment2):
-            # #     rho, theta = line1
-            # #     p1, p2 = make_line(rho, theta)
-            # #     # DEBUG
-            # #     cv.line(mean_img, p1, p2, (0, 0, 255), 1)
+        # print(len(suppressed_lines))
+        # thetas = np.array([theta for _, theta in suppressed_lines]).reshape(-1, 1)
 
-            # #     rho, theta = line2
-            # #     p1, p2 = make_line(rho, theta)
-            # #     # DEBUG
-            # #     cv.line(mean_img, p1, p2, (0, 0, 255), 1)
+        # # split into two groups
+        # segmented_lines = sk.cluster.KMeans(n_clusters=2, random_state=0).fit(
+        #     thetas
+        # )
 
-            # # utils.show(mean_img)
+        # segment1, segment2 = [], []
+        # for idx, (label, line) in enumerate(
+        #     zip(segmented_lines.labels_, suppressed_lines)
+        # ):
+        #     _segment = segment1 if label else segment2
+        #     _segment.append(line)
 
-            # w_img, h_img = connected_component.shape[:2]
-            # inters = []
-            # for line1 in segment1:
-            #     for line2 in segment2:
-            #         x, y = utils.hough_inter(line1, line2)
-            #         # if points not in the img ignore them
-            #         # if x < 0 or x > w_img or y < 0 or y > h_img:
-            #         #     continue
+        # segment1, segment2 = np.vstack(segment1), np.vstack(segment2)
 
-            #         # supress the point if it is not inside connected_components
-            #         # if connected_component[y, x] == 0:
-            #         #     continue
+        # # CRAP
+        # # segment1[:, 1] = np.mean(segment1[:, 1])
+        # # segment2[:, 1] = np.mean(segment2[:, 1])
 
-            #         inters.append((x, y))
+        # # for line1, line2 in zip(segment1, segment2):
+        # #     rho, theta = line1
+        # #     p1, p2 = make_line(rho, theta)
+        # #     # DEBUG
+        # #     cv.line(mean_img, p1, p2, (0, 0, 255), 1)
 
-            # print("len(inters)\n{}".format(len(inters)))
-            # # DEBUG
-            # for inter in inters:
-            #     cv.circle(inter_img, inter, 5, (0, 0, 255), 1)
-            # utils.show(connected_component, cimg, inter_img)
+        # #     rho, theta = line2
+        # #     p1, p2 = make_line(rho, theta)
+        # #     # DEBUG
+        # #     cv.line(mean_img, p1, p2, (0, 0, 255), 1)
 
-            # harris = cv.cornerHarris(connected_component, 5, 3, 0.1)
-            # harris = np.argwhere(harris > 0)
+        # # utils.show(mean_img)
 
-            # DEBUG
-            # harris_show = cv.cvtColor(connected_component, cv.COLOR_GRAY2BGR)
-            # for y, x in harris:
-            #     cv.circle(harris_show, (x, y), 6, (0, 0, 255), 1)
+        # w_img, h_img = connected_component.shape[:2]
+        # inters = []
+        # for line1 in segment1:
+        #     for line2 in segment2:
+        #         x, y = utils.hough_inter(line1, line2)
+        #         # if points not in the img ignore them
+        #         # if x < 0 or x > w_img or y < 0 or y > h_img:
+        #         #     continue
 
-            # DEBUG
-            # utils.show(connected_component, cimg, harris_show)
+        #         # supress the point if it is not inside connected_components
+        #         # if connected_component[y, x] == 0:
+        #         #     continue
+
+        #         inters.append((x, y))
+
+        # print("len(inters)\n{}".format(len(inters)))
+        # # DEBUG
+        # for inter in inters:
+        #     cv.circle(inter_img, inter, 5, (0, 0, 255), 1)
+        # utils.show(connected_component, cimg, inter_img)
+
+        # harris = cv.cornerHarris(connected_component, 5, 3, 0.1)
+        # harris = np.argwhere(harris > 0)
+
+        # DEBUG
+        # harris_show = cv.cvtColor(connected_component, cv.COLOR_GRAY2BGR)
+        # for y, x in harris:
+        #     cv.circle(harris_show, (x, y), 6, (0, 0, 255), 1)
+
+        # DEBUG
+        # utils.show(connected_component, cimg, harris_show)
 
     # def __create_subnodes(self, topology, connected_components):
     #     for label, sub_topology in topology.items():

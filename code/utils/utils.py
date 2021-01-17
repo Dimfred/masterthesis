@@ -4,11 +4,13 @@ import sys
 import os
 import math
 from collections import deque
+
 # from numba import njit
 
 from pathlib import Path
 from cached_property import cached_property
 from tabulate import tabulate
+import time
 
 try:
     from numba import njit
@@ -43,6 +45,22 @@ def show(*imgs, size=1000, max_axis=True):
     while not ord("q") == cv.waitKey(200):
         pass
     cv.destroyAllWindows()
+
+
+def show_bboxes(img, bboxes, orig=None):
+    bboxes = [YoloBBox(img.shape).from_ground_truth(bbox) for bbox in bboxes]
+    cimg = img.copy()
+    if len(cimg.shape) == 1:
+        cimg = cv.cvtColor(cv.COLOR_GRAY2BGR)
+
+    for bbox in bboxes:
+        x1, y1, x2, y2 = bbox.abs()
+        cv.rectangle(cimg, (x1, y1), (x2, y2), (0, 0, 255), 2)
+
+    if orig is None:
+        show(cimg)
+    else:
+        show(cimg, orig)
 
 
 def resize(img, width: int = None, height: int = None, interpolation=cv.INTER_AREA):
@@ -151,6 +169,7 @@ def calc_iou(b1, b2):
     return iou
 
 
+# TODO rename load_yolo_labels
 def load_ground_truth(file_):
     with open(file_, "r") as f:
         lines = f.readlines()
@@ -210,26 +229,26 @@ def img_from_fg(img_path: Path, fg_path: Path) -> Path:
 def merged_name(img_path, bg_path):
     return f"{img_path.stem}_{bg_path.stem}{img_path.suffix}"
 
+
 def pairwise(iterable, offset=1):
     return zip(iterable[:-offset], iterable[offset:])
+
 
 def hough_inter(line1, line2):
     rho1, theta1 = line1
     rho2, theta2 = line2
 
-    A = np.array([
-        [np.cos(theta1), np.sin(theta1)],
-        [np.cos(theta2), np.sin(theta2)]
-    ])
+    A = np.array([[np.cos(theta1), np.sin(theta1)], [np.cos(theta2), np.sin(theta2)]])
     b = np.array([[rho1], [rho2]])
 
     x0, y0 = np.linalg.solve(A, b)
     x0, y0 = int(np.round(x0)), int(np.round(y0))
     return x0, y0
 
+
 class YoloBBox:
     def __init__(self, img_dim):
-        self.img_dim = img_dim
+        self.img_dim = img_dim[:2]
 
     def from_prediction(self, prediction):
         x, y, w, h, label, confidence = prediction
@@ -470,7 +489,6 @@ class BFS:
         self.value = value
         self.early_stop = early_stop
 
-
     def is_valid(self, p):
         return self.mat[p] == self.value
 
@@ -504,3 +522,47 @@ class BFS:
                     self.queue.append(new_path)
 
         return None
+
+
+def stopwatch(name):
+    import tensorflow as tf
+    def _stopwatch(f):
+        def _deco(*args, **kwargs):
+            start = time.perf_counter()
+            ret = f(*args, **kwargs)
+            end = time.perf_counter()
+            tf.print(f"{name}::took:", end - start)
+
+            return ret
+
+        return _deco
+
+    return _stopwatch
+
+
+class A:
+    @staticmethod
+    def class_to_back(bboxes):
+        to_back = lambda bbox: list(bbox[1:]) + [bbox[0]]
+        return [to_back(bbox) for bbox in bboxes]
+
+    @staticmethod
+    def class_to_front(bboxes):
+        to_front = lambda bbox: [bbox[-1]] + list(bbox[:-1])
+        return [to_front(bbox) for bbox in bboxes]
+
+    # @staticmethod
+    # def ClassToBack(image=None, bbox=None, **kwargs):
+    #     return A.Lambda(
+    #         name="ClassToBack", image=CA.ret_img, bbox=CA.class_to_back, **kwargs
+    #     )
+
+    # @staticmethod
+    # def ClassToFront(image=None, bbox=None, **kwargs):
+    #     return A.Lambda(
+    #         name="ClassToBack", image=CA.ret_img, bbox=CA.class_to_front, **kwargs
+    #     )
+
+    # @staticmethod
+    # def ret_img(image, **kwargs):
+    #     return image

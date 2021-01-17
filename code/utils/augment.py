@@ -292,6 +292,7 @@ class YoloAugmentator(CircuitAugmentator):
 
         trains = summary_count[:, 0]
         valids = summary_count[:, 1]
+        # TODO kill that
         ratios = valids / trains
 
         reals = summary_count[:, :2].copy()
@@ -317,12 +318,13 @@ class YoloAugmentator(CircuitAugmentator):
             stacked = np.vstack([summary_count[idx] for idx in idxs])
 
             real = stacked[:, 0:2].sum(axis=0)
-            ratio = stacked[:, 2].sum(axis=0) / len(idxs)
+            train, valid = real[0:2]
+            ratio = valid / train
             aug = stacked[:, 3:5].sum(axis=0)
 
             new_row = [class_name]
             new_row += list(real.astype("uint16"))
-            new_row += ["{:.3f}".format(ratio)]
+            new_row += ["{:.3f}%".format(ratio)]
             new_row += list(aug.astype("uint16"))
 
             new_rows.append(new_row)

@@ -20,7 +20,7 @@ import utils
 from config import config
 
 
-check_errors = False
+check_errors = True
 
 # filter_ = lambda file_: ("00_20" in file_ or "00_19" in file_)
 # is checkered
@@ -49,7 +49,8 @@ for input_size in (608, 832):
     yolo.input_size = input_size
     yolo.channels = config.yolo.channels
     yolo.make_model()
-    yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
+    #yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
+    yolo.load_weights(config.weights_dir / "yolov4-tiny-100.weights", weights_type=config.yolo.weights_type)
 
 
     dir_ = config.valid_out_dir
