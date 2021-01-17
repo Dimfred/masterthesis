@@ -35,6 +35,8 @@ from ..common.base_class import BaseClass
 from ..model import yolov4
 
 from tqdm import tqdm
+from tabulate import tabulate
+import time
 from cached_property import cached_property
 
 
@@ -85,34 +87,64 @@ class YOLOv4(BaseClass):
         self.model(inputs)
         self.model.train_step = self.train_step
         self.model.valid_step = self.valid_step
+        self.model.train = self.train
+
+    # @tf.function
+    def train(self, train_dataset, valid_dataset, epochs=1, **kwargs):
+        n_accumulations = self.subdivisions
+        batch_counter = 0
+
+        batch_start = time.perf_counter()
+        for epoch in range(epochs):
+            accu_grads = None
+            total_losses = np.zeros((3,))
+            for batch in train_dataset:
+                x_train, y_train = batch
+
+                # TODO does not work
+                # grads = self.train_batch(x_train, y_train)
+                # self.model.optimizer.apply_gradients(grads)
+
+                step_grads, losses = self.train_step(x_train, y_train)
+                batch_counter += 1
+                total_losses += np.array(losses)
+
+                accu_grads = self.accumulate_grads(
+                    accu_grads, step_grads, n_accumulations
+                )
+
+                if ((batch_counter + 1) % n_accumulations) == 0:
+                    grads_zip = zip(accu_grads, self.model.trainable_variables)
+                    self.model.optimizer.apply_gradients(grads_zip)
+
+                    batch_end = time.perf_counter()
+
+                    mean_losses = [
+                        i / (self.batch_size * self.subdivisions) for i in total_losses
+                    ]
+                    p = [["Batch", (batch_counter + 1) / n_accumulations]]
+                    p += [["Took", batch_end - batch_start]]
+                    p += [["Losses", *mean_losses]]
+                    print(tabulate(p))
+
+                    total_losses = np.zeros((3,))
+                    accu_grads = None
+                    batch_start = time.perf_counter()
 
     @tf.function
-    def train_step(self, data):
-        imgs, labels = data
+    def train_step(self, x_train, y_train):
+        with tf.GradientTape() as tape:
+            y_pred = self.model(x_train, training=True)
+            # TODO check!!!
+            total_loss = 0
+            losses = [0 for _ in range(3)]
+            for lidx, (pred, train) in enumerate(zip(y_pred, y_train)):
+                loss = self.model.loss(y_pred=pred, y_true=train)
+                total_loss += loss
+                losses[lidx] = loss
 
-        # loss for this step
-        output_losses = [0 for _ in range(3)]
-        # get trainable variables
-        train_vars = self.model.trainable_variables
-        # Create empty gradient list (not a tf.Variable list)
-        accu_grads = [tf.zeros_like(var) for var in train_vars]
-
-        for start, end in tqdm(self.minibatch_idxs):
-            sub_imgs = imgs[start:end]
-            sub_labels = (label[start:end] for label in labels)
-
-            with tf.GradientTape() as tape:
-                prediction = self.model(sub_imgs, training=True)
-
-                # TODO check!!!
-                total_loss = 0
-                for lidx, (y_pred, y_true) in enumerate(zip(prediction, sub_labels)):
-                    loss = self.model.loss(y_pred=y_pred, y_true=y_true)
-                    total_loss += loss
-                    output_losses[lidx] += loss
-
-            grads = tape.gradient(total_loss, train_vars)
-            accu_grads = [(accu + grad) for accu, grad in zip(accu_grads, grads)]
+        grads = tape.gradient(total_loss, self.model.trainable_variables)
+        return grads, losses
 
         # mean the grads
         accu_grads = [grad / self.batch_size for grad in accu_grads]
@@ -126,7 +158,6 @@ class YOLOv4(BaseClass):
             "s_loss": output_losses[2],
         }
         return logs
-
 
     @tf.function
     def valid_step(self, data):
@@ -159,6 +190,25 @@ class YOLOv4(BaseClass):
         # mean the grads
         accu_grads = [grad / self.batch_size for grad in accu_grads]
 
+    # @tf.function
+    def accumulate_grads(self, accu_grads, step_grads, n_accumulations):
+        if accu_grads is None:
+            return [self.flat_gradients(grad) / n_accumulations for grad in step_grads]
+
+        for i, grad in enumerate(step_grads):
+            accu_grads[i] += self.flat_gradients(grad) / n_accumulations
+        return accu_grads
+
+    # @tf.function
+    def flat_gradients(self, grads_or_idx_slices: tf.Tensor) -> tf.Tensor:
+        if type(grads_or_idx_slices) == tf.IndexedSlices:
+            return tf.scatter_nd(
+                tf.expand_dims(grads_or_idx_slices.indices, 1),
+                grads_or_idx_slices.values,
+                grads_or_idx_slices.dense_shape,
+            )
+
+        return grads_or_idx_slices
 
     @cached_property
     def minibatch_idxs(self):

@@ -47,15 +47,15 @@ config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights
 
 ## training
 config.yolo.run_eagerly = (
-    # True
-    # if utils.isme()
-    # else False
-    False
+    True
+    if utils.isme()
+    else False
+    # False
 )
 config.yolo.checkpoint_dir = Path("checkpoints")
 config.yolo.preload_dataset = True
-config.yolo.batch_size = 4 if utils.isme() else 64
-config.yolo.subdivisions = 2 if utils.isme() else 8
+config.yolo.batch_size = 2 if utils.isme() else 8
+config.yolo.subdivisions = 32 if utils.isme() else 8
 config.yolo.validation_steps = 1 if utils.isme() else 2
 config.yolo.validation_frequency = 1 if utils.isme() else 10
 config.yolo.loss = "ciou"

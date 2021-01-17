@@ -483,6 +483,12 @@ class Dataset:
     def __len__(self):
         return len(self.dataset)
 
+    def generator(self):
+        for batch in self:
+            yield batch
+
+        yield None
+
 
 def cut_out(dataset):
     """

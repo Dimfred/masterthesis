@@ -153,13 +153,22 @@ _callbacks = [
     ),
 ]
 
-yolo.fit(
+# yolo.fit(
+#     train_dataset,
+#     validation_data=valid_dataset,
+#     epochs=config.yolo.epochs,
+#     callbacks=_callbacks,
+#     validation_steps=config.yolo.validation_steps,
+#     validation_freq=config.yolo.validation_frequency,
+#     steps_per_epoch=config.yolo.batch_size,  # config.yolo.batch_size,
+#     workers=16,
+# )
+
+yolo.train(
     train_dataset,
-    validation_data=valid_dataset,
+    valid_dataset,
     epochs=config.yolo.epochs,
-    callbacks=_callbacks,
     validation_steps=config.yolo.validation_steps,
     validation_freq=config.yolo.validation_frequency,
     steps_per_epoch=config.yolo.batch_size,  # config.yolo.batch_size,
-    workers=16,
 )
