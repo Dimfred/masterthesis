@@ -40,7 +40,7 @@ class MaskDataset(Dataset):
     def __getitem__(self, idx):
         img = Image.open(self.img_files[idx])
         img = np.array(img)
-        img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        # img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
         mask = np.load(self.mask_files[idx])
 
@@ -63,7 +63,7 @@ class MaskDataset(Dataset):
         # utils.show(img)
 
         # grayscale
-        #img = np.expand_dims(img, axis=2)
+        # img = np.expand_dims(img, axis=2)
 
         # grayscale and rgb pretrained
         img = np.repeat(img[..., np.newaxis], 3, -1)

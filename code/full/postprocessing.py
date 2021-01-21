@@ -296,6 +296,7 @@ class Postprocessor:
         )
         bbox_wire_mask = np.logical_and(bbox_mask, self.connected_components)
         # DEBUG
+        # utils.show(bbox_mask)
         # utils.show(np.uint8(bbox_wire_mask) * 255)
         # utils.show(np.uint8(np.logical_or(bbox_mask, self.connected_components)) * 255)
 

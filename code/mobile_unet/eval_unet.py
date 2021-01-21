@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.8
 
 import logging
 import os
@@ -11,8 +11,8 @@ from sklearn.model_selection import KFold
 from torch.utils.data import DataLoader
 from torchvision.transforms import Compose, Resize, ToTensor
 
-from .dataset import MaskDataset #get_img_files, get_img_files_eval
-from .nets.MobileNetV2_unet import MobileNetV2_unet
+from dataset import MaskDataset #get_img_files, get_img_files_eval
+from nets.MobileNetV2_unet import MobileNetV2_unet
 import albumentations as A
 
 np.random.seed(1)
@@ -88,7 +88,11 @@ def evaluate():
     model.to(device)
     model.eval()
 
+
+    n_shown = 0
+    ious = []
     with torch.no_grad():
+
         for inputs, labels in data_loader:
             inputs = inputs.to(device)
             labels = labels.to(device)
@@ -112,7 +116,14 @@ def evaluate():
                 l = np.uint8(l)
                 o = np.uint8(o)
 
-                utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
+                # utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
+
+                print(l.shape)
+                print(o.shape)
+                iou = np.logical_and(l, o)
+                iou = (iou.sum()) / (l > 0).sum()
+                ious.append(iou)
+
 
                 # plt.subplot(131)
                 # plt.imshow(i)
@@ -124,6 +135,9 @@ def evaluate():
                 n_shown += 1
                 # if n_shown > 10:
                 #     return
+
+    print("All:", ious)
+    print("Mean:", np.array(ious).sum() / len(ious))
 
 
 if __name__ == "__main__":

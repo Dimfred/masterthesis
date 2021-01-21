@@ -451,6 +451,7 @@ class Dataset:
         _batch_y = [[] for _ in range(len(self.grid_size))]
         augmentations = self.augmentations
         next_data = self._next_data
+
         for batch_idx in range(self.batch_size):
             x, y = next_data()
             if augmentations is not None:
@@ -471,6 +472,8 @@ class Dataset:
 
         return batch_x, batch_y
 
+    def ground_truth_labels(self):
+        return [y for _, y in self.dataset]
         # y = bboxes_to_ground_truth_njit(
         #     y,
         #     self.num_classes,

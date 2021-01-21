@@ -27,6 +27,7 @@ yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
 yolo.classes = config.yolo.classes
 yolo.input_size = config.yolo.input_size
 yolo.channels = config.yolo.channels
+yolo.batch_size = 1
 yolo.make_model()
 
 
@@ -48,8 +49,8 @@ if test_dataset:
 yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
 #dirs = [config.data / "tmp"]
-#dirs = [config.valid_out_dir]
-dirs = [config.unlabeled_dir]
+dirs = [config.valid_out_dir]
+#dirs = [config.unlabeled_dir]
 for dir_ in dirs:
     for file_ in os.listdir(dir_):
         print(file_)

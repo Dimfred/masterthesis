@@ -13,16 +13,20 @@ import enum
 import itertools as it
 from typing import List
 
-# tf.get_logger().setLevel("INFO")
+tf.get_logger().setLevel("INFO")
 
-# # has to be called right after tf import
-# physical_devices = tf.config.experimental.list_physical_devices("GPU")
-# if len(physical_devices) > 0:
-#     tf.config.experimental.set_memory_growth(physical_devices[0], True)
+# has to be called right after tf import
+physical_devices = tf.config.experimental.list_physical_devices("GPU")
+if len(physical_devices) > 0:
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-# from yolov4.tf import YOLOv4
+from yolov4.tf import YOLOv4
 from mobile_unet import MobileNetV2_unet
 from mobile_unet.eval_unet import get_data_loaders
+
+from yolov4.tf import YOLOv4
+import utils
+from config import config
 
 import utils
 from utils import YoloBBox
@@ -147,15 +151,15 @@ if __name__ == "__main__":
 
     for img_name in [
         # valid
-        "07_00.png",
-        "07_05.png",
-        "07_06.png",
-        "07_07.png",
-        "08_01.png",
-        "08_02.png",
-        "08_05.png",
-        "08_07.png",
-        "08_08.png",
+#        "07_00.png",
+#        "07_05.png",
+#        "07_06.png",
+#        "07_07.png",
+#        "08_01.png",
+#        "08_02.png",
+#        "08_05.png",
+#        "08_07.png",
+#        "08_08.png",
         "08_09.png",
         # train
         # "00_11.jpg",
@@ -173,11 +177,10 @@ if __name__ == "__main__":
         # DEBUG
         # utils.show(img)
 
-        # yolo predictions
-        # yolo = init_yolo()
-        # print("yolo inited")
         # DEBUG
+        # yolo = init_yolo()
         # yolo.inference(str(img_path))
+        # yolo.unload()
 
         # prediction_params = {"iou_threshold": 0.3, "score_threshold": 0.25}
         # yolo_prediction = yolo.predict(img)
@@ -187,9 +190,7 @@ if __name__ == "__main__":
 
         # unet predictions
         unet = init_unet()
-        print("unet inited")
         output = unet.predict(img)
-        print("unet predicted")
         unet.unload()
 
         segmentation = cv.resize(output, img.shape[:2][::-1])

@@ -4,6 +4,7 @@ import sys
 import os
 import math
 from collections import deque
+import mean_average_precision
 
 # from numba import njit
 
@@ -304,6 +305,94 @@ class YoloBBox:
         return hash(self) == hash(other)
 
 
+class MeanAveragePrecision:
+    def __init__(self, class_names, img_shape, iou_threshs=[0.5, 0.7]):
+        self.img_shape = img_shape
+        self.iou_threshs = iou_threshs
+        self.class_names = class_names
+        self.n_classes = len(class_names)
+
+        self._map = mean_average_precision.MeanAveragePrecision(self.n_classes)
+
+    def add(self, pred_batch, gt_batch):
+        for pred, gt in zip(pred_batch, gt_batch):
+            pred = self._convert_prediction(pred)
+            gt = self._convert_ground_truth(gt)
+
+            self._map.add(pred, gt)
+
+    def compute(self, show=True):
+        if show:
+            start = time.perf_counter()
+
+        results = [
+            self._map.value(iou_thresholds=iou_thresh)
+            for iou_thresh in self.iou_threshs
+        ]
+
+        if show:
+            end = time.perf_counter()
+            print("mAP computation took: ", "{:.3f}s".format(end - start))
+
+        return results
+
+    def reset(self):
+        self._map.reset()
+
+    def get_maps(self, results):
+        return [
+            (iou_thresh, res["mAP"])
+            for res, iou_thresh in zip(results, self.iou_threshs)
+        ]
+
+    def prettify(self, results):
+        ffloat = lambda f: "{:.4f}".format(f)
+
+        map_header = ["mAP@{}".format(iou_thresh) for iou_thresh in self.iou_threshs]
+        ap_header = ["AP@{}".format(iou_thresh) for iou_thresh in self.iou_threshs]
+
+        pretty = [["Class", *ap_header, " ", *map_header]]
+        # " ", "AP@0", ..., "AP@n", " ", "mAP@0", ..., "mAP@n"
+        pretty_row = [
+            [
+                " ",
+                *[" " for _ in range(len(ap_header))],
+                " ",
+                *[ffloat(res["mAP"]) for res in results],
+            ]
+        ]
+        pretty += pretty_row
+
+        all_aps = [
+            sorted(res[iou_thresh].items())
+            for res, iou_thresh in zip(results, self.iou_threshs)
+        ]
+        pretty_rows = [[cls_name] for _, cls_name in sorted(self.class_names.items())]
+
+        for aps in all_aps:
+            for cls_idx, cls_data in sorted(aps):
+                cls_name = self.class_names[cls_idx]
+                cls_ap = cls_data["ap"]
+
+                pretty_rows[cls_idx].append(ffloat(cls_ap))
+
+        pretty += pretty_rows
+
+        return tabulate(pretty)
+
+    def _convert_prediction(self, pred):
+        pred = [YoloBBox(self.img_shape).from_prediction(pred) for pred in pred]
+        pred = np.vstack([[*bbox.abs(), bbox.label, bbox.confidence] for bbox in pred])
+        return pred
+
+    def _convert_ground_truth(self, gt):
+        difficult, crowd = 0, 0
+
+        gt = [YoloBBox(self.img_shape).from_ground_truth(gt) for gt in gt]
+        gt = np.vstack([[*bbox.abs(), bbox.label, difficult, crowd] for bbox in gt])
+        return gt
+
+
 class Metrics:
     def __init__(self, classes, label_dir, iou_thresh=0.5):
         self.classes = classes
@@ -526,6 +615,7 @@ class BFS:
 
 def stopwatch(name):
     import tensorflow as tf
+
     def _stopwatch(f):
         def _deco(*args, **kwargs):
             start = time.perf_counter()
@@ -550,6 +640,7 @@ class A:
     def class_to_front(bboxes):
         to_front = lambda bbox: [bbox[-1]] + list(bbox[:-1])
         return [to_front(bbox) for bbox in bboxes]
+
 
 def seed(*args):
     # fmt: off

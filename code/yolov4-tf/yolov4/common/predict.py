@@ -22,9 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 import numpy as np
+from numba import njit, jit
+# from numba.typed import List
 
 
-def DIoU_NMS(candidates, threshold):
+# @njit
+# @jit(nopython=False)
+def DIoU_NMS(candidates: np.array, threshold: int):
     """
     Distance Intersection over Union(DIoU)
     Non-Maximum Suppression(NMS)
@@ -34,6 +38,7 @@ def DIoU_NMS(candidates, threshold):
     @param `threshold`: If DIoU is above the threshold, bboxes are considered
             the same. All but the bbox with the highest probability are removed.
     """
+    # bboxes = List()
     bboxes = []
     for class_id in set(candidates[:, 4]):
         class_bboxes = candidates[candidates[:, 4] == class_id]

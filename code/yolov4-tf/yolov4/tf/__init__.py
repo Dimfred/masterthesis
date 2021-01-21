@@ -39,6 +39,8 @@ from tabulate import tabulate
 import time
 from cached_property import cached_property
 
+import utils
+
 
 class YOLOv4(BaseClass):
     def __init__(self, tiny: bool = False, tpu: bool = False, small: bool = False):
@@ -90,9 +92,30 @@ class YOLOv4(BaseClass):
         self.model.train = self.train
 
     # @tf.function
-    def train(self, train_dataset, valid_dataset, epochs=1, **kwargs):
+    def train(
+        self, train_dataset, valid_dataset, epochs=1, validation_freq=2, **kwargs
+    ):
+        # METRICS
+        mAP = utils.MeanAveragePrecision(
+            self.classes, self.input_size, iou_threshs=[0.5, 0.6, 0.7, 0.8]
+        )
+
+        ground_truth = valid_dataset.ground_truth_labels()
+        ground_truth += ground_truth
+
+        ffloat = lambda f: "{:.5f}".format(f)
+
         n_accumulations = self.subdivisions
-        batch_counter = 0
+        mini_batch_counter = 0
+        step_counter = 0
+
+        is_update_time = lambda mini_batch_counter: (
+            ((mini_batch_counter + 1) % n_accumulations) == 0
+        )
+
+        is_valid_time = lambda mini_batch_counter: (
+            ((mini_batch_counter + 1) % (n_accumulations * validation_freq)) == 0
+        )
 
         batch_start = time.perf_counter()
         for epoch in range(epochs):
@@ -101,43 +124,85 @@ class YOLOv4(BaseClass):
             for batch in train_dataset:
                 x_train, y_train = batch
 
-                # TODO does not work
-                # grads = self.train_batch(x_train, y_train)
-                # self.model.optimizer.apply_gradients(grads)
-
                 step_grads, losses = self.train_step(x_train, y_train)
-                batch_counter += 1
+                mini_batch_counter += 1
                 total_losses += np.array(losses)
 
                 accu_grads = self.accumulate_grads(
                     accu_grads, step_grads, n_accumulations
                 )
 
-                if ((batch_counter + 1) % n_accumulations) == 0:
+                if is_update_time(mini_batch_counter):
+                    step_counter += 1
+                    if (step_counter + 1) % validation_freq == 0:
+                        do_validation = True
+
                     grads_zip = zip(accu_grads, self.model.trainable_variables)
                     self.model.optimizer.apply_gradients(grads_zip)
 
                     batch_end = time.perf_counter()
 
-                    mean_losses = [
-                        i / (self.batch_size * self.subdivisions) for i in total_losses
-                    ]
-                    p = [["Batch", (batch_counter + 1) / n_accumulations]]
-                    p += [["Took", batch_end - batch_start]]
-                    p += [["Losses", *mean_losses]]
+                    mean_losses = np.array(
+                        [i / self.subdivisions for i in total_losses]
+                    )
+                    p = [["Batch", step_counter]]
+                    p += [["Took", f"{ffloat(batch_end - batch_start)}s"]]
+                    p += [["SumLoss", ffloat(mean_losses.sum())]]
+                    p += [["L: S / M / L", *(ffloat(ml) for ml in mean_losses)]]
                     print(tabulate(p))
 
                     total_losses = np.zeros((3,))
                     accu_grads = None
                     batch_start = time.perf_counter()
 
+            if is_valid_time(mini_batch_counter):
+                vstart = time.perf_counter()
+
+                # TODO OMFG
+                stop = np.ceil(len(valid_dataset) / self.batch_size)
+
+                total_vlosses = np.zeros((3,))
+                for idx, vbatch in enumerate(valid_dataset):
+                    if stop == idx:
+                        break
+
+                    x_valid, y_valid = vbatch
+                    valid_candidates, valid_losses = self.valid_step(x_valid, y_valid)
+                    total_vlosses += np.array(valid_losses)
+
+                    if step_counter > 1000 and step_counter % 100 == 0:
+
+                        valid_candidates = self._transform_candidate_batch(valid_candidates)
+                        valid_pred_bboxes = [
+                            self.candidates_to_pred_bboxes(
+                                valid_candidate[0].numpy(),
+                                iou_threshold=0.3,
+                                score_threshold=0.25,
+                            )
+                            for valid_candidate in valid_candidates
+                        ]
+                        vstart_idx = idx * self.batch_size
+                        vend_idx = (idx + 1) * self.batch_size
+                        valid_gt_bboxes = ground_truth[vstart_idx:vend_idx]
+                        mAP.add(valid_pred_bboxes, valid_gt_bboxes)
+
+                if step_counter > 1000 and step_counter % 100 == 0:
+                    results = mAP.compute()
+                    pretty = mAP.prettify(results)
+                    print(pretty)
+                    mAP.reset()
+
+                vend = time.perf_counter()
+                print("Validation took:", vend - vstart)
+
     @tf.function
     def train_step(self, x_train, y_train):
         with tf.GradientTape() as tape:
-            y_pred = self.model(x_train, training=True)
-            # TODO check!!!
             total_loss = 0
             losses = [0 for _ in range(3)]
+
+            y_pred = self.model(x_train, training=True)
+            # TODO check!!!
             for lidx, (pred, train) in enumerate(zip(y_pred, y_train)):
                 loss = self.model.loss(y_pred=pred, y_true=train)
                 total_loss += loss
@@ -146,49 +211,49 @@ class YOLOv4(BaseClass):
         grads = tape.gradient(total_loss, self.model.trainable_variables)
         return grads, losses
 
-        # mean the grads
-        accu_grads = [grad / self.batch_size for grad in accu_grads]
-        # optimize the shit out of the model
-        self.model.optimizer.apply_gradients(zip(accu_grads, train_vars))
-
-        logs = {
-            "sum": sum(output_losses),
-            "l_loss": output_losses[0],
-            "m_loss": output_losses[1],
-            "s_loss": output_losses[2],
-        }
-        return logs
-
     @tf.function
-    def valid_step(self, data):
-        imgs, labels = data
+    def valid_step(self, x_valid, y_valid):
+        total_loss = 0
+        losses = [0 for _ in range(3)]
 
-        # loss for this step
-        output_losses = [0 for _ in range(3)]
-        # get trainable variables
-        train_vars = self.model.trainable_variables
-        # Create empty gradient list (not a tf.Variable list)
-        accu_grads = [tf.zeros_like(var) for var in train_vars]
+        y_pred = self.model(x_valid, training=False)
+        for lidx, (pred, valid) in enumerate(zip(y_pred, y_valid)):
+            loss = self.model.loss(y_pred=pred, y_true=valid)
+            total_loss += loss
+            losses[lidx] = loss
 
-        for start, end in tqdm(self.minibatch_idxs):
-            sub_imgs = imgs[start:end]
-            sub_labels = (label[start:end] for label in labels)
+        return y_pred, losses
 
-            with tf.GradientTape() as tape:
-                prediction = self.model(sub_imgs)
+    # @tf.function
+    # def valid_step(self, data):
+    #     imgs, labels = data
 
-                # TODO check!!!
-                total_loss = 0
-                for lidx, (y_pred, y_true) in enumerate(zip(prediction, sub_labels)):
-                    loss = self.model.loss(y_pred=y_pred, y_true=y_true)
-                    total_loss += loss
-                    output_losses[lidx] += loss
+    #     # loss for this step
+    #     output_losses = [0 for _ in range(3)]
+    #     # get trainable variables
+    #     train_vars = self.model.trainable_variables
+    #     # Create empty gradient list (not a tf.Variable list)
+    #     accu_grads = [tf.zeros_like(var) for var in train_vars]
 
-            grads = tape.gradient(total_loss, train_vars)
-            accu_grads = [(accu + grad) for accu, grad in zip(accu_grads, grads)]
+    #     for start, end in tqdm(self.minibatch_idxs):
+    #         sub_imgs = imgs[start:end]
+    #         sub_labels = (label[start:end] for label in labels)
 
-        # mean the grads
-        accu_grads = [grad / self.batch_size for grad in accu_grads]
+    #         with tf.GradientTape() as tape:
+    #             prediction = self.model(sub_imgs)
+
+    #             # TODO check!!!
+    #             total_loss = 0
+    #             for lidx, (y_pred, y_true) in enumerate(zip(prediction, sub_labels)):
+    #                 loss = self.model.loss(y_pred=y_pred, y_true=y_true)
+    #                 total_loss += loss
+    #                 output_losses[lidx] += loss
+
+    #         grads = tape.gradient(total_loss, train_vars)
+    #         accu_grads = [(accu + grad) for accu, grad in zip(accu_grads, grads)]
+
+    #     # mean the grads
+    #     accu_grads = [grad / self.batch_size for grad in accu_grads]
 
     # @tf.function
     def accumulate_grads(self, accu_grads, step_grads, n_accumulations):
@@ -312,13 +377,34 @@ class YOLOv4(BaseClass):
         # s_pred, m_pred, l_pred
         # x_pred == Dim(1, output_size, output_size, anchors, (bbox))
         candidates = self.model(x, training=False)
+        return self._transform_candidates(candidates)
+
+    @tf.function
+    def _transform_candidates(self, candidates):
         _candidates = []
         for candidate in candidates:
             grid_size = candidate.shape[1:3]
             _candidates.append(
                 tf.reshape(candidate[0], shape=(1, grid_size[0] * grid_size[1] * 3, -1))
             )
+
         return tf.concat(_candidates, axis=1)
+
+    @tf.function
+    def _transform_candidate_batch(self, candidate_batch):
+        _candidates = [[] for _ in range(self.batch_size)]
+
+        for candidate in candidate_batch:
+            grid_size = candidate.shape[1:3]
+            for batch_idx in range(self.batch_size):
+                _candidates[batch_idx].append(
+                    tf.reshape(
+                        candidate[batch_idx],
+                        shape=(1, grid_size[0] * grid_size[1] * 3, -1),
+                    )
+                )
+
+        return [tf.concat(_candidate, axis=1) for _candidate in _candidates]
 
     def predict(
         self,
