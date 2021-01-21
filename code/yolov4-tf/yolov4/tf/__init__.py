@@ -93,7 +93,7 @@ class YOLOv4(BaseClass):
 
     # @tf.function
     def train(
-        self, train_dataset, valid_dataset, epochs=1, validation_freq=2, **kwargs
+        self, train_dataset, valid_dataset, max_steps=1, validation_freq=2, **kwargs
     ):
         # METRICS
         mAP = utils.MeanAveragePrecision(
@@ -117,43 +117,47 @@ class YOLOv4(BaseClass):
             ((mini_batch_counter + 1) % (n_accumulations * validation_freq)) == 0
         )
 
+        is_map_time = lambda step_counter: (
+            step_counter > 1000 and step_counter % 100 == 0
+            # step_counter > 5
+        )
+
         batch_start = time.perf_counter()
-        for epoch in range(epochs):
-            accu_grads = None
-            total_losses = np.zeros((3,))
-            for batch in train_dataset:
-                x_train, y_train = batch
+        accu_grads = None
+        total_losses = np.zeros((3,))
+        for batch in train_dataset:
+            # TODO max_steps
 
-                step_grads, losses = self.train_step(x_train, y_train)
-                mini_batch_counter += 1
-                total_losses += np.array(losses)
+            x_train, y_train = batch
 
-                accu_grads = self.accumulate_grads(
-                    accu_grads, step_grads, n_accumulations
+            step_grads, losses = self.train_step(x_train, y_train)
+            mini_batch_counter += 1
+            total_losses += np.array(losses)
+
+            accu_grads = self.accumulate_grads(
+                accu_grads, step_grads, n_accumulations
+            )
+
+            if is_update_time(mini_batch_counter):
+                step_counter += 1
+
+                grads_zip = zip(accu_grads, self.model.trainable_variables)
+                self.model.optimizer.apply_gradients(grads_zip)
+
+                batch_end = time.perf_counter()
+
+                mean_losses = np.array(
+                    [i / self.subdivisions for i in total_losses]
                 )
+                p = [["Batch", step_counter]]
+                p += [["Took", f"{ffloat(batch_end - batch_start)}s"]]
+                p += [["SumLoss", ffloat(mean_losses.sum())]]
+                p += [["L: L / M / S", *(ffloat(ml) for ml in mean_losses)]]
+                print(tabulate(p))
 
-                if is_update_time(mini_batch_counter):
-                    step_counter += 1
-                    if (step_counter + 1) % validation_freq == 0:
-                        do_validation = True
-
-                    grads_zip = zip(accu_grads, self.model.trainable_variables)
-                    self.model.optimizer.apply_gradients(grads_zip)
-
-                    batch_end = time.perf_counter()
-
-                    mean_losses = np.array(
-                        [i / self.subdivisions for i in total_losses]
-                    )
-                    p = [["Batch", step_counter]]
-                    p += [["Took", f"{ffloat(batch_end - batch_start)}s"]]
-                    p += [["SumLoss", ffloat(mean_losses.sum())]]
-                    p += [["L: S / M / L", *(ffloat(ml) for ml in mean_losses)]]
-                    print(tabulate(p))
-
-                    total_losses = np.zeros((3,))
-                    accu_grads = None
-                    batch_start = time.perf_counter()
+                total_losses = np.zeros((3,))
+                accu_grads = None
+                batch_start = time.perf_counter()
 
             if is_valid_time(mini_batch_counter):
                 vstart = time.perf_counter()
@@ -170,8 +174,8 @@ class YOLOv4(BaseClass):
                     valid_candidates, valid_losses = self.valid_step(x_valid, y_valid)
                     total_vlosses += np.array(valid_losses)
 
-                    if step_counter > 1000 and step_counter % 100 == 0:
-
+                    if is_map_time(step_counter):
+                        # predictions
                         valid_candidates = self._transform_candidate_batch(valid_candidates)
                         valid_pred_bboxes = [
                             self.candidates_to_pred_bboxes(
@@ -181,19 +185,27 @@ class YOLOv4(BaseClass):
                             )
                             for valid_candidate in valid_candidates
                         ]
+
+                        # ground_truth
                         vstart_idx = idx * self.batch_size
                         vend_idx = (idx + 1) * self.batch_size
                         valid_gt_bboxes = ground_truth[vstart_idx:vend_idx]
+
                         mAP.add(valid_pred_bboxes, valid_gt_bboxes)
 
-                if step_counter > 1000 and step_counter % 100 == 0:
+                if is_map_time(step_counter):
                     results = mAP.compute()
                     pretty = mAP.prettify(results)
                     print(pretty)
                     mAP.reset()
 
+                mean_losses = np.array( [l / stop for l in total_vlosses])
                 vend = time.perf_counter()
-                print("Validation took:", vend - vstart)
+                p = [[utils.green("Validation")]]
+                p += [["Took", f"{ffloat(vend - vstart)}s"]]
+                p += [["SumLoss", ffloat(mean_losses.sum())]]
+                p += [["L: L / M / S", *(ffloat(ml) for ml in mean_losses)]]
+                print(tabulate(p))
 
     @tf.function
     def train_step(self, x_train, y_train):
