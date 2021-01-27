@@ -3,6 +3,7 @@ import albumentations as A
 import cv2 as cv
 
 import tensorflow as tf
+import tensorflow_addons as tfa
 
 # has to be called right after tf import
 physical_devices = tf.config.experimental.list_physical_devices("GPU")
@@ -103,7 +104,7 @@ if __name__ == "__main__":
     # optimizer = optimizers.SGD(
     #     learning_rate=config.yolo.lr, momentum=config.yolo.momentum
     # )
-    optimizer = optimizers.SGDW(
+    optimizer = tfa.optimizers.SGDW(
         learning_rate=config.yolo.lr,
         momentum=config.yolo.momentum,
         weight_decay=config.yolo.decay,
@@ -143,16 +144,12 @@ if __name__ == "__main__":
 
         if step < burn_in:
             return (lr / burn_in) * (step + 1)
-        # if step < int(epochs * 0.5):
-        #     return lr
-        # if epoch < int(epochs * 0.8):
-        #     return lr * 0.5
-        # if epoch < int(epochs * 0.9):
-        #     return lr * 0.1
-        # tf.print(lr)
-        return lr
+        if step > 7000:
+            return lr / 10
+        if step > 5000:
+            return lr / 5
 
-        # return lr * 0.01
+        return lr
 
     # gib ihm
     trainer = Trainer(

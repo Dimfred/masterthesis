@@ -52,7 +52,7 @@ config.yolo.loss = "ciou"
 
 config.yolo.burn_in = 1000
 config.yolo.lr = 0.000261 #1e-3
-config.yolo.decau = 0.0005
+config.yolo.decay = 0.0005
 config.yolo.momentum = 0.95
 
 config.yolo.max_steps = 400000
