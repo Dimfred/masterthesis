@@ -46,21 +46,28 @@ config.yolo.weights_type = "yolo"
 config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights"
 
 ## training
-config.yolo.run_eagerly = (
-    # True
-    # if utils.isme()
-    # else False
-    False
-)
+config.yolo.batch_size = 4 if utils.isme() else 8
+config.yolo.accumulation_steps = 16 if utils.isme() else 8
+config.yolo.loss = "ciou"
+
+config.yolo.burn_in = 1000
+config.yolo.lr = 0.000261 #1e-3
+config.yolo.momentum = 0.9
+
+config.yolo.max_steps = 400000
+config.yolo.map_after_steps = 1000
+config.yolo.map_on_step_mod = 100
+
 config.yolo.checkpoint_dir = Path("checkpoints")
 config.yolo.preload_dataset = True
-config.yolo.batch_size = 2 if utils.isme() else 8
-config.yolo.subdivisions = 32 if utils.isme() else 8
-config.yolo.validation_steps = 1 if utils.isme() else 2
-config.yolo.validation_frequency = 2 if utils.isme() else 10
-config.yolo.loss = "ciou"
-config.yolo.lr = 1e-4
-config.yolo.epochs = 4000
+config.yolo.run_eagerly = (
+    True
+    if utils.isme()
+    else False
+    # False
+)
+config.yolo.validation_steps = -1 if utils.isme() else 2
+config.yolo.validation_freq = 10 if utils.isme() else 10
 config.yolo.workers = 12 if utils.isme() else 16
 
 # classes and corresponding trained weights

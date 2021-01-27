@@ -48,8 +48,19 @@ def show(*imgs, size=1000, max_axis=True):
     cv.destroyAllWindows()
 
 
-def show_bboxes(img, bboxes, orig=None):
-    bboxes = [YoloBBox(img.shape).from_ground_truth(bbox) for bbox in bboxes]
+def show_bboxes(img, bboxes, orig=None, type_="gt"):
+    # type = gt | class_to_front | pred
+    if type_ == "class_to_front":
+        bboxes = [list(bbox) for bbox in bboxes]
+        bboxes = A.class_to_front(bboxes)
+        bboxes = [YoloBBox(img.shape).from_ground_truth(bbox) for bbox in bboxes]
+    elif type_ == "pred":
+        bboxes = [YoloBBox(img.shape).from_prediction(bbox) for bbox in bboxes]
+    elif type_ == "gt":
+        bboxes = [YoloBBox(img.shape).from_ground_truth(bbox) for bbox in bboxes]
+    else:
+        raise ValueError(f"Unknown bbox type '{type_}' in show_bboxes.")
+
     cimg = img.copy()
     if len(cimg.shape) == 1:
         cimg = cv.cvtColor(cv.COLOR_GRAY2BGR)
@@ -314,10 +325,13 @@ class MeanAveragePrecision:
 
         self._map = mean_average_precision.MeanAveragePrecision(self.n_classes)
 
-    def add(self, pred_batch, gt_batch):
+    def add(self, pred_batch, gt_batch, inverted_gt=False):
         for pred, gt in zip(pred_batch, gt_batch):
             pred = self._convert_prediction(pred)
-            gt = self._convert_ground_truth(gt)
+            if inverted_gt:
+                gt = self._convert_inverted_ground_truth(gt)
+            else:
+                gt = self._convert_ground_truth(gt)
 
             self._map.add(pred, gt)
 
@@ -391,6 +405,11 @@ class MeanAveragePrecision:
         gt = [YoloBBox(self.img_shape).from_ground_truth(gt) for gt in gt]
         gt = np.vstack([[*bbox.abs(), bbox.label, difficult, crowd] for bbox in gt])
         return gt
+
+    def _convert_inverted_ground_truth(self, gt):
+        gt = A.class_to_front(gt)
+        return self._convert_ground_truth(gt)
+
 
 
 class Metrics:

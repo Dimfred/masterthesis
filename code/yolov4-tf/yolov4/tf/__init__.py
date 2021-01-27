@@ -50,11 +50,13 @@ class YOLOv4(BaseClass):
         super(YOLOv4, self).__init__(tiny=tiny, tpu=tpu, small=small)
 
         self.batch_size = 32
-        self.subdivisions = 1
         self._has_weights = False
         self.input_size = 608
         self.channels = 3
         self.model = None
+
+        # gradient accumulation
+        self.accu_grad = None
 
     def make_model(
         self,
@@ -87,205 +89,7 @@ class YOLOv4(BaseClass):
                 kernel_regularizer=kernel_regularizer,
             )
         self.model(inputs)
-        self.model.train_step = self.train_step
-        self.model.valid_step = self.valid_step
-        self.model.train = self.train
 
-    # @tf.function
-    def train(
-        self, train_dataset, valid_dataset, max_steps=1, validation_freq=2, **kwargs
-    ):
-        # METRICS
-        mAP = utils.MeanAveragePrecision(
-            self.classes, self.input_size, iou_threshs=[0.5, 0.6, 0.7, 0.8]
-        )
-
-        ground_truth = valid_dataset.ground_truth_labels()
-        ground_truth += ground_truth
-
-        ffloat = lambda f: "{:.5f}".format(f)
-
-        n_accumulations = self.subdivisions
-        mini_batch_counter = 0
-        step_counter = 0
-
-        is_update_time = lambda mini_batch_counter: (
-            ((mini_batch_counter + 1) % n_accumulations) == 0
-        )
-
-        is_valid_time = lambda mini_batch_counter: (
-            ((mini_batch_counter + 1) % (n_accumulations * validation_freq)) == 0
-        )
-
-        is_map_time = lambda step_counter: (
-            step_counter > 1000 and step_counter % 100 == 0
-            # step_counter > 5
-        )
-
-        batch_start = time.perf_counter()
-        accu_grads = None
-        total_losses = np.zeros((3,))
-        for batch in train_dataset:
-            # TODO max_steps
-
-            x_train, y_train = batch
-
-            step_grads, losses = self.train_step(x_train, y_train)
-            mini_batch_counter += 1
-            total_losses += np.array(losses)
-
-            accu_grads = self.accumulate_grads(
-                accu_grads, step_grads, n_accumulations
-            )
-
-            if is_update_time(mini_batch_counter):
-                step_counter += 1
-
-                grads_zip = zip(accu_grads, self.model.trainable_variables)
-                self.model.optimizer.apply_gradients(grads_zip)
-
-                batch_end = time.perf_counter()
-
-                mean_losses = np.array(
-                    [i / self.subdivisions for i in total_losses]
-                )
-                p = [["Batch", step_counter]]
-                p += [["Took", f"{ffloat(batch_end - batch_start)}s"]]
-                p += [["SumLoss", ffloat(mean_losses.sum())]]
-                p += [["L: L / M / S", *(ffloat(ml) for ml in mean_losses)]]
-                print(tabulate(p))
-
-                total_losses = np.zeros((3,))
-                accu_grads = None
-                batch_start = time.perf_counter()
-
-            if is_valid_time(mini_batch_counter):
-                vstart = time.perf_counter()
-
-                # TODO OMFG
-                stop = np.ceil(len(valid_dataset) / self.batch_size)
-
-                total_vlosses = np.zeros((3,))
-                for idx, vbatch in enumerate(valid_dataset):
-                    if stop == idx:
-                        break
-
-                    x_valid, y_valid = vbatch
-                    valid_candidates, valid_losses = self.valid_step(x_valid, y_valid)
-                    total_vlosses += np.array(valid_losses)
-
-                    if is_map_time(step_counter):
-                        # predictions
-                        valid_candidates = self._transform_candidate_batch(valid_candidates)
-                        valid_pred_bboxes = [
-                            self.candidates_to_pred_bboxes(
-                                valid_candidate[0].numpy(),
-                                iou_threshold=0.3,
-                                score_threshold=0.25,
-                            )
-                            for valid_candidate in valid_candidates
-                        ]
-
-                        # ground_truth
-                        vstart_idx = idx * self.batch_size
-                        vend_idx = (idx + 1) * self.batch_size
-                        valid_gt_bboxes = ground_truth[vstart_idx:vend_idx]
-
-                        mAP.add(valid_pred_bboxes, valid_gt_bboxes)
-
-                if is_map_time(step_counter):
-                    results = mAP.compute()
-                    pretty = mAP.prettify(results)
-                    print(pretty)
-                    mAP.reset()
-
-                mean_losses = np.array( [l / stop for l in total_vlosses])
-                vend = time.perf_counter()
-                p = [[utils.green("Validation")]]
-                p += [["Took", f"{ffloat(vend - vstart)}s"]]
-                p += [["SumLoss", ffloat(mean_losses.sum())]]
-                p += [["L: L / M / S", *(ffloat(ml) for ml in mean_losses)]]
-                print(tabulate(p))
-
-    @tf.function
-    def train_step(self, x_train, y_train):
-        with tf.GradientTape() as tape:
-            total_loss = 0
-            losses = [0 for _ in range(3)]
-
-            y_pred = self.model(x_train, training=True)
-            # TODO check!!!
-            for lidx, (pred, train) in enumerate(zip(y_pred, y_train)):
-                loss = self.model.loss(y_pred=pred, y_true=train)
-                total_loss += loss
-                losses[lidx] = loss
-
-        grads = tape.gradient(total_loss, self.model.trainable_variables)
-        return grads, losses
-
-    @tf.function
-    def valid_step(self, x_valid, y_valid):
-        total_loss = 0
-        losses = [0 for _ in range(3)]
-
-        y_pred = self.model(x_valid, training=False)
-        for lidx, (pred, valid) in enumerate(zip(y_pred, y_valid)):
-            loss = self.model.loss(y_pred=pred, y_true=valid)
-            total_loss += loss
-            losses[lidx] = loss
-
-        return y_pred, losses
-
-    # @tf.function
-    # def valid_step(self, data):
-    #     imgs, labels = data
-
-    #     # loss for this step
-    #     output_losses = [0 for _ in range(3)]
-    #     # get trainable variables
-    #     train_vars = self.model.trainable_variables
-    #     # Create empty gradient list (not a tf.Variable list)
-    #     accu_grads = [tf.zeros_like(var) for var in train_vars]
-
-    #     for start, end in tqdm(self.minibatch_idxs):
-    #         sub_imgs = imgs[start:end]
-    #         sub_labels = (label[start:end] for label in labels)
-
-    #         with tf.GradientTape() as tape:
-    #             prediction = self.model(sub_imgs)
-
-    #             # TODO check!!!
-    #             total_loss = 0
-    #             for lidx, (y_pred, y_true) in enumerate(zip(prediction, sub_labels)):
-    #                 loss = self.model.loss(y_pred=y_pred, y_true=y_true)
-    #                 total_loss += loss
-    #                 output_losses[lidx] += loss
-
-    #         grads = tape.gradient(total_loss, train_vars)
-    #         accu_grads = [(accu + grad) for accu, grad in zip(accu_grads, grads)]
-
-    #     # mean the grads
-    #     accu_grads = [grad / self.batch_size for grad in accu_grads]
-
-    # @tf.function
-    def accumulate_grads(self, accu_grads, step_grads, n_accumulations):
-        if accu_grads is None:
-            return [self.flat_gradients(grad) / n_accumulations for grad in step_grads]
-
-        for i, grad in enumerate(step_grads):
-            accu_grads[i] += self.flat_gradients(grad) / n_accumulations
-        return accu_grads
-
-    # @tf.function
-    def flat_gradients(self, grads_or_idx_slices: tf.Tensor) -> tf.Tensor:
-        if type(grads_or_idx_slices) == tf.IndexedSlices:
-            return tf.scatter_nd(
-                tf.expand_dims(grads_or_idx_slices.indices, 1),
-                grads_or_idx_slices.values,
-                grads_or_idx_slices.dense_shape,
-            )
-
-        return grads_or_idx_slices
 
     @cached_property
     def minibatch_idxs(self):
@@ -389,7 +193,8 @@ class YOLOv4(BaseClass):
         # s_pred, m_pred, l_pred
         # x_pred == Dim(1, output_size, output_size, anchors, (bbox))
         candidates = self.model(x, training=False)
-        return self._transform_candidates(candidates)
+        transform = self._transform_candidates(candidates)
+        return transform
 
     @tf.function
     def _transform_candidates(self, candidates):

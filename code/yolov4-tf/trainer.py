@@ -1,174 +1,201 @@
 #!/usr/bin/env python3.8
-
 import albumentations as A
-import imgaug
 
 import tensorflow as tf
-from tensorflow.keras import optimizers, callbacks
+from tensorflow.keras import callbacks, optimizers
+
+import tfutils
+from tfutils import GradientAccumulator, LossAccumulator, LearningRateScheduler
+import utils
+
 import numpy as np
 import cv2 as cv
 
 from tqdm import tqdm
+import time
+from tabulate import tabulate
 
 
-AUTOTUNE = tf.data.experimental.AUTOTUNE
-
-# has to be called right after tf import
-physical_devices = tf.config.experimental.list_physical_devices("GPU")
-if len(physical_devices) > 0:
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)
-
-from yolov4.tf import YOLOv4
-from yolov4.tf.train import SaveWeightsCallback
-import utils
-from config import config
-
-utils.seed("tf", "np", "imgaug")
-
-yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-# yolo = YOLOv4()
-# yolo = YOLOv4(tiny=config.yolo.tiny)
-yolo.classes = config.yolo.classes
-yolo.input_size = config.yolo.input_size
-yolo.channels = config.yolo.channels
-yolo.batch_size = config.yolo.batch_size
-yolo.subdivisions = config.yolo.subdivisions
-# TODO check other params
-
-yolo.make_model()
-# yolo.load_weights(config.yolo.pretrained_weights, weights_type=config.yolo.weights_type)
-
-##############
-## TRAINING ##
-##############
-
-# fmt:off
-base_augmentations = A.Compose([
-    A.PadIfNeeded(
-        min_height=1000,
-        min_width=1000,
-        border_mode=cv.BORDER_CONSTANT,
-        value=0,
-        always_apply=True
-    ),
-    A.Resize(
-        width=config.yolo.input_size,
-        height=config.yolo.input_size,
-        always_apply=True
-    )
-])
+def ffloat(f):
+    return "{:.5f}".format(f)
 
 
-def train_augmentations(image, bboxes):
-    _train_augmentations = A.Compose([
-        # TODO tune params
-        # TODO bboxed still disappearing
-        # has to happen before the crop if not can happen that bboxes disappear
-        A.Rotate(
-            limit=10,
-            border_mode=cv.BORDER_REFLECT_101,
-            p=0.3,
-        ),
-        A.RandomScale(scale_limit=0.1, p=0.3),
-        # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
-        A.RandomSizedBBoxSafeCrop(
-            width=None, # unused
-            height=None, # unused
-            p=0.3,
-        ),
-        A.OneOf([
-            A.CLAHE(p=1),
-            A.ColorJitter(p=1),
-        ], p=0.3),
-        A.Blur(blur_limit=3, p=0.3),
-        A.GaussNoise(p=0.3),
-        base_augmentations
-    ], bbox_params=A.BboxParams("yolo"))
-
-    augmented = _train_augmentations(image=image, bboxes=bboxes)
-    return augmented["image"], augmented["bboxes"]
-
-def valid_augmentations(image, bboxes):
-    _valid_augmentations = A.Compose([
-        base_augmentations,
-    ], bbox_params=A.BboxParams("yolo"))
-
-    augmented = _valid_augmentations(image=image, bboxes=bboxes)
-    return augmented["image"], augmented["bboxes"]
-# fmt:on
+# _callbacks = [
+#     callbacks.LearningRateScheduler(lr_scheduler),
+#     callbacks.TerminateOnNaN(),
+#     callbacks.TensorBoard(log_dir="./log"),
+#     SaveWeightsCallback(
+#         yolo=yolo,
+#         dir_path=config.yolo.checkpoint_dir,
+#         weights_type=config.yolo.weights_type,
+#         epoch_per_save=1,
+#     ),
+#     tfutils.BatchProgbarLogger(config.yolo.accumulation_steps),
+# ]
 
 
-train_dataset = yolo.load_dataset(
-    dataset_path=config.train_out_dir / "labels.txt",
-    dataset_type=config.yolo.weights_type,
-    label_smoothing=0.05,
-    preload=config.yolo.preload_dataset,
-    # preload=False,
-    training=True,
-    augmentations=train_augmentations,
-)
-# test_dataset(yolo, dataset)
+class Trainer:
+    def __init__(
+        self,
+        yolo,
+        lr_scheduler=None,
+        max_steps=1,
+        validation_freq=2,
+        accumulation_steps=1,
+        map_after_steps=1,
+        map_on_step_mod=1,
+    ):
+        self.yolo = yolo
+        self.model = yolo.model
 
-valid_dataset = yolo.load_dataset(
-    dataset_path=config.valid_out_dir / "labels.txt",
-    dataset_type=config.yolo.weights_type,
-    preload=config.yolo.preload_dataset,
-    training=False,
-    augmentations=valid_augmentations,
-)
+        self.step_counter = 0
+        self.mini_step_counter = 0
+
+        self.mAP = utils.MeanAveragePrecision(
+            self.yolo.classes,
+            self.yolo.input_size,
+            iou_threshs=[0.5, 0.6, 0.7, 0.8],
+        )
+
+        self.max_steps = max_steps
+        self.validation_freq = validation_freq
+        self.lr_scheduler = LearningRateScheduler(self.model, lr_scheduler)
+        self.accumulation_steps = accumulation_steps
+        self.map_after_steps = map_after_steps
+        self.map_on_step_mod = map_on_step_mod
+
+        self.train_time = time.perf_counter()
+        self.valid_time = time.perf_counter()
+
+    def train(self, train_ds, valid_ds, **kwargs):
+        trainable_vars = self.model.trainable_variables
+        grad_accu = GradientAccumulator(self.accumulation_steps, trainable_vars)
+        tloss_accu = LossAccumulator(self.accumulation_steps)
+
+        train_ds_it = iter(train_ds)
+        for mini_batch_idx in range(0, self.max_steps * grad_accu.accumulation_steps):
+            if self.lr_scheduler:
+                self.lr_scheduler(self.step_counter)
 
 
-optimizer = optimizers.Adam(learning_rate=config.yolo.lr)
-yolo.compile(
-    optimizer=optimizer,
-    loss_iou_type=config.yolo.loss,
-    loss_verbose=0,
-    run_eagerly=config.yolo.run_eagerly,
-)
+            # training step
+            inputs, labels = next(train_ds_it)
+            step_grads, step_losses = self.train_step(inputs, labels)
 
+            accumulated_losses = tloss_accu.accumulate(step_losses)
+            accumulated_grads = grad_accu.accumulate(step_grads)
+            if accumulated_grads is None:
+                continue
 
-def lr_scheduler(epoch):
-    lr = config.yolo.lr
-    epochs = config.yolo.epochs
+            # apply optimization
+            self.step_counter += 1
+            self.model.optimizer.apply_gradients(accumulated_grads)
+            self.print_train(accumulated_losses)
 
-    if epoch < int(epochs * 0.5):
-        return lr
-    if epoch < int(epochs * 0.8):
-        return lr * 0.5
-    if epoch < int(epochs * 0.9):
-        return lr * 0.1
+            # validation step
+            if not self.is_validation_time():
+                continue
 
-    return lr * 0.01
+            self.valid_time = time.perf_counter()
 
+            n_valid_batches = np.ceil(len(valid_ds) / self.yolo.batch_size).astype(
+                np.int32
+            )
+            vloss_accu = LossAccumulator(n_valid_batches)
 
-_callbacks = [
-    # callbacks.LearningRateScheduler(lr_scheduler),
-    callbacks.TerminateOnNaN(),
-    callbacks.TensorBoard(log_dir="./log"),
-    SaveWeightsCallback(
-        yolo=yolo,
-        dir_path=config.yolo.checkpoint_dir,
-        weights_type=config.yolo.weights_type,
-        epoch_per_save=1,
-    ),
-]
+            valid_ds_it = iter(valid_ds)
+            vlosses = None
 
-# yolo.fit(
-#     train_dataset,
-#     validation_data=valid_dataset,
-#     epochs=config.yolo.epochs,
-#     callbacks=_callbacks,
-#     validation_steps=config.yolo.validation_steps,
-#     validation_freq=config.yolo.validation_frequency,
-#     steps_per_epoch=config.yolo.batch_size,  # config.yolo.batch_size,
-#     workers=16,
-# )
+            self.mAP.reset()
+            for _ in range(n_valid_batches):
+                vinputs, vlabels = next(valid_ds_it)
+                voutputs, vlosses = self.valid_step(vinputs, vlabels)
+                vlosses = vloss_accu.accumulate(vlosses)
 
-yolo.train(
-    train_dataset,
-    valid_dataset,
-    epochs=config.yolo.epochs,
-    validation_steps=config.yolo.validation_steps,
-    validation_freq=config.yolo.validation_frequency,
-    steps_per_epoch=config.yolo.batch_size,  # config.yolo.batch_size,
-)
+                if self.is_map_time():
+                    pred_batch = self.bboxes_from_outputs(voutputs)
+                    label_batch = valid_ds.orig_labels
+                    self.mAP.add(pred_batch, label_batch, inverted_gt=True)
+
+            if self.is_map_time():
+                results = self.mAP.compute(show=False)
+                tf.print(self.mAP.prettify(results))
+
+            self.print_valid(vlosses)
+
+    @tf.function
+    def train_step(self, inputs, labels):
+        with tf.GradientTape() as tape:
+            total_loss = 0
+            losses = [None for _ in range(3)]
+
+            output = self.model(inputs, training=True)
+            # TODO check!!!
+            for lidx, (o, l) in enumerate(zip(output, labels)):
+                loss = self.model.loss(y_pred=o, y_true=l)
+                total_loss += loss
+                losses[lidx] = loss
+
+        grads = tape.gradient(total_loss, self.model.trainable_variables)
+        return grads, tf.stack(losses)
+
+    @tf.function
+    def valid_step(self, inputs, labels):
+        total_loss = 0
+        losses = [0 for _ in range(3)]
+
+        outputs = self.model(inputs, training=False)
+        for lidx, (o, l) in enumerate(zip(outputs, labels)):
+            loss = self.model.loss(y_pred=o, y_true=l)
+            total_loss += loss
+            losses[lidx] = loss
+
+        return outputs, losses
+
+    def is_validation_time(self):
+        return (self.step_counter % self.validation_freq) == 0
+
+    def is_map_time(self):
+        min_map_steps_reached = self.step_counter >= self.map_after_steps
+        is_valid_map_step = self.step_counter % self.map_on_step_mod == 0
+        return min_map_steps_reached and is_valid_map_step
+        # return True
+
+    def bboxes_from_outputs(self, voutputs):
+        # voutputs:
+        # tuple(3)[(batch_size, *shape1), (batch_size, *shape2), (batch_size, *shape3)]
+        candidates = self.yolo._transform_candidate_batch(voutputs)
+        candidates = [candidate.numpy() for candidate in candidates]
+        with tf.device("CPU:0"):
+            bbox_batch = [
+                self.yolo.candidates_to_pred_bboxes(
+                    candidate[0],
+                    iou_threshold=0.3,
+                    score_threshold=0.25,
+                )
+                for candidate in candidates
+            ]
+
+        return bbox_batch
+
+    def print_train(self, losses):
+        took = ffloat(time.perf_counter() - self.train_time)
+        loss_sum = ffloat(losses.sum())
+        losses = (ffloat(l) for l in losses)
+
+        p = [["Batch", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall"]]
+        p += [[self.step_counter, f"{took}s", loss_sum, *losses]]
+        print(tabulate(p))
+
+        self.train_time = time.perf_counter()
+
+    def print_valid(self, losses):
+        took = ffloat(time.perf_counter() - self.valid_time)
+        loss_sum = ffloat(losses.sum())
+        losses = (ffloat(l) for l in losses)
+
+        # fmt: off
+        p = [[utils.green("Valid"), "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall"]]
+        p += [["", f"{took}s", loss_sum, *losses]]
+        print(tabulate(p))
+        # fmt: on

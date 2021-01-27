@@ -270,8 +270,6 @@ class Dataset:
 
         return _dataset
 
-    # @njit
-    # @utils.stopwatch("bboxes_to_ground_truth")
     def bboxes_to_ground_truth(self, bboxes):
         """
         @param bboxes: [[b_x, b_y, b_w, b_h, class_id], ...]
@@ -449,6 +447,8 @@ class Dataset:
     def _next_batch(self):
         batch_x = []
         _batch_y = [[] for _ in range(len(self.grid_size))]
+        self.orig_labels = []
+
         augmentations = self.augmentations
         next_data = self._next_data
 
@@ -456,6 +456,9 @@ class Dataset:
             x, y = next_data()
             if augmentations is not None:
                 x, y = augmentations(x, y)
+
+            if not self.data_augmentation:
+                self.orig_labels.append(y)
 
             x = np.expand_dims(x / 255.0, axis=0)
             y = self.bboxes_to_ground_truth(y)
@@ -471,17 +474,6 @@ class Dataset:
             batch_x, batch_y = batch_x[0], batch_y[0]
 
         return batch_x, batch_y
-
-    def ground_truth_labels(self):
-        return [y for _, y in self.dataset]
-        # y = bboxes_to_ground_truth_njit(
-        #     y,
-        #     self.num_classes,
-        #     self.grid_size,
-        #     self.grid_xy,
-        #     self.label_smoothing,
-        #     self.anchors_ratio
-        # )
 
     def __len__(self):
         return len(self.dataset)
