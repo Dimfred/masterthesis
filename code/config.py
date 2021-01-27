@@ -52,11 +52,12 @@ config.yolo.loss = "ciou"
 
 config.yolo.burn_in = 1000
 config.yolo.lr = 0.000261 #1e-3
-config.yolo.momentum = 0.9
+config.yolo.decau = 0.0005
+config.yolo.momentum = 0.95
 
 config.yolo.max_steps = 400000
 config.yolo.map_after_steps = 500
-config.yolo.map_on_step_mod = 100
+config.yolo.map_on_step_mod = 50
 
 config.yolo.checkpoint_dir = Path("checkpoints")
 config.yolo.preload_dataset = True

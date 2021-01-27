@@ -68,11 +68,11 @@ def train_augmentations(image, bboxes):
         ),
         # A.RandomScale(scale_limit=0.1, p=0.3),
         # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
-        # A.RandomSizedBBoxSafeCrop(
-        #     width=None, # unused
-        #     height=None, # unused
-        #     p=0.3,
-        # ),
+        A.RandomSizedBBoxSafeCrop(
+            width=None, # unused
+            height=None, # unused
+            p=0.3,
+        ),
         A.OneOf([
             A.CLAHE(p=1),
             A.ColorJitter(p=1),
@@ -98,8 +98,17 @@ def valid_augmentations(image, bboxes):
 if __name__ == "__main__":
     # model creation
     yolo = create_model()
+
     # optimizer = optimizers.Adam(learning_rate=config.yolo.lr)
-    optimizer = optimizers.SGD(config.yolo.lr, momentum=config.yolo.momentum)
+    # optimizer = optimizers.SGD(
+    #     learning_rate=config.yolo.lr, momentum=config.yolo.momentum
+    # )
+    optimizer = optimizers.SGDW(
+        learning_rate=config.yolo.lr,
+        momentum=config.yolo.momentum,
+        weight_decay=config.yolo.decay,
+    )
+
     yolo.compile(
         optimizer=optimizer,
         loss_iou_type=config.yolo.loss,
@@ -140,7 +149,7 @@ if __name__ == "__main__":
         #     return lr * 0.5
         # if epoch < int(epochs * 0.9):
         #     return lr * 0.1
-        tf.print(lr)
+        # tf.print(lr)
         return lr
 
         # return lr * 0.01
