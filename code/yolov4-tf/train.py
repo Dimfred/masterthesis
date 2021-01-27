@@ -105,7 +105,7 @@ if __name__ == "__main__":
         loss_iou_type=config.yolo.loss,
         loss_verbose=0,
         run_eagerly=config.yolo.run_eagerly,
-        steps_per_execution=config.yolo.accumulation_steps,
+        # steps_per_execution=config.yolo.accumulation_steps,
     )
 
     # dataset creation
