@@ -66,13 +66,13 @@ def train_augmentations(image, bboxes):
             border_mode=cv.BORDER_REFLECT_101,
             p=0.3,
         ),
-        A.RandomScale(scale_limit=0.1, p=0.3),
+        # A.RandomScale(scale_limit=0.1, p=0.3),
         # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
-        A.RandomSizedBBoxSafeCrop(
-            width=None, # unused
-            height=None, # unused
-            p=0.3,
-        ),
+        # A.RandomSizedBBoxSafeCrop(
+        #     width=None, # unused
+        #     height=None, # unused
+        #     p=0.3,
+        # ),
         A.OneOf([
             A.CLAHE(p=1),
             A.ColorJitter(p=1),

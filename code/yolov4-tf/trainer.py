@@ -66,6 +66,7 @@ class Trainer:
 
         self.train_time = time.perf_counter()
         self.valid_time = time.perf_counter()
+        self.train_time_start = time.perf_counter()
 
     def train(self, train_ds, valid_ds, **kwargs):
         trainable_vars = self.model.trainable_variables
@@ -122,6 +123,8 @@ class Trainer:
                 tf.print(self.mAP.prettify(results))
 
             self.print_valid(vlosses)
+
+
 
     @tf.function
     def train_step(self, inputs, labels):
@@ -183,9 +186,11 @@ class Trainer:
         loss_sum = ffloat(losses.sum())
         losses = (ffloat(l) for l in losses)
 
-        p = [["Batch", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall"]]
-        p += [[self.step_counter, f"{took}s", loss_sum, *losses]]
+        # fmt: off
+        p = [["Batch", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall"]]
+        p += [[self.step_counter, f"{took}s", loss_sum, *losses, self.overall_train_time]]
         print(tabulate(p))
+        # fmt: on
 
         self.train_time = time.perf_counter()
 
@@ -199,3 +204,10 @@ class Trainer:
         p += [["", f"{took}s", loss_sum, *losses]]
         print(tabulate(p))
         # fmt: on
+
+    @property
+    def overall_train_time(self):
+        import datetime
+
+        took = time.perf_counter() - self.train_time_start
+        return str(datetime.timedelta(seconds=took)).split(".")[0]
