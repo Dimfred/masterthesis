@@ -55,7 +55,7 @@ config.yolo.lr = 0.000261 #1e-3
 config.yolo.momentum = 0.9
 
 config.yolo.max_steps = 400000
-config.yolo.map_after_steps = 1000
+config.yolo.map_after_steps = 500
 config.yolo.map_on_step_mod = 100
 
 config.yolo.checkpoint_dir = Path("checkpoints")
