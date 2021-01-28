@@ -312,7 +312,9 @@ class TFDataset:
         # y = [tf.Tensor(l) for l in y]
         # TODO make better
         y = [np.squeeze(l, axis=0) for l in y]
-        return x, *y
+        l1, l2, l3 = y
+
+        return x, l1, l2, l3
 
     def _next_batch(self):
         batch_x = []
@@ -347,7 +349,8 @@ class TFDataset:
         batch_x = np.concatenate(batch_x, axis=0)
         batch_y = [np.concatenate(b_y, axis=0) for b_y in _batch_y]
 
-        return batch_x, *batch_y
+        batch_l1, batch_l2, batch_l3 = batch_y
+        return batch_x, batch_l1, batch_l2, batch_l3
 
     def __iter__(self):
         return iter(self.dataset)
