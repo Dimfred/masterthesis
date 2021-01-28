@@ -29,7 +29,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import backend, layers, optimizers
 
-from . import dataset, train, weights
+from . import dataset, train, weights, tfdataset
 from .train import SaveWeightsCallback
 from ..common.base_class import BaseClass
 from ..model import yolov4
@@ -268,6 +268,33 @@ class YOLOv4(BaseClass):
         preload=False,
     ):
         return dataset.Dataset(
+            anchors=self.anchors,
+            batch_size=self.batch_size,
+            dataset_path=dataset_path,
+            dataset_type=dataset_type,
+            input_size=self.input_size,
+            label_smoothing=label_smoothing,
+            num_classes=len(self.classes),
+            image_path_prefix=image_path_prefix,
+            strides=self.strides,
+            xyscales=self.xyscales,
+            channels=self.channels,
+            data_augmentation=training,
+            augmentations=augmentations,
+            preload=preload,
+        )
+
+    def load_tfdataset(
+        self,
+        dataset_path,
+        dataset_type="converted_coco",
+        label_smoothing=0.1,
+        image_path_prefix=None,
+        augmentations=None,
+        training=False,
+        preload=False,
+    ):
+        return tfdataset.TFDataset(
             anchors=self.anchors,
             batch_size=self.batch_size,
             dataset_path=dataset_path,

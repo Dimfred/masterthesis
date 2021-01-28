@@ -74,14 +74,27 @@ class Trainer:
         tloss_accu = LossAccumulator(self.accumulation_steps)
 
         train_ds_it = iter(train_ds)
-        for mini_batch_idx in range(0, self.max_steps * grad_accu.accumulation_steps):
+        # for mini_batch_idx in range(0, self.max_steps * grad_accu.accumulation_steps):
+        for inputs, l1, l2, l3 in train_ds:
             if self.lr_scheduler:
                 self.lr_scheduler(self.step_counter)
 
 
             # training step
-            inputs, labels = next(train_ds_it)
+            # data_start = time.perf_counter()
+            # with tf.device("CPU:0"):
+                # inputs, labels = next(train_ds_it)
+                # batch =  train_ds.take(1)
+                # labels = (l1, l2, l3)
+                # tf.map()
+            # data_end = time.perf_counter()
+            # tf.print("data", data_end - data_start)
+
+            # step_start = time.perf_counter()
+            labels = (l1, l2, l3)
             step_grads, step_losses = self.train_step(inputs, labels)
+            # step_end = time.perf_counter()
+            # tf.print("step", step_end - step_start)
 
             accumulated_losses = tloss_accu.accumulate(step_losses)
             accumulated_grads = grad_accu.accumulate(step_grads)

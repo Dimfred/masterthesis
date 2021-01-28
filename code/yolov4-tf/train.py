@@ -1,6 +1,7 @@
 # augmentation
 import albumentations as A
 import cv2 as cv
+import numpy as np
 
 import tensorflow as tf
 import tensorflow_addons as tfa
@@ -11,6 +12,7 @@ if len(physical_devices) > 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 from tensorflow.keras import callbacks, optimizers
+import time
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
@@ -119,7 +121,7 @@ if __name__ == "__main__":
     )
 
     # dataset creation
-    train_dataset = yolo.load_dataset(
+    train_dataset = yolo.load_tfdataset(
         dataset_path=config.train_out_dir / "labels.txt",
         dataset_type=config.yolo.weights_type,
         label_smoothing=0.05,
@@ -128,6 +130,88 @@ if __name__ == "__main__":
         training=True,
         augmentations=train_augmentations,
     )
+
+    # it = iter(train_dataset)
+    # for i in range(10):
+    #     item = next(it)
+    #     img, labels = item
+    #     print(img.shape, labels[0].shape)
+
+    item = train_dataset._next_batch()
+    train_dataset.count = 0
+
+    # build shapes
+    x, l1, l2, l3 = item
+
+    img_shapes = x.shape
+    l1_shape = l1.shape
+    l2_shape = l2.shape
+    l3_shape = l3.shape
+    label_shapes = (l1_shape, l2_shape, l3_shape)
+
+    img_types = (np.float32, np.float32, np.float32, np.float32)
+    label_type = (np.float32, np.float32, np.float32, np.float32, np.float32)
+    label_types = tuple(label_type for _ in range(len(label_shapes)))
+
+    # output_types=(img_types, *label_types)
+    output_types = (np.float32, np.float32, np.float32, np.float32)
+    output_shapes = (img_shapes, *label_shapes)
+
+    for i, s in enumerate(output_shapes):
+        print("shape", i, s)
+
+    for i, t in enumerate(output_types):
+        print("type", i, t)
+
+
+
+
+    # print("copying")
+    # parsed_input = []
+    # for img, labels in train_dataset.dataset:
+    #     parsed_input.append((tf.convert_to_tensor(img), tf.convert_to_tensor(labels)))
+    # print("copied")
+    # ragged = tf.ragged.constant(parsed_input)
+    # print("ragged")
+    # dataset = tf.data.Dataset.from_tensor_slices(ragged)
+    # print("inited")
+
+    dataset = tf.data.Dataset.from_generator(
+        train_dataset.generator,
+        output_types=output_types,
+        output_shapes=output_shapes,
+        # output_types=(*img_types, *label_types),
+        # output_shapes=(*img_shape, *label_shapes)
+    )
+    dataset = dataset.interleave(
+        lambda *args: tf.data.Dataset.from_generator(
+            train_dataset.generator,
+            output_types=output_types,
+            output_shapes=output_shapes,
+        ),
+        cycle_length=config.yolo.n_workers,
+        block_length=1,
+        num_parallel_calls=config.yolo.n_workers,
+        deterministic=False
+    )
+    # dataset = dataset.batch(config.yolo.batch_size)
+    dataset = dataset.prefetch(40)
+
+    # start_it = time.perf_counter()
+    # for x, l1, l2, l3 in dataset:
+    #     end_it = time.perf_counter()
+    #     print("it took:", end_it - start_it)
+    #     print("x", x.shape)
+    #     print("l1", l1.shape)
+    #     print("l2", l2.shape)
+    #     print("l3", l3.shape)
+    #     # THIS IS TRAINING OVERHEAD
+    #     time.sleep(0.3)
+    #     start_it = time.perf_counter()
+    #     pass
+
+
+    train_dataset = dataset
 
     valid_dataset = yolo.load_dataset(
         dataset_path=config.valid_out_dir / "labels.txt",

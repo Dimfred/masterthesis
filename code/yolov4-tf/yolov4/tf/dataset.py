@@ -41,8 +41,8 @@ import time
 from numba import njit
 
 
-@utils.stopwatch("bbox_to_ground_truth_njit")
-@njit
+# @utils.stopwatch("bbox_to_ground_truth_njit")
+# @njit
 def bboxes_to_ground_truth_njit(
     bboxes, num_classes, grid_size, grid_xy, label_smoothing, anchors_ratio
 ):
@@ -187,9 +187,9 @@ class Dataset:
         self.data_augmentation = data_augmentation
         self.augmentations = augmentations
 
-        self.count = 0
-        if self.data_augmentation:
-            np.random.shuffle(self.dataset)
+        # self.count = 0
+        # if self.data_augmentation:
+            # np.random.shuffle(self.dataset)
 
     def load_dataset(self):
         """
@@ -270,6 +270,7 @@ class Dataset:
 
         return _dataset
 
+    # TODO sometimes slow can take around 0.3s
     def bboxes_to_ground_truth(self, bboxes):
         """
         @param bboxes: [[b_x, b_y, b_w, b_h, class_id], ...]

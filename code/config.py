@@ -62,14 +62,14 @@ config.yolo.map_on_step_mod = 50
 config.yolo.checkpoint_dir = Path("checkpoints")
 config.yolo.preload_dataset = True
 config.yolo.run_eagerly = (
-    True
-    if utils.isme()
-    else False
-    # False
+    # True
+    # if utils.isme()
+    # else False
+    False
 )
 config.yolo.validation_steps = -1 if utils.isme() else 2
 config.yolo.validation_freq = 10 if utils.isme() else 10
-config.yolo.workers = 12 if utils.isme() else 16
+config.yolo.n_workers = 12 if utils.isme() else 16
 
 # classes and corresponding trained weights
 architecture_type = {
