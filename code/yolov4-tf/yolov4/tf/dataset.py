@@ -448,7 +448,6 @@ class Dataset:
     def _next_batch(self):
         batch_x = []
         _batch_y = [[] for _ in range(len(self.grid_size))]
-        self.orig_labels = []
 
         augmentations = self.augmentations
         next_data = self._next_data
@@ -457,9 +456,6 @@ class Dataset:
             x, y = next_data()
             if augmentations is not None:
                 x, y = augmentations(x, y)
-
-            if not self.data_augmentation:
-                self.orig_labels.append(y)
 
             x = np.expand_dims(x / 255.0, axis=0)
             y = self.bboxes_to_ground_truth(y)
@@ -484,6 +480,7 @@ class Dataset:
             yield batch
 
         yield None
+
 
 
 def cut_out(dataset):

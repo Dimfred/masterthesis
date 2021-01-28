@@ -73,28 +73,12 @@ class Trainer:
         grad_accu = GradientAccumulator(self.accumulation_steps, trainable_vars)
         tloss_accu = LossAccumulator(self.accumulation_steps)
 
-        train_ds_it = iter(train_ds)
-        # for mini_batch_idx in range(0, self.max_steps * grad_accu.accumulation_steps):
-        for inputs, l1, l2, l3 in train_ds:
+        for inputs, *labels, _ in train_ds:
             if self.lr_scheduler:
                 self.lr_scheduler(self.step_counter)
 
-
             # training step
-            # data_start = time.perf_counter()
-            # with tf.device("CPU:0"):
-                # inputs, labels = next(train_ds_it)
-                # batch =  train_ds.take(1)
-                # labels = (l1, l2, l3)
-                # tf.map()
-            # data_end = time.perf_counter()
-            # tf.print("data", data_end - data_start)
-
-            # step_start = time.perf_counter()
-            labels = (l1, l2, l3)
             step_grads, step_losses = self.train_step(inputs, labels)
-            # step_end = time.perf_counter()
-            # tf.print("step", step_end - step_start)
 
             accumulated_losses = tloss_accu.accumulate(step_losses)
             accumulated_grads = grad_accu.accumulate(step_grads)
@@ -122,13 +106,13 @@ class Trainer:
 
             self.mAP.reset()
             for _ in range(n_valid_batches):
-                vinputs, vlabels = next(valid_ds_it)
+                vinputs, *vlabels, idxs = next(valid_ds_it)
                 voutputs, vlosses = self.valid_step(vinputs, vlabels)
                 vlosses = vloss_accu.accumulate(vlosses)
 
                 if self.is_map_time():
                     pred_batch = self.bboxes_from_outputs(voutputs)
-                    label_batch = valid_ds.orig_labels
+                    label_batch = valid_ds.get_ground_truth(idxs)
                     self.mAP.add(pred_batch, label_batch, inverted_gt=True)
 
             if self.is_map_time():
@@ -137,8 +121,6 @@ class Trainer:
 
             self.print_valid(vlosses)
 
-
-
     @tf.function
     def train_step(self, inputs, labels):
         with tf.GradientTape() as tape:
@@ -146,7 +128,6 @@ class Trainer:
             losses = [None for _ in range(3)]
 
             output = self.model(inputs, training=True)
-            # TODO check!!!
             for lidx, (o, l) in enumerate(zip(output, labels)):
                 loss = self.model.loss(y_pred=o, y_true=l)
                 total_loss += loss

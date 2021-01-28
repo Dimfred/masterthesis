@@ -69,7 +69,7 @@ def train_augmentations(image, bboxes):
             border_mode=cv.BORDER_REFLECT_101,
             p=0.3,
         ),
-        # A.RandomScale(scale_limit=0.1, p=0.3),
+        A.RandomScale(scale_limit=0.1, p=0.3),
         # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
         A.RandomSizedBBoxSafeCrop(
             width=None, # unused
@@ -131,65 +131,7 @@ if __name__ == "__main__":
         augmentations=train_augmentations,
     )
 
-    # it = iter(train_dataset)
-    # for i in range(10):
-    #     item = next(it)
-    #     img, labels = item
-    #     print(img.shape, labels[0].shape)
-
-    item = train_dataset._next_batch()
-    # item = train_dataset._next()
-    train_dataset.count = 0
-
-    # build shapes
-    x, l1, l2, l3 = item
-
-    img_shapes = x.shape
-    l1_shape = l1.shape
-    l2_shape = l2.shape
-    l3_shape = l3.shape
-    label_shapes = (l1_shape, l2_shape, l3_shape)
-
-    img_types = (np.float32, np.float32, np.float32, np.float32)
-    label_type = (np.float32, np.float32, np.float32, np.float32, np.float32)
-    label_types = tuple(label_type for _ in range(len(label_shapes)))
-
-    # output_types=(img_types, *label_types)
-    output_types = (np.float32, np.float32, np.float32, np.float32)
-    output_shapes = (img_shapes, *label_shapes)
-
-    for i, s in enumerate(output_shapes):
-        print("shape", i, s)
-
-    for i, t in enumerate(output_types):
-        print("type", i, t)
-
-
-    dataset = tf.data.Dataset.from_generator(
-        train_dataset.generator,
-        output_types=output_types,
-        output_shapes=output_shapes,
-    )
-    # dataset = dataset.batch(config.yolo.batch_size)
-    dataset = dataset.prefetch(20)
-
-    # start_it = time.perf_counter()
-    # for x, l1, l2, l3 in dataset:
-    #     end_it = time.perf_counter()
-    #     print("it took:", end_it - start_it)
-    #     print("x", x.shape)
-    #     print("l1", l1.shape)
-    #     print("l2", l2.shape)
-    #     print("l3", l3.shape)
-    #     # THIS IS TRAINING OVERHEAD
-    #     time.sleep(0.3)
-    #     start_it = time.perf_counter()
-    #     pass
-
-
-    train_dataset = dataset
-
-    valid_dataset = yolo.load_dataset(
+    valid_dataset = yolo.load_tfdataset(
         dataset_path=config.valid_out_dir / "labels.txt",
         dataset_type=config.yolo.weights_type,
         preload=config.yolo.preload_dataset,
@@ -203,7 +145,8 @@ if __name__ == "__main__":
         burn_in = config.yolo.burn_in
 
         if step < burn_in:
-            return (lr / burn_in) * (step + 1)
+            # return (lr / burn_in) * (step + 1)
+            return lr * (step / burn_in)**10
         if step > 7000:
             return lr / 10
         if step > 5000:
@@ -222,3 +165,58 @@ if __name__ == "__main__":
         lr_scheduler=lr_scheduler,
     )
     trainer.train(train_dataset, valid_dataset)
+
+    # it = iter(train_dataset)
+    # for i in range(10):
+    #     item = next(it)
+    #     img, labels = item
+    #     print(img.shape, labels[0].shape)
+
+    # item = train_dataset._next_batch()
+    # item = train_dataset._next()
+    # train_dataset.count = 0
+
+    # build shapes
+    # x, l1, l2, l3 = item
+
+    # img_shapes = x.shape
+    # l1_shape = l1.shape
+    # l2_shape = l2.shape
+    # l3_shape = l3.shape
+    # label_shapes = (l1_shape, l2_shape, l3_shape)
+
+    # img_types = (np.float32, np.float32, np.float32, np.float32)
+    # label_type = (np.float32, np.float32, np.float32, np.float32, np.float32)
+    # label_types = tuple(label_type for _ in range(len(label_shapes)))
+
+    # # output_types=(img_types, *label_types)
+    # output_types = (np.float32, np.float32, np.float32, np.float32)
+    # output_shapes = (img_shapes, *label_shapes)
+
+    # for i, s in enumerate(output_shapes):
+    #     print("shape", i, s)
+
+    # for i, t in enumerate(output_types):
+    #     print("type", i, t)
+
+
+    # dataset = tf.data.Dataset.from_generator(
+    #     train_dataset.generator,
+    #     output_types=output_types,
+    #     output_shapes=output_shapes,
+    # )
+    # # dataset = dataset.batch(config.yolo.batch_size)
+    # dataset = dataset.prefetch(20)
+
+    # start_it = time.perf_counter()
+    # for x, l1, l2, l3 in dataset:
+    #     end_it = time.perf_counter()
+    #     print("it took:", end_it - start_it)
+    #     print("x", x.shape)
+    #     print("l1", l1.shape)
+    #     print("l2", l2.shape)
+    #     print("l3", l3.shape)
+    #     # THIS IS TRAINING OVERHEAD
+    #     time.sleep(0.3)
+    #     start_it = time.perf_counter()
+    #     pass

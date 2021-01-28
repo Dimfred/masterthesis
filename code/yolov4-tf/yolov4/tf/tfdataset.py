@@ -40,9 +40,9 @@ import utils
 import time
 
 from numba import njit
+from cached_property import cached_property
 
 
-# @njit
 def bboxes_to_ground_truth_njit(
     bboxes, num_classes, grid_size, grid_xy, label_smoothing, anchors_ratio
 ):
@@ -185,7 +185,12 @@ class TFDataset:
         self.dataset = self.load_dataset()
         self.augmentations = augmentations
 
+        # list to shuffle idxs from
+        self.idxs = list(range(len(self.dataset)))
         self.count = 0
+
+        if self.data_augmentation:
+            np.random.shuffle(self.idxs)
 
     def load_dataset(self):
         """
@@ -236,6 +241,7 @@ class TFDataset:
             raise FileNotFoundError("Failed to find images")
 
         if self.preload:
+
             def _read_and_store(path, idx):
                 img = self._imread(path)
                 _dataset[idx][0] = img
@@ -277,57 +283,30 @@ class TFDataset:
 
     def _next_data(self):
         if self.count == len(self.dataset):
-            np.random.shuffle(self.dataset)
             self.count = 0
+            if self.data_augmentation:
+                np.random.shuffle(self.idxs)
 
-        _dataset = self.dataset[self.count]
+        idx = self.idxs[self.count]
+        _dataset = self.dataset[idx]
         self.count += 1
 
-        ret = self.load_img_and_labels(_dataset)
-        if ret is not None:
-            return ret
+        inputs, labels = self.load_img_and_labels(_dataset)
 
-        raise FileNotFoundError("Failed to find images")
-
-    def _next(self):
-        x, y = self._next_data()
-        if self.augmentations is not None:
-            x, y = self.augmentations(x, y)
-
-        # x = np.expand_dims(x / 255.0, axis=0).astype(np.float64)
-        x = x / 255.0
-        # x = tf.Tensor(x)
-
-        y = bboxes_to_ground_truth_njit(
-            y,
-            self.num_classes,
-            self.grid_size,
-            self.grid_xy,
-            self.label_smoothing,
-            self.anchors_ratio,
-        )
-        y = [np.squeeze(l, axis=0) for l in y]
-        l1, l2, l3 = y
-
-        return x, l1, l2, l3
+        return inputs, labels, idx
 
     def _next_batch(self):
-        # start_batch = time.perf_counter()
-
         batch_x = []
         _batch_y = [[] for _ in range(len(self.grid_size))]
-        self.orig_labels = []
+        batch_idxs = []
 
         augmentations = self.augmentations
         next_data = self._next_data
 
         for batch_idx in range(self.batch_size):
-            x, y = next_data()
+            x, y, idx = next_data()
             if augmentations is not None:
                 x, y = augmentations(x, y)
-
-            if not self.data_augmentation:
-                self.orig_labels.append(y)
 
             x = np.expand_dims(x / 255.0, axis=0)
             y = bboxes_to_ground_truth_njit(
@@ -340,39 +319,59 @@ class TFDataset:
             )
 
             batch_x.append(x)
+            batch_idxs.append(idx)
             for i, _y in enumerate(y):
                 _batch_y[i].append(_y)
 
         batch_x = np.concatenate(batch_x, axis=0)
         batch_y = [np.concatenate(b_y, axis=0) for b_y in _batch_y]
-
-        # end_batch = time.perf_counter()
-        # print("BATCHLOAD:", end_batch - start_batch)
+        batch_idxs = np.array(batch_idxs, dtype=np.int32)
 
         batch_l1, batch_l2, batch_l3 = batch_y
-        return batch_x, batch_l1, batch_l2, batch_l3
+        return batch_x, batch_l1, batch_l2, batch_l3, batch_idxs
 
     def __iter__(self):
-        return iter(self.dataset)
+        self.count = 0
+
+        output_types, output_shapes = self.shape_types
+        dataset = tf.data.Dataset.from_generator(
+            self._generator,
+            output_types=output_types,
+            output_shapes=output_shapes,
+        )
+        dataset = dataset.prefetch(40)
+
+        return iter(dataset)
+
+        # dataset = dataset.interleave(
+        #     lambda *args: tf.data.Dataset.from_generator(
+        #         self._generator,
+        #         output_types=output_types,
+        #         output_shapes=output_shapes
+        #     ),
+        #     block_length=1,
+        #     cycle_length=4,
+        #     num_parallel_calls=4
+        # )
+        # dataset = dataset.prefetch(self.prefetch)
 
     def __len__(self):
         return len(self.dataset)
 
-    def generator(self):
-        # TODO shuffle here
+    def _generator(self):
         while True:
-            # item = self._next()
-            item = self._next_batch()
-            if item is None:
-                break
-                # return
+            yield self._next_batch()
 
-            # x, l1, l2, l3 = item
-            # x = tf.convert_to_tensor(x)
-            # l1 = tf.convert_to_tensor(l1)
-            # l2 = tf.convert_to_tensor(l2)
-            # l3 = tf.convert_to_tensor(l3)
+    @cached_property
+    def shape_types(self):
+        x, l1, l2, l3, idxs = self._next_batch()
+        self.count = 0
 
-            # yield x, l1, l2, l3
-            yield item
-            # yield item
+        output_types = (np.float32, np.float32, np.float32, np.float32, np.int32)
+        output_shapes = (x.shape, l1.shape, l2.shape, l3.shape, idxs.shape)
+
+        return output_types, output_shapes
+
+    def get_ground_truth(self, idxs):
+        ds = self.dataset
+        return [ds[idx][1] for idx in idxs]
