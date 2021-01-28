@@ -171,7 +171,7 @@ if __name__ == "__main__":
         output_shapes=output_shapes,
     )
     # dataset = dataset.batch(config.yolo.batch_size)
-    dataset = dataset.prefetch(tf.data.AUTOTUNE)
+    dataset = dataset.prefetch(20)
 
     # start_it = time.perf_counter()
     # for x, l1, l2, l3 in dataset:
