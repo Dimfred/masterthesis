@@ -195,7 +195,7 @@ if __name__ == "__main__":
         deterministic=False
     )
     # dataset = dataset.batch(config.yolo.batch_size)
-    dataset = dataset.prefetch(40)
+    dataset = dataset.prefetch(config.yolo.accumulation_steps)
 
     # start_it = time.perf_counter()
     # for x, l1, l2, l3 in dataset:
