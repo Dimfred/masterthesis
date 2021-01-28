@@ -170,6 +170,63 @@ class YOLOv4Loss(Loss):
 
         return total_loss
 
+from numba import njit
+import numpy as np
+
+@njit
+def bbox_iou_njit(bboxes1, bboxes2):
+    """
+    @param bboxes1: (a, b, ..., 4)
+    @param bboxes2: (A, B, ..., 4)
+        x:X is 1:n or n:n or n:1
+
+    @return (max(a,A), max(b,B), ...)
+
+    ex) (4,):(3,4) -> (3,)
+        (2,1,4):(2,3,4) -> (2,3)
+    """
+    bboxes1_area = bboxes1[..., 2] * bboxes1[..., 3]
+    bboxes2_area = bboxes2[..., 2] * bboxes2[..., 3]
+
+    bboxes1_coor = np.append(
+        bboxes1[..., :2] - bboxes1[..., 2:] * 0.5,
+        bboxes1[..., :2] + bboxes1[..., 2:] * 0.5,
+        axis=-1,
+    )
+    # bboxes1_coor = np.concatenate(
+    #     [
+    #         bboxes1[..., :2] - bboxes1[..., 2:] * 0.5,
+    #         bboxes1[..., :2] + bboxes1[..., 2:] * 0.5,
+    #     ],
+    #     axis=-1,
+    # )
+    # bboxes2_coor = np.concatenate(
+    #     [
+    #         bboxes2[..., :2] - bboxes2[..., 2:] * 0.5,
+    #         bboxes2[..., :2] + bboxes2[..., 2:] * 0.5,
+    #     ],
+    #     axis=-1,
+    # )
+    bboxes2_coor = np.append(
+        bboxes2[..., :2] - bboxes2[..., 2:] * 0.5,
+        bboxes2[..., :2] + bboxes2[..., 2:] * 0.5,
+        axis=-1,
+    )
+
+    left_up = np.maximum(bboxes1_coor[..., :2], bboxes2_coor[..., :2])
+    right_down = np.minimum(bboxes1_coor[..., 2:], bboxes2_coor[..., 2:])
+
+    inter_section = np.maximum(right_down - left_up, 0.0)
+    inter_area = inter_section[..., 0] * inter_section[..., 1]
+
+    union_area = bboxes1_area + bboxes2_area - inter_area
+
+    iou = inter_area / (union_area + 1e-8)
+
+    return iou
+
+
+
 def bbox_iou(bboxes1, bboxes2):
     """
     @param bboxes1: (a, b, ..., 4)

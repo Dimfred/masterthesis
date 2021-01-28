@@ -69,7 +69,7 @@ config.yolo.run_eagerly = (
 )
 config.yolo.validation_steps = -1 if utils.isme() else 2
 config.yolo.validation_freq = 10 if utils.isme() else 10
-config.yolo.n_workers = 12 if utils.isme() else 16
+config.yolo.n_workers = 12
 
 # classes and corresponding trained weights
 architecture_type = {

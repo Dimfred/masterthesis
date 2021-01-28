@@ -138,6 +138,7 @@ if __name__ == "__main__":
     #     print(img.shape, labels[0].shape)
 
     item = train_dataset._next_batch()
+    # item = train_dataset._next()
     train_dataset.count = 0
 
     # build shapes
@@ -164,38 +165,13 @@ if __name__ == "__main__":
         print("type", i, t)
 
 
-
-
-    # print("copying")
-    # parsed_input = []
-    # for img, labels in train_dataset.dataset:
-    #     parsed_input.append((tf.convert_to_tensor(img), tf.convert_to_tensor(labels)))
-    # print("copied")
-    # ragged = tf.ragged.constant(parsed_input)
-    # print("ragged")
-    # dataset = tf.data.Dataset.from_tensor_slices(ragged)
-    # print("inited")
-
     dataset = tf.data.Dataset.from_generator(
         train_dataset.generator,
         output_types=output_types,
         output_shapes=output_shapes,
-        # output_types=(*img_types, *label_types),
-        # output_shapes=(*img_shape, *label_shapes)
-    )
-    dataset = dataset.interleave(
-        lambda *args: tf.data.Dataset.from_generator(
-            train_dataset.generator,
-            output_types=output_types,
-            output_shapes=output_shapes,
-        ),
-        cycle_length=config.yolo.n_workers,
-        block_length=1,
-        num_parallel_calls=config.yolo.n_workers,
-        deterministic=False
     )
     # dataset = dataset.batch(config.yolo.batch_size)
-    dataset = dataset.prefetch(config.yolo.accumulation_steps)
+    dataset = dataset.prefetch(tf.data.AUTOTUNE)
 
     # start_it = time.perf_counter()
     # for x, l1, l2, l3 in dataset:

@@ -42,6 +42,7 @@ import time
 from numba import njit
 
 
+# @njit
 def bboxes_to_ground_truth_njit(
     bboxes, num_classes, grid_size, grid_xy, label_smoothing, anchors_ratio
 ):
@@ -89,17 +90,15 @@ def bboxes_to_ground_truth_njit(
             anchors_xywh = np.zeros((3, 4), dtype=np.float32)
             anchors_xywh[:, 0:2] = xywh[0:2]
             anchors_xywh[:, 2:4] = anchors_ratio[i]
-            iou = train.bbox_iou(xywh, anchors_xywh)
+            iou = train.bbox_iou_njit(xywh, anchors_xywh)
             ious.append(iou)
             iou_mask = iou > 0.3
 
             if np.any(iou_mask):
                 exist_positive = True
 
-                xy_grid = xywh[0:2] * (
-                    grid_size[i][1],
-                    grid_size[i][0],
-                )
+                sgrid = np.array((grid_size[i][1], grid_size[i][0]), dtype=np.float32)
+                xy_grid = xywh[0:2] * sgrid
                 xy_index = np.floor(xy_grid)
 
                 for j, mask in enumerate(iou_mask):
@@ -110,14 +109,14 @@ def bboxes_to_ground_truth_njit(
                         ground_truth[i][0, _y, _x, j, 5:] = smooth_onehot
 
         if not exist_positive:
-            index = np.argmax(np.array(ious))
+            ious_concat = np.append(ious[0], ious[1])
+            ious_concat = np.append(ious_concat, ious[2])
+            index = np.argmax(ious_concat)
             i = index // 3
             j = index % 3
 
-            xy_grid = xywh[0:2] * (
-                grid_size[i][1],
-                grid_size[i][0],
-            )
+            sgrid = np.array((grid_size[i][1], grid_size[i][0]), dtype=np.float32)
+            xy_grid = xywh[0:2] * sgrid
             xy_index = np.floor(xy_grid)
 
             _x, _y = int(xy_index[0]), int(xy_index[1])
@@ -237,7 +236,6 @@ class TFDataset:
             raise FileNotFoundError("Failed to find images")
 
         if self.preload:
-
             def _read_and_store(path, idx):
                 img = self._imread(path)
                 _dataset[idx][0] = img
@@ -317,6 +315,8 @@ class TFDataset:
         return x, l1, l2, l3
 
     def _next_batch(self):
+        # start_batch = time.perf_counter()
+
         batch_x = []
         _batch_y = [[] for _ in range(len(self.grid_size))]
         self.orig_labels = []
@@ -348,6 +348,9 @@ class TFDataset:
 
         batch_x = np.concatenate(batch_x, axis=0)
         batch_y = [np.concatenate(b_y, axis=0) for b_y in _batch_y]
+
+        # end_batch = time.perf_counter()
+        # print("BATCHLOAD:", end_batch - start_batch)
 
         batch_l1, batch_l2, batch_l3 = batch_y
         return batch_x, batch_l1, batch_l2, batch_l3
