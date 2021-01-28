@@ -191,6 +191,11 @@ class TFDataset:
 
         if self.data_augmentation:
             np.random.shuffle(self.idxs)
+        else:
+            self.ground_truth = list(range(len(self.dataset)))
+
+
+
 
     def load_dataset(self):
         """
@@ -308,6 +313,10 @@ class TFDataset:
             if augmentations is not None:
                 x, y = augmentations(x, y)
 
+            # TODO bad
+            if not self.data_augmentation:
+                self.ground_truth[idx] = y
+
             x = np.expand_dims(x / 255.0, axis=0)
             y = bboxes_to_ground_truth_njit(
                 y,
@@ -373,5 +382,5 @@ class TFDataset:
         return output_types, output_shapes
 
     def get_ground_truth(self, idxs):
-        ds = self.dataset
-        return [ds[idx][1] for idx in idxs]
+        gt = self.ground_truth
+        return [gt[idx] for idx in idxs]
