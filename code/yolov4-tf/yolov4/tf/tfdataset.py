@@ -276,12 +276,12 @@ class TFDataset:
         return img, labels
 
     def _next_data(self):
-        _dataset = self.dataset[self.count]
-
-        self.count += 1
         if self.count == len(self.dataset):
+            np.random.shuffle(self.dataset)
             self.count = 0
-            return None
+
+        _dataset = self.dataset[self.count]
+        self.count += 1
 
         ret = self.load_img_and_labels(_dataset)
         if ret is not None:
@@ -306,9 +306,6 @@ class TFDataset:
             self.label_smoothing,
             self.anchors_ratio,
         )
-        # y = [l.astype(np.float64) for l in y]
-        # y = [tf.Tensor(l) for l in y]
-        # TODO make better
         y = [np.squeeze(l, axis=0) for l in y]
         l1, l2, l3 = y
 
