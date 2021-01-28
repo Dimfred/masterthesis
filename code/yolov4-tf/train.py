@@ -146,7 +146,8 @@ if __name__ == "__main__":
 
         if step < burn_in:
             # return (lr / burn_in) * (step + 1)
-            return lr * (step / burn_in)**10
+            # tf.print(lr * (step / burn_in)**10)
+            return lr * (step / burn_in)**5
         if step > 7000:
             return lr / 10
         if step > 5000:
