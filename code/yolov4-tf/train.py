@@ -117,7 +117,6 @@ if __name__ == "__main__":
         loss_iou_type=config.yolo.loss,
         loss_verbose=0,
         run_eagerly=config.yolo.run_eagerly,
-        # steps_per_execution=config.yolo.accumulation_steps,
     )
 
     # dataset creation
@@ -145,9 +144,7 @@ if __name__ == "__main__":
         burn_in = config.yolo.burn_in
 
         if step < burn_in:
-            # return (lr / burn_in) * (step + 1)
-            # tf.print(lr * (step / burn_in)**10)
-            return lr * (step / burn_in)**5
+            return lr * (step / burn_in)**4
         if step > 7000:
             return lr / 10
         if step > 5000:

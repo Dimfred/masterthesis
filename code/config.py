@@ -25,6 +25,11 @@ config.foregrounds_dir = config.data / "foregrounds"
 config.backgrounds_dir = config.data / "backgrounds"
 config.merged_dir = config.data / "merged"
 
+# mnist
+config.mnist_dir = config.data / "mnist"
+config.mnist_train_dir = config.mnist_dir / "train"
+config.mnist_test_dir = config.mnist_dir / "test"
+
 # other
 config.noise_dir = config.data / "noise"
 config.labeled_safe_dir = config.data / "labeled_safe"

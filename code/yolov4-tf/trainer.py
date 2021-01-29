@@ -121,6 +121,8 @@ class Trainer:
 
             self.print_valid(vlosses)
 
+            # TODO resize network?
+
     @tf.function
     def train_step(self, inputs, labels):
         with tf.GradientTape() as tape:

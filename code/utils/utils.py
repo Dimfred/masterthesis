@@ -214,11 +214,6 @@ def list_imgs(path: Path):
     return sorted(img_paths, key=by_path)
 
 
-def yolo_label_from_img(img_file: Path):
-    label_path = img_file.parent / f"{img_file.stem}.txt"
-    return label_path
-
-
 def has_mask(mask_dir, img_file):
     name, ext = os.path.splitext(img_file)
     mask_name = f"{name}_fg_mask{ext}"
@@ -409,7 +404,6 @@ class MeanAveragePrecision:
     def _convert_inverted_ground_truth(self, gt):
         gt = A.class_to_front(gt)
         return self._convert_ground_truth(gt)
-
 
 
 class Metrics:
@@ -632,7 +626,7 @@ class BFS:
         return None
 
 
-def stopwatch(name):
+def stopwatchtf(name):
     import tensorflow as tf
 
     def _stopwatch(f):
@@ -640,7 +634,22 @@ def stopwatch(name):
             start = time.perf_counter()
             ret = f(*args, **kwargs)
             end = time.perf_counter()
-            tf.print(f"{name}::took:", end - start)
+            tf.print(f"{green(name)}::took:", "{:4f}s".format(end - start))
+
+            return ret
+
+        return _deco
+
+    return _stopwatch
+
+
+def stopwatch(name):
+    def _stopwatch(f):
+        def _deco(*args, **kwargs):
+            start = time.perf_counter()
+            ret = f(*args, **kwargs)
+            end = time.perf_counter()
+            print(f"{green(name)}::took:", "{:4f}s".format(end - start))
 
             return ret
 
@@ -677,18 +686,47 @@ def seed(*args):
 
     # fmt: on
 
-    # @staticmethod
-    # def ClassToBack(image=None, bbox=None, **kwargs):
-    #     return A.Lambda(
-    #         name="ClassToBack", image=CA.ret_img, bbox=CA.class_to_back, **kwargs
-    #     )
 
-    # @staticmethod
-    # def ClassToFront(image=None, bbox=None, **kwargs):
-    #     return A.Lambda(
-    #         name="ClassToBack", image=CA.ret_img, bbox=CA.class_to_front, **kwargs
-    #     )
+class Yolo:
+    @staticmethod
+    def parse_classes(path: Path, result_type=list):
+        # result_type: arr | dict
+        with open(path) as f:
+            lines = f.readlines()
 
-    # @staticmethod
-    # def ret_img(image, **kwargs):
-    #     return image
+        lines = [line.strip() for line in lines]
+        if result_type == list:
+            return lines
+        if result_type == dict:
+            return {i: cls_name for i, cls_name in enumerate(lines)}
+
+        raise ValueError(f"Unknown 'result_type': {result_type}")
+
+    def parse_labels(label_path: Path):
+        with open(label_path, "r") as f:
+            lines = f.readlines()
+
+        labels = []
+        for line in lines:
+            line = line.strip()
+            l, x, y, w, h = line.split(" ")
+            labels.append((int(l), float(x), float(y), float(w), float(h)))
+
+        return labels
+
+    @staticmethod
+    def load_dataset(path):
+        img_paths = list_imgs(path)
+
+        img_label_paths = []
+        for img_path in img_paths:
+            label_path = Yolo.label_from_img(img_path)
+            if label_path.exists():
+                img_label_paths.append((img_path, label_path))
+
+        return img_label_paths
+
+    @staticmethod
+    def label_from_img(img_path):
+        label_path = img_path.parent / f"{img_path.stem}.txt"
+        return label_path
