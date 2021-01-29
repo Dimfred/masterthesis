@@ -130,6 +130,7 @@ if __name__ == "__main__":
         # preload=False,
         training=True,
         augmentations=train_augmentations,
+        n_workers=config.yolo.n_workers
     )
 
     valid_dataset = yolo.load_tfdataset(
@@ -138,6 +139,7 @@ if __name__ == "__main__":
         preload=config.yolo.preload_dataset,
         training=False,
         augmentations=valid_augmentations,
+        n_workers=config.yolo.n_workers
     )
 
     @nb.njit

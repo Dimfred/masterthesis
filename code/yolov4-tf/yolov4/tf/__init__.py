@@ -293,6 +293,7 @@ class YOLOv4(BaseClass):
         augmentations=None,
         training=False,
         preload=False,
+        n_workers=16,
     ):
         return tfdataset.TFDataset(
             anchors=self.anchors,
@@ -309,6 +310,7 @@ class YOLOv4(BaseClass):
             data_augmentation=training,
             augmentations=augmentations,
             preload=preload,
+            n_workers=n_workers
         )
 
     def compile(

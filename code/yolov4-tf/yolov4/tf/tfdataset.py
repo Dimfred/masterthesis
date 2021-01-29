@@ -153,6 +153,7 @@ class TFDataset:
         data_augmentation: bool = False,
         augmentations=None,
         preload=False,
+        n_workers=16,
     ):
         # anchors / width
         self.anchors_ratio = anchors / input_size[0]
@@ -194,6 +195,7 @@ class TFDataset:
         self.data_augmentation = data_augmentation
         self.dataset = self.load_dataset()
         self.augmentations = augmentations
+        self.n_workers = n_workers
 
         # list to shuffle idxs from
         self.idxs = list(range(len(self.dataset)))
@@ -366,17 +368,17 @@ class TFDataset:
             output_shapes=output_shapes,
         )
         # can be used to parallelize
-        dataset = dataset.interleave(
-            lambda *args: tf.data.Dataset.from_generator(
-                self._generator_interleave,
-                output_types=output_types,
-                output_shapes=output_shapes
-            ),
-            block_length=1,
-            cycle_length=1,
-            num_parallel_calls=1
-        )
-
+        # dataset = dataset.interleave(
+        #     lambda *args: tf.data.Dataset.from_generator(
+        #         self._generator_interleave,
+        #         output_types=output_types,
+        #         output_shapes=output_shapes
+        #     ),
+        #     block_length=1,
+        #     cycle_length=1,
+        #     num_parallel_calls=1
+        # )
+        dataset = dataset.map(lambda *args: args, num_parallel_calls=self.n_workers)
         dataset = dataset.prefetch(50)
 
         return iter(dataset)
