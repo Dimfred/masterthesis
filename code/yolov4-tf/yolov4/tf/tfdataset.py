@@ -365,21 +365,22 @@ class TFDataset:
             output_types=output_types,
             output_shapes=output_shapes,
         )
-        dataset = dataset.prefetch(200)
+        # can be used to parallelize
+        dataset = dataset.interleave(
+            lambda *args: tf.data.Dataset.from_generator(
+                self._generator_interleave,
+                output_types=output_types,
+                output_shapes=output_shapes
+            ),
+            block_length=1,
+            cycle_length=1,
+            num_parallel_calls=1
+        )
+
+        dataset = dataset.prefetch(50)
 
         return iter(dataset)
 
-        # can be used to parallelize
-        # dataset = dataset.interleave(
-        #     lambda *args: tf.data.Dataset.from_generator(
-        #         self._generator_interleave,
-        #         output_types=output_types,
-        #         output_shapes=output_shapes
-        #     ),
-        #     block_length=1,
-        #     cycle_length=self.batch_size,
-        #     num_parallel_calls=self.batch_size
-        # )
 
     def __len__(self):
         return len(self.dataset)

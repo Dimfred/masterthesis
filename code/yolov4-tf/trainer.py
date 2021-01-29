@@ -119,6 +119,7 @@ class Trainer:
             vlosses = None
 
             self.mAP.reset()
+            # TODO loss is wrong too much x, y from valid
             for _ in range(n_valid_batches):
                 vinputs, *vlabels, idxs = next(valid_ds_it)
                 voutputs, vlosses = self.valid_step(vinputs, vlabels)
