@@ -39,10 +39,17 @@ import tensorflow.keras as K
 import utils
 import time
 
+import numba as nb
 from numba import njit
 from cached_property import cached_property
 
+@njit
+def empty_list_nb():
+    l = nb.typed.List(np.zeros((2, 2), dtype=np.float32))
+    l.clear()
+    return l
 
+@njit
 def bboxes_to_ground_truth_njit(
     bboxes, num_classes, grid_size, grid_xy, label_smoothing, anchors_ratio
 ):
@@ -72,7 +79,9 @@ def bboxes_to_ground_truth_njit(
 
     for bbox in bboxes:
         # [b_x, b_y, b_w, b_h, class_id]
-        xywh = np.array(bbox[:4], dtype=np.float32)
+        # xywh = np.array(bbox[:4], dtype=np.float32)
+        # NUMBA
+        xywh = bbox[:4]
         class_id = int(bbox[4])
 
         # smooth_onehot = [0.xx, ... , 1-(0.xx*(n-1)), 0.xx, ...]
@@ -179,6 +188,7 @@ class TFDataset:
             ).astype(np.float32)
             for _size in self.grid_size  # (height, width)
         ]
+        self.grid_xy = nb.typed.List(self.grid_xy)
 
         self.preload = preload
         self.data_augmentation = data_augmentation
@@ -193,9 +203,6 @@ class TFDataset:
             np.random.shuffle(self.idxs)
         else:
             self.ground_truth = list(range(len(self.dataset)))
-
-
-
 
     def load_dataset(self):
         """
@@ -232,14 +239,13 @@ class TFDataset:
                     with open(root + ".txt") as fd2:
                         bboxes = fd2.readlines()
                         xywhc_s = np.zeros((len(bboxes), 5))
+
                         for i, bbox in enumerate(bboxes):
                             # bbox = class_id x y w h
                             bbox = bbox.strip()
-                            bbox = list(map(float, bbox.split(" ")))
-                            xywhc_s[i, :] = (
-                                *bbox[1:],
-                                bbox[0],
-                            )
+                            bbox = [float(val) for val in bbox.split()]
+                            xywhc_s[i, :] = (*bbox[1:], bbox[0])
+
                         _dataset.append([image_path, xywhc_s])
 
         if len(_dataset) == 0:
@@ -296,10 +302,13 @@ class TFDataset:
         _dataset = self.dataset[idx]
         self.count += 1
 
-        inputs, labels = self.load_img_and_labels(_dataset)
+        # TODO old behaviour
+        # inputs, labels = self.load_img_and_labels(_dataset)
+        inputs, labels = _dataset
 
         return inputs, labels, idx
 
+    # @utils.stopwatch("next_batch")
     def _next_batch(self):
         batch_x = []
         _batch_y = [[] for _ in range(len(self.grid_size))]
@@ -318,6 +327,14 @@ class TFDataset:
                 self.ground_truth[idx] = y
 
             x = np.expand_dims(x / 255.0, axis=0)
+
+            # NUMBA convert to numba list
+            if y:
+                y = [np.array(labels, dtype=np.float32) for labels in y]
+                y = nb.typed.List(y)
+            else:
+                y = empty_list_nb()
+
             y = bboxes_to_ground_truth_njit(
                 y,
                 self.num_classes,
@@ -348,21 +365,21 @@ class TFDataset:
             output_types=output_types,
             output_shapes=output_shapes,
         )
-        dataset = dataset.prefetch(40)
+        dataset = dataset.prefetch(200)
 
         return iter(dataset)
 
+        # can be used to parallelize
         # dataset = dataset.interleave(
         #     lambda *args: tf.data.Dataset.from_generator(
-        #         self._generator,
+        #         self._generator_interleave,
         #         output_types=output_types,
         #         output_shapes=output_shapes
         #     ),
         #     block_length=1,
-        #     cycle_length=4,
-        #     num_parallel_calls=4
+        #     cycle_length=self.batch_size,
+        #     num_parallel_calls=self.batch_size
         # )
-        # dataset = dataset.prefetch(self.prefetch)
 
     def __len__(self):
         return len(self.dataset)
@@ -370,6 +387,7 @@ class TFDataset:
     def _generator(self):
         while True:
             yield self._next_batch()
+
 
     @cached_property
     def shape_types(self):

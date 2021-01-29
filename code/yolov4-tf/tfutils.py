@@ -6,6 +6,7 @@ import time
 from tabulate import tabulate
 
 import numpy as np
+import numba as nb
 
 
 class GradientAccumulator:
@@ -66,9 +67,8 @@ class LearningRateScheduler:
         self.model = model
         self.schedule = schedule
 
-    def __call__(self, step):
-        lr = float(K.get_value(self.model.optimizer.lr))
-        lr = self.schedule(step, lr)
+    def __call__(self, step, base_lr, burn_in):
+        lr = self.schedule(step, base_lr, burn_in)
         K.set_value(self.model.optimizer.lr, lr)
 
     def __bool__(self):

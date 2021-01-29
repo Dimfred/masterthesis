@@ -6,6 +6,8 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_addons as tfa
 
+import numba as nb
+
 # has to be called right after tf import
 physical_devices = tf.config.experimental.list_physical_devices("GPU")
 if len(physical_devices) > 0:
@@ -103,14 +105,14 @@ if __name__ == "__main__":
     yolo = create_model()
 
     # optimizer = optimizers.Adam(learning_rate=config.yolo.lr)
-    # optimizer = optimizers.SGD(
-    #     learning_rate=config.yolo.lr, momentum=config.yolo.momentum
-    # )
-    optimizer = tfa.optimizers.SGDW(
-        learning_rate=config.yolo.lr,
-        momentum=config.yolo.momentum,
-        weight_decay=config.yolo.decay,
+    optimizer = optimizers.SGD(
+        learning_rate=config.yolo.lr, momentum=config.yolo.momentum
     )
+    # optimizer = tfa.optimizers.SGDW(
+    #     learning_rate=config.yolo.lr,
+    #     momentum=config.yolo.momentum,
+    #     weight_decay=config.yolo.decay,
+    # )
 
     yolo.compile(
         optimizer=optimizer,
@@ -138,11 +140,8 @@ if __name__ == "__main__":
         augmentations=valid_augmentations,
     )
 
-    def lr_scheduler(step, lr):
-        lr = config.yolo.lr
-        max_steps = config.yolo.max_steps
-        burn_in = config.yolo.burn_in
-
+    @nb.njit
+    def lr_scheduler(step, lr, burn_in):
         if step < burn_in:
             return lr * (step / burn_in)**4
         if step > 7000:
@@ -163,58 +162,3 @@ if __name__ == "__main__":
         lr_scheduler=lr_scheduler,
     )
     trainer.train(train_dataset, valid_dataset)
-
-    # it = iter(train_dataset)
-    # for i in range(10):
-    #     item = next(it)
-    #     img, labels = item
-    #     print(img.shape, labels[0].shape)
-
-    # item = train_dataset._next_batch()
-    # item = train_dataset._next()
-    # train_dataset.count = 0
-
-    # build shapes
-    # x, l1, l2, l3 = item
-
-    # img_shapes = x.shape
-    # l1_shape = l1.shape
-    # l2_shape = l2.shape
-    # l3_shape = l3.shape
-    # label_shapes = (l1_shape, l2_shape, l3_shape)
-
-    # img_types = (np.float32, np.float32, np.float32, np.float32)
-    # label_type = (np.float32, np.float32, np.float32, np.float32, np.float32)
-    # label_types = tuple(label_type for _ in range(len(label_shapes)))
-
-    # # output_types=(img_types, *label_types)
-    # output_types = (np.float32, np.float32, np.float32, np.float32)
-    # output_shapes = (img_shapes, *label_shapes)
-
-    # for i, s in enumerate(output_shapes):
-    #     print("shape", i, s)
-
-    # for i, t in enumerate(output_types):
-    #     print("type", i, t)
-
-
-    # dataset = tf.data.Dataset.from_generator(
-    #     train_dataset.generator,
-    #     output_types=output_types,
-    #     output_shapes=output_shapes,
-    # )
-    # # dataset = dataset.batch(config.yolo.batch_size)
-    # dataset = dataset.prefetch(20)
-
-    # start_it = time.perf_counter()
-    # for x, l1, l2, l3 in dataset:
-    #     end_it = time.perf_counter()
-    #     print("it took:", end_it - start_it)
-    #     print("x", x.shape)
-    #     print("l1", l1.shape)
-    #     print("l2", l2.shape)
-    #     print("l3", l3.shape)
-    #     # THIS IS TRAINING OVERHEAD
-    #     time.sleep(0.3)
-    #     start_it = time.perf_counter()
-    #     pass

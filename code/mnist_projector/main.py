@@ -12,7 +12,6 @@ import time
 import random
 
 
-
 class MNistLoader:
     def __init__(self):
         self.data = [[] for _ in range(10)]
@@ -70,7 +69,6 @@ class MNistLoader:
         return img
 
 
-
 class MNistProjector:
     def __init__(self, mnist_dataset, classes):
         self.dataset = mnist_dataset
@@ -91,8 +89,6 @@ class MNistProjector:
 
             utils.show(img)
 
-
-
     def _project_number(self, img, number, y, x):
         nh, nw = number.shape
         yp = y - nh
@@ -100,24 +96,15 @@ class MNistProjector:
         not_white = np.argwhere(number < 180)
         print(not_white.shape)
 
-
         # img[to_img_idxs] = number[not_white]
         for yn, xn in not_white:
-            img[yp+yn, x+xn] = number[yn, xn]
-
-
-
-
-
-
+            img[yp + yn, x + xn] = number[yn, xn]
 
     def _random_number(self, number):
         return random.choice(self.dataset[int(number)])
 
     def _numbers_from_str(self, number_str):
         return [self._random_number(n) for n in number_str]
-
-
 
 
 if __name__ == "__main__":
@@ -137,7 +124,6 @@ if __name__ == "__main__":
         projector.project(img, labels, number)
 
         # utils.show(img)
-
 
     for i in range(20):
         utils.show(projector.dataset[0][i])

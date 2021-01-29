@@ -44,6 +44,8 @@ class Trainer:
         accumulation_steps=1,
         map_after_steps=1,
         map_on_step_mod=1,
+        lr=0.00026,
+        burn_in=1000,
     ):
         self.yolo = yolo
         self.model = yolo.model
@@ -63,6 +65,8 @@ class Trainer:
         self.accumulation_steps = accumulation_steps
         self.map_after_steps = map_after_steps
         self.map_on_step_mod = map_on_step_mod
+        self.lr = lr
+        self.burn_in = burn_in
 
         self.train_time = time.perf_counter()
         self.valid_time = time.perf_counter()
@@ -73,22 +77,32 @@ class Trainer:
         grad_accu = GradientAccumulator(self.accumulation_steps, trainable_vars)
         tloss_accu = LossAccumulator(self.accumulation_steps)
 
-        for inputs, *labels, _ in train_ds:
-            if self.lr_scheduler:
-                self.lr_scheduler(self.step_counter)
+        base_lr = self.lr
+        burn_in = self.burn_in
 
+
+        for inputs, *labels, _ in train_ds:
             # training step
             step_grads, step_losses = self.train_step(inputs, labels)
+
 
             accumulated_losses = tloss_accu.accumulate(step_losses)
             accumulated_grads = grad_accu.accumulate(step_grads)
             if accumulated_grads is None:
                 continue
 
+
             # apply optimization
             self.step_counter += 1
+            if self.lr_scheduler:
+                self.lr_scheduler(self.step_counter, base_lr, burn_in)
+
             self.model.optimizer.apply_gradients(accumulated_grads)
+
+            ### TIME
+            # start = time.perf_counter()
             self.print_train(accumulated_losses)
+            # print("TOOK:", time.perf_counter() - start)
 
             # validation step
             if not self.is_validation_time():
