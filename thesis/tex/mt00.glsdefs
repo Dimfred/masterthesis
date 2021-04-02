@@ -1,0 +1,30 @@
+\ifglsentryexists{TST}{}%
+{%
+\gls@defglossaryentry{TST}%
+{%
+name={TST},%
+sort={TST},%
+type={acronym},%
+first={TEEEST\glsspace (TST)},%
+firstplural={TEEESTs\glsspace (TSTs)},%
+text={TST},%
+plural={TSTs},%
+description={TEEEST},%
+descriptionplural={TEEEST\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={TEEEST},%
+longplural={TEEESTs},%
+short={TST},%
+shortplural={TSTs},%
+counter={page},%
+parent={},%
+%
+}%
+}%

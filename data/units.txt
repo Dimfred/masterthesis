@@ -1,0 +1,5 @@
+Capacitor: F
+Resistor: Omega # TODO
+Inductor: H
+Voltage: V
+Current: I

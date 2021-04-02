@@ -1,0 +1,58 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{}%
+\contentsline {section}{\numberline {1.1}Motivation}{1}{}%
+\contentsline {section}{\numberline {1.2}Related Works}{1}{}%
+\contentsline {section}{\numberline {1.3}Goals of the Thesis}{1}{}%
+\contentsline {subsection}{\numberline {1.3.1}Task Description}{1}{}%
+\contentsline {subsection}{\numberline {1.3.2}Contribution}{1}{}%
+\contentsline {chapter}{\numberline {2}Theory}{3}{}%
+\contentsline {section}{\numberline {2.1}Electrical Circuit Diagrams}{3}{}%
+\contentsline {section}{\numberline {2.2}LTspice File}{3}{}%
+\contentsline {subsection}{\numberline {2.2.1}General}{4}{}%
+\contentsline {subsection}{\numberline {2.2.2}Header}{4}{}%
+\contentsline {subsection}{\numberline {2.2.3}Symbols}{4}{}%
+\contentsline {subsection}{\numberline {2.2.4}Symbol Attributes}{5}{}%
+\contentsline {subsection}{\numberline {2.2.5}Ground}{6}{}%
+\contentsline {subsection}{\numberline {2.2.6}Wire}{6}{}%
+\contentsline {section}{\numberline {2.3}Artificial Neural Networks}{6}{}%
+\contentsline {subsection}{\numberline {2.3.1}General Concepts}{6}{}%
+\contentsline {subsubsection}{Learning Procedure}{7}{}%
+\contentsline {subsubsection}{Forward Propagation}{7}{}%
+\contentsline {subsubsection}{Loss}{8}{}%
+\contentsline {subsubsection}{Backward Propagation}{8}{}%
+\contentsline {subsubsection}{Optimization}{9}{}%
+\contentsline {subsection}{\numberline {2.3.2}Convolutional Neural Networks}{9}{}%
+\contentsline {subsubsection}{Convolutional Layer}{9}{}%
+\contentsline {subsubsection}{Pooling Layer}{10}{}%
+\contentsline {subsubsection}{Fully-Connected Layer}{10}{}%
+\contentsline {subsection}{\numberline {2.3.3}Batch Normalization}{11}{}%
+\contentsline {subsection}{\numberline {2.3.4}Dropout}{11}{}%
+\contentsline {section}{\numberline {2.4}Data Augmentation}{11}{}%
+\contentsline {section}{\numberline {2.5}Object Detection}{11}{}%
+\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{11}{}%
+\contentsline {subsubsection}{Sliding Window}{11}{}%
+\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{12}{}%
+\contentsline {subsubsection}{Fast R-CNN}{13}{}%
+\contentsline {subsubsection}{Faster R-CNN}{14}{}%
+\contentsline {subsubsection}{Singleshot Detector}{14}{}%
+\contentsline {subsection}{\numberline {2.5.2}You Only Look Once}{14}{}%
+\contentsline {section}{\numberline {2.6}Segmentation}{14}{}%
+\contentsline {section}{\numberline {2.7}Connected Components Analysis}{14}{}%
+\contentsline {section}{\numberline {2.8}Optical Character Recognition}{14}{}%
+\contentsline {section}{\numberline {2.9}Hypergraphs}{14}{}%
+\contentsline {section}{\numberline {2.10}Metrics}{14}{}%
+\contentsline {chapter}{\numberline {3}Material and Methods}{15}{}%
+\contentsline {section}{\numberline {3.1}Data}{15}{}%
+\contentsline {subsection}{\numberline {3.1.1}Statistics}{15}{}%
+\contentsline {subsection}{\numberline {3.1.2}Label Format}{15}{}%
+\contentsline {subsection}{\numberline {3.1.3}Training Split TODO}{15}{}%
+\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{15}{}%
+\contentsline {subsection}{\numberline {3.2.1}General Overview}{15}{}%
+\contentsline {subsection}{\numberline {3.2.2}Component Detection}{15}{}%
+\contentsline {subsection}{\numberline {3.2.3}ECD TODO Segmentation}{15}{}%
+\contentsline {subsection}{\numberline {3.2.4}}{15}{}%
+\contentsline {chapter}{\numberline {4}Results}{17}{}%
+\contentsline {chapter}{\numberline {5}Discussion}{19}{}%
+\contentsline {chapter}{\numberline {A}Abbrevations}{21}{}%
+\contentsline {chapter}{List of Figures}{23}{}%
+\contentsline {chapter}{List of Tables}{25}{}%
+\contentsline {chapter}{Bibliography}{27}{}%

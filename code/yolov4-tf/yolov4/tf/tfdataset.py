@@ -43,11 +43,13 @@ import numba as nb
 from numba import njit
 from cached_property import cached_property
 
+
 @njit
 def empty_list_nb():
     l = nb.typed.List(np.zeros((2, 2), dtype=np.float32))
     l.clear()
     return l
+
 
 @njit
 def bboxes_to_ground_truth_njit(
@@ -383,14 +385,12 @@ class TFDataset:
 
         return iter(dataset)
 
-
     def __len__(self):
         return len(self.dataset)
 
     def _generator(self):
         while True:
             yield self._next_batch()
-
 
     @cached_property
     def shape_types(self):

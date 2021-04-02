@@ -1,0 +1,154 @@
+- TODO program itself?
+
+Since the hand drawn \ac{ECDs} are to be converted into a LTspice format, the general structure, as well as the syntax for LTspice schematic files (file extension \textit{.asc}), is presented here.
+
+For this thesis the basic syntax was reverse engineered by creating a schematic in LTspice, reading the file, changing a value and analyzing the effect it had on the schematic inside of LTspice.
+
+\subsection{General}
+LTspice files are written in plain text and are human readable.
+The file structure has to be interpreted line by line, meaning that one command is written on one line.
+Inside a line a command is separated by a space.
+In most cases the first word of a line is a keyword indicating the used command, which then is followed by parameters provided to the command.
+
+LTspice itself provides a grid, where components are aligned to.
+This grid has a size of $32x32$ units, where a unit is an abstract measure inside of LTspice.
+
+\subsection{Header}
+
+Each schematic file starts with a header, which defines the used version of the syntax.
+Throughout this thesis the forth version of the syntax is used. Table \ref{tab:ltheader_syntax} shows the syntax for the version definition command.
+
+\begin{table}[H]
+\begin{center}
+
+\begin{tabular}{l|l|l}
+    & \textbf{Keyword} & \textbf{Param1}\\
+    \hline
+    \textbf{Syntax} & VERSION & version number\\
+    \textbf{Info} & & in this thesis 4
+\end{tabular}
+\caption{LTspice header syntax}
+\label{tab:ltheader_syntax}
+
+\end{center}
+\end{table}
+
+
+\subsection{Symbols}
+
+In LTspice \ac{ECCs} are called symbols.
+The syntax to define a symbol is presented in table \ref{tab:ltsymbol_syntax}.
+The command is declared by using the keyword ``SYMBOL'' followed by a symbol name, where the symbol name is a mapping to an \ac{ECC}.
+All symbol names which are used in this thesis are shown in table \ref{tab:ltsymbol_mapping}.
+The symbol name is followed by two integers defining the $x$ and $y$ coordinate of the symbol.
+The coordinates are representing the upper left corner of the symbols image used to represent the symbol inside LTspice.
+Additionally a rotation has to be provided with $Rr$ where $r$ defines the rotation in degree.
+The rotation $r$ is constrained to be either $0$, $90$ or $270$ degree.
+So an example for a resistor declaration would be: ``SYMBOL res 32 32 R90'', which means that a resistor is defined at $x = 32$, $y = 32$ with a rotation of $90$ degree.
+
+\begin{table}[H]
+\begin{center}
+
+\begin{tabular}{l|l}
+    \textbf{Electrical Circuit Component} & \textbf{LTspice keyword}\\
+    \hline
+    Resistor & res\\
+    Capacitor & cap\\
+    Inductor & ind\\
+    Diode & diode\\
+    Voltage Source & voltage\\
+    Current Source & current
+\end{tabular}
+\caption{LTspice symbol names}
+\label{tab:ltsymbol_mapping}
+
+\end{center}
+\end{table}
+
+\begin{table}[H]
+\begin{center}
+
+\begin{tabular}{l|l|l|l|l|l}
+    & \textbf{Keyword} & \textbf{Param1} & \textbf{Param2} & \textbf{Param3} & \textbf{Param4}\\
+    \hline
+    \textbf{Syntax} & SYMBOL & symbol name & X-Coordinate & Y-Coordinate & Rotation\\
+    \textbf{Info} & & see table \ref{tab:ltsymbol_mapping} & multiple of 32 & multiple of 32 & R0, R90, R270
+\end{tabular}
+\caption{LTspice symbol syntax}
+\label{tab:ltsymbol_syntax}
+
+\end{center}
+\end{table}
+
+\subsection{Symbol Attributes}
+
+A symbol can be further specified through the usage of a symbol attribute.
+The symbol attribute is always applied to the first occurrence of a previously defined symbol relative to this command.
+The syntax for this command is presented in table \ref{tab:ltsymattr_syntax}.
+This command is declared using the keyword ``SYMATTR'' followed by the targeted attribute and the corresponding value to be set for the targeted attribute.
+Two attributes can be used as a target for this command.
+The ``InstName'' attribute allows to declare a name for the symbol and the value therefore is a string.
+The ``Value'' attribute allows to declare a component value for the symbol always defined in the corresponding base unit of the component (e.g. $\Omega$ for resistors).
+
+\begin{table}[H]
+\begin{center}
+
+\begin{tabular}{l|l|l|l|l|l}
+    & \textbf{Keyword} & \textbf{Param1} & \textbf{Param2}\\
+    \hline
+    \textbf{Syntax} & SYMATTR & attribute & value\\
+    \textbf{Info} & & Value, InstName & Integer, String\\
+\end{tabular}
+\caption{LTspice symbol attribute syntax}
+\label{tab:ltsymattr_syntax}
+
+\end{center}
+\end{table}
+
+\subsection{Ground}
+
+Grounds are defined by using the keyword ``FLAG'' followed by the coordinates of the ground.
+An additional ``0'' has to be placed at the end of the line, which indicates that the used flag is indeed a ground node.
+Note that it was not further analyzed which effect the last parameter has on the flag definition, but it can be said that when the ``0'' is not present the ground is not defined correctly.
+The syntax for grounds can be seen in table \ref{tab:ltflag_syntax}.
+
+\begin{table}[H]
+\begin{center}
+
+\begin{tabular}{l|l|l|l|l}
+    & \textbf{Keyword} & \textbf{Param1} & \textbf{Param2} & \textbf{Param3}\\
+    \hline
+    \textbf{Syntax} & FLAG & X-coordinate & Y-coordinate & flag indicator\\
+    \textbf{Info} & & multiple of 32 & multiple of 32 & 0 for ground\\
+\end{tabular}
+\caption{LTspice ground syntax}
+\label{tab:ltflag_syntax}
+
+\end{center}
+\end{table}
+
+\subsection{Wire}
+
+After the symbols have been defined they are connected through wires.
+Wires in LTspice are defined as lines.
+The syntax is presented in table \ref{tab:ltwire_syntax}.
+The command begins with the keyword ``WIRE'' followed by two coordinate pairs.
+The first pair is the beginning of the line and second the end of the line.
+
+- TODO
+Note that there is no constraint which point has to be first or second as long as the wire endpoint overlaps with a component it is connected.
+
+\begin{table}[H]
+\begin{center}
+
+\begin{tabular}{l|l|l|l|l|l}
+    & \textbf{Keyword} & \textbf{Param1} & \textbf{Param2} & \textbf{Param3} & \textbf{Param4}\\
+    \hline
+    \textbf{Syntax} & WIRE & X1-coordinate & Y1-coordinate & X2-coordinate & Y2-coordinate\\
+    \textbf{Info} & & multiple of 32 & multiple of 32 & multiple of 32& multiple of 32  \\
+\end{tabular}
+\caption{LTspice wire syntax}
+\label{tab:ltwire_syntax}
+
+\end{center}
+\end{table}

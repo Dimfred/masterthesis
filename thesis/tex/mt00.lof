@@ -1,0 +1,10 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Multi Layer Perceptron with two layers}}{8}{}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Example of a convolution of a 4x4 image (blue) with a 3x3 kernel (dark blue), resulting in a 2x2 output (cyan). \cite {conv_arithmetic}}}{10}{}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Predicted bounding boxes before and after a non-maximum suppression was applied \cite {nms_before_after}}}{12}{}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Example of results obtained through the selective search algorithm with increasing region scale from left to right \cite {selective_search}}}{13}{}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }

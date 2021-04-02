@@ -62,6 +62,8 @@ base_augmentations = A.Compose([
 
 
 def train_augmentations(image, bboxes):
+    # TODO mixup?
+    # TODO synchronize BN???
     _train_augmentations = A.Compose([
         # TODO tune params
         # TODO bboxed still disappearing
@@ -125,7 +127,7 @@ if __name__ == "__main__":
     train_dataset = yolo.load_tfdataset(
         dataset_path=config.train_out_dir / "labels.txt",
         dataset_type=config.yolo.weights_type,
-        label_smoothing=0.05,
+        label_smoothing=config.yolo.label_smoothing,
         preload=config.yolo.preload_dataset,
         # preload=False,
         training=True,
@@ -144,6 +146,10 @@ if __name__ == "__main__":
 
     @nb.njit
     def lr_scheduler(step, lr, burn_in):
+        # TODO cosine
+        # cycle = 1000
+        # mult = 2
+
         if step < burn_in:
             return lr * (step / burn_in)**4
         if step > 7000:

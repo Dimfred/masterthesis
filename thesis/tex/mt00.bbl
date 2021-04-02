@@ -1,0 +1,88 @@
+\begin{thebibliography}{Dum16}
+
+\bibitem[Dum16]{conv_arithmetic}
+V.~Dumoulin and F.~Visin.
+\newblock A guide to convolution arithmetic for deep learning.
+\newblock {\em ArXiv e-prints}, mar 2016.
+
+\bibitem[Gir13]{rcnn}
+R.~Girshick, J.~Donahue, T.~Darrell, and J.~Malik.
+\newblock Rich feature hierarchies for accurate object detection and semantic
+  segmentation.
+\newblock {\em CoRR}, abs/1311.2524, 2013.
+
+\bibitem[Gra10]{cca}
+C.~Grana, D.~Borghesani, and R.~Cucchiara.
+\newblock Optimized block-based connected components labeling with decision
+  trees.
+\newblock {\em IEEE transactions on image processing : a publication of the
+  IEEE Signal Processing Society}, 19(6):1596--609, Jun 2010.
+
+\bibitem[Gro73]{mlp}
+S.~Grossberg.
+\newblock Contour enhancement, short term memory, and constancies in
+  reverberating neural networks.
+\newblock {\em Studies in Applied Mathematics}, 52(3):213--257, 1973.
+
+\bibitem[He15]{resnet}
+K.~He, X.~Zhang, S.~Ren, and J.~Sun.
+\newblock Deep residual learning for image recognition.
+\newblock {\em CoRR}, abs/1512.03385, 2015.
+
+\bibitem[Hua16]{densenet}
+G.~Huang, Z.~Liu, and K.~Weinberger.
+\newblock Densely connected convolutional networks.
+\newblock {\em CoRR}, abs/1608.06993, 2016.
+
+\bibitem[IEC]{iec60617}
+IEC.
+\newblock {IEC}-60617.
+\newblock \url{https://webstore.iec.ch/publication/2723}.
+\newblock Accessed: 21.12.2020.
+
+\bibitem[LeC99]{lecun_lenet}
+Y.~LeCun, P.~Haffner, L.~Bottou, and Y.~Bengio.
+\newblock Object recognition with gradient-based learning.
+\newblock In D.~Forsyth, editor, {\em Feature Grouping}. Springer, 1999.
+
+\bibitem[Mai20]{dl}
+A.~Maier, V.~Christlein, K.~Breininger, and S.~Vesal.
+\newblock {\em Deep Learning Lecture}.
+\newblock Friedrich-Alexander-University, 2020.
+
+\bibitem[McC43]{bioneuron}
+W.~McCulloch and W.~Pitts.
+\newblock A logical calculus of the ideas immanent in nervous activity.
+\newblock {\em Bulletin of mathematical biophysics}, 5:115--143, 1943.
+
+\bibitem[Red15]{yolov1}
+J.~Redmon, S.~Divvala, R.~Girshick, and A.~Farhadi.
+\newblock You only look once: Unified, real-time object detection.
+\newblock {\em CoRR}, abs/1506.02640, 2015.
+
+\bibitem[Ros58]{perceptron}
+F.~Rosenblatt.
+\newblock The perceptron: A probabilistic model for information storage and
+  organization in the brain.
+\newblock {\em Psychological Review}, pages 65--386, 1958.
+
+\bibitem[Sam]{nms_before_after}
+K.~Sambasivarao.
+\newblock Non-maximum suppression ({NMS}).
+\newblock
+  \url{https://towardsdatascience.com/non-maximum-suppression-nms-93ce178e177c}.
+\newblock Accessed: 02.04.2021.
+
+\bibitem[Sze14]{inception}
+C.~Szegedy, W.~Liu, Y.~Jia, P.~Sermanet, S.~Reed, D.~Anguelov, D.~Erhan,
+  V.~Vanhoucke, and A.~Rabinovich.
+\newblock Going deeper with convolutions.
+\newblock {\em CoRR}, abs/1409.4842, 2014.
+
+\bibitem[vdS11]{selective_search}
+K.~van~de Sande, J.~Uijlings, T.~Gevers, and A.~Smeulders.
+\newblock Segmentation as selective search for object recognition.
+\newblock In {\em 2011 International Conference on Computer Vision}. {IEEE},
+  nov 2011.
+
+\end{thebibliography}

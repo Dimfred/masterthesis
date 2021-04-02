@@ -16,6 +16,9 @@ config.train_out_dir = config.data / "train_out"
 config.valid_dir = config.data / "valid"
 config.valid_out_dir = config.data / "valid_out"
 
+# evaluation
+config.eval_dir = config.data / "eval"
+
 # preprocessing stuff
 config.yolo_labeled_dir = config.data / "yolo_labeled"
 config.unlabeled_dir = config.data / "unlabeled"
@@ -59,6 +62,7 @@ config.yolo.burn_in = 1000
 config.yolo.lr = 0.000261 #1e-3
 config.yolo.decay = 0.0005
 config.yolo.momentum = 0.95
+config.yolo.label_smoothing = 0.1
 
 config.yolo.max_steps = 400000
 config.yolo.map_after_steps = 500 #500

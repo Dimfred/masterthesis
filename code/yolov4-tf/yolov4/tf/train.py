@@ -28,6 +28,8 @@ from tensorflow.keras import backend
 from tensorflow.keras.callbacks import Callback
 from tensorflow.keras.losses import BinaryCrossentropy, Loss, Reduction
 
+from numba import njit
+import numpy as np
 
 class YOLOv4Loss(Loss):
     def __init__(self, batch_size, iou_type, verbose=0):
@@ -170,8 +172,6 @@ class YOLOv4Loss(Loss):
 
         return total_loss
 
-from numba import njit
-import numpy as np
 
 @njit
 def bbox_iou_njit(bboxes1, bboxes2):

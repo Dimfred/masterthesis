@@ -58,6 +58,8 @@ def show_bboxes(img, bboxes, orig=None, type_="gt"):
         bboxes = [YoloBBox(img.shape).from_prediction(bbox) for bbox in bboxes]
     elif type_ == "gt":
         bboxes = [YoloBBox(img.shape).from_ground_truth(bbox) for bbox in bboxes]
+    elif type_ == "utils":
+        pass
     else:
         raise ValueError(f"Unknown bbox type '{type_}' in show_bboxes.")
 
@@ -66,7 +68,7 @@ def show_bboxes(img, bboxes, orig=None, type_="gt"):
         cimg = cv.cvtColor(cv.COLOR_GRAY2BGR)
 
     for bbox in bboxes:
-        x1, y1, x2, y2 = bbox.abs()
+        x1, y1, x2, y2 = bbox.abs
         cv.rectangle(cimg, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
     if orig is None:
@@ -75,7 +77,7 @@ def show_bboxes(img, bboxes, orig=None, type_="gt"):
         show(cimg, orig)
 
 
-def resize(img, width: int = None, height: int = None, interpolation=cv.INTER_AREA):
+def resize(img, width: int = None, height: int = None, interpolation=cv.INTER_CUBIC):
     h, w = img.shape[:2]
 
     if width is None and height is None:
@@ -278,6 +280,22 @@ class YoloBBox:
 
         return self
 
+    def from_abs(self, x1, y1, x2, y2, label):
+        self.label = int(label)
+        ih, iw = self.img_dim
+
+        h, w = (y2 - y1), (x2 - x1)
+        ym = y1 + 0.5 * h
+        xm = x1 + 0.5 * w
+
+        self.x = xm / iw
+        self.y = ym / ih
+        self.w = w / iw
+        self.h = h / ih
+
+        return self
+
+    @cached_property
     def abs(self):
         ih, iw = self.img_dim
 
@@ -289,11 +307,19 @@ class YoloBBox:
 
         return x1, y1, x2, y2
 
+    @cached_property
     def abs_mid(self):
         ih, iw = self.img_dim
         xm, ym = self.x * iw, self.y * ih
 
         return xm, ym
+
+    @cached_property
+    def abs_dim(self):
+        x1, y1, x2, y2 = self.abs
+        h, w = (y2 - y1), (x2 - x1)
+
+        return w, h
 
     def yolo(self):
         return np.array((self.x, self.y, self.w, self.h, self.label))
@@ -730,3 +756,74 @@ class Yolo:
     def label_from_img(img_path):
         label_path = img_path.parent / f"{img_path.stem}.txt"
         return label_path
+
+
+class EvalTopology:
+    @staticmethod
+    def parse(path):
+        with open(path, "r") as f:
+            lines = f.readlines()
+
+        lines = [line.strip() for line in lines]
+
+        start, end = EvalTopology._get_bounds(lines)
+        lines = lines[start:end]
+        lines = EvalTopology._clean(lines)
+
+        arr = EvalTopology._as_array(lines)
+        arr = np.array(arr)
+
+        return arr
+
+    @staticmethod
+    def _get_bounds(lines):
+        return lines.index("## START") + 1, lines.index("## END")
+
+    @staticmethod
+    def _clean(lines):
+        lines = [line for line in lines if line]
+        # remove comments
+        lines = [line.split("//")[0] for line in lines]
+        # first line is just to help me build the topology => remove it
+        lines = lines[1:]
+
+        return lines
+
+    @staticmethod
+    def _as_array(lines):
+        # when we have > 9 components we put two space to still better read the gt
+        lines = [line.replace("  ", " ") for line in lines]
+        lines = [line.replace(" ", ",") for line in lines]
+        lines = ["[{}]".format(line) for line in lines]
+        lines = [eval(line) for line in lines]
+
+        return lines
+
+
+class Topology:
+    @staticmethod
+    def print_dict(topology):
+        print("----------------------------------------------------------")
+        print(red("TOPOLOGY:"))
+        for i, edge in enumerate(topology.values()):
+            pretty = f"{str(i).zfill(2)}: "
+            pretty_edge = [
+                f"{green(bbox_idx)}:{Orientation.to_str(connection.orientation)}"
+                for bbox_idx, connection in edge.items()
+            ]
+            pretty_edge = ", ".join(pretty_edge)
+            pretty += pretty_edge
+            print(pretty_edge)
+
+
+class Orientation:
+    @staticmethod
+    def to_str(orientation):
+        if orientation == 0:
+            return "l"
+        if orientation == 1:
+            return "r"
+        if orientation == 2:
+            return "t"
+        if orientation == 3:
+            return "b"

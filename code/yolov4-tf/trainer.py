@@ -91,7 +91,6 @@ class Trainer:
             if accumulated_grads is None:
                 continue
 
-
             # apply optimization
             self.step_counter += 1
             if self.lr_scheduler:
