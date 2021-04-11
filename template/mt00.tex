@@ -1,0 +1,121 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  Diplomarbeit Vorname Name Datum         
+%  "Titel"
+%  Lehrstuhl fuer Mustererkennung, FAU Erlangen-Nuernberg
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ++ LME LateX Dokument 
+%    Die Verwendung der option "german" bindet german.sty ein.
+%    For english papers, use the "english" option and talk to your advisor.
+\documentclass[german,mt]{lmedoc}
+%\documentclass[english,mt]{lmedoc}
+
+% ++ Umlaut Unterstuetzung
+%    Paket "inputenc" kann verwendet werden, um z.B. Umlaute oder das scharfe S
+%    direkt (als Nicht-ASCII-Zeichen) einzubinden. Dabei auf die korrekte
+%    Kodiermethode achten (z.B. Linux: latin1)! 
+\usepackage[latin1]{inputenc}
+
+% ++ es werden keine underfull hboxes als Fehler ausgegeben,
+%    da das ja nur heiﬂt, dass die Seite noch nicht ganz voll ist
+\hbadness=10000
+
+
+
+\includeonly{mt01, mt02, mt03, mt04, mt05, mt06, mt07, mt08, mt09, mt10, mt11, mt-lit, mt-lof, mt-lot}
+
+\pagenumbering{roman}
+
+%\bibliographystyle{galpha1a} %german bibliography
+\bibliographystyle{alphamod} %english bibliography
+
+\begin{document}
+\clearpage
+  \begin{deckblatt}
+    \Titel{Titel}
+    \Name{Name}
+    \Vorname{Vorname}
+    \Geburtsort{Geburtsort}
+    \Geburtsdatum{Geburtsdatum}
+    \Betreuer{Betreuer}
+    \Start{Start}
+    \Ende{Ende}
+  \end{deckblatt}
+
+
+\cleardoublepage
+
+
+Ich versichere, dass ich die Arbeit ohne fremde Hilfe und ohne Benutzung
+anderer als der angegebenen Quellen angefertigt habe und dass die Arbeit
+in gleicher oder "ahnlicher Form noch keiner anderen Pr"ufungsbeh"orde
+vorgelegen hat und von dieser als Teil einer Pr"ufungsleistung
+angenommen wurde. Alle Ausf"uhrungen, die w"ortlich oder sinngem"a"s
+"ubernommen wurden, sind als solche gekennzeichnet.
+\\
+
+Die Richtlinien des Lehrstuhls f"ur Studien- und Diplomarbeiten
+habe ich gelesen und anerkannt, insbesondere die Regelung des
+Nutzungsrechts. \\[15mm]
+Erlangen, den \selectlanguage{german} \today \hspace{6.0cm} \\[10mm]
+
+\selectlanguage{english} %remove this line for german style
+
+\cleardoublepage
+
+\begin{center}
+\bfseries
+"Ubersicht
+\normalfont
+\end{center}
+
+
+\vspace{5.0cm}
+
+\begin{center}
+\bfseries
+Abstract
+\normalfont
+\end{center}
+
+\cleardoublepage
+
+\tableofcontents
+
+\cleardoublepage \pagenumbering{arabic}
+
+\include{mt01}   % Einfuehrung (\chapter{Einf"uhrung})
+\cleardoublepage
+\include{mt02}   % (\chapter{})
+\cleardoublepage
+\include{mt03}   % (\chapter{})
+\cleardoublepage
+\include{mt04}   % (\chapter{})
+\cleardoublepage
+\include{mt05}   % (\chapter{})
+\cleardoublepage
+\include{mt06}   % (\chapter{})
+\cleardoublepage
+\include{mt07}   % Ausblick (\chapter{Ausblick} TEXT)
+\cleardoublepage
+\include{mt08}   % Zusammenfassung (\chapter{Zusammenfassung}  TEXT)
+\cleardoublepage
+
+\appendix
+\cleardoublepage
+\include{mt09}   % Glossar (\chapter{Glossar}  TEXT)
+\cleardoublepage
+\include{mt10}   % 
+\cleardoublepage
+\include{mt11}   % 
+\cleardoublepage
+
+\include{mt-lof} % Bilderverzeichnis
+\cleardoublepage
+\include{mt-lot} % Tabellenverzeichnis
+\cleardoublepage
+\include{mt-lit} % Literaturverzeichnis
+
+\end{document}

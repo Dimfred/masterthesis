@@ -24,35 +24,49 @@
 \contentsline {subsubsection}{Convolutional Layer}{9}{}%
 \contentsline {subsubsection}{Pooling Layer}{10}{}%
 \contentsline {subsubsection}{Fully-Connected Layer}{10}{}%
-\contentsline {subsection}{\numberline {2.3.3}Batch Normalization}{11}{}%
-\contentsline {subsection}{\numberline {2.3.4}Dropout}{11}{}%
+\contentsline {subsection}{\numberline {2.3.3}Activation Functions}{11}{}%
+\contentsline {subsubsection}{Rectified Linear Unit (ReLU)}{11}{}%
+\contentsline {subsubsection}{ReLU6}{11}{}%
+\contentsline {subsubsection}{Loss Functions}{11}{}%
+\contentsline {subsubsection}{Skip Connections}{11}{}%
+\contentsline {subsection}{\numberline {2.3.4}Batch Normalization}{11}{}%
+\contentsline {subsection}{\numberline {2.3.5}Dropout}{11}{}%
 \contentsline {section}{\numberline {2.4}Data Augmentation}{11}{}%
 \contentsline {section}{\numberline {2.5}Object Detection}{11}{}%
-\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{11}{}%
-\contentsline {subsubsection}{Sliding Window}{11}{}%
+\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{12}{}%
+\contentsline {subsubsection}{Sliding Window}{12}{}%
 \contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{12}{}%
 \contentsline {subsubsection}{Fast R-CNN}{13}{}%
 \contentsline {subsubsection}{Faster R-CNN}{14}{}%
-\contentsline {subsubsection}{Singleshot Detector}{14}{}%
-\contentsline {subsection}{\numberline {2.5.2}You Only Look Once}{14}{}%
-\contentsline {section}{\numberline {2.6}Segmentation}{14}{}%
-\contentsline {section}{\numberline {2.7}Connected Components Analysis}{14}{}%
-\contentsline {section}{\numberline {2.8}Optical Character Recognition}{14}{}%
-\contentsline {section}{\numberline {2.9}Hypergraphs}{14}{}%
-\contentsline {section}{\numberline {2.10}Metrics}{14}{}%
-\contentsline {chapter}{\numberline {3}Material and Methods}{15}{}%
-\contentsline {section}{\numberline {3.1}Data}{15}{}%
-\contentsline {subsection}{\numberline {3.1.1}Statistics}{15}{}%
-\contentsline {subsection}{\numberline {3.1.2}Label Format}{15}{}%
-\contentsline {subsection}{\numberline {3.1.3}Training Split TODO}{15}{}%
-\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{15}{}%
-\contentsline {subsection}{\numberline {3.2.1}General Overview}{15}{}%
-\contentsline {subsection}{\numberline {3.2.2}Component Detection}{15}{}%
-\contentsline {subsection}{\numberline {3.2.3}ECD TODO Segmentation}{15}{}%
-\contentsline {subsection}{\numberline {3.2.4}}{15}{}%
-\contentsline {chapter}{\numberline {4}Results}{17}{}%
-\contentsline {chapter}{\numberline {5}Discussion}{19}{}%
-\contentsline {chapter}{\numberline {A}Abbrevations}{21}{}%
-\contentsline {chapter}{List of Figures}{23}{}%
-\contentsline {chapter}{List of Tables}{25}{}%
-\contentsline {chapter}{Bibliography}{27}{}%
+\contentsline {subsubsection}{Single Shot Detector}{15}{}%
+\contentsline {subsubsection}{TODO? Anchor Box Free Detection?}{15}{}%
+\contentsline {subsection}{\numberline {2.5.2}Intersection Over Union (IoU)}{15}{}%
+\contentsline {subsection}{\numberline {2.5.3}IoU Based Loss Functions}{16}{}%
+\contentsline {subsection}{\numberline {2.5.4}Anchor Boxes}{17}{}%
+\contentsline {section}{\numberline {2.6}You Only Look Once (YOLO)}{18}{}%
+\contentsline {subsubsection}{General}{18}{}%
+\contentsline {subsubsection}{Backbone}{18}{}%
+\contentsline {subsubsection}{Neck}{19}{}%
+\contentsline {subsubsection}{Head}{19}{}%
+\contentsline {subsubsection}{Loss}{19}{}%
+\contentsline {section}{\numberline {2.7}Segmentation}{22}{}%
+\contentsline {section}{\numberline {2.8}Connected Components Analysis}{22}{}%
+\contentsline {section}{\numberline {2.9}Optical Character Recognition}{22}{}%
+\contentsline {section}{\numberline {2.10}Hypergraphs}{22}{}%
+\contentsline {section}{\numberline {2.11}Metrics}{22}{}%
+\contentsline {chapter}{\numberline {3}Material and Methods}{23}{}%
+\contentsline {section}{\numberline {3.1}Data}{23}{}%
+\contentsline {subsection}{\numberline {3.1.1}Statistics}{23}{}%
+\contentsline {subsection}{\numberline {3.1.2}Label Format}{23}{}%
+\contentsline {subsection}{\numberline {3.1.3}Training Split TODO}{23}{}%
+\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{23}{}%
+\contentsline {subsection}{\numberline {3.2.1}General Overview}{23}{}%
+\contentsline {subsection}{\numberline {3.2.2}Component Detection}{23}{}%
+\contentsline {subsection}{\numberline {3.2.3}ECD TODO Segmentation}{23}{}%
+\contentsline {subsection}{\numberline {3.2.4}Training}{23}{}%
+\contentsline {chapter}{\numberline {4}Results}{25}{}%
+\contentsline {chapter}{\numberline {5}Discussion}{27}{}%
+\contentsline {chapter}{\numberline {A}Abbrevations}{29}{}%
+\contentsline {chapter}{List of Figures}{31}{}%
+\contentsline {chapter}{List of Tables}{33}{}%
+\contentsline {chapter}{Bibliography}{35}{}%

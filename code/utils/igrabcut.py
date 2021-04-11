@@ -452,7 +452,7 @@ class IGrabcut:
 
         color_type = cv.IMREAD_GRAYSCALE if channels == 1 else None
         img = cv.imread(self._img_path, color_type)
-        img = utils.resize_max_axis(img, resize)
+        # img = utils.resize_max_axis(img, resize)
 
         self._img = img
         self._original_img = self.img

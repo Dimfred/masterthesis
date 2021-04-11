@@ -37,3 +37,9 @@ t_top
 t_right
 t_bot
 cross
+text
+arrow_left
+arrow_top
+arrow_right
+arrow_bot
+

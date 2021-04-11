@@ -133,6 +133,11 @@ class YOLOv4Tiny(Model):
 
     def call(self, x):
         x = self.csp_darknet53_tiny(x)
+        r1, r2, r3 = x
+        print("r1.shape\n{}".format(r1.shape))
+        print("r2.shape\n{}".format(r2.shape))
+        print("r3.shape\n{}".format(r3.shape))
+
         x = self.panet_tiny(x)
         x = self.yolov3_head_tiny(x)
         return x

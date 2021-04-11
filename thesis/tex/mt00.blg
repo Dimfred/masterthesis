@@ -2,48 +2,50 @@ This is BibTeX, Version 0.99d (TeX Live 2020/Arch Linux)
 Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: mt00.aux
 The style file: alphamod.bst
+A level-1 auxiliary file: mt07.aux
+A level-1 auxiliary file: mt08.aux
 A level-1 auxiliary file: mt-lof.aux
 A level-1 auxiliary file: mt-lot.aux
 A level-1 auxiliary file: mt-lit.aux
 Database file #1: mt.bib
-You've used 15 entries,
+You've used 32 entries,
             2543 wiz_defined-function locations,
-            648 strings with 6609 characters,
-and the built_in function-call counts, 5621 in all, are:
-= -- 533
-> -- 295
-< -- 16
-+ -- 98
-- -- 95
-* -- 395
-:= -- 955
-add.period$ -- 49
-call.type$ -- 15
-change.case$ -- 106
-chr.to.int$ -- 15
-cite$ -- 15
-duplicate$ -- 225
-empty$ -- 382
-format.name$ -- 124
-if$ -- 1121
+            728 strings with 9103 characters,
+and the built_in function-call counts, 12077 in all, are:
+= -- 1126
+> -- 688
+< -- 34
++ -- 228
+- -- 225
+* -- 853
+:= -- 2039
+add.period$ -- 99
+call.type$ -- 32
+change.case$ -- 238
+chr.to.int$ -- 32
+cite$ -- 32
+duplicate$ -- 470
+empty$ -- 804
+format.name$ -- 288
+if$ -- 2409
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 14
-newline$ -- 80
-num.names$ -- 47
-pop$ -- 116
+missing$ -- 26
+newline$ -- 162
+num.names$ -- 100
+pop$ -- 269
 preamble$ -- 1
-purify$ -- 122
+purify$ -- 271
 quote$ -- 0
-skip$ -- 169
+skip$ -- 376
 stack$ -- 0
-substring$ -- 209
-swap$ -- 24
-text.length$ -- 16
-text.prefix$ -- 14
+substring$ -- 387
+swap$ -- 52
+text.length$ -- 34
+text.prefix$ -- 31
 top$ -- 0
-type$ -- 116
+type$ -- 252
 warning$ -- 0
-while$ -- 39
-width$ -- 19
-write$ -- 195
+while$ -- 78
+width$ -- 36
+write$ -- 404

@@ -1,9 +1,40 @@
-\begin{thebibliography}{Dum16}
+\begin{thebibliography}{{Fel}10}
+
+\bibitem[Ana]{faster_rcnn_pic}
+S.~Ananth.
+\newblock Faster r-cnn for object detection.
+\newblock
+  \url{https://towardsdatascience.com/faster-r-cnn-for-object-detection-a-technical-summary-474c5b857b46}.
+\newblock Accessed: 07.04.2021.
+
+\bibitem[Boc20]{yolov4}
+A.~Bochkovskiy, C~Wang, and H.~Liao.
+\newblock Yolov4: Optimal speed and accuracy of object detection, 2020.
+
+\bibitem[Bri90]{softmax}
+J.~Bridle.
+\newblock Probabilistic interpretation of feedforward classification network
+  outputs, with relationships to statistical pattern recognition.
+\newblock In Fran{\c{c}}oise~Fogelman Souli{\'e} and Jeanny H{\'e}rault,
+  editors, {\em Neurocomputing}, pages 227--236, Berlin, Heidelberg, 1990.
+  Springer Berlin Heidelberg.
 
 \bibitem[Dum16]{conv_arithmetic}
 V.~Dumoulin and F.~Visin.
 \newblock A guide to convolution arithmetic for deep learning.
 \newblock {\em ArXiv e-prints}, mar 2016.
+
+\bibitem[{Fel}10]{bbox_regressor}
+P.~{Felzenszwalb}, R.~{Girshick}, D.~{McAllester}, and D.~{Ramanan}.
+\newblock Object detection with discriminatively trained part-based models.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  32(9):1627--1645, 2010.
+
+\bibitem[Ger15]{fast_rcnn}
+R.~Gershick.
+\newblock Fast r-cnn.
+\newblock In {\em Proceedings of the IEEE International Conference on Computer
+  Vision (ICCV)}, December 2015.
 
 \bibitem[Gir13]{rcnn}
 R.~Girshick, J.~Donahue, T.~Darrell, and J.~Malik.
@@ -29,6 +60,11 @@ K.~He, X.~Zhang, S.~Ren, and J.~Sun.
 \newblock Deep residual learning for image recognition.
 \newblock {\em CoRR}, abs/1512.03385, 2015.
 
+\bibitem[Hos17]{learn_nms}
+J.~Hosang, R.~Benenson, and B.~Schiele.
+\newblock Learning non-maximum suppression.
+\newblock {\em CoRR}, abs/1705.02950, 2017.
+
 \bibitem[Hua16]{densenet}
 G.~Huang, Z.~Liu, and K.~Weinberger.
 \newblock Densely connected convolutional networks.
@@ -40,10 +76,31 @@ IEC.
 \newblock \url{https://webstore.iec.ch/publication/2723}.
 \newblock Accessed: 21.12.2020.
 
+\bibitem[Iof15]{batchnorm}
+S.~Ioffe and C.~Szegedy.
+\newblock Batch normalization: Accelerating deep network training by reducing
+  internal covariate shift.
+\newblock {\em CoRR}, abs/1502.03167, 2015.
+
 \bibitem[LeC99]{lecun_lenet}
 Y.~LeCun, P.~Haffner, L.~Bottou, and Y.~Bengio.
 \newblock Object recognition with gradient-based learning.
 \newblock In D.~Forsyth, editor, {\em Feature Grouping}. Springer, 1999.
+
+\bibitem[Lin17]{focalloss}
+T.~Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Doll.
+\newblock Focal loss for dense object detection.
+\newblock {\em CoRR}, abs/1708.02002, 2017.
+
+\bibitem[Liu15]{ssd}
+W.~Liu, D.~Anguelov, D.~Erhan, C.~Szegedy, S.~Reed, C.~Fu, and A.~Berg.
+\newblock {SSD:} single shot multibox detector.
+\newblock {\em CoRR}, abs/1512.02325, 2015.
+
+\bibitem[Liu18]{pannet}
+S.~Liu, L.~Qi, H.~Qin, J.~Shi, and J.~Jia.
+\newblock Path aggregation network for instance segmentation.
+\newblock {\em CoRR}, abs/1803.01534, 2018.
 
 \bibitem[Mai20]{dl}
 A.~Maier, V.~Christlein, K.~Breininger, and S.~Vesal.
@@ -60,6 +117,18 @@ J.~Redmon, S.~Divvala, R.~Girshick, and A.~Farhadi.
 \newblock You only look once: Unified, real-time object detection.
 \newblock {\em CoRR}, abs/1506.02640, 2015.
 
+\bibitem[Ren15]{faster_rcnn}
+S.~Ren, K.~He, R.~Girshick, and J.~Sun.
+\newblock Faster {R-CNN:} towards real-time object detection with region
+  proposal networks.
+\newblock {\em CoRR}, abs/1506.01497, 2015.
+
+\bibitem[Rez19]{giou}
+S.~Rezatofighi, N.~Tsoi, J.~Gwak, A.~Sadeghian, I.~Reid, and S.~Savarese.
+\newblock Generalized intersection over union: {A} metric and {A} loss for
+  bounding box regression.
+\newblock {\em CoRR}, abs/1902.09630, 2019.
+
 \bibitem[Ros58]{perceptron}
 F.~Rosenblatt.
 \newblock The perceptron: A probabilistic model for information storage and
@@ -73,6 +142,11 @@ K.~Sambasivarao.
   \url{https://towardsdatascience.com/non-maximum-suppression-nms-93ce178e177c}.
 \newblock Accessed: 02.04.2021.
 
+\bibitem[Sim14]{vgg}
+K.~Simonyan and A.~Zisserman.
+\newblock Very deep convolutional networks for large-scale image recognition.
+\newblock {\em arXiv preprint arXiv:1409.1556}, 2014.
+
 \bibitem[Sze14]{inception}
 C.~Szegedy, W.~Liu, Y.~Jia, P.~Sermanet, S.~Reed, D.~Anguelov, D.~Erhan,
   V.~Vanhoucke, and A.~Rabinovich.
@@ -84,5 +158,25 @@ K.~van~de Sande, J.~Uijlings, T.~Gevers, and A.~Smeulders.
 \newblock Segmentation as selective search for object recognition.
 \newblock In {\em 2011 International Conference on Computer Vision}. {IEEE},
   nov 2011.
+
+\bibitem[Wan21]{yolov4_tiny}
+C.~Wang, A.~Bochkovskiy, and H.~Liao.
+\newblock Scaled-yolov4: Scaling cross stage partial network, 2021.
+
+\bibitem[Yu16]{iou}
+J.~Yu, Y.~Jiang, Z.~Wang, Z.~Cao, and T.~Huang.
+\newblock {UnitBox}.
+\newblock In {\em Proceedings of the 24th {ACM} international conference on
+  Multimedia}. {ACM}, oct 2016.
+
+\bibitem[Zha21]{eiou}
+Y.~Zhang, W.~Ren, Z.~Zhang, Z.~Jia, L.~Wang, and T.~Tan.
+\newblock Focal and efficient iou loss for accurate bounding box regression,
+  2021.
+
+\bibitem[Zhe19]{diou}
+Z.~Zheng, P.~Wang, W.~Liu, J.~Li, R.~Ye, and D.~Ren.
+\newblock Distance-iou loss: Faster and better learning for bounding box
+  regression, 2019.
 
 \end{thebibliography}

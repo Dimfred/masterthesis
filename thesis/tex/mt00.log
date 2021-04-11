@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.3.9)  2 APR 2021 19:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.3.9)  11 APR 2021 17:03
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -465,103 +465,32 @@ File: pgflibraryfadings.code.tex 2020/12/01 v3.1.7a (3.1.7a)
 )) (/usr/share/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
-)
-\bibdata{url}
-(/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl
-LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 1.
- (/usr/share/texmf-dist/tex/latex/psnfss/ot1ptm.fd
-File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
-)
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24.88> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1.
-
-
-/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl:1: LaTeX Error: Missing \begin{document}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.1 \begin{thebibliography}{Dum16}
-                                  
-You're in trouble here.  Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-\bibcite{conv_arithmetic}{Dum16}
-\bibcite{rcnn}{Gir13}
-\bibcite{cca}{Gra10}
-\bibcite{mlp}{Gro73}
-\bibcite{resnet}{He15}
-\bibcite{densenet}{Hua16}
-\bibcite{iec60617}{IEC}
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 40.
-(/usr/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
-File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-)
-LaTeX Font Info:    Trying to load font information for U+msa on input line 40.
- (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 40.
- (/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-\bibcite{lecun_lenet}{LeC99}
-\bibcite{dl}{Mai20}
-\bibcite{bioneuron}{McC43}
-\bibcite{yolov1}{Red15}
-\bibcite{perceptron}{Ros58}
-\bibcite{nms_before_after}{Sam}
-\bibcite{inception}{Sze14}
-\bibcite{selective_search}{vdS11}
-/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl:88: Undefined control sequence.
-\set@color ...\@pdfcolorstack push{\current@color 
-                                                  }\aftergroup \reset@color 
-l.88 \end{thebibliography}
-                          
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl:88: Undefined control sequence.
-\set@color ...\@pdfcolorstack push{\current@color 
-                                                  }\aftergroup \reset@color 
-l.88 \end{thebibliography}
-                          
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[1
-
-
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]) (/usr/share/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+) (/usr/share/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count302
+)
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 73.
+ (/usr/share/texmf-dist/tex/latex/psnfss/ot1ptm.fd
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 ) (/usr/share/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2020-09-24 L3 backend support: PDF output (pdfTeX)
 \l__kernel_color_stack_int=\count303
 \l__pdf_internal_box=\box65
-) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux))
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 67.
-LaTeX Font Info:    ... okay on input line 67.
+) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux))
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 73.
+LaTeX Font Info:    ... okay on input line 73.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -616,14 +545,14 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-LaTeX Info: Redefining \microtypecontext on input line 67.
+LaTeX Info: Redefining \microtypecontext on input line 73.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `basictext'.
-LaTeX Info: Redefining \showhyphens on input line 67.
+LaTeX Info: Redefining \showhyphens on input line 73.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -631,28 +560,37 @@ Package microtype Info: No adjustment of character kerning.
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 \c@lstlisting=\count310
- [2] [3
+ [1
 
 
-] [4
 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2
+
+
+] [3] [4
 
 ] [5] [6
 
-] [7] [8
-
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.toc (/usr/share/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman (RS)
+)
+LaTeX Font Info:    Trying to load font information for U+msa on input line 2.
+ (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/share/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 2.
+ (/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/share/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-) [9
+) [7
 
 
 ])
 \tf@toc=\write4
- [10] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/00_introduction.tex
+ [8] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/00_introduction.tex
 Chapter 1.
 ) [1
 
@@ -664,14 +602,9 @@ Chapter 1.
 Chapter 2.
 Package acronym Info: Label `acro:ECD' newly defined as it shall be overridden
 although it is yet undefined on input line 5.
-Package acronym Info: Label `acro:ECCs' newly defined as it shall be overridden
-although it is yet undefined on input line 5.
 Package acronym Info: Label `acro:ECC' newly defined as it shall be overridden
 although it is yet undefined on input line 5.
-(/home/dimfred/workspaces/uni/ma/thesis/tex/main/ltspice.tex
-Package acronym Info: Label `acro:ECDs' newly defined as it shall be overridden
-although it is yet undefined on input line 3.
- [3
+(/home/dimfred/workspaces/uni/ma/thesis/tex/main/ltspice.tex [3
 
 
 ]
@@ -688,119 +621,176 @@ Package acronym Info: Label `acro:MLP' newly defined as it shall be overridden
 although it is yet undefined on input line 19.
 Package acronym Info: Label `acro:MSE' newly defined as it shall be overridden
 although it is yet undefined on input line 44.
- [7]
-Package acronym Info: Label `acro:MLPs' newly defined as it shall be overridden
-although it is yet undefined on input line 57.
- (/home/dimfred/workspaces/uni/ma/thesis/tex/main/mlp_fig.tex) [8]
-Package acronym Info: Label `acro:CNNs' newly defined as it shall be overridden
-although it is yet undefined on input line 73.
+ [7] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/mlp_fig.tex) [8]
 Package acronym Info: Label `acro:CNN' newly defined as it shall be overridden
-although it is yet undefined on input line 74.
+although it is yet undefined on input line 73.
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 77.
  (/usr/share/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ) [9]
-<imgs/conv_example_full.png, id=105, 979.66pt x 259.97125pt>
+<imgs/conv_example_full.png, id=96, 979.66pt x 259.97125pt>
 File: imgs/conv_example_full.png Graphic file (type png)
 <use imgs/conv_example_full.png>
 Package pdftex.def Info: imgs/conv_example_full.png  used on input line 105.
 (pdftex.def)             Requested size: 455.24408pt x 120.80605pt.
-) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/object_detection.tex [10 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/conv_example_full.png>]
+ [10 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/conv_example_full.png>]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/object_detection.tex
+Overfull \hbox (1.64465pt too wide) in paragraph at lines 10--17
+\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x[]; y[]; w[]; h[]\OT1/cmr/m/n/12 )$\OT1/ptm/m/n/12 (-20) . Here, $\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x[]; y[]\OT1/cmr/m/n/12 )$ \OT1/ptm/m/n/12 (-20) de-fine the rel-a-tive cen-ter of the bound-ing box and $\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 w[]; h[]\OT1/cmr/m/n/12 )$
+ []
+
+[11]
 Package acronym Info: Label `acro:NMS' newly defined as it shall be overridden
-although it is yet undefined on input line 26.
- [11]
-<imgs/nms_before_after.png, id=114, 702.625pt x 323.2075pt>
+although it is yet undefined on input line 30.
+<imgs/nms_before_after.png, id=106, 702.625pt x 323.2075pt>
 File: imgs/nms_before_after.png Graphic file (type png)
 <use imgs/nms_before_after.png>
-Package pdftex.def Info: imgs/nms_before_after.png  used on input line 33.
-(pdftex.def)             Requested size: 455.24408pt x 209.4166pt.
+Package pdftex.def Info: imgs/nms_before_after.png  used on input line 41.
+(pdftex.def)             Requested size: 284.52756pt x 130.88351pt.
 Package acronym Info: Label `acro:R-CNN' newly defined as it shall be overridden
-although it is yet undefined on input line 42.
-Package acronym Info: Label `acro:SVMs' newly defined as it shall be overridden
-although it is yet undefined on input line 50.
- [12 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/nms_before_after.png (PNG copy)>]
-<imgs/selective_search.png, id=118, 702.625pt x 462.72874pt>
+although it is yet undefined on input line 49.
+Package acronym Info: Label `acro:SVM' newly defined as it shall be overridden
+although it is yet undefined on input line 56.
+ [12]
+<imgs/selective_search.png, id=110, 702.625pt x 462.72874pt>
 File: imgs/selective_search.png Graphic file (type png)
 <use imgs/selective_search.png>
-Package pdftex.def Info: imgs/selective_search.png  used on input line 56.
-(pdftex.def)             Requested size: 369.88582pt x 243.59993pt.
-) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/cca.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [13 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/selective_search.png>]
+Package pdftex.def Info: imgs/selective_search.png  used on input line 61.
+(pdftex.def)             Requested size: 284.52756pt x 187.38293pt.
+Package acronym Info: Label `acro:RoI' newly defined as it shall be overridden
+although it is yet undefined on input line 76.
+ [13 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/nms_before_after.png (PNG copy)>]
+Package acronym Info: Label `acro:RPN' newly defined as it shall be overridden
+although it is yet undefined on input line 98.
+ [14 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/selective_search.png>]
+<imgs/faster_rcnn.jpg, id=117, 702.625pt x 526.96875pt>
+File: imgs/faster_rcnn.jpg Graphic file (type jpg)
+<use imgs/faster_rcnn.jpg>
+Package pdftex.def Info: imgs/faster_rcnn.jpg  used on input line 105.
+(pdftex.def)             Requested size: 398.33858pt x 298.75908pt.
+Package acronym Info: Label `acro:IoU' newly defined as it shall be overridden
+although it is yet undefined on input line 118.
+ [15 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/faster_rcnn.jpg>]
+Package acronym Info: Label `acro:GIoU' newly defined as it shall be overridden
+although it is yet undefined on input line 138.
+Package acronym Info: Label `acro:DIoU' newly defined as it shall be overridden
+although it is yet undefined on input line 150.
+Package acronym Info: Label `acro:CIoU' newly defined as it shall be overridden
+although it is yet undefined on input line 150.
+ [16]
+Package acronym Info: Label `acro:EIoU' newly defined as it shall be overridden
+although it is yet undefined on input line 182.
+Package acronym Info: Label `acro:YOLO' newly defined as it shall be overridden
+although it is yet undefined on input line 196.
+Package acronym Info: Label `acro:SSD' newly defined as it shall be overridden
+although it is yet undefined on input line 196.
+) [17] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/yolo.tex
+Package acronym Info: Label `acro:YOLOv4' newly defined as it shall be overridden
+although it is yet undefined on input line 5.
+Package acronym Info: Label `acro:ReLU' newly defined as it shall be overridden
+although it is yet undefined on input line 20.
+ [18]
+Package acronym Info: Label `acro:PANet' newly defined as it shall be overridden
+although it is yet undefined on input line 83.
+Package acronym Info: Label `acro:CE' newly defined as it shall be overridden
+although it is yet undefined on input line 128.
+ [19] [20] [21]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/cca.tex
 Package acronym Info: Label `acro:CCA' newly defined as it shall be overridden
 although it is yet undefined on input line 5.
-)) [14] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
+)) [22] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
 Chapter 3.
-) [15
-
-
-
-] [16
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
-Chapter 4.
-) [17
-
-
-] [18
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
-Chapter 5.
-) [19
-
-
-] [20
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-glossar.tex
-Appendix A.
-[21
-
-
-
-]) [22] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
-\tf@lof=\write5
 ) [23
 
 
 
 ] [24
 
-
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot)
-\tf@lot=\write6
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
+Chapter 4.
 ) [25
-
 
 
 ] [26
 
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
+Chapter 5.
+) [27
+
+
+] [28
+
+]
+No file mt07.tex.
+No file mt08.tex.
+(/home/dimfred/workspaces/uni/ma/thesis/tex/mt-glossar.tex
+Appendix A.
+[29
+
+
+
+
+
+
+
+
+
+
+
+]) [30] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
+\tf@lof=\write5
+) [31
+
+
+
+] [32
+
+
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot)
+\tf@lot=\write6
+) [33
+
+
+
+] [34
+
 
 
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 7.
+ (/usr/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `pcr' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [27
+
+Overfull \hbox (60.8078pt too wide) in paragraph at lines 4--9
+\OT1/pcr/m/n/12 faster-[]r-[]cnn-[]for-[]object-[]detection-[]a-[]technical-[]summary-[]474c5b857b46$\OT1/ptm/m/n/12 (-20) . 
+ []
+
+[35
 
 
 
-])) [28] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
+] [36])) [37] [38
+
+
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
 Here is how much of TeX's memory you used:
- 18987 strings out of 479383
- 355236 string characters out of 5875831
- 673529 words of memory out of 5000000
- 35512 multiletter control sequences out of 15000+600000
- 430668 words of font info for 164 fonts, out of 8000000 for 9000
+ 19098 strings out of 479383
+ 356962 string characters out of 5875831
+ 694474 words of memory out of 5000000
+ 35608 multiletter control sequences out of 15000+600000
+ 430443 words of font info for 166 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 80i,9n,85p,553b,742s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (38 pages, 604163 bytes).
+ 80i,10n,85p,553b,742s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (46 pages, 658044 bytes).
 PDF statistics:
- 222 PDF objects out of 1000 (max. 8388607)
- 145 compressed objects within 2 object streams
+ 248 PDF objects out of 1000 (max. 8388607)
+ 162 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 21628 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 21633 words of extra memory for PDF output out of 24883 (max. 10000000)
 

@@ -307,6 +307,7 @@ class PANetTiny(Model):
         activation: str = "leaky",
         kernel_regularizer=None,
         small: bool = False,
+        upsampling: str = "bilinear"
     ):
         super(PANetTiny, self).__init__(name="PANetTiny")
         self.small = small
@@ -337,7 +338,11 @@ class PANetTiny(Model):
             activation=activation,
             kernel_regularizer=kernel_regularizer,
         )
-        self.upSampling18 = layers.UpSampling2D(interpolation="bilinear")
+        if upsampling == "bilinear":
+            self.upSampling18 = layers.UpSampling2D(interpolation="bilinear")
+        else:
+            # TODO transpose conv
+            pass
         self.concat13_18 = layers.Concatenate(axis=-1)
 
         self.conv19 = YOLOConv2D(
@@ -360,7 +365,11 @@ class PANetTiny(Model):
                 activation=activation,
                 kernel_regularizer=kernel_regularizer,
             )
-            self.upSampling21 = layers.UpSampling2D(interpolation="bilinear")
+            if upsampling == "bilinear":
+                self.upSampling21 = layers.UpSampling2D(interpolation="bilinear")
+            else:
+                # TODO transpose
+                pass
             self.concat9_21 = layers.Concatenate(axis=-1)
 
             self.conv22 = YOLOConv2D(

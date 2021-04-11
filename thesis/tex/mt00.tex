@@ -24,13 +24,17 @@
 % to forbid tables to get repositioned on top / bot
 \usepackage{float}
 \restylefloat{table}
-% \usepackage{hyperref}
 
-% math
+% TODO add this in the end, currently makes compilation insanely slow
+% \usepackage{hyperref}
+% maybe like this idk
+% \usepackage[pdftex,colorlinks=true,urlcolor=refC,linkcolor=refC,citecolor=citeC]{hyperref} % math
+
 \usepackage{amsmath}
 \usepackage{amssymb}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
+
 
 % drawing
 \usepackage{tikz}
@@ -40,7 +44,11 @@
 % graphics
 \usepackage{graphicx}
 
+% for urls in bib
 \usepackage{url}
+
+% multiline formulas
+% \usepackage{breqn}
 
 % non-retarded new line
 \newcommand{\lf}{\\[\baselineskip]}
@@ -57,12 +65,10 @@
 
 %\bibliographystyle{galpha1a} %german bibliography
 \bibliographystyle{alphamod} %english bibliography
-\bibliography{url}
 
 % fix bad url formatting
 \usepackage{etoolbox}
 \apptocmd{\thebibliography}{\raggedright}{}{}
-
 
 \begin{document}
 \clearpage
@@ -128,10 +134,10 @@ Abstract
 \cleardoublepage
 \input{main/04_discussion}
 \cleardoublepage
-% \include{mt07}   % Ausblick (\chapter{Ausblick} TEXT)
-% \cleardoublepage
-% \include{mt08}   % Zusammenfassung (\chapter{Zusammenfassung}  TEXT)
-% \cleardoublepage
+\include{mt07}   % Ausblick (\chapter{Ausblick} TEXT)
+\cleardoublepage
+\include{mt08}   % Zusammenfassung (\chapter{Zusammenfassung}  TEXT)
+\cleardoublepage
 
 
 \appendix

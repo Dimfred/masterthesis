@@ -33,6 +33,9 @@ config.mnist_dir = config.data / "mnist"
 config.mnist_train_dir = config.mnist_dir / "train"
 config.mnist_test_dir = config.mnist_dir / "test"
 
+# arrows
+config.arrows_dir = config.data / "arrows"
+
 # other
 config.noise_dir = config.data / "noise"
 config.labeled_safe_dir = config.data / "labeled_safe"
@@ -56,7 +59,7 @@ config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights
 ## training
 config.yolo.batch_size = 4 if utils.isme() else 16
 config.yolo.accumulation_steps = 16 if utils.isme() else 4
-config.yolo.loss = "ciou"
+config.yolo.loss = "eiou" #"ciou"
 
 config.yolo.burn_in = 1000
 config.yolo.lr = 0.000261 #1e-3
@@ -116,7 +119,7 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 448  # 448 #224 #608 #416  #288
+config.unet.input_size = 608 #448  # 448 #224 #608 #416  #288
 config.unet.channels = 3
 config.unet.weights = Path("mobile_unet/weights/best.pth")
 

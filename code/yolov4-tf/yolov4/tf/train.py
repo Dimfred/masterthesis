@@ -41,6 +41,8 @@ class YOLOv4Loss(Loss):
             self.bbox_xiou = bbox_giou
         elif iou_type == "ciou":
             self.bbox_xiou = bbox_ciou
+        elif iou_type == "eiou":
+            self.bbox_xiou = bbox_eiou
 
         self.verbose = verbose
 
@@ -57,6 +59,7 @@ class YOLOv4Loss(Loss):
         @param `y_pred`: Dim(batch, g_height, g_width, 3,
                                 (b_x, b_y, b_w, b_h, conf, prob_0, prob_1, ...))
         """
+        # print("ypred", y_pred.shape)
         if len(y_pred.shape) == 4:
             _, g_height, g_width, box_size = y_pred.shape
             box_size = box_size // 3
@@ -69,10 +72,14 @@ class YOLOv4Loss(Loss):
         y_pred = tf.reshape(
             y_pred, shape=(-1, g_height * g_width * 3, box_size)
         )
+        # print("ypred", y_pred.shape)
 
         truth_xywh = y_true[..., 0:4]
+        # print("truth_xywh", truth_xywh.shape)
         truth_conf = y_true[..., 4:5]
+        # print("truth_conf", truth_conf.shape)
         truth_prob = y_true[..., 5:]
+        # print("truth_prob", truth_prob.shape)
 
         num_classes = truth_prob.shape[-1]
 
@@ -81,7 +88,9 @@ class YOLOv4Loss(Loss):
         pred_prob = y_pred[..., 5:]
 
         one_obj = truth_conf
+        # print("before", one_obj.shape)
         num_obj = tf.reduce_sum(one_obj, axis=[1, 2])
+        # print("after", num_obj.shape)
         one_noobj = 1.0 - one_obj
         # Dim(batch, g_height * g_width * 3, 1)
         one_obj_mask = one_obj > 0.5
@@ -92,7 +101,9 @@ class YOLOv4Loss(Loss):
         xiou = self.bbox_xiou(truth_xywh, pred_xywh)
         xiou_scale = 2.0 - truth_xywh[..., 2:3] * truth_xywh[..., 3:4]
         xiou_loss = one_obj * xiou_scale * (1.0 - xiou[..., tf.newaxis])
+        # print("xiou_loss.shape\n{}".format(xiou_loss.shape))
         xiou_loss = 3 * tf.reduce_mean(tf.reduce_sum(xiou_loss, axis=(1, 2)))
+        # print("xiou_loss.shape\n{}".format(xiou_loss.shape))
 
         # Confidence Loss
         i0 = tf.constant(0)
@@ -134,6 +145,7 @@ class YOLOv4Loss(Loss):
                 tf.TensorShape([None, g_height * g_width * 3, 1]),
             ],
         )
+        # print("max_iou", max_iou)
 
         conf_obj_loss = one_obj * (0.0 - backend.log(pred_conf + 1e-9))
         conf_noobj_loss = (
@@ -193,26 +205,11 @@ def bbox_iou_njit(bboxes1, bboxes2):
         bboxes1[..., :2] + bboxes1[..., 2:] * 0.5,
         axis=-1,
     )
-    # bboxes1_coor = np.concatenate(
-    #     [
-    #         bboxes1[..., :2] - bboxes1[..., 2:] * 0.5,
-    #         bboxes1[..., :2] + bboxes1[..., 2:] * 0.5,
-    #     ],
-    #     axis=-1,
-    # )
-    # bboxes2_coor = np.concatenate(
-    #     [
-    #         bboxes2[..., :2] - bboxes2[..., 2:] * 0.5,
-    #         bboxes2[..., :2] + bboxes2[..., 2:] * 0.5,
-    #     ],
-    #     axis=-1,
-    # )
     bboxes2_coor = np.append(
         bboxes2[..., :2] - bboxes2[..., 2:] * 0.5,
         bboxes2[..., :2] + bboxes2[..., 2:] * 0.5,
         axis=-1,
     )
-
     left_up = np.maximum(bboxes1_coor[..., :2], bboxes2_coor[..., :2])
     right_down = np.minimum(bboxes1_coor[..., 2:], bboxes2_coor[..., 2:])
 
@@ -392,6 +389,65 @@ def bbox_ciou(bboxes1, bboxes2):
 
     return ciou
 
+def bbox_eiou(bboxes1, bboxes2):
+    """
+    Efficient IoU: https://arxiv.org/abs/2101.08158
+    @param bboxes1: (a, b, ..., 4)
+    @param bboxes2: (A, B, ..., 4)
+        x:X is 1:n or n:n or n:1
+
+    @return (max(a,A), max(b,B), ...)
+
+    ex) (4,):(3,4) -> (3,)
+        (2,1,4):(2,3,4) -> (2,3)
+    """
+    bboxes1_area = bboxes1[..., 2] * bboxes1[..., 3]
+    bboxes2_area = bboxes2[..., 2] * bboxes2[..., 3]
+
+    bboxes1_coor = tf.concat(
+        [
+            bboxes1[..., :2] - bboxes1[..., 2:] * 0.5,
+            bboxes1[..., :2] + bboxes1[..., 2:] * 0.5,
+        ],
+        axis=-1,
+    )
+    bboxes2_coor = tf.concat(
+        [
+            bboxes2[..., :2] - bboxes2[..., 2:] * 0.5,
+            bboxes2[..., :2] + bboxes2[..., 2:] * 0.5,
+        ],
+        axis=-1,
+    )
+
+    left_up = tf.maximum(bboxes1_coor[..., :2], bboxes2_coor[..., :2])
+    right_down = tf.minimum(bboxes1_coor[..., 2:], bboxes2_coor[..., 2:])
+
+    inter_section = tf.maximum(right_down - left_up, 0.0)
+    inter_area = inter_section[..., 0] * inter_section[..., 1]
+
+    union_area = bboxes1_area + bboxes2_area - inter_area
+
+    iou = inter_area / (union_area + 1e-8)
+
+    enclose_left_up = tf.minimum(bboxes1_coor[..., :2], bboxes2_coor[..., :2])
+    enclose_right_down = tf.maximum(
+        bboxes1_coor[..., 2:], bboxes2_coor[..., 2:]
+    )
+
+    enclose_section = enclose_right_down - enclose_left_up
+
+    c_2 = enclose_section[..., 0] ** 2 + enclose_section[..., 1] ** 2
+    center_diagonal = bboxes2[..., :2] - bboxes1[..., :2]
+    rho_2 = center_diagonal[..., 0] ** 2 + center_diagonal[..., 1] ** 2
+    diou = iou - rho_2 / (c_2 + 1e-8)
+
+    dwdh = (bboxes2[..., 2:4] - bboxes1[..., 2:4])**2
+    dwdh /= enclose_section**2
+    dw, dh = dwdh[..., 0], dwdh[..., 1]
+
+    eiou = diou - dw - dh
+
+    return eiou
 
 class SaveWeightsCallback(Callback):
     def __init__(
