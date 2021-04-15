@@ -24,6 +24,7 @@ SOFTWARE.
 from tensorflow.keras import layers, Model
 
 from .common import YOLOConv2D
+from .mobilenetv3 import ConvBnAct, BottleNeck
 
 
 class PANet(Model):
@@ -307,7 +308,7 @@ class PANetTiny(Model):
         activation: str = "leaky",
         kernel_regularizer=None,
         small: bool = False,
-        upsampling: str = "bilinear"
+        upsampling: str = "bilinear",
     ):
         super(PANetTiny, self).__init__(name="PANetTiny")
         self.small = small
@@ -385,7 +386,6 @@ class PANetTiny(Model):
                 kernel_regularizer=kernel_regularizer,
             )
 
-
     def call(self, x):
         if not self.small:
             route1, route2 = x
@@ -405,6 +405,9 @@ class PANetTiny(Model):
             return pred_m, pred_l
         else:
             route1, route2, route3 = x
+            # print("route1.shape\n{}".format(route1.shape))
+            # print("route2.shape\n{}".format(route2.shape))
+            # print("route3.shape\n{}".format(route3.shape))
 
             x1 = self.conv15(route3)
 
@@ -431,3 +434,119 @@ class PANetTiny(Model):
             pred_l = self.conv23(x1)
 
             return pred_l, pred_m, pred_s
+
+
+class PAMobileNetV3(Model):
+    def __init__(
+        self,
+        num_classes,
+        activation: str = "leaky",
+        kernel_regularizer=None,
+        small: bool = False,
+        upsampling: str = "bilinear",
+    ):
+        super(PAMobileNetV3, self).__init__(name="PAMobileNetV3")
+
+        kernel_regularizer = 2e-5
+        self.conv15 = ConvBnAct(
+            k=1, exp=False, out=480, SE=False, NL="hswish", s=1, l2=kernel_regularizer
+        )
+
+        # OUT 1
+        self.conv16 = BottleNeck(
+            k=3, exp=960, out=480, SE=True, NL="hswish", s=1, l2=kernel_regularizer
+        )
+        self.conv17 = ConvBnAct(
+            k=1,
+            exp=False,
+            out=3 * (num_classes + 5),
+            SE=False,
+            NL="hswish",
+            s=1,
+            l2=kernel_regularizer,
+        )
+
+        # UP 1
+        self.conv18 = None
+
+        YOLOConv2D(
+            filters=128,
+            kernel_size=1,
+            activation=activation,
+            kernel_regularizer=kernel_regularizer,
+        )
+        if upsampling == "bilinear":
+            self.upSampling18 = layers.UpSampling2D(interpolation="bilinear")
+        else:
+            # TODO transpose conv
+            pass
+        self.concat13_18 = layers.Concatenate(axis=-1)
+
+        self.conv19 = YOLOConv2D(
+            filters=256,
+            kernel_size=3,
+            activation=activation,
+            kernel_regularizer=kernel_regularizer,
+        )
+        self.conv20 = YOLOConv2D(
+            filters=3 * (num_classes + 5),
+            kernel_size=1,
+            activation=None,
+            kernel_regularizer=kernel_regularizer,
+        )
+
+        if self.small:
+            self.conv21 = YOLOConv2D(
+                filters=64,
+                kernel_size=1,
+                activation=activation,
+                kernel_regularizer=kernel_regularizer,
+            )
+            if upsampling == "bilinear":
+                self.upSampling21 = layers.UpSampling2D(interpolation="bilinear")
+            else:
+                # TODO transpose
+                pass
+            self.concat9_21 = layers.Concatenate(axis=-1)
+
+            self.conv22 = YOLOConv2D(
+                filters=128,
+                kernel_size=3,
+                activation=activation,
+                kernel_regularizer=kernel_regularizer,
+            )
+            self.conv23 = YOLOConv2D(
+                filters=3 * (num_classes + 5),
+                kernel_size=1,
+                activation=None,
+                kernel_regularizer=kernel_regularizer,
+            )
+
+    def call(self, x):
+        route1, route2, route3 = x
+
+        x1 = self.conv15(route3)
+
+        x2 = self.conv16(x1)
+        pred_s = self.conv17(x2)
+
+        # TODO
+        # why use as input conv15 and not conv16???
+        # that kinda breaks the design
+        x1 = self.conv18(x1)
+        x1 = self.upSampling18(x1)
+        x1 = self.concat13_18([x1, route2])
+
+        x1 = self.conv19(x1)
+        pred_m = self.conv20(x1)
+
+        # skip from conv19
+        x1 = self.conv21(x1)
+        x1 = self.upSampling21(x1)
+        # route3 = conv9
+        x1 = self.concat9_21([x1, route1])
+
+        x1 = self.conv22(x1)
+        pred_l = self.conv23(x1)
+
+        return pred_l, pred_m, pred_s

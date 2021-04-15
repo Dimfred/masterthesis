@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from core.model.base import SegBaseModel
+from .base import SegBaseModel
 
 __all__ = ['MobileNetV3Seg', 'get_mobilenetv3_large_seg', 'get_mobilenetv3_small_seg']
 
@@ -108,3 +108,4 @@ def get_mobilenetv3_small_seg(dataset='citys', pretrained=False, root='~/.torch/
 
 if __name__ == '__main__':
     model = MobileNetV3Seg(19)
+    print(model)

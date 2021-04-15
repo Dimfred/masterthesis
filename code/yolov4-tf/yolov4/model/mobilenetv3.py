@@ -26,52 +26,54 @@ from __future__ import print_function
 
 import tensorflow as tf
 
+# fmt:off
 MobileNetV3_Small_Spec = [
     # Op            k    exp    out    SE     NL        s
-    ["ConvBnAct", 3, False, 16, False, "hswish", 2],
-    ["bneck", 3, 16, 16, True, "relu", 2],
-    ["bneck", 3, 72, 24, False, "relu", 2],
-    ["bneck", 3, 88, 24, False, "relu", 1],
-    ["bneck", 5, 96, 40, True, "hswish", 2],
-    ["bneck", 5, 240, 40, True, "hswish", 1],
-    ["bneck", 5, 240, 40, True, "hswish", 1],
-    ["bneck", 5, 120, 48, True, "hswish", 1],
-    ["bneck", 5, 144, 48, True, "hswish", 1],
-    ["bneck", 5, 288, 96, True, "hswish", 2],
-    ["bneck", 5, 576, 96, True, "hswish", 1],
-    ["bneck", 5, 576, 96, True, "hswish", 1],
-    ["ConvBnAct", 1, False, 576, True, "hswish", 1],
-    ["pool", 7, False, False, False, "None", 1],
-    ["ConvNBnAct", 1, False, 1280, False, "hswish", 1],
-    ["ConvNBnAct", 1, False, 1000, False, "None", 1],
+    ["ConvBnAct",   3,   False, 16,    False, "hswish", 2],
+    ["bneck",       3,   16,    16,    True,  "relu",   2],
+    ["bneck",       3,   72,    24,    False, "relu",   2],
+    ["bneck",       3,   88,    24,    False, "relu",   1],
+    ["bneck",       5,   96,    40,    True,  "hswish", 2],
+    ["bneck",       5,   240,   40,    True,  "hswish", 1],
+    ["bneck",       5,   240,   40,    True,  "hswish", 1],
+    ["bneck",       5,   120,   48,    True,  "hswish", 1],
+    ["bneck",       5,   144,   48,    True,  "hswish", 1],
+    ["bneck",       5,   288,   96,    True,  "hswish", 2],
+    ["bneck",       5,   576,   96,    True,  "hswish", 1],
+    ["bneck",       5,   576,   96,    True,  "hswish", 1],
+    ["ConvBnAct",   1,   False, 576,   True,  "hswish", 1],
+    ["pool",        7,   False, False, False, "None",   1],
+    ["ConvNBnAct",  1,   False, 1280,  False, "hswish", 1],
+    ["ConvNBnAct",  1,   False, 1000,  False, "None",   1],
 ]
 
 MobileNetV3_Large_Spec = [
     # Op            k    exp    out    SE     NL        s
-    ["ConvBnAct", 3, False, 16, False, "hswish", 2],
-    ["bneck", 3, 16, 16, False, "relu", 1],
-    ["bneck", 3, 64, 24, False, "relu", 2],
-    ["bneck", 3, 72, 24, False, "relu", 1],
-    ["bneck", 5, 72, 40, True, "relu", 2],
-    ["bneck", 5, 120, 40, True, "relu", 1],
-    ["bneck", 5, 120, 40, True, "relu", 1], # bneck_6
-    ["bneck", 3, 240, 80, False, "hswish", 2],
-    ["bneck", 3, 200, 80, False, "hswish", 1],
-    ["bneck", 3, 184, 80, False, "hswish", 1],
-    ["bneck", 3, 184, 80, False, "hswish", 1],
-    ["bneck", 3, 480, 112, True, "hswish", 1],
-    ["bneck", 3, 672, 112, True, "hswish", 1], # bneck_12
-    ["bneck", 5, 672, 160, True, "hswish", 2],
-    ["bneck", 5, 960, 160, True, "hswish", 1],
-    ["bneck", 5, 960, 160, True, "hswish", 1], # bneck_15
-    # ["ConvBnAct", 1, False, 960, False, "hswish", 1],
-    # ["pool", 7, False, False, False, "None", 1],
-    # ["ConvNBnAct", 1, False, 1280, False, "hswish", 1],
-    # ["ConvNBnAct", 1, False, 1000, False, "None", 1],
+    ["ConvBnAct",   3,   False, 16,    False, "hswish", 2],
+    ["bneck",       3,   16,    16,    False, "relu",   1],
+    ["bneck",       3,   64,    24,    False, "relu",   2],
+    ["bneck",       3,   72,    24,    False, "relu",   1],
+    ["bneck",       5,   72,    40,    True,  "relu",   2],
+    ["bneck",       5,   120,   40,    True,  "relu",   1],
+    ["bneck",       5,   120,   40,    True,  "relu",   1], # bneck_6
+    ["bneck",       3,   240,   80,    False, "hswish", 2],
+    ["bneck",       3,   200,   80,    False, "hswish", 1],
+    ["bneck",       3,   184,   80,    False, "hswish", 1],
+    ["bneck",       3,   184,   80,    False, "hswish", 1],
+    ["bneck",       3,   480,   112,   True,  "hswish", 1],
+    ["bneck",       3,   672,   112,   True,  "hswish", 1], # bneck_12
+    ["bneck",       5,   672,   160,   True,  "hswish", 2],
+    ["bneck",       5,   960,   160,   True,  "hswish", 1],
+    ["bneck",       5,   960,   160,   True,  "hswish", 1], # bneck_15
+    # ["ConvBnAct",   1,   False, 960,   False, "hswish", 1],
+    # ["pool",        7,   False, False, False, "None",   1],
+    # ["ConvNBnAct",  1,   False, 1280,  False, "hswish", 1],
+    # ["ConvNBnAct",  1,   False, 1000,  False, "None",   1],
 ]
+# fmt:on
 
 
-def _make_divisible(v, divisor, min_value=None):
+def _make_divisible (v, divisor, min_value=None):
     if min_value is None:
         min_value = divisor
     new_v = max(min_value, int(v + divisor / 2) // divisor * divisor)
