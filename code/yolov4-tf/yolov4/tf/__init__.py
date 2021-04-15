@@ -92,6 +92,10 @@ class YOLOv4(BaseClass):
             )
         self.model(inputs)
 
+        self.model.backbone.summary()
+        self.model.panet_tiny.summary()
+        self.model.yolov3_head_tiny.summary()
+
 
     @cached_property
     def minibatch_idxs(self):
