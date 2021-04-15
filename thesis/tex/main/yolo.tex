@@ -8,42 +8,29 @@ Furthermore, there exists a version of \ac{YOLOv4} (YOLOv4-tiny \cite{yolov4_tin
 \subsubsection{General}
 
 \ac{YOLOv4} unifies class prediction and bounding box regression in a single neural network.
-The architecture can be structured into three main parts: the backbone, the neck and the head.
+It is an anchor based detection network and hence outputs regression offsets based on a predefined anchor box.
+The architecture can be structured into three main parts: a backbone, a neck and a head.
 The backbone receives as input an image and is responsible to extract features out of it.
 Further, the neck receives the output of the backbone and produces output feature maps, which are further processed by the head to produce the final prediction.
-The final prediction is then a bounding box regression offset for an anchor as well as a vector of conditional probabilities for the classes to detect.
+The final prediction is then a vector with bounding box regression offsets for the anchors, an objectness score, which class agnostically indicates whether an object is present, as well as a vector of independent class probabilities.
 
 \subsubsection{Backbone}
 
-- TODO backbone is a smaller scale of the original Darknet53?
+- TODO backbone is a smaller scale of the original Darknet53
 
 The backbone of the \ac{YOLOv4} network is mostly formed out of YOLOConv layers (tab. \ref{tab:yoloconv}), which is sequentially build out of a convolutional layer, a batch normalization layer and a leaky \ac{ReLU} activation function, following the principles of \cite{batchnorm}.
+
+
 The initial two layers (c0, c1) use an increased stride and a valid padding to first reduce the input size of the image.
-The following layers always use three $3x3$ convolutions, followed by one $1x1$ convolution and a max pooling layer to half feature map size.
+The following layers always use three $3x3$ convolutions, followed by one $1x1$ convolution and a max pooling layer to half the feature map size.
 The number of filters for the four convolutions is always $N * (K, K/2, K/2, K)$, where $N$ denotes the layer number and $K$ the number of filters beginning with $64$.
 So as can be seen in \ref{tab:darknet_tiny_arch}, where the whole architecture of the backbone is presented, in the first layer the kernel sizes are set to $(64, 32, 32, 64)$.
 Further, the backbone has three outputs, seen on the right of the table ($Skip_S$, $Skip_M$, $Skip_L$), which are used as skip connections to the following neck network.
 $S$, $M$, $L$ indicates here the size of the detected object (small, medium, large).
 
-\begin{table}
-\begin{center}
-
-\begin{tabular}{l|c|c|c|c|c}
-    \textbf{Sequence} & \textbf{Parameter}\\
-    \hline
-    Convolution & see tab. \ref{tab:darknet_tiny_arch}; l2 kernel regularization $5x10^{-3}$\\
-    BatchNormalization &\\
-    LeakyReLU & $\alpha = 0.1$\\
-
-\end{tabular}
-\caption{Convolutional Base Block in YOLOv4 (YOLOConv)}
-\label{tab:yoloconv}
-
-\end{center}
-\end{table}
 
 
-\begin{table}
+\begin{table} %[H]
 \begin{center}
 
 \begin{tabular}{l|c|c|c|c|c|c|c}
@@ -79,8 +66,35 @@ $S$, $M$, $L$ indicates here the size of the detected object (small, medium, lar
 \end{center}
 \end{table}
 
+\begin{table} %[H]
+\begin{center}
+
+\begin{tabular}{l|c|c|c|c|c}
+    \textbf{Sequence} & \textbf{Parameter}\\
+    \hline
+    Convolution & see tab. \ref{tab:darknet_tiny_arch}; l2 kernel regularization $5x10^{-3}$\\
+    BatchNormalization &\\
+    LeakyReLU & $\alpha = 0.1$\\
+
+\end{tabular}
+\caption{Convolutional Base Block in YOLOv4 (YOLOConv)}
+\label{tab:yoloconv}
+
+\end{center}
+\end{table}
+
 \subsubsection{Neck}
-The neck of the \ac{YOLOv4} network is a scaled version of the \ac{PANet} \cite{pannet} and is further referred to as PANet-tiny.
+
+The neck of the \ac{YOLOv4} network is a scaled version of the \ac{PANet} \cite{pannet} and is further referred to as PANet-tiny \cite{yolov4_tiny}.
+The PANet-tiny receives as input the outputs of the backbone and produces three output tensors, where each output tensor is a prediction for a particular scale of object.
+Outputs have a size of $(2^{L-1}*S)x(2^{L-1}*S)$, where $L$ is the output layer number.
+Hence, the spatial size of the output is doubled with increasing network depth.
+Therefore, $Pred_L$ has a size of $SxS$, $Pred_M$ has a size of $2Sx2S$ and $Pred_S$ has a size of $4Sx4S$.
+Generally, the PANet-tiny is build by using a separate output branch to produce a prediction, followed by an upsampling layer, where the feature map is bilinearly upsampled and convolved together with the skip connection from the backbone to serve again as input for the next output branch.
+Each output branch is a $1x1$ convolution and hence acts as a fully-connected layer.
+The output size of each output layer is $3*(5+C)$, where $3$ are the number of anchor boxes in that particular scale, $5$ are the number of bounding box parameters (4 regression offsets, 1 objectness score) and $C$ are the number of classes.
+So the final output tensor of the network is $(2^{L-1}*S)x(2^{L-1}*S)x(3*(5+C))$.
+
 
 \begin{table}
 \begin{center}
@@ -89,25 +103,50 @@ The neck of the \ac{YOLOv4} network is a scaled version of the \ac{PANet} \cite{
     \textbf{Layer} & \textbf{Input} & \textbf{Type} & \textbf{Filters} & \textbf{Size} & \textbf{Stride} & \textbf{Padding} & \textbf{Output} \\
     \hline
     c15 & $Skip_L$ & YOLOConv & 256 & 1x1 & 1 & same\\
+    \textbf{Out 1} & & & & & &\\
     c16 & c15 & YOLOConv & 512 & 3x3 & 1 & same\\
     c17 & c16 & YOLOConv & 3 * (5 + C) & 1x1 & 1 & same & $Pred_L$\\
+    \textbf{Up 1}& & & & & &\\
     c18 & c15 & YOLOConv & 128 & 1x1 & 1 & same \\
     u18 & c18 & UpBillinear & & 2x2 & &\\
+    \textbf{Out 2}& & & & & &\\
     c19 & $Skip_M$ \& u18 & YOLOConv & 256 & 3x3 & 1 & same\\
     c20 & c19 & YOLOConv & 3 * (5 + C) & 1x1 & 1 & same & $Pred_M$\\
+    \textbf{Up 2}& & & & & &\\
     c21 & c19 & YOLOConv & 256 & 3x3 & 1 & same\\
     u21 & c21 & UpBillinear & & 2x2 & &\\
+    \textbf{Out 3}& & & & & &\\
     c22 & $Skip_S$ \& u21 & YOLOConv & 128 & 3x3 & 1 & same\\
     c32 & c22 & YOLOConv & 3 * (5 + C) & 1x1 & 1 & same & $Pred_S$\\
 \end{tabular}
 
-\caption{PANetTiny-3l Architecture}
+\caption{PANetTiny Architecture}
 \label{tab:panet_tiny_arch}
 \end{center}
 \end{table}
 
 
 \subsubsection{Head}
+The last component in the \ac{YOLOv4} network architecture is the head, which is reused from YOLOv3 \cite{yolov3}.
+Each input scale from the neck ($Pred_{L}$, $Pred_{M}$, $Pred_{S}$) is processed in the same manner.
+The input vector looks as follows:
+
+\begin{equation}
+    Pred_{X} = \{t_x, t_y, t_w, t_h, q_{conf}, q_{C1},...,q_{CC}\}
+\end{equation}
+
+The final bounding box calculation as well as some visual information on how the final bounding box parameters are derived can be seen in fig. \ref{fig:bbox_calculation}.
+The final spatial coordinate $b_*$, where $*$ denotes x and y respectively, is calculated by applying the sigmoid activation function on $t_*$ and adding the grid cell offset $c_*$ to the results.
+Further, the final size $b_+$, where $+$ denotes w and h respectively, is calculated by multiplying the prior assigned anchor box sizes $p_+$ with the exponential function applied to the predicted spatial offset $t_+$.
+Finally, the objectness score as well as the class probabilities are also calculated through the sigmoid activation function.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=6cm]{imgs/bbox_calculation.png}
+    \caption{Final bounding box calculation in the YOLOv4 network based on an anchor box \cite{yolov2}}
+    \label{fig:bbox_calculation}
+\end{center}
+\end{figure}
 
 \subsubsection{Loss}
 
@@ -172,3 +211,8 @@ Finally, each of the above losses is multiplied with a tunable hyperparameter an
     L_{YOLO} = \lambda_{class} * L_{class} + \lambda_{IoU} * L_{IoU} + \lambda_{objectness} * (L_{obj} + L_{noobj})
     \label{eq:yolo_loss}
 \end{equation}
+
+\subsubsection{Non-Maximum Suppression}
+
+During prediction time to further increase the detection performance a \ac{NMS} algorithm is applied.
+More precisely \ac{DIoU}-\ac{NMS} \cite{diou}, since it has shown to perform better than classical \ac{NMS} \cite{soft_nms}, especially in occlusion cases.

@@ -63,6 +63,7 @@ class YOLOv4(BaseClass):
         activation0: str = "mish",
         activation1: str = "leaky",
         kernel_regularizer=tf.keras.regularizers.l2(0.0005),
+        backbone: str = "yolo",
     ):
         # pylint: disable=missing-function-docstring
         self._has_weights = False
@@ -78,6 +79,7 @@ class YOLOv4(BaseClass):
                 activation=activation1,
                 kernel_regularizer=kernel_regularizer,
                 small=self.small,
+                backbone=backbone
             )
         else:
             self.model = yolov4.YOLOv4(

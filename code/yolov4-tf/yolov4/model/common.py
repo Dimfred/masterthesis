@@ -24,6 +24,7 @@ SOFTWARE.
 from typing import Union
 
 import tensorflow as tf
+import tensorflow.keras as K
 from tensorflow.keras import backend, layers, Sequential
 from tensorflow.keras.layers import Layer
 
@@ -33,6 +34,47 @@ class Mish(Layer):
         # pylint: disable=no-self-use
         return x * backend.tanh(backend.softplus(x))
 
+# class HSigmoid(K.nn.Module):
+#     def __init__(self, inplace=True):
+#         super(HSigmoid, self).__init__()
+#         self.relu = tf.keras.nn.ReLU6(inplace=inplace)
+
+#     def forward(self, x):
+#         return self.relu(x + 3) / 6
+
+
+# class HSwish(K.nn.Module):
+#     def __init__(self, inplace=True):
+#         super(HSwish, self).__init__()
+#         self.sigmoid = HSigmoid(inplace=inplace)
+
+#     def forward(self, x):
+#         return x * self.sigmoid(x)
+
+class HardSigmoid(tf.keras.layers.Layer):
+    def __init__(self, name="HardSigmoid", **kwargs):
+        super(HardSigmoid, self).__init__(name=name, **kwargs)
+        self.relu6 = tf.keras.layers.ReLU(max_value=6, name="ReLU6", **kwargs)
+
+    def call(self, input):
+        return self.relu6(input + 3.0) / 6.0
+
+    def get_config(self):
+        base_config = super(HardSigmoid, self).get_config()
+        return dict(list(base_config.items()))
+
+
+class HardSwish(tf.keras.layers.Layer):
+    def __init__(self, name="HardSwish", **kwargs):
+        super(HardSwish, self).__init__(name=name, **kwargs)
+        self.relu6 = tf.keras.layers.ReLU(max_value=6, name="ReLU6", **kwargs)
+
+    def call(self, input):
+        return input * self.relu6(input + 3.0) / 6.0
+
+    def get_config(self):
+        base_config = super(HardSwish, self).get_config()
+        return dict(list(base_config.items()))
 
 class YOLOConv2D(Layer):
     def __init__(
@@ -84,6 +126,8 @@ class YOLOConv2D(Layer):
             self.sequential.add(layers.LeakyReLU(alpha=0.1))
         elif self.activation == "relu":
             self.sequential.add(layers.ReLU())
+        elif self.activation == "hswish":
+            self.sequential.add(HardSwish())
 
     def build(self, input_shape):
         self.input_dim = input_shape[-1]

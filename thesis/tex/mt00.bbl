@@ -11,6 +11,11 @@ S.~Ananth.
 A.~Bochkovskiy, C~Wang, and H.~Liao.
 \newblock Yolov4: Optimal speed and accuracy of object detection, 2020.
 
+\bibitem[Bod17]{soft_nms}
+N.~Bodla, B.~Singh, R.~Chellappa, and L.~Davis.
+\newblock Improving object detection with one line of code.
+\newblock {\em CoRR}, abs/1704.04503, 2017.
+
 \bibitem[Bri90]{softmax}
 J.~Bridle.
 \newblock Probabilistic interpretation of feedforward classification network
@@ -116,6 +121,15 @@ W.~McCulloch and W.~Pitts.
 J.~Redmon, S.~Divvala, R.~Girshick, and A.~Farhadi.
 \newblock You only look once: Unified, real-time object detection.
 \newblock {\em CoRR}, abs/1506.02640, 2015.
+
+\bibitem[Red16]{yolov2}
+J.~Redmon and A.~Farhadi.
+\newblock Yolo9000: Better, faster, stronger, 2016.
+
+\bibitem[Red18]{yolov3}
+J.~Redmon and A.~Farhadi.
+\newblock Yolov3: An incremental improvement.
+\newblock {\em CoRR}, abs/1804.02767, 2018.
 
 \bibitem[Ren15]{faster_rcnn}
 S.~Ren, K.~He, R.~Girshick, and J.~Sun.

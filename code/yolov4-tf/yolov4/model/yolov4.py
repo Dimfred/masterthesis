@@ -24,9 +24,10 @@ SOFTWARE.
 import tensorflow as tf
 from tensorflow.keras import Model
 
-from .backbone import CSPDarknet53, CSPDarknet53Tiny
+from .backbone import CSPDarknet53, CSPDarknet53Tiny, MobileNetV3
 from .head import YOLOv3Head, YOLOv3HeadTiny
 from .neck import PANet, PANetTiny
+from config import config as ma_config
 
 
 class YOLOv4(Model):
@@ -109,12 +110,29 @@ class YOLOv4Tiny(Model):
         activation: str = "leaky",
         kernel_regularizer=None,
         small=False,
+        backbone="yolo",
     ):
         super(YOLOv4Tiny, self).__init__(name="YOLOv4Tiny")
 
-        self.csp_darknet53_tiny = CSPDarknet53Tiny(
-            activation=activation, kernel_regularizer=kernel_regularizer, small=small
-        )
+        if backbone == "yolo":
+            self.backbone = CSPDarknet53Tiny(
+                activation=activation,
+                kernel_regularizer=kernel_regularizer,
+                small=small,
+            )
+        elif backbone == "mobilenetv3-large":
+            self.backbone = MobileNetV3(
+                type="large",
+                input_shape=(ma_config.yolo.input_size, ma_config.yolo.input_size, 1),
+            )
+        elif backbone == "mobilenetv3-small":
+            self.backbone = MobileNetV3(
+                type="small",
+                input_shape=(ma_config.yolo.input_size, ma_config.yolo.input_size, 1),
+            )
+        else:
+            raise ValueError("Unsupported backend.")
+
         self.panet_tiny = PANetTiny(
             num_classes=num_classes,
             activation=activation,
@@ -132,12 +150,7 @@ class YOLOv4Tiny(Model):
             )
 
     def call(self, x):
-        x = self.csp_darknet53_tiny(x)
-        r1, r2, r3 = x
-        print("r1.shape\n{}".format(r1.shape))
-        print("r2.shape\n{}".format(r2.shape))
-        print("r3.shape\n{}".format(r3.shape))
-
+        x = self.backbone(x)
         x = self.panet_tiny(x)
         x = self.yolov3_head_tiny(x)
         return x

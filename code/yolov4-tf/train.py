@@ -4,9 +4,11 @@ import cv2 as cv
 import numpy as np
 
 import tensorflow as tf
+from tensorflow.python.keras.backend import backend
 import tensorflow_addons as tfa
 
 import numba as nb
+from torch.nn.modules import activation
 
 # has to be called right after tf import
 physical_devices = tf.config.experimental.list_physical_devices("GPU")
@@ -36,7 +38,8 @@ def create_model():
     yolo.input_size = config.yolo.input_size
     yolo.channels = config.yolo.channels
     yolo.batch_size = config.yolo.batch_size
-    yolo.make_model()
+    yolo.make_model(activation1=config.yolo.activation, backbone=config.yolo.backbone)
+    yolo.model.summary()
 
     # yolo.load_weights(config.yolo.pretrained_weights, weights_type=config.yolo.weights_type)
     # yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)

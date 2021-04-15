@@ -159,7 +159,7 @@ class YoloAugmentator(CircuitAugmentator):
 
         img_label_paths = []
         for img_path in img_paths:
-            label_path = utils.yolo_label_from_img(img_path)
+            label_path = utils.Yolo.label_from_img(img_path)
             if label_path.exists():
                 img_label_paths.append((img_path, label_path))
 

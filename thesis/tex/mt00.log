@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.3.9)  11 APR 2021 17:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.4.12)  14 APR 2021 13:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -687,43 +687,59 @@ although it is yet undefined on input line 196.
 Package acronym Info: Label `acro:YOLOv4' newly defined as it shall be overridden
 although it is yet undefined on input line 5.
 Package acronym Info: Label `acro:ReLU' newly defined as it shall be overridden
-although it is yet undefined on input line 20.
+although it is yet undefined on input line 21.
  [18]
 Package acronym Info: Label `acro:PANet' newly defined as it shall be overridden
-although it is yet undefined on input line 83.
+although it is yet undefined on input line 88.
+ [19]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [20]
+<imgs/bbox_calculation.png, id=137, 804.00375pt x 620.3175pt>
+File: imgs/bbox_calculation.png Graphic file (type png)
+<use imgs/bbox_calculation.png>
+Package pdftex.def Info: imgs/bbox_calculation.png  used on input line 145.
+(pdftex.def)             Requested size: 170.71652pt x 131.70924pt.
+ [21 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/bbox_calculation.png>]
 Package acronym Info: Label `acro:CE' newly defined as it shall be overridden
-although it is yet undefined on input line 128.
- [19] [20] [21]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/cca.tex
+although it is yet undefined on input line 167.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [22]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/cca.tex
 Package acronym Info: Label `acro:CCA' newly defined as it shall be overridden
 although it is yet undefined on input line 5.
-)) [22] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
+))
+Underfull \vbox (badness 4492) has occurred while \output is active []
+
+ [23] [24] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
 Chapter 3.
-) [23
-
-
-
-] [24
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
-Chapter 4.
 ) [25
+
 
 
 ] [26
 
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
-Chapter 5.
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
+Chapter 4.
 ) [27
 
 
 ] [28
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
+Chapter 5.
+) [29
+
+
+] [30
 
 ]
 No file mt07.tex.
 No file mt08.tex.
 (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-glossar.tex
 Appendix A.
-[29
+[31
 
 
 
@@ -735,23 +751,23 @@ Appendix A.
 
 
 
-]) [30] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
+]) [32] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
 \tf@lof=\write5
-) [31
-
-
-
-] [32
-
-
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot)
-\tf@lot=\write6
 ) [33
 
 
 
 ] [34
+
+
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot)
+\tf@lot=\write6
+) [35
+
+
+
+] [36
 
 
 
@@ -769,28 +785,24 @@ Overfull \hbox (60.8078pt too wide) in paragraph at lines 4--9
 \OT1/pcr/m/n/12 faster-[]r-[]cnn-[]for-[]object-[]detection-[]a-[]technical-[]summary-[]474c5b857b46$\OT1/ptm/m/n/12 (-20) . 
  []
 
-[35
+[37
 
 
 
-] [36])) [37] [38
-
-
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
+] [38] [39])) [40] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
 Here is how much of TeX's memory you used:
- 19098 strings out of 479383
- 356962 string characters out of 5875831
- 694474 words of memory out of 5000000
- 35608 multiletter control sequences out of 15000+600000
+ 19108 strings out of 479383
+ 357171 string characters out of 5875830
+ 685506 words of memory out of 5000000
+ 35617 multiletter control sequences out of 15000+600000
  430443 words of font info for 166 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  80i,10n,85p,553b,742s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (46 pages, 658044 bytes).
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (48 pages, 693781 bytes).
 PDF statistics:
- 248 PDF objects out of 1000 (max. 8388607)
- 162 compressed objects within 2 object streams
+ 256 PDF objects out of 1000 (max. 8388607)
+ 166 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 21633 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 21638 words of extra memory for PDF output out of 24883 (max. 10000000)
 

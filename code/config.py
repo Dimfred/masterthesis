@@ -54,12 +54,14 @@ config.yolo.channels = 1
 config.yolo.tiny = True
 config.yolo.small = True
 config.yolo.weights_type = "yolo"
+config.yolo.activation = "leaky"
+config.yolo.backbone = "mobilenetv3" # yolo
 config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights"
 
 ## training
-config.yolo.batch_size = 4 if utils.isme() else 16
+config.yolo.batch_size = 2 if utils.isme() else 16
 config.yolo.accumulation_steps = 16 if utils.isme() else 4
-config.yolo.loss = "eiou" #"ciou"
+config.yolo.loss = "ciou" #"ciou", "eiou", "diou"
 
 config.yolo.burn_in = 1000
 config.yolo.lr = 0.000261 #1e-3
@@ -223,6 +225,10 @@ config.augment.label_transition_rotation = {
     "t_right": "t_bot",
     "t_bot": "t_left",
     "cross": "cross",
+    "arrow_left": "arrow_top",
+    "arrow_top": "arrow_right",
+    "arrow_right": "arrow_bot",
+    "arrow_bot": "arrow_left",
 }
 
 # flip over y axis
@@ -266,6 +272,10 @@ config.augment.label_transition_flip = {
     "t_right": "t_left",
     "t_bot": "t_bot",
     "cross": "cross",
+    "arrow_right": "arrow_left",
+    "arrow_left": "arrow_right",
+    "arrow_top": "arrow_bot",
+    "arrow_bot": "arrow_top",
 }
 
 # removes classes from dataset
@@ -280,6 +290,12 @@ config.labels_to_remove = [
     "t_right",
     "t_bot",
     "cross",
+    "arrow_right",
+    "arrow_left",
+    "arrow_top",
+    "arrow_bot",
+    "text"
+
 
     ### ALL ###
     # "diode_left",
@@ -326,6 +342,13 @@ config.labels_to_remove = [
 
 # removes classes and the file where the class is present from dataset
 config.labels_and_files_to_remove = [
+    # REMOVE FOR NOW
+    "arrow_right",
+    "arrow_left",
+    "arrow_top",
+    "arrow_bot",
+    "text",
+    # OLD LABELS
     "bat_left",
     "bat_top",
     "bat_right",

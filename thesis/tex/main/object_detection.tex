@@ -196,6 +196,6 @@ The aspect ratio penalty is here replaced through two separate penalties, which 
 Various object detection networks such as, Faster \ac{R-CNN} \cite{faster_rcnn}, \ac{YOLO} \cite{yolov1}, \ac{SSD} \cite{ssd} and RetinaNet \cite{focalloss} use anchor boxes to predict the objects in an image.
 Anchor boxes are used to assign a ground truth to a prediction of a network, which is then used to apply a loss on the prediction and hence make the network learn.
 For example in Faster \ac{R-CNN} the ground truth bounding box is assigned to an anchor when the \ac{IoU} of the bounding box and the anchor box is greater than a certain threshold.
-Anchor boxes can be seen as predictors, who over time get better and better of predicting objects of certain size and aspect ratios \cite{yolov1}.
-The scale and aspect ratio is often picked by using the k-means clustering algorithm on the dataset, to obtain optimal scales and aspect rations representing the underlying dataset.
+Anchor boxes can be seen as predictors, who over time get better and better of predicting objects of certain size and aspect ratios \cite{yolov1}. (TODO actually more the layer outputs which are multiplied with that anchor)
+The scale and aspect ratio is often selected by using the k-means clustering algorithm on the dataset, to obtain optimal scales and aspect ratios representing the underlying dataset \cite{yolov2}.
 The selection of good anchor box sizes can improve the prediction quality \cite{faster_rcnn}.

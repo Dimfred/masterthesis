@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from .mobilenetv3 import MobileNetV3 as InitMobileNetV3
 import tensorflow as tf
 from tensorflow.keras import layers, Model, Sequential
 
@@ -448,3 +449,5 @@ class CSPDarknet53Tiny(Model):
             return route1, route2, route3
         else:
             return route2, route3
+
+MobileNetV3 = InitMobileNetV3

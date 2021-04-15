@@ -411,6 +411,9 @@ class PANetTiny(Model):
             x2 = self.conv16(x1)
             pred_s = self.conv17(x2)
 
+            # TODO
+            # why use as input conv15 and not conv16???
+            # that kinda breaks the design
             x1 = self.conv18(x1)
             x1 = self.upSampling18(x1)
             x1 = self.concat13_18([x1, route2])

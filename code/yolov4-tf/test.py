@@ -21,6 +21,13 @@ from config import config
 # default 0.25, 0.3
 # inference_params = {"score_threshold": 0.8, "iou_threshold": 0.8}
 
+# from yolov4.model.backbone import CSPDarknet53Tiny
+# tiny = CSPDarknet53Tiny(small=True)
+# tiny.build(input_shape=(1, config.yolo.input_size, config.yolo.input_size, 1))
+# tiny.summary()
+
+# sys.exit()
+
 
 # small will use yolov4 head with 3 yolo layers
 yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)

@@ -50,7 +50,9 @@ class YOLOv3Head(Model):
         #       (xywh + conf + num_classes) * (# of anchors)
 
         # g_width, g_height
+        # 76x76, 38x38, 19x19
         _size = [(shape[2], shape[1]) for shape in input_shape]
+
 
         self.reshape0.target_shape = (
             _size[0][1],
