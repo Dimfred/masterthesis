@@ -46,6 +46,7 @@ class Trainer:
         map_on_step_mod=1,
         lr=0.00026,
         burn_in=1000,
+        resize_model=None
     ):
         self.yolo = yolo
         self.model = yolo.model
@@ -72,6 +73,8 @@ class Trainer:
         self.valid_time = time.perf_counter()
         self.train_time_start = time.perf_counter()
 
+        self.resize_model = resize_model
+
     def train(self, train_ds, valid_ds, **kwargs):
         trainable_vars = self.model.trainable_variables
         grad_accu = GradientAccumulator(self.accumulation_steps, trainable_vars)
@@ -80,11 +83,9 @@ class Trainer:
         base_lr = self.lr
         burn_in = self.burn_in
 
-
         for inputs, *labels, _ in train_ds:
             # training step
             step_grads, step_losses = self.train_step(inputs, labels)
-
 
             accumulated_losses = tloss_accu.accumulate(step_losses)
             accumulated_grads = grad_accu.accumulate(step_grads)
@@ -132,6 +133,9 @@ class Trainer:
             if self.is_map_time():
                 results = self.mAP.compute(show=False)
                 tf.print(self.mAP.prettify(results))
+
+            if self.resize_model is not None:
+                self.model = self.resize_model(self.model, 576)
 
             self.print_valid(vlosses)
 

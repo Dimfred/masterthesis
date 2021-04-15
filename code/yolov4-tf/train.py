@@ -4,6 +4,7 @@ import cv2 as cv
 import numpy as np
 
 import tensorflow as tf
+import tensorflow.keras as K
 from tensorflow.python.keras.backend import backend
 import tensorflow_addons as tfa
 
@@ -123,6 +124,15 @@ if __name__ == "__main__":
     #     weight_decay=config.yolo.decay,
     # )
 
+    # TODO would be nice to have
+    def resize_model(model, input_size):
+        model.layers.pop(0)
+        model.summary()
+        new_input = K.layers.Input((input_size, input_size, config.yolo.channels))
+        new_outputs = model(new_input)
+        new_model = K.Model(new_input, new_outputs)
+        return new_model
+
     yolo.compile(
         optimizer=optimizer,
         loss_iou_type=config.yolo.loss,
@@ -139,7 +149,7 @@ if __name__ == "__main__":
         # preload=False,
         training=True,
         augmentations=train_augmentations,
-        n_workers=config.yolo.n_workers
+        n_workers=config.yolo.n_workers,
     )
 
     valid_dataset = yolo.load_tfdataset(
@@ -148,7 +158,7 @@ if __name__ == "__main__":
         preload=config.yolo.preload_dataset,
         training=False,
         augmentations=valid_augmentations,
-        n_workers=config.yolo.n_workers
+        n_workers=config.yolo.n_workers,
     )
 
     @nb.njit
@@ -158,7 +168,7 @@ if __name__ == "__main__":
         # mult = 2
 
         if step < burn_in:
-            return lr * (step / burn_in)**4
+            return lr * (step / burn_in) ** 4
         if step > 7000:
             return lr / 10
         if step > 5000:
@@ -175,5 +185,6 @@ if __name__ == "__main__":
         map_after_steps=config.yolo.map_after_steps,
         map_on_step_mod=config.yolo.map_on_step_mod,
         lr_scheduler=lr_scheduler,
+        resize_model=resize_model,
     )
     trainer.train(train_dataset, valid_dataset)
