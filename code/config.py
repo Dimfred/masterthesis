@@ -59,8 +59,8 @@ config.yolo.backbone = "mobilenetv3-large" # yolo, mobilenetv3-large, mobilenetv
 config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights"
 
 ## training
-config.yolo.batch_size = 2 if utils.isme() else 16
-config.yolo.accumulation_steps = 16 if utils.isme() else 4
+config.yolo.batch_size = 2 if utils.isme() else 8
+config.yolo.accumulation_steps = 16 if utils.isme() else 8
 config.yolo.loss = "ciou" #"ciou", "eiou", "diou"
 
 config.yolo.burn_in = 1000
