@@ -417,14 +417,14 @@ class MeanAveragePrecision:
 
     def _convert_prediction(self, pred):
         pred = [YoloBBox(self.img_shape).from_prediction(pred) for pred in pred]
-        pred = np.vstack([[*bbox.abs(), bbox.label, bbox.confidence] for bbox in pred])
+        pred = np.vstack([[*bbox.abs, bbox.label, bbox.confidence] for bbox in pred])
         return pred
 
     def _convert_ground_truth(self, gt):
         difficult, crowd = 0, 0
 
         gt = [YoloBBox(self.img_shape).from_ground_truth(gt) for gt in gt]
-        gt = np.vstack([[*bbox.abs(), bbox.label, difficult, crowd] for bbox in gt])
+        gt = np.vstack([[*bbox.abs, bbox.label, difficult, crowd] for bbox in gt])
         return gt
 
     def _convert_inverted_ground_truth(self, gt):
@@ -463,7 +463,7 @@ class Metrics:
         # first find pairs of matching iou
         for gt in gt_bboxes:
             for pred in pred_bboxes:
-                iou = calc_iou(gt.abs(), pred.abs())
+                iou = calc_iou(gt.abs, pred.abs)
                 if iou > self.iou_thresh:
                     self._confusion[gt.label][pred.label] += 1
                     used_gt.add(gt)

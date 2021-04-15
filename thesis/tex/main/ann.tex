@@ -7,9 +7,9 @@ TODO How the signal is processed depends on the biological structure of the neur
 In general a biological neuron produces an output signal, when a certain activation potential is reached.
 
 The first artificial neuron was proposed in 1958 by Rosenblatt \cite{perceptron} and is known as the Rosenblatt Perceptron.
-The decision rule for the Perceptron is described by the formula \ref{form:perceptron}.
-It states that the output $\hat{y}$ is defined by the sign of the dot product of a weight vector $W$ with an input vector $x$.
-The decision boundary of this function is a linear function, which means non-linear problems like the XOR-problem, can't be solved with the perceptron.
+The decision rule for the Perceptron is described by eq. \ref{form:perceptron}.
+It states that the output $\hat{y} \in \{-1, 1\}$ is defined by the sign of the dot product of a weight vector $V \in \R^{n \times 1}$ with an input vector $x \in \R^{n \times 1}$.
+The decision boundary of this function is a linear function, which means non-linear problems like the XOR-problem, can't be solved with the perceptron TODO CITE.
 
 \begin{equation}
     \hat{y} = sign(W^Tx)

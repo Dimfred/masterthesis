@@ -13,7 +13,9 @@ In most cases the first word of a line is a keyword indicating the used command,
 LTspice itself provides a grid, where components are aligned to.
 This grid has a size of $32x32$ units, where a unit is an abstract measure inside of LTspice.
 
-\subsection{Header}
+\subsection{File Definition}
+
+\subsubsection{Header}
 
 Each schematic file starts with a header, which defines the used version of the syntax.
 Throughout this thesis the forth version of the syntax is used. Table \ref{tab:ltheader_syntax} shows the syntax for the version definition command.
@@ -34,7 +36,7 @@ Throughout this thesis the forth version of the syntax is used. Table \ref{tab:l
 \end{table}
 
 
-\subsection{Symbols}
+\subsubsection{Symbols}
 
 In LTspice \acp{ECC} are called symbols.
 The syntax to define a symbol is presented in table \ref{tab:ltsymbol_syntax}.
@@ -80,7 +82,7 @@ So an example for a resistor declaration would be: ``SYMBOL res 32 32 R90'', whi
 \end{center}
 \end{table}
 
-\subsection{Symbol Attributes}
+\subsubsection{Symbol Attributes}
 
 A symbol can be further specified through the usage of a symbol attribute.
 The symbol attribute is always applied to the first occurrence of a previously defined symbol relative to this command.
@@ -105,7 +107,7 @@ The ``Value'' attribute allows to declare a component value for the symbol alway
 \end{center}
 \end{table}
 
-\subsection{Ground}
+\subsubsection{Ground}
 
 Grounds are defined by using the keyword ``FLAG'' followed by the coordinates of the ground.
 An additional ``0'' has to be placed at the end of the line, which indicates that the used flag is indeed a ground node.
@@ -127,7 +129,7 @@ The syntax for grounds can be seen in table \ref{tab:ltflag_syntax}.
 \end{center}
 \end{table}
 
-\subsection{Wire}
+\subsubsection{Wire}
 
 After the symbols have been defined they are connected through wires.
 Wires in LTspice are defined as lines.

@@ -8,11 +8,12 @@
 \contentsline {section}{\numberline {2.1}Electrical Circuit Diagrams}{3}{}%
 \contentsline {section}{\numberline {2.2}LTspice File}{3}{}%
 \contentsline {subsection}{\numberline {2.2.1}General}{4}{}%
-\contentsline {subsection}{\numberline {2.2.2}Header}{4}{}%
-\contentsline {subsection}{\numberline {2.2.3}Symbols}{4}{}%
-\contentsline {subsection}{\numberline {2.2.4}Symbol Attributes}{5}{}%
-\contentsline {subsection}{\numberline {2.2.5}Ground}{6}{}%
-\contentsline {subsection}{\numberline {2.2.6}Wire}{6}{}%
+\contentsline {subsection}{\numberline {2.2.2}File Definition}{4}{}%
+\contentsline {subsubsection}{Header}{4}{}%
+\contentsline {subsubsection}{Symbols}{4}{}%
+\contentsline {subsubsection}{Symbol Attributes}{5}{}%
+\contentsline {subsubsection}{Ground}{6}{}%
+\contentsline {subsubsection}{Wire}{6}{}%
 \contentsline {section}{\numberline {2.3}Artificial Neural Networks}{6}{}%
 \contentsline {subsection}{\numberline {2.3.1}General Concepts}{6}{}%
 \contentsline {subsubsection}{Learning Procedure}{7}{}%

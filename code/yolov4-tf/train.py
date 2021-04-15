@@ -108,6 +108,10 @@ def valid_augmentations(image, bboxes):
 if __name__ == "__main__":
     # model creation
     yolo = create_model()
+    print("---------------------------------------------------")
+    print("CLASSSES:")
+    print(yolo.classes)
+    print("---------------------------------------------------")
 
     # optimizer = optimizers.Adam(learning_rate=config.yolo.lr)
     optimizer = optimizers.SGD(

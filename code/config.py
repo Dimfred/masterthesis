@@ -168,13 +168,13 @@ config.augment.yolo = EasyDict()
 config.augment.yolo.img_params = EasyDict()
 config.augment.yolo.img_params.channels = 1
 config.augment.yolo.img_params.keep_ar = True
-config.augment.yolo.img_params.resize = 1000
+config.augment.yolo.img_params.resize = 1000 # resizes longest image axis to that size
 
 config.augment.unet = EasyDict()
 config.augment.unet.img_params = EasyDict()
 config.augment.unet.img_params.channels = 1  # config.unet.channels
 config.augment.unet.img_params.keep_ar = True
-config.augment.unet.img_params.resize = 640
+config.augment.unet.img_params.resize = 640 # resizes longest image axis to that size
 
 # whether to perform flip and rotation on the dataset
 config.augment.perform_train = True

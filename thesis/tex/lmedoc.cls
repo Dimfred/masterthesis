@@ -119,7 +119,7 @@
 \end{center}
 \begin{center}
 \@Vorname\ \@Name \\[2mm]
-\ifnum\language=\l@english born \else Geboren am\fi~
+\ifnum\language=\l@english born \else Geboren am\fi
 \@Geburtsdatum\ in \@Geburtsort \\% [45mm]
 \vfill
 \end{center}
