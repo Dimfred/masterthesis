@@ -185,6 +185,6 @@ if __name__ == "__main__":
         map_after_steps=config.yolo.map_after_steps,
         map_on_step_mod=config.yolo.map_on_step_mod,
         lr_scheduler=lr_scheduler,
-        resize_model=resize_model,
+        # resize_model=resize_model,
     )
     trainer.train(train_dataset, valid_dataset)
