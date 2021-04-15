@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.4.12)  14 APR 2021 13:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.4.12)  15 APR 2021 11:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -608,10 +608,10 @@ although it is yet undefined on input line 5.
 
 
 ]
-Underfull \vbox (badness 3657) has occurred while \output is active []
+Underfull \vbox (badness 1097) has occurred while \output is active []
 
  [4]
-Underfull \vbox (badness 1292) has occurred while \output is active []
+Underfull \vbox (badness 1675) has occurred while \output is active []
 
  [5]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ann.tex
 Package acronym Info: Label `acro:ANN' newly defined as it shall be overridden
@@ -793,13 +793,13 @@ Overfull \hbox (60.8078pt too wide) in paragraph at lines 4--9
 Here is how much of TeX's memory you used:
  19108 strings out of 479383
  357171 string characters out of 5875830
- 685506 words of memory out of 5000000
+ 686504 words of memory out of 5000000
  35617 multiletter control sequences out of 15000+600000
  430443 words of font info for 166 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  80i,10n,85p,553b,742s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (48 pages, 693781 bytes).
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (48 pages, 694218 bytes).
 PDF statistics:
  256 PDF objects out of 1000 (max. 8388607)
  166 compressed objects within 2 object streams
