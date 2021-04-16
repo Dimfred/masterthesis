@@ -290,11 +290,11 @@ config.labels_to_remove = [
     "t_right",
     "t_bot",
     "cross",
-    "arrow_right",
-    "arrow_left",
-    "arrow_top",
-    "arrow_bot",
-    "text"
+    # "arrow_right",
+    # "arrow_left",
+    # "arrow_top",
+    # "arrow_bot",
+    # "text"
 
 
     ### ALL ###
@@ -343,11 +343,11 @@ config.labels_to_remove = [
 # removes classes and the file where the class is present from dataset
 config.labels_and_files_to_remove = [
     # REMOVE FOR NOW
-    "arrow_right",
-    "arrow_left",
-    "arrow_top",
-    "arrow_bot",
-    "text",
+    # "arrow_right",
+    # "arrow_left",
+    # "arrow_top",
+    # "arrow_bot",
+    # "text",
     # OLD LABELS
     "bat_left",
     "bat_top",

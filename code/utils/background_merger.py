@@ -141,8 +141,8 @@ if __name__ == "__main__":
             cv.imwrite(str(merged_path), merged_img)
 
             # copy the corresponding yolo label to the merged_dir
-            yolo_label_path = utils.yolo_label_from_img(img_path)
-            merged_yolo_label_path = utils.yolo_label_from_img(merged_path)
+            yolo_label_path = utils.Yolo.label_from_img(img_path)
+            merged_yolo_label_path = utils.Yolo.label_from_img(merged_path)
             sh.copy(yolo_label_path, merged_yolo_label_path)
 
             # copy the corresponding segmentation label to the merged_dir
