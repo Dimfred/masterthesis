@@ -277,14 +277,13 @@ class YoloAugmentator(CircuitAugmentator):
         real_valid, aug_valid = self._summary(classes, self.valid_out_dir)
 
         class_names = sorted(real_train.keys())
-
         summary_count = np.vstack(
             [
                 (
                     real_train[class_name],
-                    real_valid[class_name],
+                    real_valid.get(class_name, 0),
                     aug_train[class_name],
-                    aug_valid[class_name],
+                    aug_valid.get(class_name, 0),
                 )
                 for class_name in class_names
             ]
@@ -606,6 +605,7 @@ def augment(target):
     end = time.perf_counter()
 
     print("Took:", end - start)
+
 
 if __name__ == "__main__":
     augment()

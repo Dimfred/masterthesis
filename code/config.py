@@ -176,7 +176,7 @@ config.augment.unet.img_params.keep_ar = True
 config.augment.unet.img_params.resize = 640  # resizes longest image axis to that size
 
 # whether to perform flip and rotation on the dataset
-config.augment.perform_train = True
+config.augment.perform_train = False
 config.augment.perform_valid = False
 config.augment.perform_merged = True
 
@@ -274,8 +274,8 @@ config.augment.label_transition_flip = {
     "cross": "cross",
     "arrow_right": "arrow_left",
     "arrow_left": "arrow_right",
-    "arrow_top": "arrow_bot",
-    "arrow_bot": "arrow_top",
+    "arrow_top": "arrow_top",
+    "arrow_bot": "arrow_bot",
     "text": "text",
 }
 
@@ -349,6 +349,7 @@ config.labels_and_files_to_remove = [
     # "arrow_top",
     # "arrow_bot",
     # "text",
+
     # OLD LABELS
     "bat_left",
     "bat_top",
