@@ -54,24 +54,24 @@ config.yolo.channels = 1
 config.yolo.tiny = True
 config.yolo.small = True
 config.yolo.weights_type = "yolo"
-config.yolo.activation = "hswish" # leaky, hswish
-config.yolo.backbone = "yolo" # yolo, mobilenetv3-large, mobilenetv3-small
+config.yolo.activation = "hswish"  # leaky, hswish
+config.yolo.backbone = "yolo"  # yolo, mobilenetv3-large, mobilenetv3-small
 config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights"
 
 ## training
 config.yolo.batch_size = 2 if utils.isme() else 16
 config.yolo.accumulation_steps = 1 if utils.isme() else 4
-config.yolo.loss = "eiou" #"ciou", "eiou", "diou"
+config.yolo.loss = "eiou"  # "ciou", "eiou", "diou"
 
 config.yolo.burn_in = 1000
-config.yolo.lr = 0.000261 #1e-3
+config.yolo.lr = 0.000261  # 1e-3
 config.yolo.decay = 0.0005
 config.yolo.momentum = 0.95
 config.yolo.label_smoothing = 0.1
 
 config.yolo.max_steps = 400000
-config.yolo.map_after_steps = 500 #500
-config.yolo.map_on_step_mod = 20 #50
+config.yolo.map_after_steps = 500  # 500
+config.yolo.map_on_step_mod = 20  # 50
 config.yolo.validation_freq = 10 if utils.isme() else 10
 config.yolo.n_workers = 12
 config.yolo.validation_steps = -1 if utils.isme() else 2
@@ -112,7 +112,6 @@ config.yolo.weights = weights
 config.yolo.full_classes = architecture_type["edges"][0]
 
 
-
 ###############
 # mobile_unet #
 ###############
@@ -121,7 +120,7 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 608 #448  # 448 #224 #608 #416  #288
+config.unet.input_size = 608  # 448  # 448 #224 #608 #416  #288
 config.unet.channels = 3
 config.unet.weights = Path("mobile_unet/weights/best.pth")
 
@@ -168,13 +167,13 @@ config.augment.yolo = EasyDict()
 config.augment.yolo.img_params = EasyDict()
 config.augment.yolo.img_params.channels = 1
 config.augment.yolo.img_params.keep_ar = True
-config.augment.yolo.img_params.resize = 1000 # resizes longest image axis to that size
+config.augment.yolo.img_params.resize = 1000  # resizes longest image axis to that size
 
 config.augment.unet = EasyDict()
 config.augment.unet.img_params = EasyDict()
 config.augment.unet.img_params.channels = 1  # config.unet.channels
 config.augment.unet.img_params.keep_ar = True
-config.augment.unet.img_params.resize = 640 # resizes longest image axis to that size
+config.augment.unet.img_params.resize = 640  # resizes longest image axis to that size
 
 # whether to perform flip and rotation on the dataset
 config.augment.perform_train = True
@@ -229,6 +228,7 @@ config.augment.label_transition_rotation = {
     "arrow_top": "arrow_right",
     "arrow_right": "arrow_bot",
     "arrow_bot": "arrow_left",
+    "text": "text",
 }
 
 # flip over y axis
@@ -276,6 +276,7 @@ config.augment.label_transition_flip = {
     "arrow_left": "arrow_right",
     "arrow_top": "arrow_bot",
     "arrow_bot": "arrow_top",
+    "text": "text",
 }
 
 # removes classes from dataset
