@@ -138,6 +138,7 @@ if __name__ == "__main__":
         loss_iou_type=config.yolo.loss,
         loss_verbose=0,
         run_eagerly=config.yolo.run_eagerly,
+        loss_gamma=config.yolo.loss_gamma
     )
 
     # dataset creation

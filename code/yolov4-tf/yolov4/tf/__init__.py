@@ -324,6 +324,7 @@ class YOLOv4(BaseClass):
         loss_iou_type: str = "ciou",
         loss_verbose=1,
         optimizer=optimizers.Adam(learning_rate=1e-4),
+        loss_gamma=0.0,
         **kwargs,
     ):
         self.model.compile(
@@ -332,6 +333,7 @@ class YOLOv4(BaseClass):
                 batch_size=self.batch_size,
                 iou_type=loss_iou_type,
                 verbose=loss_verbose,
+                gamma=loss_gamma
             ),
             **kwargs,
         )
