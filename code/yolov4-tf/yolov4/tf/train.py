@@ -31,8 +31,9 @@ from tensorflow.keras.losses import BinaryCrossentropy, Loss, Reduction
 from numba import njit
 import numpy as np
 
+
 class YOLOv4Loss(Loss):
-    def __init__(self, batch_size, iou_type, verbose=0):
+    def __init__(self, batch_size, iou_type, verbose=0, gamma=0.0):
         super(YOLOv4Loss, self).__init__(name="YOLOv4Loss")
         self.batch_size = batch_size
         if iou_type == "iou":
@@ -42,15 +43,13 @@ class YOLOv4Loss(Loss):
         elif iou_type == "ciou":
             self.bbox_xiou = bbox_ciou
         elif iou_type == "eiou":
-            self.bbox_xiou = bbox_eiou
+            self.bbox_xiou = lambda bboxes1, bboxes2: bbox_eiou(bboxes1, bboxes2, gamma)
 
         self.verbose = verbose
 
         self.while_cond = lambda i, iou: tf.less(i, self.batch_size)
 
-        self.prob_binaryCrossentropy = BinaryCrossentropy(
-            reduction=Reduction.NONE
-        )
+        self.prob_binaryCrossentropy = BinaryCrossentropy(reduction=Reduction.NONE)
 
     def call(self, y_true, y_pred):
         """
@@ -66,12 +65,8 @@ class YOLOv4Loss(Loss):
         else:
             _, g_height, g_width, _, box_size = y_pred.shape
 
-        y_true = tf.reshape(
-            y_true, shape=(-1, g_height * g_width * 3, box_size)
-        )
-        y_pred = tf.reshape(
-            y_pred, shape=(-1, g_height * g_width * 3, box_size)
-        )
+        y_true = tf.reshape(y_true, shape=(-1, g_height * g_width * 3, box_size))
+        y_pred = tf.reshape(y_pred, shape=(-1, g_height * g_width * 3, box_size))
         # print("ypred", y_pred.shape)
 
         truth_xywh = y_true[..., 0:4]
@@ -160,9 +155,7 @@ class YOLOv4Loss(Loss):
         # Probabilities Loss
         prob_loss = self.prob_binaryCrossentropy(truth_prob, pred_prob)
         prob_loss = one_obj * prob_loss[..., tf.newaxis]
-        prob_loss = tf.reduce_mean(
-            tf.reduce_sum(prob_loss, axis=(1, 2)) * num_classes
-        )
+        prob_loss = tf.reduce_mean(tf.reduce_sum(prob_loss, axis=(1, 2)) * num_classes)
 
         total_loss = xiou_loss + conf_loss + prob_loss
 
@@ -221,7 +214,6 @@ def bbox_iou_njit(bboxes1, bboxes2):
     iou = inter_area / (union_area + 1e-8)
 
     return iou
-
 
 
 def bbox_iou(bboxes1, bboxes2):
@@ -307,9 +299,7 @@ def bbox_giou(bboxes1, bboxes2):
     iou = inter_area / (union_area + 1e-8)
 
     enclose_left_up = tf.minimum(bboxes1_coor[..., :2], bboxes2_coor[..., :2])
-    enclose_right_down = tf.maximum(
-        bboxes1_coor[..., 2:], bboxes2_coor[..., 2:]
-    )
+    enclose_right_down = tf.maximum(bboxes1_coor[..., 2:], bboxes2_coor[..., 2:])
 
     enclose_section = enclose_right_down - enclose_left_up
     enclose_area = enclose_section[..., 0] * enclose_section[..., 1]
@@ -360,9 +350,7 @@ def bbox_ciou(bboxes1, bboxes2):
     iou = inter_area / (union_area + 1e-8)
 
     enclose_left_up = tf.minimum(bboxes1_coor[..., :2], bboxes2_coor[..., :2])
-    enclose_right_down = tf.maximum(
-        bboxes1_coor[..., 2:], bboxes2_coor[..., 2:]
-    )
+    enclose_right_down = tf.maximum(bboxes1_coor[..., 2:], bboxes2_coor[..., 2:])
 
     enclose_section = enclose_right_down - enclose_left_up
 
@@ -389,7 +377,8 @@ def bbox_ciou(bboxes1, bboxes2):
 
     return ciou
 
-def bbox_eiou(bboxes1, bboxes2):
+
+def bbox_eiou(bboxes1, bboxes2, gamma):
     """
     Efficient IoU: https://arxiv.org/abs/2101.08158
     @param bboxes1: (a, b, ..., 4)
@@ -430,9 +419,7 @@ def bbox_eiou(bboxes1, bboxes2):
     iou = inter_area / (union_area + 1e-8)
 
     enclose_left_up = tf.minimum(bboxes1_coor[..., :2], bboxes2_coor[..., :2])
-    enclose_right_down = tf.maximum(
-        bboxes1_coor[..., 2:], bboxes2_coor[..., 2:]
-    )
+    enclose_right_down = tf.maximum(bboxes1_coor[..., 2:], bboxes2_coor[..., 2:])
 
     enclose_section = enclose_right_down - enclose_left_up
 
@@ -441,13 +428,19 @@ def bbox_eiou(bboxes1, bboxes2):
     rho_2 = center_diagonal[..., 0] ** 2 + center_diagonal[..., 1] ** 2
     diou = iou - rho_2 / (c_2 + 1e-8)
 
-    dwdh = (bboxes2[..., 2:4] - bboxes1[..., 2:4])**2
-    dwdh /= enclose_section**2
+    dwdh = (bboxes2[..., 2:4] - bboxes1[..., 2:4]) ** 2
+    dwdh /= enclose_section ** 2
     dw, dh = dwdh[..., 0], dwdh[..., 1]
 
     eiou = diou - dw - dh
+    focal_eiou = tf.cond(
+        tf.equal(gamma, 0),
+        lambda: eiou,
+        lambda: (iou ** gamma) * eiou
+    )
 
-    return eiou
+    return focal_eiou
+
 
 class SaveWeightsCallback(Callback):
     def __init__(
