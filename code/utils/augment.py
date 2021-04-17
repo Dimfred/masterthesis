@@ -10,6 +10,8 @@ from pathlib import Path
 import click
 from tabulate import tabulate
 import copy
+from concurrent.futures import ThreadPoolExecutor
+import time
 
 from typing import List, Union, Tuple, Callable
 from easydict import EasyDict
@@ -53,6 +55,9 @@ class CircuitAugmentator:
         if clean:
             self.clean(self.train_out_dir)
             self.clean(self.valid_out_dir)
+
+        # self.executor = ThreadPoolExecutor(max_workers=32)
+        # self.future_results = []
 
     def imread(self, path: Path):
         _imread_type = (
@@ -160,7 +165,6 @@ class YoloAugmentator(CircuitAugmentator):
         self.flip_text = flip_text
         self.oversample_text = oversample_text
 
-
     @staticmethod
     def fileloader(path: Path):
         img_paths = utils.list_imgs(path)
@@ -183,6 +187,10 @@ class YoloAugmentator(CircuitAugmentator):
         print("Augment: Valid")
         self.copy_classes(self.valid_dir, self.valid_out_dir)
         self.perform(self.valid_files, self.valid_out_dir, perform_augmentation=False)
+
+        self.executor.shutdown(wait=True)
+        for future in self.future_results:
+            future.result()
 
     def perform(
         self,
@@ -228,7 +236,6 @@ class YoloAugmentator(CircuitAugmentator):
                 elif self.oversample_text:
                     self.write(file, img, content, degree, False, output_dir)
 
-
         # flip
         if not utils.has_annotation(file):
             img = self.flip(oimg)
@@ -241,8 +248,6 @@ class YoloAugmentator(CircuitAugmentator):
                 self.write(file, img, content, 0, True, output_dir)
             elif self.oversample_text:
                 self.write(file, img, content, 0, True, output_dir)
-
-
 
         # rotate flipped image
         if not utils.has_annotation(file):
@@ -278,12 +283,18 @@ class YoloAugmentator(CircuitAugmentator):
         img_filename = f"{filename}{img_path.suffix}"
         label_filename = f"{filename}.txt"
 
-        cv.imwrite(str(output_dir / img_filename), img)
+        def write_():
+            cv.imwrite(str(output_dir / img_filename), img)
+            with open(str(output_dir / label_filename), "w") as label_file:
+                for c in content:
+                    label_file.write(" ".join(str(i) for i in c))
+                    label_file.write("\n")
+        write_()
 
-        with open(str(output_dir / label_filename), "w") as label_file:
-            for c in content:
-                label_file.write(" ".join(str(i) for i in c))
-                label_file.write("\n")
+        # res = self.executor.submit(write_)
+        # self.future_results.append(res)
+
+
 
     def make_symlink(self, img_filename):
         img_sym = str(self.preprocessed_dir / img_filename)

@@ -170,9 +170,9 @@ config.augment.yolo.img_params.keep_ar = True
 config.augment.yolo.img_params.resize = 1000  # resizes longest image axis to that size
 
 config.augment.yolo.text = EasyDict()
-config.augment.yolo.text.rotate = False # whether to rotate files where text is present
-config.augment.yolo.text.flip = True # whether to flip files where text is present
-config.augment.yolo.text.oversample = True # whether to oversample files with text
+config.augment.yolo.text.rotate = True  # whether to rotate files where text is present
+config.augment.yolo.text.flip = True  # whether to flip files where text is present
+config.augment.yolo.text.oversample = False  # whether to oversample files with text
 
 
 config.augment.unet = EasyDict()
@@ -182,7 +182,7 @@ config.augment.unet.img_params.keep_ar = True
 config.augment.unet.img_params.resize = 640  # resizes longest image axis to that size
 
 # whether to perform flip and rotation on the dataset
-config.augment.perform_train = False
+config.augment.perform_train = True
 config.augment.perform_valid = False
 config.augment.perform_merged = True
 
@@ -355,7 +355,6 @@ config.labels_and_files_to_remove = [
     # "arrow_top",
     # "arrow_bot",
     # "text",
-
     # OLD LABELS
     "bat_left",
     "bat_top",
