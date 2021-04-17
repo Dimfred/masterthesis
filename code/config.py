@@ -67,7 +67,7 @@ config.yolo.loss_gamma = 0.0
 config.yolo.burn_in = 1000
 config.yolo.lr = 0.000261  # 1e-3
 config.yolo.decay = 0.0005
-config.yolo.momentum = 0.95
+config.yolo.momentum = 0.90
 config.yolo.label_smoothing = 0.1
 
 config.yolo.max_steps = 400000

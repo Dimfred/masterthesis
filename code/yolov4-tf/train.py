@@ -114,10 +114,13 @@ if __name__ == "__main__":
     print(yolo.classes)
     print("---------------------------------------------------")
 
-    # optimizer = optimizers.Adam(learning_rate=config.yolo.lr)
-    optimizer = optimizers.SGD(
-        learning_rate=config.yolo.lr, momentum=config.yolo.momentum
+    # optimizer = optimizers.Adam(learning_rate=config.yolo.lr, amsgrad=False)
+    optimizer = optimizers.Adam(
+        learning_rate=config.yolo.lr, momentum=config.yolo.momentum, amsgrad=True
     )
+    # optimizer = optimizers.SGD(
+    #     learning_rate=config.yolo.lr, momentum=config.yolo.momentum
+    # )
     # optimizer = tfa.optimizers.SGDW(
     #     learning_rate=config.yolo.lr,
     #     momentum=config.yolo.momentum,
@@ -138,7 +141,7 @@ if __name__ == "__main__":
         loss_iou_type=config.yolo.loss,
         loss_verbose=0,
         run_eagerly=config.yolo.run_eagerly,
-        loss_gamma=config.yolo.loss_gamma
+        loss_gamma=config.yolo.loss_gamma,
     )
 
     # dataset creation
