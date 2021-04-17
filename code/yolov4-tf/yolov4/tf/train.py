@@ -436,7 +436,8 @@ def bbox_eiou(bboxes1, bboxes2, gamma):
     focal_eiou = tf.cond(
         tf.equal(gamma, 0.0),
         lambda: eiou,
-        lambda: -((1 - iou) ** gamma) * backend.log(iou + 1e-8) * eiou,
+        # lambda: -((1 - iou) ** gamma) * backend.log(iou + 1e-8) * eiou, # focal*-eiou
+        lambda: ((1 - iou) ** gamma) * eiou,  # focal-eiou
     )
 
     return focal_eiou
