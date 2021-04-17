@@ -29,7 +29,7 @@ if __name__ == "__main__":
             continue
 
         img_path = label_dir / file_
-        label_path = utils.label_file_from_img(img_path)
+        label_path = utils.Yolo.label_from_img(img_path)
 
         img = cv.imread(str(img_path), cv.IMREAD_GRAYSCALE)
         img = utils.resize_max_axis(img, 1200)
@@ -41,7 +41,7 @@ if __name__ == "__main__":
         # extract all bboxes from the img
         extracted_bboxes = []
         for bbox in bboxes:
-            x1, y1, x2, y2 = bbox.abs()
+            x1, y1, x2, y2 = bbox.abs
             extracted_bbox = cv.resize(img[y1:y2, x1:x2], (100, 100))
             extracted_bbox = np.pad(extracted_bbox, ((0, 10), (0, 10)))
             extracted_bboxes.append(extracted_bbox)
@@ -53,9 +53,7 @@ if __name__ == "__main__":
 
     all_bboxes = sorted(all_bboxes, key=lambda full: full[0].label)
 
-    # just using the yolo class parser
-    yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-    yolo.classes = config.yolo.classes
+    classes = utils.Yolo.parse_classes(config.train_dir / "classes.txt")
 
     # plot all bboxes
     cv.namedWindow("verify")
@@ -65,13 +63,13 @@ if __name__ == "__main__":
     max_width = 10
     max_height = 10
 
-    cur_cls_name = yolo.classes[all_bboxes[0][0].label]
+    cur_cls_name = classes[all_bboxes[0][0].label]
 
     # split all classes into seperate containers
     class_wise = []
     _current_class_wise = []
     for bbox, ex_bbox, img_path in all_bboxes:
-        cls_name = yolo.classes[bbox.label]
+        cls_name = classes[bbox.label]
 
         if cls_name == cur_cls_name:
             # append this cls
@@ -119,7 +117,7 @@ if __name__ == "__main__":
             ph, pw = page.shape[:2]
 
             yolo_bbox = cls_[0][0]
-            cls_name = yolo.classes[yolo_bbox.label]
+            cls_name = classes[yolo_bbox.label]
 
             show = base.copy()
             show = write_class_name(show, cls_name)

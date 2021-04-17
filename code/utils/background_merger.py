@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from concurrent.futures import ThreadPoolExecutor
 import cv2 as cv
 import numpy as np
 
@@ -15,29 +16,13 @@ from config import config
 class BackgroundMerger:
     def __init__(
         self,
-        fg_img_path: Union[str, Path],
-        fg_mask_path: Union[str, Path],
-        bg_path: Union[str, Path],
+        img,
+        fg_img,
+        bg_img,
     ):
-        self.fg_img_path, self.fg_mask_path, self.bg_path = (
-            fg_img_path,
-            fg_mask_path,
-            bg_path,
-        )
-
-        self.fg_img = cv.imread(str(fg_img_path))
-        self.fg_img = utils.resize_max_axis(self.fg_img, 1000)
-
-        self.fg_mask = cv.imread(str(fg_mask_path))
-        self.fg_mask = utils.resize_max_axis(self.fg_mask, 1000)
-        # TODO still dunno why this is happening
-        # normally the mask should only store bools, instead some values
-        # are 2 and 3
-        self.fg_mask[self.fg_mask == 2] = 1
-        self.fg_mask[self.fg_mask == 3] = 1
-
-        self.bg_img = cv.imread(str(bg_path))
-        self.bg_img = utils.resize_max_axis(self.bg_img, 1000)
+        self.fg_img = img
+        self.fg_mask = fg_img
+        self.bg_img = bg_img
         self.fit_bg()
 
         self.merged = None
@@ -101,18 +86,6 @@ class BackgroundMerger:
             self.bg_img = self.bg_img[:fgh, :fgw]
 
 
-by_path = lambda path: str(path)
-
-
-def list_backgrounds():
-    bg_paths = config.backgrounds_dir.glob("**/*.*")
-    return sorted(bg_paths, key=by_path)
-
-
-def list_foregrounds():
-    fg_paths = config.foregrounds_dir.glob("**/*.*")
-    return sorted(fg_paths, key=by_path)
-
 if __name__ == "__main__":
     # clear before applying anything
     dir_list = config.merged_dir.glob("**/*.*")
@@ -120,12 +93,34 @@ if __name__ == "__main__":
         os.remove(str(f))
 
 
-    bg_paths = list_backgrounds()
-    fg_paths = list_foregrounds()
+    bg_paths = config.backgrounds_dir.glob("**/*.*")
+    fg_paths = list(config.foregrounds_dir.glob("**/*.*"))
+    img_paths = [utils.img_from_fg(config.train_dir, fg_path) for fg_path in fg_paths]
 
-    for bg_path in bg_paths:
+    def read_and_store(path, target):
+        img = cv.imread(str(path))
+        img = utils.resize_max_axis(img, 1000)
+        target.append((path, img))
+
+    bgs, fgs, imgs = [], [], []
+    with ThreadPoolExecutor(max_workers=32) as executor:
+        for path in bg_paths:
+            executor.submit(read_and_store, path, bgs)
+
+        for path in fg_paths:
+            executor.submit(read_and_store, path, fgs)
+
+        for path in img_paths:
+            executor.submit(read_and_store, path, imgs)
+
+    imgs = dict(imgs)
+    for i in range(len(fgs)):
+        fgs[i][1][fgs[i][1] == 2] = 0
+        fgs[i][1][fgs[i][1] == 3] = 1
+
+    for bg_path, bg_img in bgs:
         print("Projecting on: ", bg_path)
-        for fg_path in fg_paths:
+        for fg_path, fg_img in fgs:
             print("\tFG:", fg_path)
 
             img_path = utils.img_from_fg(config.train_dir, fg_path)
@@ -133,7 +128,9 @@ if __name__ == "__main__":
                 print("IMG_NAME NOT FOUND SHOULD NOT HAPPEN")
                 continue
 
-            merger = BackgroundMerger(img_path, fg_path, bg_path)
+            img = imgs[img_path]
+
+            merger = BackgroundMerger(img, fg_img, bg_img)
             merged_img = merger.merge(debug=False)
 
             # save the merged img
