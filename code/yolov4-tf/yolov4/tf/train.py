@@ -436,8 +436,12 @@ def bbox_eiou(bboxes1, bboxes2, gamma):
     focal_eiou = tf.cond(
         tf.equal(gamma, 0.0),
         lambda: eiou,
+        # Focal loss which gives more weight to boxes with good overlap
+        lambda: (iou ** gamma) * eiou
+        # Focal loss which gives more weight to boxes with bad overlap
+        # lambda: ((1 - iou) ** gamma) * eiou,  # focal-eiou
+        # Other focal loss with classical focal, converges bad
         # lambda: -((1 - iou) ** gamma) * backend.log(iou + 1e-8) * eiou, # focal*-eiou
-        lambda: ((1 - iou) ** gamma) * eiou,  # focal-eiou
     )
 
     return focal_eiou
