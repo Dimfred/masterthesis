@@ -242,6 +242,8 @@ def merged_name(img_path, bg_path):
 def pairwise(iterable, offset=1):
     return zip(iterable[:-offset], iterable[offset:])
 
+def has_annotation(path):
+    return "_a" in str(path)
 
 def hough_inter(line1, line2):
     rho1, theta1 = line1

@@ -169,6 +169,12 @@ config.augment.yolo.img_params.channels = 1
 config.augment.yolo.img_params.keep_ar = True
 config.augment.yolo.img_params.resize = 1000  # resizes longest image axis to that size
 
+config.augment.yolo.text = EasyDict()
+config.augment.yolo.text.rotate = False # whether to rotate files where text is present
+config.augment.yolo.text.flip = True # whether to flip files where text is present
+config.augment.yolo.text.oversample = True # whether to oversample files with text
+
+
 config.augment.unet = EasyDict()
 config.augment.unet.img_params = EasyDict()
 config.augment.unet.img_params.channels = 1  # config.unet.channels

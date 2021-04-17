@@ -136,6 +136,9 @@ class YoloAugmentator(CircuitAugmentator):
         flip_transition: dict,
         # perform_augmentation: bool,
         clean: bool = True,
+        rotate_text: bool = True,
+        flip_text: bool = True,
+        oversample_text: bool = True,
     ):
         super().__init__(
             train_dir,
@@ -153,6 +156,11 @@ class YoloAugmentator(CircuitAugmentator):
         # self.perform_augmentation = perform_augmentation
         self.classes = self._parse_classes(self.train_dir)
 
+        self.rotate_text = rotate_text
+        self.flip_text = flip_text
+        self.oversample_text = oversample_text
+
+
     @staticmethod
     def fileloader(path: Path):
         img_paths = utils.list_imgs(path)
@@ -166,9 +174,13 @@ class YoloAugmentator(CircuitAugmentator):
         return img_label_paths
 
     def run(self):
+        print("---------------------------------------------------")
+        print("Augment: Train")
         self.copy_classes(self.train_dir, self.train_out_dir)
         self.perform(self.train_files, self.train_out_dir, perform_augmentation=True)
 
+        print("---------------------------------------------------")
+        print("Augment: Valid")
         self.copy_classes(self.valid_dir, self.valid_out_dir)
         self.perform(self.valid_files, self.valid_out_dir, perform_augmentation=False)
 
@@ -190,6 +202,7 @@ class YoloAugmentator(CircuitAugmentator):
     def augment(
         self, file: str, oimg, ocontent, output_dir: Path, perform_augmentation: bool
     ):
+        print(f"File: {file}")
         # rotate original image
         img = oimg.copy()
         content = copy.deepcopy(ocontent)
@@ -201,21 +214,50 @@ class YoloAugmentator(CircuitAugmentator):
         if not perform_augmentation:
             return
 
-        for degree in (90, 180, 270):
-            img = self.rotate(img)
-            content = self.calc_rotations(content)
-            self.write(file, img, content, degree, False, output_dir)
+        if not utils.has_annotation(file):
+            for degree in (90, 180, 270):
+                img = self.rotate(img)
+                content = self.calc_rotations(content)
+                self.write(file, img, content, degree, False, output_dir)
+        else:
+            for degree in (90, 180, 270):
+                if self.rotate_text:
+                    img = self.rotate(img)
+                    content = self.calc_rotations(content)
+                    self.write(file, img, content, degree, False, output_dir)
+                elif self.oversample_text:
+                    self.write(file, img, content, degree, False, output_dir)
+
 
         # flip
-        img = self.flip(oimg)
-        content = self.calc_flips(ocontent)
-        self.write(file, img, content, 0, True, output_dir)
+        if not utils.has_annotation(file):
+            img = self.flip(oimg)
+            content = self.calc_flips(ocontent)
+            self.write(file, img, content, 0, True, output_dir)
+        else:
+            if self.flip_text:
+                img = self.flip(oimg)
+                content = self.calc_flips(ocontent)
+                self.write(file, img, content, 0, True, output_dir)
+            elif self.oversample_text:
+                self.write(file, img, content, 0, True, output_dir)
+
+
 
         # rotate flipped image
-        for degree in (90, 180, 270):
-            img = self.rotate(img)
-            content = self.calc_rotations(content)
-            self.write(file, img, content, degree, True, output_dir)
+        if not utils.has_annotation(file):
+            for degree in (90, 180, 270):
+                img = self.rotate(img)
+                content = self.calc_rotations(content)
+                self.write(file, img, content, degree, True, output_dir)
+        else:
+            for degree in (90, 180, 270):
+                if self.rotate_text:
+                    img = self.rotate(img)
+                    content = self.calc_rotations(content)
+                    self.write(file, img, content, degree, False, output_dir)
+                elif self.oversample_text:
+                    self.write(file, img, content, degree, False, output_dir)
 
     def write(
         self,
@@ -570,6 +612,9 @@ def augment(target):
             config.augment.label_transition_rotation,
             config.augment.label_transition_flip,
             clean=True,
+            rotate_text=config.augment.yolo.text.rotate,
+            flip_text=config.augment.yolo.text.flip,
+            oversample_text=config.augment.yolo.text.oversample,
         )
         augmentator.run()
 
