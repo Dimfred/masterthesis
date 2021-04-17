@@ -56,7 +56,7 @@ class CircuitAugmentator:
             self.clean(self.train_out_dir)
             self.clean(self.valid_out_dir)
 
-        # self.executor = ThreadPoolExecutor(max_workers=32)
+        self.executor = ThreadPoolExecutor(max_workers=32)
         # self.future_results = []
 
     def imread(self, path: Path):
@@ -188,7 +188,7 @@ class YoloAugmentator(CircuitAugmentator):
         self.copy_classes(self.valid_dir, self.valid_out_dir)
         self.perform(self.valid_files, self.valid_out_dir, perform_augmentation=False)
 
-        # self.executor.shutdown(wait=True)
+        self.executor.shutdown(wait=True)
         # for future in self.future_results:
         #     future.result()
 
@@ -290,8 +290,7 @@ class YoloAugmentator(CircuitAugmentator):
                     label_file.write(" ".join(str(i) for i in c))
                     label_file.write("\n")
         write_()
-
-        # res = self.executor.submit(write_)
+        #res = self.executor.submit(write_)
         # self.future_results.append(res)
 
 
