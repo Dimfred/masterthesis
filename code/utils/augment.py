@@ -188,9 +188,9 @@ class YoloAugmentator(CircuitAugmentator):
         self.copy_classes(self.valid_dir, self.valid_out_dir)
         self.perform(self.valid_files, self.valid_out_dir, perform_augmentation=False)
 
-        self.executor.shutdown(wait=True)
-        for future in self.future_results:
-            future.result()
+        # self.executor.shutdown(wait=True)
+        # for future in self.future_results:
+        #     future.result()
 
     def perform(
         self,
