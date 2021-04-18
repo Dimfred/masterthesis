@@ -15,17 +15,17 @@
 		\draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (-0.5,8) -- (0.75,8) node [black,midway,yshift=+0.6cm]{input layer};
 
         % weight layer
-        \node[weight](w00) at (2, 7.5, 0){$w_{0,0}$};
-        \node[weight](w01) at (2, 6.5, 0){$w_{0,1}$};
+        \node[weight](w00) at (2, 7.5, 0){$w^{(1)}_{0,0}$};
+        \node[weight](w01) at (2, 6.5, 0){$w^{(1)}_{0,1}$};
 
-        \node[weight](w10) at (2, 5.5, 0){$w_{1,0}$};
-        \node[weight](w11) at (2, 4.5, 0){$w_{1,1}$};
+        \node[weight](w10) at (2, 5.5, 0){$w^{(1)}_{1,0}$};
+        \node[weight](w11) at (2, 4.5, 0){$w^{(1)}_{1,1}$};
 
-        \node[weight](w20) at (2, 3.5, 0){$w_{2,0}$};
-        \node[weight](w21) at (2, 2.5, 0){$w_{2,1}$};
+        \node[weight](w20) at (2, 3.5, 0){$w^{(1)}_{2,0}$};
+        \node[weight](w21) at (2, 2.5, 0){$w^{(1)}_{2,1}$};
 
-        \node[weight](wn0) at (2, 0.5, 0){$w_{n,0}$};
-        \node[weight](wn1) at (2, -0.5, 0){$w_{n,0}$};
+        \node[weight](wn0) at (2, 0.5, 0){$w^{(1)}_{n,0}$};
+        \node[weight](wn1) at (2, -0.5, 0){$w^{(1)}_{n,0}$};
 
         % sum layer
         \node[unit](sum0) at (5, 5, 0){$\Sigma$};
@@ -39,8 +39,8 @@
 		\draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (1.5,8) -- (7.75,8) node [black,midway,yshift=+0.6cm]{1. layer};
 
         % weight layer 2
-        \node[weight](w200) at (9, 5, 0){$w_{0,0}$};
-        \node[weight](w201) at (9, 2, 0){$w_{0,1}$};
+        \node[weight](w200) at (9, 5, 0){$w^{(2)}_{0,0}$};
+        \node[weight](w201) at (9, 2, 0){$w^{(2)}_{0,1}$};
 
         % sum layer 2
         \node[unit](sum2) at (11, 3.5, 0){$\Sigma$};

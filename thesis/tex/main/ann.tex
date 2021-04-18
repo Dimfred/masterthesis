@@ -12,7 +12,7 @@ It states that the output $\hat{y} \in \{-1, 1\}$ is defined by the sign of the 
 The decision boundary of this function is a linear function, which means non-linear problems like the XOR-problem, can't be solved with the perceptron TODO CITE.
 
 \begin{equation}
-    \hat{y} = sign(W^Tx)
+    \hat{y} = sign(V^Tx)
     \label{form:perceptron}
 \end{equation}
 
@@ -28,7 +28,7 @@ The learning procedure of an \ac{ANN} is as follows:
 \begin{enumerate}
     \item The input data gets fed into the network and produces an output.
     \item The similarity of the output and the desired output (label) are measured using a loss function.
-    \item The loss is used to calculate the gradients by propagating it back through the network.
+    \item The loss is used to calculate the gradients by propagating it back through the network TODO chainrule.
     \item The gradients are used in a gradient descent algorithm to update and optimize the weights of the network.
     \item The above is performed until the weights don't change anymore.
 \end{enumerate}
@@ -47,7 +47,7 @@ Finally, the mean is taken of the resulting sum, where $n$ here denotes the dime
 
 \begin{equation}
     \label{eq:mse}
-    MSE(y, \hat{y}) = \frac{1}{n} * \sum_{i=1}^{n}(y_i - \hat{y}_i)^2
+    MSE(y, \hat{y}) = \frac{1}{n} \sum_{i=1}^{n}(y_i - \hat{y}_i)^2
 \end{equation}
 
 \subsubsection{Backward Propagation}
@@ -64,7 +64,7 @@ In particular, this is important because a gradient is needed to update the weig
 \subsection{Convolutional Neural Networks}
 
 While \acp{MLP} perform pretty well on vectorial data, multidimensional data like images for example, can only be fed to a network when it was previously flattened into a vector.
-One problem that arises is that when flattening for example an image of size $100x100$, this would already require the input size of the network to have $10.000$ weights per neuron in the next layer.
+One problem that arises is that when flattening for example an image of size $100 \times 100$, this would already require the input size of the network to have $10.000$ weights per neuron in the next layer.
 This increases drastically the capacity of the network and hence requires a larger training set.
 Additionally nearby pixels in images are often highly correlated and classical unstructured \ac{ANN} fails to capture such spatial dependencies. \cite{lecun_lenet}
 
@@ -82,7 +82,7 @@ The classical \ac{CNN} architecture is comprised of three different layer types:
 \subsubsection{Convolutional Layer}
 Convolutional layers form the major component in a \ac{CNN}.
 As the name suggest the underlying mathematical foundation of those layers is the convolution.
-The equation for a convolution (see eq. \ref{eq:conv}), states that a function $f$ convolved with another function $g$, is the same as the multiplication of those two functions, while $g$ is shifted over $f$.
+The equation for a convolution (see eq. \ref{eq:conv}), states that a function $f$ convolved with another function $g$, is the multiplication of those two functions, while $g$ is shifted over $f$.
 The final result is then obtained by taking the integral over the whole domain. \cite{dl}
 
 \begin{equation}
@@ -90,15 +90,15 @@ The final result is then obtained by taking the integral over the whole domain. 
     \label{eq:conv}
 \end{equation}
 
-In simpler terms that just means there is an image $I$ with $I \in \N^{W_IxH_IxC_I}$, where $W_I$ and $H_I$ are the width and height of the image and $C_I$ being the number of channels.
-Furthermore, there is a kernel $K$ with $K \in \N^{W_KxH_KxC_I}$.
+In simpler terms that just means there is an image $I \in \R^{WxHxC}$, where $W$ and $H$ are the width and height of the image and $C$ being the number of channels.
+Furthermore, there is a kernel $K$ with $K \in \R^{W_KxH_KxC}$.
 The image and the kernel are now convolved by moving the kernel over the image and at each position an element-wise multiplication of the overlapping area of the image and the kernel is taken.
 Afterwards, the result is summed up and used as an output element in the convolution result.
 Finally, the kernel is shifted further until the whole image has been convolved.
 How much pixel a kernel is shifted at a time depends on the used stride.
 The higher the stride the less local information is preserved.
 Typically a stride of $1$ or $2$ is used.
-An example of a convolution of a $4x4$ input with a $3x3$ kernel and a stride of $1$ is given in figure \ref{fig:conv_example}.
+An example of a convolution of a $4\times4$ input with a $3\times3$ kernel and a stride of $1$ is given in figure \ref{fig:conv_example}.
 
 \begin{figure}
 \begin{center}
@@ -114,7 +114,7 @@ An example of a convolution of a $4x4$ input with a $3x3$ kernel and a stride of
 
 \subsubsection{Pooling Layer}
 Pooling layers in \acp{CNN} are used to further reduce the dimensionality of the output.
-During the pooling operation information across spatial locations is fused by sliding a window (typically of size $2x2$ or $3x3$) over the input and performing a function on the values inside the window.
+During the pooling operation information across spatial locations is fused by sliding a window (typically of size $2\times2$ or $3\times3$) over the input and performing a function on the values inside the window.
 In the case of max pooling the used function is the $MAX$ function, therefore only the maximum value inside the window is considered and used in the pooling output.
 This decreases the number of parameters and hence reduces the computational cost. \cite{dl}
 

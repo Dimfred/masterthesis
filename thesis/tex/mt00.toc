@@ -20,8 +20,8 @@
 \contentsline {subsubsection}{Forward Propagation}{7}{}%
 \contentsline {subsubsection}{Loss}{8}{}%
 \contentsline {subsubsection}{Backward Propagation}{8}{}%
-\contentsline {subsubsection}{Optimization}{9}{}%
-\contentsline {subsection}{\numberline {2.3.2}Convolutional Neural Networks}{9}{}%
+\contentsline {subsubsection}{Optimization}{8}{}%
+\contentsline {subsection}{\numberline {2.3.2}Convolutional Neural Networks}{8}{}%
 \contentsline {subsubsection}{Convolutional Layer}{9}{}%
 \contentsline {subsubsection}{Pooling Layer}{10}{}%
 \contentsline {subsubsection}{Fully-Connected Layer}{10}{}%
