@@ -285,12 +285,8 @@ class YoloAugmentator(CircuitAugmentator):
         label_filename = f"{filename}.txt"
 
         def write_():
-            label_path = str(output_dir / label_filename)
-            if label_path in self.path_mem:
-                raise ValueError("ALREADY USED")
-
             cv.imwrite(str(output_dir / img_filename), img)
-            with open(label_path, "w") as label_file:
+            with open(str(output_dir / label_filename), "w") as label_file:
                 for c in content:
                     label_file.write(" ".join(str(i) for i in c))
                     label_file.write("\n")
