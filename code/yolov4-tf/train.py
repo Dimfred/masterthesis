@@ -77,7 +77,7 @@ def train_augmentations(image, bboxes):
             border_mode=cv.BORDER_REFLECT_101,
             p=0.3,
         ),
-        A.RandomScale(scale_limit=0.3, p=0.3),
+        A.RandomScale(scale_limit=0.5, p=0.3),
         # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
         A.RandomSizedBBoxSafeCrop(
             width=None, # unused
@@ -173,10 +173,12 @@ if __name__ == "__main__":
 
         if step < burn_in:
             return lr * (step / burn_in) ** 4
-        if step > 7000:
-            return lr / 10
-        # if step > 3000:
+        # if step > 7000:
+        #     return lr / 10
+        # if step > 4000:
         #     return lr / 5
+        if step > 4000:
+            return lr / 10
 
         return lr
 
