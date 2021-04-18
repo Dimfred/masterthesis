@@ -115,12 +115,12 @@ if __name__ == "__main__":
     print("---------------------------------------------------")
 
     # optimizer = optimizers.Adam(learning_rate=config.yolo.lr, amsgrad=False)
-    optimizer = optimizers.Adam(
-        learning_rate=config.yolo.lr, momentum=config.yolo.momentum, amsgrad=True
-    )
-    # optimizer = optimizers.SGD(
-    #     learning_rate=config.yolo.lr, momentum=config.yolo.momentum
+    # optimizer = optimizers.Adam(
+    #     learning_rate=config.yolo.lr, momentum=config.yolo.momentum, amsgrad=True
     # )
+    optimizer = optimizers.SGD(
+        learning_rate=config.yolo.lr, momentum=config.yolo.momentum
+    )
     # optimizer = tfa.optimizers.SGDW(
     #     learning_rate=config.yolo.lr,
     #     momentum=config.yolo.momentum,
