@@ -50,6 +50,7 @@ def create_model():
 
 # fmt:off
 base_augmentations = A.Compose([
+    A.Normalize(mean=config.train.mean, std=config.train.std, max_pixel_value=255),
     A.PadIfNeeded(
         min_height=1000,
         min_width=1000,
@@ -61,7 +62,7 @@ base_augmentations = A.Compose([
         width=config.yolo.input_size,
         height=config.yolo.input_size,
         always_apply=True
-    )
+    ),
 ])
 
 

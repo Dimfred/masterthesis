@@ -214,5 +214,40 @@ Finally, each of the above losses is multiplied with a tunable hyperparameter an
 
 \subsubsection{Non-Maximum Suppression}
 
-During prediction time to further increase the detection performance a \ac{NMS} algorithm is applied.
-More precisely \ac{DIoU}-\ac{NMS} \cite{diou}, since it has shown to perform better than classical \ac{NMS} \cite{soft_nms}, especially in occlusion cases.
+During prediction time often multiple bounding boxes are predicted for one object.
+To deal with this and suppress unnecessary bounding boxes a \ac{NMS} algorithm is applied.
+More precisely \ac{DIoU}-\ac{NMS} \cite{diou}, since it has shown to perform better than classical \ac{NMS} \cite{soft_nms}, especially in cases of occlusion.
+
+In the following the algorithm for \ac{DIoU}-\ac{NMS} is presented.
+The input is a set of bounding boxes $B$ as well as the corresponding prediction scores $S$ and a suppression threshold $\epsilon$.
+The algorithm first selects the bounding box $B_m$ with the highest score $S_m$ and compares it to every other bounding box $b_i$ in the set.
+If the \ac{DIoU} measure between $B_m$ and $b_i$ is above the threshold $\epsilon$, the bounding box $b_i$ gets suppressed by removing it from the set $B$.
+This process is repeated until no bounding boxes are present in $B$.
+
+\begin{algorithm}[caption={DIoU-NMS Algorithm TODO caption to bottom and format}, label={alg1}]
+input: $B$ = {$b_1$,...,$b_N$}, $S$ = {$s_1$,...,$s_N$}, $\epsilon$
+       $B$: list of bounding box proposals
+       $S$: list of bounding box scores
+       $\epsilon$: NMS threshold
+output: $B_S \subseteq B$, $B_S = \{b_1,...,b_M\}$
+        $B_S$: list of bounding boxes after suppression
+        $S_S$: list of bounding box scores after suppression
+
+begin
+$B_S \gets \{\}$; $S_S \gets \{\}$
+while $B \neq empty$ do
+    $m \gets$ argmax($S$)
+    $B_m \gets B[m]$; $S_m \gets S[m]$
+
+    $B_S \gets B_S \cup B_m$; $S_S \gets S_S \cup S_m$
+    $B \gets B - B_m$; $S \gets S - S_m$
+
+    foreach $b_i$, $s_i$ in $B$, $S$ do
+        if $DIoU(B_m, b_i) \geq \epsilon$ then
+            $B \gets B - b_i; S \gets S - s_i$
+        end
+    end
+
+    return $B_S$, $S_S$
+end
+\end{algorithm}

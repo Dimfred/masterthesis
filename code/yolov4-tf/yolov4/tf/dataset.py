@@ -439,7 +439,8 @@ class Dataset:
         if self.augmentations is not None:
             x, y = self.augmentations(x, y)
 
-        x = np.expand_dims(x / 255.0, axis=0)
+        # x = np.expand_dims(x / 255.0, axis=0)
+        x = np.expand_dims(x, axis=0)
         y = self.bboxes_to_ground_truth(y)
 
         return x, y

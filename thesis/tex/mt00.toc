@@ -51,8 +51,8 @@
 \contentsline {subsubsection}{Head}{21}{}%
 \contentsline {subsubsection}{Loss}{21}{}%
 \contentsline {subsubsection}{Non-Maximum Suppression}{23}{}%
-\contentsline {section}{\numberline {2.7}Segmentation}{23}{}%
-\contentsline {section}{\numberline {2.8}Connected Components Analysis}{23}{}%
+\contentsline {section}{\numberline {2.7}Segmentation}{24}{}%
+\contentsline {section}{\numberline {2.8}Connected Components Analysis}{24}{}%
 \contentsline {section}{\numberline {2.9}Optical Character Recognition}{24}{}%
 \contentsline {section}{\numberline {2.10}Hypergraphs}{24}{}%
 \contentsline {section}{\numberline {2.11}Metrics}{24}{}%

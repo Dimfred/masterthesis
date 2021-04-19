@@ -1,5 +1,7 @@
 from easydict import EasyDict
 from pathlib import Path
+
+import easydict
 import utils
 
 config = EasyDict()
@@ -42,6 +44,10 @@ config.labeled_safe_dir = config.data / "labeled_safe"
 
 # weights
 config.weights_dir = Path("weights")
+
+config.train = EasyDict()
+config.train.mean = 0.631572
+config.train.std = 0.126536
 
 ########
 # yolo #
