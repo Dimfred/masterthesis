@@ -125,12 +125,13 @@ if __name__ == "__main__":
 
             img_path = utils.img_from_fg(config.train_dir, fg_path)
             if not img_path.exists():
-                img_path = utils.img_from_fg(config.valid_dir, fg_path)
-                if not img_path.exists():
+                valid_img_path = utils.img_from_fg(config.valid_dir, fg_path)
+                test_img_path = utils.img_from_fg(config.test_dir, fg_path)
+                if not (valid_img_path.exists() or test_img_path.exists()):
                     print("-------------------------------------------------------")
                     print("-------------------------------------------------------")
                     print("-------------------------------------------------------")
-                    print("IMG_NAME NOT FOUND IN TRAIN NOR VALID SHOULD NOT HAPPEN")
+                    print("IMG_NAME NOT FOUND !!!!!!!!!!!!!!!!!! SHOULD NOT HAPPEN")
                     print("-------------------------------------------------------")
                     print("-------------------------------------------------------")
                     print("-------------------------------------------------------")
