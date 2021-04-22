@@ -65,14 +65,17 @@ class CircuitAugmentator:
                         self.valid_files.append((merged_img, merged_label))
                         break
 
-            by_img_name = lambda x: x[0]
-            self.train_files = sorted(self.train_files, key=by_img_name)
 
+        by_img_name = lambda x: x[0]
+        self.train_files = sorted(self.train_files, key=by_img_name)
+        self.valid_files = sorted(self.valid_files, key=by_img_name)
         self.test_files = fileloader(self.test_dir)
+        self.test_files = sorted(self.test_files, key=by_img_name)
 
         if clean:
             self.clean(self.train_out_dir)
             self.clean(self.valid_out_dir)
+            self.clean(self.test_out_dir)
 
     def imread(self, path: Path):
         _imread_type = (
