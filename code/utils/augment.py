@@ -27,6 +27,8 @@ class CircuitAugmentator:
         train_out_dir: Path,
         valid_dir: Path,
         valid_out_dir: Path,
+        test_dir: Path,
+        test_out_dir: Path,
         merged_dir: Path,
         img_params: EasyDict,
         fileloader: Callable[[Path], List[Tuple[Path, Path]]],
@@ -39,26 +41,38 @@ class CircuitAugmentator:
         self.valid_dir = valid_dir
         self.valid_out_dir = valid_out_dir
 
+        self.test_dir = test_dir
+        self.test_out_dir = test_out_dir
+
         self.merged_dir = merged_dir
 
         self.img_params = img_params
 
         self.train_files = fileloader(self.train_dir)
+        self.valid_files = fileloader(self.valid_dir)
         if self.merged_dir is not None:
-            self.train_files.extend(fileloader(self.merged_dir))
+            merged_files = fileloader(self.merged_dir)
+
+            for merged_img, merged_label in merged_files:
+                for img_path, _ in self.train_files:
+                    if str(merged_img.name).startswith(img_path.stem):
+                        self.train_files.append((merged_img, merged_label))
+                        break
+
+            for merged_img, merged_label in merged_files:
+                for img_path, _ in self.valid_files:
+                    if str(merged_img.name).startswith(img_path.stem):
+                        self.valid_files.append((merged_img, merged_label))
+                        break
 
             by_img_name = lambda x: x[0]
             self.train_files = sorted(self.train_files, key=by_img_name)
 
-        self.valid_files = fileloader(self.valid_dir)
+        self.test_files = fileloader(self.test_dir)
 
         if clean:
             self.clean(self.train_out_dir)
             self.clean(self.valid_out_dir)
-
-        self.executor = ThreadPoolExecutor(max_workers=32)
-        # self.future_results = []
-        self.path_mem = []
 
     def imread(self, path: Path):
         _imread_type = (
@@ -126,6 +140,7 @@ class UNetAugmentator(CircuitAugmentator):
     def run(self):
         self.perform(self.train_files, self.train_out_dir)
         self.perform(self.valid_files, self.valid_out_dir)
+        self.perform(self.test_dir, self.test_out_dir)
 
 
 class YoloAugmentator(CircuitAugmentator):
@@ -135,6 +150,8 @@ class YoloAugmentator(CircuitAugmentator):
         train_out_dir: Path,
         valid_dir: Path,
         valid_out_dir: Path,
+        test_dir: Path,
+        test_out_dir: Path,
         merged_dir: Path,
         img_params: EasyDict,
         # receives label_dir, returns List[(abs_img_path, abs_label_path)]
@@ -151,6 +168,8 @@ class YoloAugmentator(CircuitAugmentator):
             train_out_dir,
             valid_dir,
             valid_out_dir,
+            test_dir,
+            test_out_dir,
             merged_dir,
             img_params,
             YoloAugmentator.fileloader,
@@ -160,7 +179,7 @@ class YoloAugmentator(CircuitAugmentator):
         self.rot_transition = rot_transition
         self.flip_transition = flip_transition
         # self.perform_augmentation = perform_augmentation
-        self.classes = self._parse_classes(self.train_dir)
+        self.classes = utils.Yolo.parse_classes(self.train_dir / "classes.txt")
 
         self.rotate_text = rotate_text
         self.flip_text = flip_text
@@ -180,18 +199,28 @@ class YoloAugmentator(CircuitAugmentator):
 
     def run(self):
         print("---------------------------------------------------")
+        print("---------------------------------------------------")
         print("Augment: Train")
+        print("---------------------------------------------------")
+        print("---------------------------------------------------")
         self.copy_classes(self.train_dir, self.train_out_dir)
         self.perform(self.train_files, self.train_out_dir, perform_augmentation=True)
 
         print("---------------------------------------------------")
+        print("---------------------------------------------------")
         print("Augment: Valid")
-        self.copy_classes(self.valid_dir, self.valid_out_dir)
-        self.perform(self.valid_files, self.valid_out_dir, perform_augmentation=False)
+        print("---------------------------------------------------")
+        print("---------------------------------------------------")
+        self.copy_classes(self.train_dir, self.valid_out_dir)
+        self.perform(self.valid_files, self.valid_out_dir, perform_augmentation=True)
 
-        self.executor.shutdown(wait=True)
-        # for future in self.future_results:
-        #     future.result()
+        print("---------------------------------------------------")
+        print("---------------------------------------------------")
+        print("Augment: Test")
+        print("---------------------------------------------------")
+        print("---------------------------------------------------")
+        self.copy_classes(self.train_dir, self.test_out_dir)
+        self.perform(self.test_files, self.test_out_dir, perform_augmentation=False)
 
     def perform(
         self,
@@ -200,7 +229,7 @@ class YoloAugmentator(CircuitAugmentator):
         perform_augmentation: bool,
     ):
         for img_path, label_path in files:
-            labels = self._parse_labels(label_path)
+            labels = utils.Yolo.parse_labels(label_path)
 
             img = self.imread(img_path)
             self.augment(img_path, img, labels, output_dir, perform_augmentation)
@@ -290,11 +319,10 @@ class YoloAugmentator(CircuitAugmentator):
                 for c in content:
                     label_file.write(" ".join(str(i) for i in c))
                     label_file.write("\n")
+
         write_()
-        #res = self.executor.submit(write_)
+        # res = self.executor.submit(write_)
         # self.future_results.append(res)
-
-
 
     def make_symlink(self, img_filename):
         img_sym = str(self.preprocessed_dir / img_filename)
@@ -321,95 +349,6 @@ class YoloAugmentator(CircuitAugmentator):
         with open(str(output_dir / label_file), "w") as f:
             for img_path, _ in img_label_paths:
                 print(img_path, file=f)
-
-    def summary(self):
-        # reparse classes after stripper hits
-        classes = self._parse_classes(self.train_out_dir)
-
-        real_train, aug_train = self._summary(classes, self.train_out_dir)
-        real_valid, aug_valid = self._summary(classes, self.valid_out_dir)
-
-        class_names = sorted(real_train.keys())
-        summary_count = np.vstack(
-            [
-                (
-                    real_train[class_name],
-                    real_valid.get(class_name, 0),
-                    aug_train[class_name],
-                    aug_valid.get(class_name, 0),
-                )
-                for class_name in class_names
-            ]
-        )
-
-        trains = summary_count[:, 0]
-        valids = summary_count[:, 1]
-        # TODO kill that
-        ratios = valids / trains
-
-        reals = summary_count[:, :2].copy()
-        augs = summary_count[:, 2:].copy()
-        summary_count = np.append(reals, ratios[:, np.newaxis], axis=1)
-        summary_count = np.append(summary_count, augs, axis=1)
-
-        # accumulate summary idxs with common base class
-        idxs_to_combine = {}
-        for idx, sub_class_name in enumerate(class_names):
-            class_name, *_ = sub_class_name.split("_", 1)
-
-            if class_name not in idxs_to_combine:
-                idxs_to_combine[class_name] = []
-
-            idxs_to_combine[class_name].append(idx)
-
-        # merge base classes
-        new_class_names = sorted(idxs_to_combine.keys())
-        new_rows = []
-        for class_name in new_class_names:
-            idxs = idxs_to_combine[class_name]
-            stacked = np.vstack([summary_count[idx] for idx in idxs])
-
-            real = stacked[:, 0:2].sum(axis=0)
-            train, valid = real[0:2]
-            ratio = valid / train
-            aug = stacked[:, 3:5].sum(axis=0)
-
-            new_row = [class_name]
-            new_row += list(real.astype("uint16"))
-            new_row += ["{:.3f}%".format(ratio)]
-            new_row += list(aug.astype("uint16"))
-
-            new_rows.append(new_row)
-
-        summary_header = [
-            ["Labels", "Train", "Valid", "Val/Train", "AugTrain", "AugValid"]
-        ]
-        summary = summary_header + new_rows
-
-        print(tabulate(summary))
-
-    def _summary(self, classes: List[str], label_path: Path):
-        real = {}
-        augmented = {}
-
-        img_label_paths = YoloAugmentator.fileloader(label_path)
-        for _, label_path in img_label_paths:
-            labels = self._parse_labels(label_path)
-
-            slabel_path = str(label_path)
-            for label_value, *_ in labels:
-                class_name = classes[label_value]
-                if class_name not in augmented:
-                    augmented[class_name] = 0
-                    real[class_name] = 0
-
-                augmented[class_name] += 1
-
-                # is original
-                if "_000_nflip_" in slabel_path and not "_checkered_" in slabel_path:
-                    real[class_name] += 1
-
-        return real, augmented
 
     def rotate(self, img):
         return cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
@@ -454,20 +393,6 @@ class YoloAugmentator(CircuitAugmentator):
         new_w = h
         new_h = w
         return new_label, new_x, new_y, new_w, new_h
-
-    def _parse_classes(self, label_dir: Path):
-        with open(str(label_dir / "classes.txt"), "r") as f:
-            return [f.replace("\n", "") for f in f.readlines()]
-
-    def _parse_labels(self, yolo_file: Path):
-        with open(str(yolo_file), "r") as f:
-            lines = f.readlines()
-            content = []
-            for line in lines:
-                l, x, y, w, h = line.split(" ")
-                content.append((int(l), float(x), float(y), float(w), float(h)))
-
-        return content
 
 
 class ClassStripper:
@@ -593,21 +518,17 @@ files_to_ignore = [
     "train.txt",
     "val.txt",
     "val.txt.bak",
+    "test_yolo.txt",
     "valid_yolo.txt",
     "train_yolo.txt",
     "log",
+    "labels.txt"
 ]
 
 
+
 @click.command()
-@click.argument(
-    "target",
-    # help="Values: <yolo/unet>"
-    # "--target",
-    # "-t",
-    # multiple=False,
-    # help="Values: <yolo/unet>"
-)
+@click.argument("target")
 def augment(target):
     import time
 
@@ -618,6 +539,8 @@ def augment(target):
             config.train_out_dir,
             config.valid_dir,
             config.valid_out_dir,
+            config.test_dir,
+            config.test_out_dir,
             config.merged_dir,
             config.augment.yolo.img_params,
             config.augment.label_transition_rotation,
@@ -641,10 +564,16 @@ def augment(target):
             config.labels_and_files_to_remove,
             files_to_ignore,
         ).run()
+        ClassStripper(
+            config.test_out_dir,
+            config.labels_to_remove,
+            config.labels_and_files_to_remove,
+            files_to_ignore,
+        ).run()
 
         augmentator.create_labels_file(augmentator.train_out_dir)
         augmentator.create_labels_file(augmentator.valid_out_dir)
-        augmentator.summary()
+        augmentator.create_labels_file(augmentator.test_out_dir)
 
     elif target == "unet":
         augmentator = UNetAugmentator(
@@ -652,6 +581,8 @@ def augment(target):
             config.train_out_dir,
             config.valid_dir,
             config.valid_out_dir,
+            config.test_dir,
+            config.test_out_dir,
             config.merged_dir,
             config.augment.unet.img_params,
             clean=True,

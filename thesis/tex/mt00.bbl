@@ -75,6 +75,14 @@ G.~Huang, Z.~Liu, and K.~Weinberger.
 \newblock Densely connected convolutional networks.
 \newblock {\em CoRR}, abs/1608.06993, 2016.
 
+\bibitem[Hui18]{map_article}
+Jonathan Hui.
+\newblock map (mean average precision) for object detection.
+\newblock
+  \url{https://jonathan-hui.medium.com/map-mean-average-precision-for-object-detection-45c121a31173},
+  2018.
+\newblock Accessed: 20.04.2021.
+
 \bibitem[IEC]{iec60617}
 IEC.
 \newblock {IEC}-60617.

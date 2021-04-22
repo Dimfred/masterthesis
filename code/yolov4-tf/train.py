@@ -85,12 +85,12 @@ def train_augmentations(image, bboxes):
             height=None, # unused
             p=0.5,
         ),
-        A.OneOf([
-            A.CLAHE(p=1),
-            A.ColorJitter(p=1),
-        ], p=0.3),
-        A.Blur(blur_limit=3, p=0.3),
-        A.GaussNoise(p=0.3),
+        # A.OneOf([
+        A.CLAHE(p=0.3),
+        A.ColorJitter(p=0.3),
+        # ], p=0.3),
+        # A.Blur(blur_limit=3, p=0.3),
+        # A.GaussNoise(p=0.3),
         base_augmentations
     ], bbox_params=A.BboxParams("yolo"))
 

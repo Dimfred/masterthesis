@@ -6,7 +6,7 @@
 \contentsline {subsection}{\numberline {1.3.2}Contribution}{1}{}%
 \contentsline {chapter}{\numberline {2}Theory}{3}{}%
 \contentsline {section}{\numberline {2.1}Electrical Circuit Diagrams}{3}{}%
-\contentsline {section}{\numberline {2.2}LTspice File}{3}{}%
+\contentsline {section}{\numberline {2.2}LTspice}{3}{}%
 \contentsline {subsection}{\numberline {2.2.1}General}{4}{}%
 \contentsline {subsection}{\numberline {2.2.2}File Definition}{4}{}%
 \contentsline {subsubsection}{Header}{4}{}%
@@ -26,49 +26,60 @@
 \contentsline {subsubsection}{Pooling Layer}{10}{}%
 \contentsline {subsubsection}{Fully-Connected Layer}{10}{}%
 \contentsline {subsection}{\numberline {2.3.3}Activation Functions}{11}{}%
+\contentsline {subsubsection}{Sigmoid}{11}{}%
+\contentsline {subsubsection}{Hard Sigmoid}{11}{}%
 \contentsline {subsubsection}{Rectified Linear Unit (ReLU)}{11}{}%
 \contentsline {subsubsection}{ReLU6}{11}{}%
-\contentsline {subsubsection}{Loss Functions}{11}{}%
+\contentsline {subsubsection}{Hard Swish}{11}{}%
+\contentsline {subsection}{\numberline {2.3.4}Loss Functions}{11}{}%
 \contentsline {subsubsection}{Skip Connections}{11}{}%
-\contentsline {subsection}{\numberline {2.3.4}Batch Normalization}{11}{}%
-\contentsline {subsection}{\numberline {2.3.5}Dropout}{11}{}%
+\contentsline {subsection}{\numberline {2.3.5}Batch Normalization}{11}{}%
+\contentsline {subsection}{\numberline {2.3.6}Dropout}{11}{}%
 \contentsline {section}{\numberline {2.4}Data Augmentation}{11}{}%
 \contentsline {section}{\numberline {2.5}Object Detection}{11}{}%
 \contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{12}{}%
 \contentsline {subsubsection}{Sliding Window}{12}{}%
-\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{12}{}%
+\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{13}{}%
 \contentsline {subsubsection}{Fast R-CNN}{13}{}%
-\contentsline {subsubsection}{Faster R-CNN}{14}{}%
-\contentsline {subsubsection}{Single Shot Detector}{15}{}%
-\contentsline {subsubsection}{TODO? Anchor Box Free Detection?}{15}{}%
-\contentsline {subsection}{\numberline {2.5.2}Intersection Over Union (IoU)}{15}{}%
+\contentsline {subsubsection}{Faster R-CNN}{15}{}%
+\contentsline {subsubsection}{Single Shot Detector}{16}{}%
+\contentsline {subsubsection}{TODO? Anchor Box Free Detection?}{16}{}%
+\contentsline {subsection}{\numberline {2.5.2}Intersection Over Union (IoU)}{16}{}%
 \contentsline {subsection}{\numberline {2.5.3}IoU Based Loss Functions}{16}{}%
 \contentsline {subsection}{\numberline {2.5.4}Anchor Boxes}{17}{}%
 \contentsline {section}{\numberline {2.6}You Only Look Once (YOLO)}{18}{}%
 \contentsline {subsubsection}{General}{18}{}%
-\contentsline {subsubsection}{Backbone}{18}{}%
+\contentsline {subsubsection}{Backbone}{19}{}%
 \contentsline {subsubsection}{Neck}{19}{}%
 \contentsline {subsubsection}{Head}{21}{}%
-\contentsline {subsubsection}{Loss}{21}{}%
-\contentsline {subsubsection}{Non-Maximum Suppression}{23}{}%
+\contentsline {subsubsection}{Loss}{22}{}%
+\contentsline {subsubsection}{Non-Maximum Suppression (NMS)}{23}{}%
 \contentsline {section}{\numberline {2.7}Segmentation}{24}{}%
 \contentsline {section}{\numberline {2.8}Connected Components Analysis}{24}{}%
-\contentsline {section}{\numberline {2.9}Optical Character Recognition}{24}{}%
-\contentsline {section}{\numberline {2.10}Hypergraphs}{24}{}%
-\contentsline {section}{\numberline {2.11}Metrics}{24}{}%
-\contentsline {chapter}{\numberline {3}Material and Methods}{25}{}%
-\contentsline {section}{\numberline {3.1}Data}{25}{}%
-\contentsline {subsection}{\numberline {3.1.1}Statistics}{25}{}%
-\contentsline {subsection}{\numberline {3.1.2}Label Format}{25}{}%
-\contentsline {subsection}{\numberline {3.1.3}Training Split TODO}{25}{}%
-\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{25}{}%
-\contentsline {subsection}{\numberline {3.2.1}General Overview}{25}{}%
-\contentsline {subsection}{\numberline {3.2.2}Component Detection}{25}{}%
-\contentsline {subsection}{\numberline {3.2.3}ECD TODO Segmentation}{25}{}%
-\contentsline {subsection}{\numberline {3.2.4}Training}{25}{}%
-\contentsline {chapter}{\numberline {4}Results}{27}{}%
-\contentsline {chapter}{\numberline {5}Discussion}{29}{}%
-\contentsline {chapter}{\numberline {A}Abbrevations}{31}{}%
-\contentsline {chapter}{List of Figures}{33}{}%
-\contentsline {chapter}{List of Tables}{35}{}%
-\contentsline {chapter}{Bibliography}{37}{}%
+\contentsline {section}{\numberline {2.9}Optical Character Recognition}{25}{}%
+\contentsline {section}{\numberline {2.10}Hypergraphs}{25}{}%
+\contentsline {section}{\numberline {2.11}Metrics}{25}{}%
+\contentsline {subsubsection}{Confusion Matrix}{25}{}%
+\contentsline {subsubsection}{Precision}{25}{}%
+\contentsline {subsubsection}{Recall}{26}{}%
+\contentsline {subsubsection}{F1-Score}{26}{}%
+\contentsline {subsubsection}{Accuracy}{26}{}%
+\contentsline {subsubsection}{Average Precision (AP)}{26}{}%
+\contentsline {subsubsection}{Mean Average Precision (mAP)}{27}{}%
+\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{27}{}%
+\contentsline {chapter}{\numberline {3}Material and Methods}{29}{}%
+\contentsline {section}{\numberline {3.1}Data}{29}{}%
+\contentsline {subsection}{\numberline {3.1.1}Statistics}{29}{}%
+\contentsline {subsection}{\numberline {3.1.2}Label Format}{29}{}%
+\contentsline {subsection}{\numberline {3.1.3}Training Split TODO}{29}{}%
+\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{29}{}%
+\contentsline {subsection}{\numberline {3.2.1}General Overview}{29}{}%
+\contentsline {subsection}{\numberline {3.2.2}Component Detection}{29}{}%
+\contentsline {subsection}{\numberline {3.2.3}ECD TODO Segmentation}{29}{}%
+\contentsline {subsection}{\numberline {3.2.4}Training}{29}{}%
+\contentsline {chapter}{\numberline {4}Results}{31}{}%
+\contentsline {chapter}{\numberline {5}Discussion}{33}{}%
+\contentsline {chapter}{\numberline {A}Abbrevations}{35}{}%
+\contentsline {chapter}{List of Figures}{37}{}%
+\contentsline {chapter}{List of Tables}{39}{}%
+\contentsline {chapter}{Bibliography}{41}{}%

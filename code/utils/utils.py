@@ -234,10 +234,8 @@ def img_from_fg(img_path: Path, fg_path: Path) -> Path:
     name = str(name).replace("_fg_mask", "")
     return img_path / name
 
-
 def merged_name(img_path, bg_path):
     return f"{img_path.stem}_{bg_path.stem}{img_path.suffix}"
-
 
 def pairwise(iterable, offset=1):
     return zip(iterable[:-offset], iterable[offset:])

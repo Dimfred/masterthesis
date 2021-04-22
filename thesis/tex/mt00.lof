@@ -5,7 +5,8 @@
 \contentsline {figure}{\numberline {2.3}{\ignorespaces Predicted bounding boxes before and after a non-maximum suppression was applied \cite {nms_before_after}\relax }}{13}{}%
 \contentsline {figure}{\numberline {2.4}{\ignorespaces Example of results obtained through the Selective Search algorithm with increasing region scale from left to right \cite {selective_search}\relax }}{14}{}%
 \contentsline {figure}{\numberline {2.5}{\ignorespaces The Faster R-CNN Network Architecture \cite {faster_rcnn_pic} TODO img quality sucks\relax }}{15}{}%
-\contentsline {figure}{\numberline {2.6}{\ignorespaces Final bounding box calculation in the YOLOv4 network based on an anchor box \cite {yolov2}\relax }}{21}{}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Final bounding box calculation in the YOLOv4 network based on an anchor box \cite {yolov2}\relax }}{22}{}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite {map_article}\relax }}{27}{}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

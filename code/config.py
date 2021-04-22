@@ -18,6 +18,10 @@ config.train_out_dir = config.data / "train_out"
 config.valid_dir = config.data / "valid"
 config.valid_out_dir = config.data / "valid_out"
 
+# test / augmented test
+config.test_dir = config.data / "test"
+config.test_out_dir = config.data / "test_out"
+
 # evaluation
 config.eval_dir = config.data / "eval"
 
