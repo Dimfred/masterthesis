@@ -75,12 +75,12 @@ config.yolo.loss = "eiou"  # "ciou", "eiou", "diou"
 config.yolo.loss_gamma = 0.0 # 0.5
 
 config.yolo.burn_in = 1000
-config.yolo.lr = 0.00261  # 1e-3
+config.yolo.lr = 0.1 #0.00261  # 1e-3
 config.yolo.decay = 0.0005
 config.yolo.momentum = 0.90
 config.yolo.label_smoothing = 0.1
 
-config.yolo.max_steps = 400000
+config.yolo.max_steps = 8000
 config.yolo.map_after_steps = 500  # 500
 config.yolo.map_on_step_mod = 20  # 50
 config.yolo.validation_freq = 10 if utils.isme() else 10
@@ -180,12 +180,6 @@ config.augment.yolo.img_params.channels = 1
 config.augment.yolo.img_params.keep_ar = True
 config.augment.yolo.img_params.resize = 1000  # resizes longest image axis to that size
 
-config.augment.yolo.text = EasyDict()
-config.augment.yolo.text.rotate = True  # whether to rotate files where text is present
-config.augment.yolo.text.flip = True  # whether to flip files where text is present
-config.augment.yolo.text.oversample = False  # whether to oversample files with text
-
-
 config.augment.unet = EasyDict()
 config.augment.unet.img_params = EasyDict()
 config.augment.unet.img_params.channels = 1  # config.unet.channels
@@ -193,12 +187,10 @@ config.augment.unet.img_params.keep_ar = True
 config.augment.unet.img_params.resize = 640  # resizes longest image axis to that size
 
 # whether to perform flip and rotation on the dataset
-config.augment.perform_train = True
-config.augment.perform_valid = False
-config.augment.perform_merged = True
-
-# will exclude merged entirelly
-config.augment.exclude_merged = True
+config.augment.perform_rotation = False
+config.augment.perform_flip = False
+config.augment.include_merged = False
+config.augment.augment_valid = False
 
 # transition occurs always with the clock (90°)
 config.augment.label_transition_rotation = {

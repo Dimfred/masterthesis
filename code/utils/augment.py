@@ -34,6 +34,7 @@ class CircuitAugmentator:
         fileloader: Callable[[Path], List[Tuple[Path, Path]]],
         # receives path to labels, returns List[(abs_img_path, abs_label_path)]
         clean: bool = True,
+        include_merged: bool = True,
     ):
         self.train_dir = train_dir
         self.train_out_dir = train_out_dir
@@ -50,7 +51,7 @@ class CircuitAugmentator:
 
         self.train_files = fileloader(self.train_dir)
         self.valid_files = fileloader(self.valid_dir)
-        if self.merged_dir is not None:
+        if self.merged_dir is not None and include_merged:
             merged_files = fileloader(self.merged_dir)
 
             for merged_img, merged_label in merged_files:
@@ -64,7 +65,6 @@ class CircuitAugmentator:
                     if str(merged_img.name).startswith(img_path.stem):
                         self.valid_files.append((merged_img, merged_label))
                         break
-
 
         by_img_name = lambda x: x[0]
         self.train_files = sorted(self.train_files, key=by_img_name)
@@ -162,9 +162,10 @@ class YoloAugmentator(CircuitAugmentator):
         flip_transition: dict,
         # perform_augmentation: bool,
         clean: bool = True,
-        rotate_text: bool = True,
-        flip_text: bool = True,
-        oversample_text: bool = True,
+        rotate=False,
+        flip=False,
+        include_merged=False,
+        augment_valid=False,
     ):
         super().__init__(
             train_dir,
@@ -177,6 +178,7 @@ class YoloAugmentator(CircuitAugmentator):
             img_params,
             YoloAugmentator.fileloader,
             clean,
+            include_merged
         )
 
         self.rot_transition = rot_transition
@@ -184,9 +186,10 @@ class YoloAugmentator(CircuitAugmentator):
         # self.perform_augmentation = perform_augmentation
         self.classes = utils.Yolo.parse_classes(self.train_dir / "classes.txt")
 
-        self.rotate_text = rotate_text
-        self.flip_text = flip_text
-        self.oversample_text = oversample_text
+        self.do_rotate = rotate
+        self.do_flip = flip
+        self.do_include_merged = include_merged
+        self.do_augment_valid = augment_valid
 
     @staticmethod
     def fileloader(path: Path):
@@ -207,7 +210,13 @@ class YoloAugmentator(CircuitAugmentator):
         print("---------------------------------------------------")
         print("---------------------------------------------------")
         self.copy_classes(self.train_dir, self.train_out_dir)
-        self.perform(self.train_files, self.train_out_dir, perform_augmentation=True)
+        self.perform(
+            self.train_files,
+            self.train_out_dir,
+            perform_flip=self.do_flip,
+            perform_rotate=self.do_rotate,
+            perform_augmentation=True,
+        )
 
         print("---------------------------------------------------")
         print("---------------------------------------------------")
@@ -215,7 +224,13 @@ class YoloAugmentator(CircuitAugmentator):
         print("---------------------------------------------------")
         print("---------------------------------------------------")
         self.copy_classes(self.train_dir, self.valid_out_dir)
-        self.perform(self.valid_files, self.valid_out_dir, perform_augmentation=True)
+        self.perform(
+            self.valid_files,
+            self.valid_out_dir,
+            perform_flip=self.do_flip,
+            perform_rotate=self.do_rotate,
+            perform_augmentation=self.do_augment_valid,
+        )
 
         print("---------------------------------------------------")
         print("---------------------------------------------------")
@@ -223,25 +238,48 @@ class YoloAugmentator(CircuitAugmentator):
         print("---------------------------------------------------")
         print("---------------------------------------------------")
         self.copy_classes(self.train_dir, self.test_out_dir)
-        self.perform(self.test_files, self.test_out_dir, perform_augmentation=False)
+        self.perform(
+            self.test_files,
+            self.test_out_dir,
+            perform_flip=False,
+            perform_rotate=False,
+            perform_augmentation=False,
+        )
 
     def perform(
         self,
         files: List[Tuple[Path, Path]],
         output_dir: Path,
+        perform_flip: bool,
+        perform_rotate: bool,
         perform_augmentation: bool,
     ):
         for img_path, label_path in files:
             labels = utils.Yolo.parse_labels(label_path)
 
             img = self.imread(img_path)
-            self.augment(img_path, img, labels, output_dir, perform_augmentation)
+            self.augment(
+                img_path,
+                img,
+                labels,
+                output_dir,
+                perform_flip,
+                perform_rotate,
+                perform_augmentation,
+            )
 
     def copy_classes(self, src_dir: Path, dst_dir: Path):
         sh.copy(src_dir / "classes.txt", dst_dir / "classes.txt")
 
     def augment(
-        self, file: str, oimg, ocontent, output_dir: Path, perform_augmentation: bool
+        self,
+        file: str,
+        oimg,
+        ocontent,
+        output_dir: Path,
+        perform_flip: bool,
+        perform_rotate: bool,
+        perform_augmentation: bool,
     ):
         print(f"File: {file}")
         # rotate original image
@@ -251,51 +289,25 @@ class YoloAugmentator(CircuitAugmentator):
         # store the original_img
         self.write(file, img, content, 0, False, output_dir)
 
-        # normally we don't perform valid augmentation hence just cpy
         if not perform_augmentation:
             return
 
-        if not utils.has_annotation(file):
+        if perform_rotate:
             for degree in (90, 180, 270):
                 img = self.rotate(img)
                 content = self.calc_rotations(content)
                 self.write(file, img, content, degree, False, output_dir)
-        else:
-            for degree in (90, 180, 270):
-                if self.rotate_text:
-                    img = self.rotate(img)
-                    content = self.calc_rotations(content)
-                    self.write(file, img, content, degree, False, output_dir)
-                elif self.oversample_text:
-                    self.write(file, img, content, degree, False, output_dir)
 
-        # flip
-        if not utils.has_annotation(file):
+        if perform_flip:
             img = self.flip(oimg)
             content = self.calc_flips(ocontent)
             self.write(file, img, content, 0, True, output_dir)
-        else:
-            if self.flip_text:
-                img = self.flip(oimg)
-                content = self.calc_flips(ocontent)
-                self.write(file, img, content, 0, True, output_dir)
-            elif self.oversample_text:
-                self.write(file, img, content, 0, True, output_dir)
 
-        # rotate flipped image
-        if not utils.has_annotation(file):
+        if perform_rotate and perform_flip:
             for degree in (90, 180, 270):
                 img = self.rotate(img)
                 content = self.calc_rotations(content)
                 self.write(file, img, content, degree, True, output_dir)
-        else:
-            for degree in (90, 180, 270):
-                if self.rotate_text:
-                    img = self.rotate(img)
-                    content = self.calc_rotations(content)
-                    self.write(file, img, content, degree, False, output_dir)
-                elif self.oversample_text:
-                    self.write(file, img, content, degree, False, output_dir)
 
     def write(
         self,
@@ -525,9 +537,8 @@ files_to_ignore = [
     "valid_yolo.txt",
     "train_yolo.txt",
     "log",
-    "labels.txt"
+    "labels.txt",
 ]
-
 
 
 @click.command()
@@ -548,25 +559,34 @@ def augment(target):
             config.augment.yolo.img_params,
             config.augment.label_transition_rotation,
             config.augment.label_transition_flip,
+            rotate=config.augment.perform_rotation,
+            flip=config.augment.perform_flip,
+            include_merged=config.augment.include_merged,
             clean=True,
-            rotate_text=config.augment.yolo.text.rotate,
-            flip_text=config.augment.yolo.text.flip,
-            oversample_text=config.augment.yolo.text.oversample,
         )
         augmentator.run()
 
+        print("---------------------------------------------------")
+        print("---------------------------------------------------")
+        print("Classstripper: Train")
         ClassStripper(
             config.train_out_dir,
             config.labels_to_remove,
             config.labels_and_files_to_remove,
             files_to_ignore,
         ).run()
+        print("---------------------------------------------------")
+        print("---------------------------------------------------")
+        print("Classstripper: Valid")
         ClassStripper(
             config.valid_out_dir,
             config.labels_to_remove,
             config.labels_and_files_to_remove,
             files_to_ignore,
         ).run()
+        print("---------------------------------------------------")
+        print("---------------------------------------------------")
+        print("Classstripper: Test")
         ClassStripper(
             config.test_out_dir,
             config.labels_to_remove,
