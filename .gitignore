@@ -11,6 +11,7 @@ train_preprocessed
 valid_preprocessed
 train_out
 valid_out
+test_out
 yolo_labeled
 merged
 tmp
