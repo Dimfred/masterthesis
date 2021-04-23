@@ -155,10 +155,8 @@ if __name__ == "__main__":
         n_workers=config.yolo.n_workers,
     )
 
-    # v = config.test_out_dir
-    valid_dir = config.test_out_dir
     valid_dataset = yolo.load_tfdataset(
-        dataset_path=valid_dir / "labels.txt",
+        dataset_path=config.valid_out_dir / "labels.txt",
         dataset_type=config.yolo.weights_type,
         preload=config.yolo.preload_dataset,
         training=False,
