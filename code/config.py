@@ -73,7 +73,7 @@ config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights
 config.yolo.batch_size = 2 if utils.isme() else 16
 config.yolo.accumulation_steps = 8 if utils.isme() else 4
 config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_steps
-config.yolo.loss = "eiou"  # "ciou", "eiou", "diou"
+config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
 config.yolo.loss_gamma = 0.0 # 0.5
 
 config.yolo.burn_in = 25
