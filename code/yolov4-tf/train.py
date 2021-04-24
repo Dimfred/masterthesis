@@ -164,8 +164,6 @@ if __name__ == "__main__":
         n_workers=config.yolo.n_workers,
     )
 
-    n_accumulations = config.yolo.accumulation_steps
-
     def lr_scheduler(step, lr, burn_in):
         # TODO cosine
         # cycle = 1000
@@ -173,8 +171,7 @@ if __name__ == "__main__":
 
         # ORIGINAL DARKNET
         if step < burn_in:
-            batch_counter = (step // n_accumulations) + 1
-            multiplier = (batch_counter / burn_in) ** 4
+            multiplier = (step / burn_in) ** 4
             return lr * multiplier
 
         return lr

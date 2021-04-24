@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.8
+from concurrent.futures.thread import ThreadPoolExecutor
 import albumentations as A
 
 import tensorflow as tf
@@ -204,8 +205,9 @@ class Trainer:
         losses = (ffloat(l) for l in losses)
 
         # fmt: off
-        p = [["Step", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall", "Experiment"]]
-        p += [[self.step_counter, f"{took}s", loss_sum, *losses, self.overall_train_time, self.pexperiment]]
+        p = [["Batch", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall"]]
+        p += [[self.step_counter, f"{took}s", loss_sum, *losses, self.overall_train_time]]
+        p += [["Experiment", self.pexperiment]]
         print(tabulate(p))
         # fmt: on
 
