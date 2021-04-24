@@ -202,7 +202,7 @@ class Trainer:
         losses = (ffloat(l) for l in losses)
 
         # fmt: off
-        p = [["Batch", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall"]]
+        p = [["Step", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall"]]
         p += [[self.step_counter, f"{took}s", loss_sum, *losses, self.overall_train_time]]
         print(tabulate(p))
         # fmt: on
