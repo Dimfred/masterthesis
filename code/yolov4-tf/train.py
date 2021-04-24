@@ -174,10 +174,12 @@ if __name__ == "__main__":
         # ORIGINAL DARKNET
         if step < burn_in:
             print("step", step)
-            multiplier = ((step // real_batch_size) + 1) / burn_in
-            print("multiplier",(multiplier))
+            batch_counter = (step // real_batch_size) + 1
+            print("batch_counter",batch_counter)
+            multiplier = (batch_counter / burn_in)**4
+            print("multiplier\n{}".format(multiplier))
 
-            return lr * multiplier**4
+            return lr * multiplier
 
         return lr
 
