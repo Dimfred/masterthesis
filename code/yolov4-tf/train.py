@@ -171,23 +171,13 @@ if __name__ == "__main__":
         # cycle = 1000
         # mult = 2
 
-        # if step < burn_in:
-        #     return lr * (step / burn_in) ** 4
-
         # ORIGINAL DARKNET
         if step < burn_in:
             print("step", step)
-            multiplier = (step // real_batch_size) + 1
+            multiplier = ((step // real_batch_size) + 1) / burn_in
             print("multiplier",(multiplier))
 
             return lr * multiplier**4
-
-        # if step > 7000:
-        #     return lr / 10
-        # if step > 4000:
-        #     return lr / 5
-        # if step > 4000:
-        #     return lr / 10
 
         return lr
 
