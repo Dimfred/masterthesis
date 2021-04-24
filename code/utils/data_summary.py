@@ -134,13 +134,13 @@ class SummaryWriter:
 
     def cls_summary(self):
         # reparse classes after stripper hits
-        classes = utils.Yolo.parse_classes(self.train_out_dir / "classes.txt")
+        class_names = utils.Yolo.parse_classes(self.train_out_dir / "classes.txt")
 
-        real_train, aug_train = self._summary(classes, self.train_out_dir)
-        real_valid, aug_valid = self._summary(classes, self.valid_out_dir)
-        real_test, aug_test = self._summary(classes, self.test_out_dir)
+        real_train, aug_train = self._summary(class_names, self.train_out_dir)
+        real_valid, aug_valid = self._summary(class_names, self.valid_out_dir)
+        real_test, aug_test = self._summary(class_names, self.test_out_dir)
 
-        class_names = sorted(real_train.keys())
+        # class_names = sorted(real_train.keys())
         summary_count = np.vstack(
             [
                 (
@@ -172,35 +172,44 @@ class SummaryWriter:
         summary_count = np.append(summary_count, augs, axis=1)
 
         # accumulate summary idxs with common base class
-        idxs_to_combine = {}
-        for idx, sub_class_name in enumerate(class_names):
-            class_name, *_ = sub_class_name.split("_", 1)
+        # idxs_to_combine = {}
+        # for idx, sub_class_name in enumerate(class_names):
+        #     class_name, *_ = sub_class_name.split("_", 1)
 
-            if class_name not in idxs_to_combine:
-                idxs_to_combine[class_name] = []
+        #     if class_name not in idxs_to_combine:
+        #         idxs_to_combine[class_name] = []
 
-            idxs_to_combine[class_name].append(idx)
+        #     idxs_to_combine[class_name].append(idx)
 
         # merge base classes
-        new_class_names = sorted(idxs_to_combine.keys())
-        new_rows = []
-        for class_name in new_class_names:
-            idxs = idxs_to_combine[class_name]
-            stacked = np.vstack([summary_count[idx] for idx in idxs])
+        # new_class_names = sorted(idxs_to_combine.keys())
+        # new_rows = []
+        # for class_name in new_class_names:
+        #     idxs = idxs_to_combine[class_name]
+        #     stacked = np.vstack([summary_count[idx] for idx in idxs])
 
-            real = stacked[:, 0:3].sum(axis=0)
-            train, valid, test = real[0:3]
-            valid_train_ratio = valid / train * 100
-            test_train_ratio = test / train * 100
-            aug = stacked[:, 5:8].sum(axis=0)
+        #     real = stacked[:, 0:3].sum(axis=0)
+        #     train, valid, test = real[0:3]
+        #     valid_train_ratio = valid / train * 100
+        #     test_train_ratio = test / train * 100
+        #     aug = stacked[:, 5:8].sum(axis=0)
 
-            new_row = [class_name]
-            new_row += list(real.astype("uint16"))
-            new_row += ["{:.3f}%".format(valid_train_ratio)]
-            new_row += ["{:.3f}%".format(test_train_ratio)]
-            new_row += list(aug.astype("uint16"))
+        #     new_row = [class_name]
+        #     new_row += list(real.astype("uint16"))
+        #     new_row += ["{:.3f}%".format(valid_train_ratio)]
+        #     new_row += ["{:.3f}%".format(test_train_ratio)]
+        #     new_row += list(aug.astype("uint16"))
 
-            new_rows.append(new_row)
+        #     new_rows.append(new_row)
+
+        pretty = []
+        for cls_name, row in zip(class_names, summary_count):
+            pretty_row = [cls_name]
+            pretty_row += [int(n) for n in row[0:3]]
+            pretty_row += ["{:.2f}%".format(f * 100) for f in row[3:5]]
+            pretty_row += [int(n) for n in row[5:8]]
+            pretty += [pretty_row]
+
 
         summary_header = [
             [
@@ -215,7 +224,7 @@ class SummaryWriter:
                 "AugTest",
             ]
         ]
-        summary = summary_header + list(new_rows)
+        summary = summary_header + list(pretty)
 
         print(tabulate(summary))
 
@@ -247,7 +256,7 @@ class SummaryWriter:
         augmented = {}
         for spath, labels in spath_and_labels:
             for label_value, *_ in labels:
-                class_name = classes[label_value]
+                class_name = classes[int(label_value)]
                 if class_name not in augmented:
                     augmented[class_name] = 0
                     real[class_name] = 0

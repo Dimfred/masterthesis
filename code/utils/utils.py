@@ -721,6 +721,9 @@ class Yolo:
             lines = f.readlines()
 
         lines = [line.strip() for line in lines]
+        if not lines[-1]:
+            lines = lines[:-1]
+
         if result_type == list:
             return lines
         if result_type == dict:

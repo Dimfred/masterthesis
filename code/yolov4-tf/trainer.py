@@ -59,6 +59,7 @@ class Trainer:
             self.yolo.input_size,
             iou_threshs=[0.5, 0.6, 0.7, 0.8],
         )
+        self.best_mAP = [0.0, 0.0, 0.0, 0.0]
 
         self.max_steps = max_steps
         self.validation_freq = validation_freq
@@ -119,7 +120,6 @@ class Trainer:
             vlosses = None
 
             self.mAP.reset()
-            # TODO loss is wrong too much x, y from valid
             for _ in range(n_valid_batches):
                 vinputs, *vlabels, idxs = next(valid_ds_it)
                 voutputs, vlosses = self.valid_step(vinputs, vlabels)
@@ -132,6 +132,7 @@ class Trainer:
 
             if self.is_map_time():
                 results = self.mAP.compute(show=False)
+
                 tf.print(self.mAP.prettify(results))
 
             if self.resize_model is not None:

@@ -172,12 +172,13 @@ if __name__ == "__main__":
 
         if step < burn_in:
             return lr * (step / burn_in) ** 4
+
         # if step > 7000:
         #     return lr / 10
         # if step > 4000:
         #     return lr / 5
-        if step > 4000:
-            return lr / 10
+        # if step > 4000:
+        #     return lr / 10
 
         return lr
 
