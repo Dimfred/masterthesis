@@ -27,16 +27,47 @@
 Performed on plain train / valid
 Loss      CIoU
 BatchSize 64
-BurnIn    25 (50 epochs)
+
+BurnIn     0 batches ALL DIV
+
+BurnIn    10 batches (20 epochs)
 
 LR      | Result (Best mAP)
-0.50000 | DIV after 1k
-0.25000 | DIV after 1k
-0.10000 | DIV after 1k
-0.05000 | DIV after 1k
-0.02500 | rtx b0
-0.01000 | rtx b1
-0.00500 | rtx b2
+0.01000 | DIV / Step 1994 / Loss 311
+0.00500 | DIV / Step 1129 / Loss 200
+0.00250 | DIV / Step 1121 / Loss 200
+0.00100 | DIV / Step 1100 / Loss 200
+0.00050 | DIV / Step 1310 / Loss 360
+0.00025 | DIV / Step 1280 / Loss 370
+0.00010 |
+
+BurnIn    10 batches (20 epochs)
+
+LR      | Result (Best mAP)
+0.01000 | DIV / Step 1994 / Loss 311
+0.00500 | DIV / Step 1129 / Loss 200
+0.00250 | DIV / Step 1121 / Loss 200
+0.00100 | DIV / Step 1100 / Loss 200
+0.00050 | DIV / Step 1310 / Loss 360
+0.00025 | DIV / Step 1280 / Loss 370
+0.00010 |
+
+BurnIn    500 batches (1000 epochs)
+
+LR      | Result (Best mAP)
+0.01000 |
+0.00500 |
+0.00250 |
+0.00100 |
+0.00050 |
+0.00025 |
+0.00010 |
+
+BurnIn    1000 batches (2000 epochs)
+
+LR      | Result (Best mAP)
+0.01000 |
+0.00500 |
 0.00250 |
 0.00100 |
 0.00050 |

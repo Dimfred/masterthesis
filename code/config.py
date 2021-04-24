@@ -76,8 +76,8 @@ config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_
 config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
 config.yolo.loss_gamma = 0.0 # 0.5
 
-config.yolo.burn_in = 10
-config.yolo.lr = 0.5 #0.00261  # 1e-3
+config.yolo.burn_in = 500
+config.yolo.lr = 0.001 #0.00261  # 1e-3
 config.yolo.decay = 0.0005
 config.yolo.momentum = 0.90
 config.yolo.label_smoothing = 0.1
