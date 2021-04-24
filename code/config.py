@@ -82,8 +82,8 @@ config.yolo.decay = 0.0005
 config.yolo.momentum = 0.90
 config.yolo.label_smoothing = 0.1
 
-config.yolo.max_steps = 8000
-config.yolo.map_after_steps = config.yolo.burn_in #500  # 500
+config.yolo.max_steps = 3000
+config.yolo.map_after_steps = 300  # 500
 config.yolo.map_on_step_mod = 20  # 50
 config.yolo.validation_freq = 10 if utils.isme() else 10
 config.yolo.n_workers = 12
