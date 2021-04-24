@@ -164,6 +164,7 @@ if __name__ == "__main__":
         n_workers=config.yolo.n_workers,
     )
 
+    real_batch_size = config.yolo.real_batch_size
     @nb.njit
     def lr_scheduler(step, lr, burn_in):
         # TODO cosine
@@ -172,6 +173,14 @@ if __name__ == "__main__":
 
         # if step < burn_in:
         #     return lr * (step / burn_in) ** 4
+
+        # ORIGINAL DARKNET
+        if step < burn_in:
+            print("step", step)
+            multiplier = ((step // real_batch_size) + 1)
+            print("multiplier",(multiplier))
+
+            return lr * multiplier**4
 
         # if step > 7000:
         #     return lr / 10
