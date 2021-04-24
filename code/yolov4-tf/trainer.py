@@ -149,6 +149,9 @@ class Trainer:
 
             self.print_valid(vlosses)
 
+            if self.step_counter >= self.max_steps:
+                break
+
     @tf.function
     def train_step(self, inputs, labels):
         with tf.GradientTape() as tape:
@@ -212,7 +215,7 @@ class Trainer:
         p = [["Batch", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall"]]
         p += [[self.step_counter, f"{took}s", loss_sum, *losses, self.overall_train_time]]
         p += [["Experiment", self.pexperiment]]
-        p += [["BestMAP50", "{:.5f}".format(self.best_mAP * 100)]]
+        p += [["BestMAP50", "{:.5f}%".format(self.best_mAP * 100)]]
         p += [["BestMAPStep", self.best_mAP_step]]
         print(tabulate(p))
         # fmt: on
