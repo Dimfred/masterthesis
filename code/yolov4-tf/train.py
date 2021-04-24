@@ -170,9 +170,11 @@ if __name__ == "__main__":
         # mult = 2
 
         # ORIGINAL DARKNET
-        # if step < burn_in:
-        #     multiplier = (step / burn_in) ** 4
-        #     return lr * multiplier
+        if step < burn_in:
+            multiplier = (step / burn_in) ** 4
+            return lr * multiplier
+
+
 
         return lr
 
