@@ -170,8 +170,8 @@ if __name__ == "__main__":
         # cycle = 1000
         # mult = 2
 
-        if step < burn_in:
-            return lr * (step / burn_in) ** 4
+        # if step < burn_in:
+        #     return lr * (step / burn_in) ** 4
 
         # if step > 7000:
         #     return lr / 10
