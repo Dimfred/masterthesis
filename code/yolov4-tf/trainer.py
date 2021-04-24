@@ -61,7 +61,8 @@ class Trainer:
             self.yolo.input_size,
             iou_threshs=[0.5, 0.6, 0.7, 0.8],
         )
-        self.best_mAP = [0.0, 0.0, 0.0, 0.0]
+        self.best_mAP = 0.0
+        self.best_mAP_step = 0
 
         self.max_steps = max_steps
         self.validation_freq = validation_freq
@@ -136,6 +137,11 @@ class Trainer:
                 results = self.mAP.compute(show=False)
                 tf.print(self.mAP.prettify(results))
 
+                mAP50 = self.mAP.get_maps(results)[0][1]
+                if mAP50 > self.best_mAP:
+                    self.best_mAP = mAP50
+                    self.best_mAP_step = self.step_counter
+
             # TODO resize network?
             if self.resize_model is not None:
                 raise NotImplementedError("Resizing not implemented.")
@@ -206,6 +212,8 @@ class Trainer:
         p = [["Batch", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall"]]
         p += [[self.step_counter, f"{took}s", loss_sum, *losses, self.overall_train_time]]
         p += [["Experiment", self.pexperiment]]
+        p += [["BestMAP50", "{:.5f}".format(self.best_mAP * 100)]]
+        p += [["BestMAPStep", self.best_mAP_step]]
         print(tabulate(p))
         # fmt: on
 

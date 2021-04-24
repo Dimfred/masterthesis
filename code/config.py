@@ -76,14 +76,14 @@ config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_
 config.yolo.loss = "eiou"  # "ciou", "eiou", "diou"
 config.yolo.loss_gamma = 0.0 # 0.5
 
-config.yolo.burn_in = 1000
+config.yolo.burn_in = 25
 config.yolo.lr = 0.5 #0.00261  # 1e-3
 config.yolo.decay = 0.0005
 config.yolo.momentum = 0.90
 config.yolo.label_smoothing = 0.1
 
 config.yolo.max_steps = 8000
-config.yolo.map_after_steps = 500  # 500
+config.yolo.map_after_steps = config.yolo.burn_in #500  # 500
 config.yolo.map_on_step_mod = 20  # 50
 config.yolo.validation_freq = 10 if utils.isme() else 10
 config.yolo.n_workers = 12
