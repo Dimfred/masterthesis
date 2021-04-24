@@ -104,10 +104,8 @@ class Trainer:
 
             self.model.optimizer.apply_gradients(accumulated_grads)
 
-            ### TIME
-            # start = time.perf_counter()
+            # summary
             self.print_train(accumulated_losses)
-            # print("TOOK:", time.perf_counter() - start)
 
             # validation step
             if not self.is_validation_time():
