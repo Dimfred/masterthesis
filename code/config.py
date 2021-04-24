@@ -58,6 +58,9 @@ config.train.std = 0.126536
 ########
 config.yolo = EasyDict()
 
+## experiment
+config.yolo.pexperiment = lambda: print(f"Experiment: LR {config.yolo.lr}")
+
 ## architecture
 config.yolo.input_size = 608  # 608, 736, 832, 928, 960, 1120, 1280, 1600
 config.yolo.channels = 1

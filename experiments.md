@@ -1,5 +1,7 @@
 # Experiments
 
+!!!!!!!!!Experiment with data (reduce train set see how it behaves 1 0.8 0.6 0.4)
+
 ## General
 
     ~3 hours converging
@@ -10,14 +12,27 @@
         clip_limit := upper threshold for contrast limiting
     Just want to use the default values for CLAHE and turn on off
 
-## Settings
+
+## Definitions
+
+    Plain Dataset = NO rotation NO flipping NO projection on checkered paper
+    Rot Dataset = rotated
+    Flip Dataset = flipped
+    Proj Dataset = projection on checkered
+    RotFlip Dataset = rotated and flipped
+    Dataset = rotated, flipped, projections
 
 ## Initial LR Experiment
 
+Performed on plain train / valid
 BatchSize 64
 
 LR      | Result (Best mAP)
-0.10000 |
+0.50000 | DIV after 1k
+0.25000 | DIV after 1k
+0.10000 | DIV after 1k
+0.05000 | DIV after 1k
+0.02500 |
 0.01000 |
 0.00500 |
 0.00250 |
@@ -26,14 +41,17 @@ LR      | Result (Best mAP)
 0.00025 |
 0.00010 |
 
-Experiment with data (reduce train set see how it behaves 1 0.8 0.6 0.4)
 
+    LR        BEST ABOVE
+    BatchSize 64
 
-| Grid                   | V1    | V2     | NumParams |
-| ------------           | --    | --     | --        |
-| Grid Paper Projection  | True  | False  | 2         |
-| Offline Rotate Flip    | True  | False  | 2         |
-
+| Grid Dataset | V1    | V2     | NumParams |
+| ------------ | --    | --     | --        |
+| Proj         | True  | False  | 2         |
+| Flip         | True  | False  | 2         |
+| Rot          | True  | False  | 2         |
+| ------------ | --    | --     | --        |
+| N            | --    | --     | 8         |
 
 
 Using best of above
@@ -42,9 +60,9 @@ Using best of above
 | ------------                       | --    | --     | --  | --        | --
 | Rotate                             | 0°    | 10°    | 20° | 30°       | 4
 | RandomScale                        | 0.0   | 0.2    | 0.4 | 0.6       | 4
-| Rotate and Scale (best above)      | True  | False  | 2   |
-| BBoxSafeCrop                       | True  | False  | 2   |
-| CLAHE & ColorJitter                | True  | False  | 2   |
+| Rotate and Scale (best above)      | True  | False  | 2   |           |
+| BBoxSafeCrop                       | True  | False  | 2   |           |
+| CLAHE & ColorJitter                | True  | False  | 2   |           |
 
 Using best of above
 

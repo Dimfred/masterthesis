@@ -46,7 +46,8 @@ class Trainer:
         map_on_step_mod=1,
         lr=0.00026,
         burn_in=1000,
-        resize_model=None
+        resize_model=None,
+        pexperiment=None
     ):
         self.yolo = yolo
         self.model = yolo.model
@@ -75,6 +76,8 @@ class Trainer:
         self.train_time_start = time.perf_counter()
 
         self.resize_model = resize_model
+
+        self.pexperiment = pexperiment
 
     def train(self, train_ds, valid_ds, **kwargs):
         trainable_vars = self.model.trainable_variables
@@ -132,15 +135,16 @@ class Trainer:
 
             if self.is_map_time():
                 results = self.mAP.compute(show=False)
-
                 tf.print(self.mAP.prettify(results))
+                self.pexperiment()
 
+            # TODO resize network?
             if self.resize_model is not None:
+                raise NotImplementedError("Resizing not implemented.")
                 self.model = self.resize_model(self.model, 576)
 
             self.print_valid(vlosses)
 
-            # TODO resize network?
 
     @tf.function
     def train_step(self, inputs, labels):
