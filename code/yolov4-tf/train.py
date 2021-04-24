@@ -174,8 +174,6 @@ if __name__ == "__main__":
             multiplier = (step / burn_in) ** 4
             return lr * multiplier
 
-
-
         return lr
 
     # gib ihm

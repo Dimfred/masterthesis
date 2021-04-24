@@ -25,7 +25,9 @@
 ## Initial LR Experiment
 
 Performed on plain train / valid
+Loss      CIoU
 BatchSize 64
+BurnIn    25 (50 epochs)
 
 LR      | Result (Best mAP)
 0.50000 | DIV after 1k
