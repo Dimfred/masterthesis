@@ -187,5 +187,6 @@ if __name__ == "__main__":
         lr_scheduler=lr_scheduler,
         # resize_model=resize_model,
         pexperiment=config.yolo.pexperiment,
+        burn_in=config.yolo.burn_in
     )
     trainer.train(train_dataset, valid_dataset)
