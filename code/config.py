@@ -58,8 +58,6 @@ config.train.std = 0.126536
 ########
 config.yolo = EasyDict()
 
-## experiment
-config.yolo.pexperiment = lambda: print(f"Experiment: LR {config.yolo.lr}")
 
 ## architecture
 config.yolo.input_size = 608  # 608, 736, 832, 928, 960, 1120, 1280, 1600
@@ -90,6 +88,7 @@ config.yolo.map_on_step_mod = 20  # 50
 config.yolo.validation_freq = 10 if utils.isme() else 10
 config.yolo.n_workers = 12
 config.yolo.validation_steps = -1 if utils.isme() else 2
+
 
 config.yolo.checkpoint_dir = Path("checkpoints")
 config.yolo.preload_dataset = True
@@ -376,3 +375,6 @@ config.labels_and_files_to_remove = [
     "ind_us_hor",
     "ind_us_ver",
 ]
+
+## experiment
+config.yolo.pexperiment = f"LR {config.yolo.lr}"

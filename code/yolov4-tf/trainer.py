@@ -47,7 +47,7 @@ class Trainer:
         lr=0.00026,
         burn_in=1000,
         resize_model=None,
-        pexperiment=None
+        pexperiment=None,
     ):
         self.yolo = yolo
         self.model = yolo.model
@@ -136,7 +136,6 @@ class Trainer:
             if self.is_map_time():
                 results = self.mAP.compute(show=False)
                 tf.print(self.mAP.prettify(results))
-                self.pexperiment()
 
             # TODO resize network?
             if self.resize_model is not None:
@@ -144,7 +143,6 @@ class Trainer:
                 self.model = self.resize_model(self.model, 576)
 
             self.print_valid(vlosses)
-
 
     @tf.function
     def train_step(self, inputs, labels):
@@ -206,8 +204,8 @@ class Trainer:
         losses = (ffloat(l) for l in losses)
 
         # fmt: off
-        p = [["Step", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall"]]
-        p += [[self.step_counter, f"{took}s", loss_sum, *losses, self.overall_train_time]]
+        p = [["Step", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall", "Experiment"]]
+        p += [[self.step_counter, f"{took}s", loss_sum, *losses, self.overall_train_time, self.pexperiment]]
         print(tabulate(p))
         # fmt: on
 
