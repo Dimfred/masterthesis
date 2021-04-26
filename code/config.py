@@ -65,7 +65,7 @@ config.yolo.channels = 1
 config.yolo.tiny = True
 config.yolo.small = True
 config.yolo.weights_type = "yolo"
-config.yolo.activation = "hswish"  # leaky, hswish
+config.yolo.activation = "leaky"  # leaky, hswish
 config.yolo.backbone = "yolo"  # yolo, mobilenetv3-large, mobilenetv3-small
 config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights"
 
