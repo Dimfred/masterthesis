@@ -77,7 +77,7 @@ config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
 config.yolo.loss_gamma = 0.0  # 0.5
 
 config.yolo.burn_in = 1000
-config.yolo.lr = 0.01  # 0.00261  # 1e-3
+config.yolo.lr = 0.01
 config.yolo.decay = 0.00025
 config.yolo.momentum = 0.90
 config.yolo.label_smoothing = 0.1
