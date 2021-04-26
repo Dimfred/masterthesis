@@ -22,7 +22,7 @@
     RotFlip Dataset = rotated and flipped
     Dataset = rotated, flipped, projections
 
-## InitialInitial LR Experiment
+## InitialInitial LR Test
 
 Performed on plain train / valid
 Loss      CIoU
@@ -79,7 +79,7 @@ BurnIn    1000 batches (2000 epochs)
 | 0.00010 | 82.87             |
 
 
-## Initial Learning Rate Test
+## Initial LR Test
 
     BurnIn     1000
     Batch      64
@@ -87,24 +87,146 @@ BurnIn    1000 batches (2000 epochs)
 
 | LR = 0.01    |
 | ---------    |
+| DIV          |
 
 | LR = 0.005   |
 | ----------   |
+| DIV          |
 
-| LR = 0.0025  |
-| -----------  |
+| LR = 0.0025  | 1      | 2      | 3      |
+| -----------  | ------ | ------ | ------ |
+| diode_left   |
+| diode_top    |
+| diode_right  |
+| diode_bot    |
+| res_de_hor   |
+| res_de_ver   |
+| cap_hor      |
+| cap_ver      |
+| gr_left      |
+| gr_top       |
+| gr_right     |
+| gr_bot       |
+| ind_de_hor   |
+| ind_de_ver   |
+| source_hor   |
+| source_ver   |
+| current_hor  |
+| current_ver  |
+| text         |
+| arrow_left   |
+| arrow_top    |
+| arrow_right  |
+| arrow_bot    |
+| OVERALL      |
 
-| LR = 0.001   |
-| ----------   |
+| LR = 0.001   | 1      | 2      | 3      |
+| ----------   | ------ | ------ | ------ |
+| diode_left   |
+| diode_top    |
+| diode_right  |
+| diode_bot    |
+| res_de_hor   |
+| res_de_ver   |
+| cap_hor      |
+| cap_ver      |
+| gr_left      |
+| gr_top       |
+| gr_right     |
+| gr_bot       |
+| ind_de_hor   |
+| ind_de_ver   |
+| source_hor   |
+| source_ver   |
+| current_hor  |
+| current_ver  |
+| text         |
+| arrow_left   |
+| arrow_top    |
+| arrow_right  |
+| arrow_bot    |
+| OVERALL      |
 
-| LR = 0.0005  |
-| -----------  |
+| LR = 0.0005  | 1      | 2      | 3      |
+| -----------  | ------ | ------ | ------ |
+| diode_left   |
+| diode_top    |
+| diode_right  |
+| diode_bot    |
+| res_de_hor   |
+| res_de_ver   |
+| cap_hor      |
+| cap_ver      |
+| gr_left      |
+| gr_top       |
+| gr_right     |
+| gr_bot       |
+| ind_de_hor   |
+| ind_de_ver   |
+| source_hor   |
+| source_ver   |
+| current_hor  |
+| current_ver  |
+| text         |
+| arrow_left   |
+| arrow_top    |
+| arrow_right  |
+| arrow_bot    |
+| OVERALL      |
 
-| LR = 0.00025 |
-| ------------ |
+| LR = 0.00025 | 1      | 2      | 3      |
+| ------------ | ------ | ------ | ------ |
+| diode_left   |
+| diode_top    |
+| diode_right  |
+| diode_bot    |
+| res_de_hor   |
+| res_de_ver   |
+| cap_hor      |
+| cap_ver      |
+| gr_left      |
+| gr_top       |
+| gr_right     |
+| gr_bot       |
+| ind_de_hor   |
+| ind_de_ver   |
+| source_hor   |
+| source_ver   |
+| current_hor  |
+| current_ver  |
+| text         |
+| arrow_left   |
+| arrow_top    |
+| arrow_right  |
+| arrow_bot    |
+| OVERALL      |
 
-| LR = 0.0001  |
-| -----------  |
+| LR = 0.0001  | 1      | 2      | 3      |
+| -----------  | ------ | ------ | ------ |
+| diode_left   |
+| diode_top    |
+| diode_right  |
+| diode_bot    |
+| res_de_hor   |
+| res_de_ver   |
+| cap_hor      |
+| cap_ver      |
+| gr_left      |
+| gr_top       |
+| gr_right     |
+| gr_bot       |
+| ind_de_hor   |
+| ind_de_ver   |
+| source_hor   |
+| source_ver   |
+| current_hor  |
+| current_ver  |
+| text         |
+| arrow_left   |
+| arrow_top    |
+| arrow_right  |
+| arrow_bot    |
+| OVERALL      |
 
 
 ------------------------------------------------------------------------------
