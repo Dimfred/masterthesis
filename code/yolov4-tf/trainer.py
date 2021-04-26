@@ -154,6 +154,7 @@ class Trainer:
 
             if self.step_counter >= self.max_steps:
                 tf.print(self.best_mAP_pretty)
+                break
 
     @tf.function
     def train_step(self, inputs, labels):
