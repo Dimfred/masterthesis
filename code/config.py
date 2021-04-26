@@ -74,11 +74,11 @@ config.yolo.batch_size = 2 if utils.isme() else 16
 config.yolo.accumulation_steps = 8 if utils.isme() else 4
 config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_steps
 config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
-config.yolo.loss_gamma = 0.0 # 0.5
+config.yolo.loss_gamma = 0.0  # 0.5
 
-config.yolo.burn_in = 500
-config.yolo.lr = 0.001 #0.00261  # 1e-3
-config.yolo.decay = 0.0005
+config.yolo.burn_in = 1000
+config.yolo.lr = 0.01  # 0.00261  # 1e-3
+config.yolo.decay = 0.00025
 config.yolo.momentum = 0.90
 config.yolo.label_smoothing = 0.1
 

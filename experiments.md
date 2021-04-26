@@ -22,13 +22,12 @@
     RotFlip Dataset = rotated and flipped
     Dataset = rotated, flipped, projections
 
-## Initial LR Experiment
+## InitialInitial LR Experiment
 
 Performed on plain train / valid
 Loss      CIoU
 BatchSize 64
 Capped at 4000 steps
-
 
 BurnIn     0 batches ALL DIV
 
@@ -57,27 +56,56 @@ LR      | Result (Best mAP)
 
 BurnIn    500 batches (1000 epochs)
 
-| LR    | Result (Best mAP) |
-| ----- | ----------------- |
-0.01000 | 82.28             |
-0.00500 | 81.76             |
-0.00250 | 78.47             |
-0.00100 | 81.20             |
-0.00050 | 79.36             |
-0.00025 | 84.60             |
-0.00010 | 82.60             |
+| LR      | Result (Best mAP) |
+| -----   | ----------------- |
+| 0.01000 | 82.28             |
+| 0.00500 | 81.76             |
+| 0.00250 | 81.18             |
+| 0.00100 | 81.20             |
+| 0.00050 | 79.36             |
+| 0.00025 | 84.60             |
+| 0.00010 | 82.60             |
 
 BurnIn    1000 batches (2000 epochs)
 
 | LR      | Result (Best mAP) |
 | ------- | ----------------- |
-| 0.01000 |
-| 0.00500 |
-| 0.00250 |
-| 0.00100 |
-| 0.00050 |
-| 0.00025 |
-| 0.00010 |
+| 0.01000 | 82.48             |
+| 0.00500 | 82.24             |
+| 0.00250 | 83.78             |
+| 0.00100 | 81.20             |
+| 0.00050 | 81.86             |
+| 0.00025 | 79.83             |
+| 0.00010 | 82.87             |
+
+
+## Initial Learning Rate Test
+
+    BurnIn     1000
+    Batch      64
+    MaxBatches 4000
+
+| LR = 0.01    |
+| ---------    |
+
+| LR = 0.005   |
+| ----------   |
+
+| LR = 0.0025  |
+| -----------  |
+
+| LR = 0.001   |
+| ----------   |
+
+| LR = 0.0005  |
+| -----------  |
+
+| LR = 0.00025 |
+| ------------ |
+
+| LR = 0.0001  |
+| -----------  |
+
 
 ------------------------------------------------------------------------------
 
@@ -97,9 +125,8 @@ Using best of above
 
 | Ablation 2                         |       |        |     |           | NumParams
 | ------------                       | --    | --     | --  | --        | --
-| Rotate                             | 0°    | 10°    | 20° | 30°       | 4
-| RandomScale                        | 0.0   | 0.2    | 0.4 | 0.6       | 4
-| Rotate and Scale (best above)      | True  | False  | 2   |           |
+| Rotate                             | 10°   | 20°    | 30° |           | 4
+| RandomScale                        | 0.2   | 0.4    | 0.6 |           | 4
 | BBoxSafeCrop                       | True  | False  | 2   |           |
 | CLAHE & ColorJitter                | True  | False  | 2   |           |
 

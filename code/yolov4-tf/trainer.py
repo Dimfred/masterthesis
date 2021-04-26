@@ -63,6 +63,7 @@ class Trainer:
         )
         self.best_mAP = 0.0
         self.best_mAP_step = 0
+        self.best_mAP_pretty = None
 
         self.max_steps = max_steps
         self.validation_freq = validation_freq
@@ -135,12 +136,14 @@ class Trainer:
 
             if self.is_map_time():
                 results = self.mAP.compute(show=False)
-                tf.print(self.mAP.prettify(results))
+                pretty = self.mAP.prettify(results)
+                tf.print(pretty)
 
                 mAP50 = self.mAP.get_maps(results)[0][1]
                 if mAP50 > self.best_mAP:
                     self.best_mAP = mAP50
                     self.best_mAP_step = self.step_counter
+                    self.best_mAP_pretty = pretty
 
             # TODO resize network?
             if self.resize_model is not None:
@@ -150,7 +153,7 @@ class Trainer:
             self.print_valid(vlosses)
 
             if self.step_counter >= self.max_steps:
-                break
+                tf.print(self.best_mAP_pretty)
 
     @tf.function
     def train_step(self, inputs, labels):
