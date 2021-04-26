@@ -17,9 +17,10 @@ def rem_rot_all(dir_):
         cv.imwrite(str(path), img)
 
 def main():
-    rem_rot_all(config.train_dir)
-    rem_rot_all(config.valid_dir)
-    rem_rot_all(config.test_dir)
+    # rem_rot_all(config.train_dir)
+    # rem_rot_all(config.valid_dir)
+    # rem_rot_all(config.test_dir)
+    rem_rot_all(config.unlabeled_dir)
 
 if __name__ == "__main__":
     main()
