@@ -34,6 +34,9 @@ config.foregrounds_dir = config.data / "foregrounds"
 config.backgrounds_dir = config.data / "backgrounds"
 config.merged_dir = config.data / "merged"
 
+# texts
+config.texts_dir = config.data / "texts"
+
 # mnist
 config.mnist_dir = config.data / "mnist"
 config.mnist_train_dir = config.mnist_dir / "train"

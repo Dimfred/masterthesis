@@ -116,7 +116,7 @@ if __name__ == "__main__":
 
     imgs = dict(imgs)
     for i in range(len(fgs)):
-        fgs[i][1][fgs[i][1] == 2] = 0
+        fgs[i][1][fgs[i][1] == 2] = 1
         fgs[i][1][fgs[i][1] == 3] = 1
 
     for bg_path, bg_img in bgs:

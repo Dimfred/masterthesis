@@ -5,6 +5,7 @@ import os
 import math
 from collections import deque
 import mean_average_precision
+import albumentations as A
 
 # from numba import njit
 
@@ -102,8 +103,14 @@ def resize(img, width: int = None, height: int = None, interpolation=cv.INTER_CU
 def resize_max_axis(img, size):
     h, w = img.shape[:2]
     if h > w:
+        if h == size:
+            return img
+
         return resize(img, height=size)
     else:
+        if w == size:
+            return img
+
         return resize(img, width=size)
 
 
@@ -830,3 +837,22 @@ class Orientation:
             return "t"
         if orientation == 3:
             return "b"
+
+
+
+# class TextProjection(A.core.transforms_interface.DualTransform):
+#     def __init__(self):
+#         super().__init__()
+
+#     def apply(self, img, **params):
+#         for
+
+#     def apply_to_bbox(self, bbox, **params):
+#         for
+
+#     def get_params_dependent_on_targets(self, params):
+
+
+#     @property
+#     def targets_as_params(self):
+#         return [""]
