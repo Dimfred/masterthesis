@@ -943,6 +943,7 @@ class TextProjection(AA.core.transforms_interface.DualTransform):
     def apply_to_bbox(self, bbox, new_img, new_bboxes, **params):
         return bbox
 
+    @stopwatch("main")
     def get_params_dependent_on_targets(self, params):
         img = params["image"]
         bboxes = params["bboxes"]
@@ -1020,6 +1021,7 @@ class TextProjection(AA.core.transforms_interface.DualTransform):
     def get_transform_init_args_names(self):
         return ("text_idx",)
 
+    @stopwatch("is_bbox_valid")
     def is_bbox_valid(self, new_bbox, new_bboxes, present_bboxes):
         for present_bbox in present_bboxes:
             iou = calc_iou(new_bbox.abs, present_bbox.abs)
@@ -1033,6 +1035,7 @@ class TextProjection(AA.core.transforms_interface.DualTransform):
 
         return True
 
+    @stopwatch("get_orientation")
     def get_orientation(self, cls_idx):
         cls_name = self.classes[cls_idx]
         # print(cls_name)
@@ -1047,6 +1050,7 @@ class TextProjection(AA.core.transforms_interface.DualTransform):
         else:
             return "ver"
 
+    @stopwatch("calc_annotation_size")
     def calc_annotation_size(self, bbox, orientation):
         w_bbox, h_bbox = bbox.abs_dim
         # print("-----------------------------")
@@ -1065,6 +1069,7 @@ class TextProjection(AA.core.transforms_interface.DualTransform):
 
         return h_annotation, w_annotation
 
+    @stopwatch("calc_start_coords")
     def calc_start_coordinates(self, bbox, h_annotation, w_annotation, orientation):
         ih, iw = bbox.img_dim
         mx_bbox, my_bbox = bbox.abs_mid
@@ -1108,6 +1113,7 @@ class TextProjection(AA.core.transforms_interface.DualTransform):
 
         return y_annotation_start, x_annotation_start
 
+    @stopwatch("has_text")
     def has_text(self, bboxes):
         for _, _, _, _, cls_ in bboxes:
             if int(cls_) == self.text_idx:
@@ -1115,6 +1121,7 @@ class TextProjection(AA.core.transforms_interface.DualTransform):
 
         return False
 
+    @stopwatch("is_ground")
     def is_ground(self, cls_):
         return cls_ in self.ground_idxs
 
