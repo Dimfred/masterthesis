@@ -325,6 +325,8 @@ class TFDataset:
             x, y, idx = next_data()
             if augmentations is not None:
                 x, y = augmentations(x, y)
+                # utils.show(x)
+                utils.show_bboxes(x, y, type_="class_to_front")
 
             # TODO bad
             if not self.data_augmentation:
@@ -383,6 +385,7 @@ class TFDataset:
         dataset = dataset.map(lambda *args: args, num_parallel_calls=self.n_workers)
         dataset = dataset.prefetch(50)
 
+        return iter(self._generator())
         return iter(dataset)
 
     def __len__(self):

@@ -1,6 +1,5 @@
 # Experiments
 
-!!!!!!!!!Experiment with data (reduce train set see how it behaves 1 0.8 0.6 0.4)
 
 ## General
 
@@ -12,6 +11,7 @@
         clip_limit := upper threshold for contrast limiting
     Just want to use the default values for CLAHE and turn on off
 
+    !!!!!!!!!Experiment with data (reduce train set see how it behaves 1 0.8 0.6 0.4)
 
 ## Definitions
 

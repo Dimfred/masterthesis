@@ -5,7 +5,9 @@ import os
 import math
 from collections import deque
 import mean_average_precision
-import albumentations as A
+import albumentations as AA
+import random
+from concurrent.futures import ThreadPoolExecutor
 
 # from numba import njit
 
@@ -65,8 +67,8 @@ def show_bboxes(img, bboxes, orig=None, type_="gt"):
         raise ValueError(f"Unknown bbox type '{type_}' in show_bboxes.")
 
     cimg = img.copy()
-    if len(cimg.shape) == 1:
-        cimg = cv.cvtColor(cv.COLOR_GRAY2BGR)
+    # if len(cimg.shape) == 1:
+    #     cimg = cv.cvtColor(cv.COLOR_GRAY2BGR)
 
     for bbox in bboxes:
         x1, y1, x2, y2 = bbox.abs
@@ -241,14 +243,18 @@ def img_from_fg(img_path: Path, fg_path: Path) -> Path:
     name = str(name).replace("_fg_mask", "")
     return img_path / name
 
+
 def merged_name(img_path, bg_path):
     return f"{img_path.stem}_{bg_path.stem}{img_path.suffix}"
+
 
 def pairwise(iterable, offset=1):
     return zip(iterable[:-offset], iterable[offset:])
 
+
 def has_annotation(path):
     return "_a" in str(path)
+
 
 def hough_inter(line1, line2):
     rho1, theta1 = line1
@@ -263,8 +269,11 @@ def hough_inter(line1, line2):
 
 
 class YoloBBox:
-    def __init__(self, img_dim):
+    def __init__(self, img_dim, x=None, y=None, w=None, h=None, label=None):
         self.img_dim = img_dim[:2]
+        self.x, self.y = x, y
+        self.w, self.h = w, h
+        self.label = label
 
     def from_prediction(self, prediction):
         x, y, w, h, label, confidence = prediction
@@ -318,6 +327,71 @@ class YoloBBox:
     def abs_mid(self):
         ih, iw = self.img_dim
         xm, ym = self.x * iw, self.y * ih
+
+        return xm, ym
+
+    @cached_property
+    def abs_dim(self):
+        x1, y1, x2, y2 = self.abs
+        h, w = (y2 - y1), (x2 - x1)
+
+        return w, h
+
+    def yolo(self):
+        return np.array((self.x, self.y, self.w, self.h, self.label))
+
+    def __hash__(self):
+        return hash(self.__key())
+
+    def __key(self):
+        return (self.label, self.x, self.y, self.w, self.h)
+
+    def __eq__(self, other):
+        if not isinstance(self, type(other)):
+            raise ValueError("Wrong type used for equal.")
+
+        return hash(self) == hash(other)
+
+
+class AlbumentationsBBox:
+    def __init__(self, img_dim):
+        self.img_dim = img_dim[:2]
+
+    def from_rel(self, bbox):
+        x1, y1, x2, y2, label = bbox
+        self.label = int(label)
+        self.x1 = float(x1)
+        self.y1 = float(y1)
+        self.x2 = float(x2)
+        self.y2 = float(y2)
+
+        return self
+
+    def from_abs(self, x1, y1, x2, y2, label):
+        self.label = int(label)
+        ih, iw = self.img_dim
+
+        self.x1 = x1 / iw
+        self.y1 = y1 / ih
+        self.x2 = x2 / iw
+        self.y2 = y2 / ih
+
+        return self
+
+    @cached_property
+    def abs(self):
+        ih, iw = self.img_dim
+
+        y1, x1 = self.y1 * ih, self.x1 * iw
+        y2, x2 = self.y2 * ih, self.x2 * iw
+
+        return int(x1), int(y1), int(x2), int(y2)
+
+    @cached_property
+    def abs_mid(self):
+        x1, y1, x2, y2 = self.abs
+        xm = x1 + (x2 - x1) // 2
+        ym = y1 + (y2 - y1) // 2
 
         return xm, ym
 
@@ -839,20 +913,221 @@ class Orientation:
             return "b"
 
 
+def project(src, dst, y, x):
+    where_src = np.argwhere(src != 255)
+    y, x = int(y), int(x)
+    for y_src, x_src in where_src:
+        # print(y_src, x_src)
+        y_dst, x_dst = y_src + y, x_src + x
+        # print(y_dst, x_dst)
+        dst[y_dst, x_dst, 0] = src[y_src, x_src]
 
-# class TextProjection(A.core.transforms_interface.DualTransform):
-#     def __init__(self):
-#         super().__init__()
-
-#     def apply(self, img, **params):
-#         for
-
-#     def apply_to_bbox(self, bbox, **params):
-#         for
-
-#     def get_params_dependent_on_targets(self, params):
+    return dst
 
 
-#     @property
-#     def targets_as_params(self):
-#         return [""]
+class TextProjection(AA.core.transforms_interface.DualTransform):
+    def __init__(self, text_idx, ground_idxs, texts, classes, *args, **kwargs):
+        super(TextProjection, self).__init__(*args, **kwargs)
+        self.classes = classes
+        self.text_idx = text_idx
+        self.ground_idxs = ground_idxs
+        self.texts = texts
+        self.annotation_probability = 0.5
+
+        self.scale_margin = 0.1  # => [0.9, 1.1]
+
+    def apply(self, img, new_img, new_bboxes, **params):
+        return img
+
+    def apply_to_bbox(self, bbox, new_img, new_bboxes, **params):
+        return bbox
+
+    def get_params_dependent_on_targets(self, params):
+        img = params["image"]
+        bboxes = params["bboxes"]
+
+        if self.has_text(bboxes):
+            return {"new_img": None, "new_bboxes": None}
+
+        alb_bboxes = [AlbumentationsBBox(img.shape).from_rel(bbox) for bbox in bboxes]
+
+        new_bboxes, new_texts = [], []
+        for bbox in alb_bboxes:
+            if self.is_ground(bbox.label):
+                continue
+
+            # change to perform an annotation on this bbox
+            if np.random.uniform() < self.annotation_probability:
+                continue
+
+
+            orientation = self.get_orientation(bbox.label)
+            h_annotation, w_annotation = self.calc_annotation_size(bbox, orientation)
+            text = random.choice(self.texts).copy()
+            text = resize(text, w_annotation, h_annotation)
+            h_annotation, w_annotation = text.shape[:2]
+
+            annotation_start = self.calc_start_coordinates(
+                bbox, h_annotation, w_annotation, orientation
+            )
+            # when we are out of bounds by the calculation
+            if annotation_start is None:
+                continue
+
+            y_start_bbox, x_start_bbox = annotation_start
+
+            h_text_bbox, w_text_bbox = text.shape[:2]
+            h_text_bbox += 4
+            w_text_bbox += 4
+
+            y_end_bbox, x_end_bbox = (
+                y_start_bbox + h_text_bbox,
+                x_start_bbox + w_text_bbox,
+            )
+
+            text_bbox = AlbumentationsBBox(img.shape).from_abs(
+                x_start_bbox, y_start_bbox, x_end_bbox, y_end_bbox, self.text_idx
+            )
+
+            if not self.is_bbox_valid(text_bbox, new_bboxes, alb_bboxes):
+                continue
+            new_bboxes.append(text_bbox)
+
+            img = project(text, img, *annotation_start)
+            bboxes.append(
+                (
+                    text_bbox.x1,
+                    text_bbox.y1,
+                    text_bbox.x2,
+                    text_bbox.y2,
+                    text_bbox.label,
+                )
+            )
+
+
+        # DEBUG
+        # alb_bboxes = [AlbumentationsBBox(img.shape).from_rel(bbox) for bbox in bboxes]
+        # # show_bboxes(img, alb_bboxes, type_="utils")
+        # show(img)
+
+        return {"new_img": img, "new_bboxes": bboxes}
+
+    @property
+    def targets_as_params(self):
+        return ["image", "bboxes"]
+
+    def get_transform_init_args_names(self):
+        return ("text_idx",)
+
+    def is_bbox_valid(self, new_bbox, new_bboxes, present_bboxes):
+        for present_bbox in present_bboxes:
+            iou = calc_iou(new_bbox.abs, present_bbox.abs)
+            if iou > 0.03:
+                return False
+
+        for present_bbox in new_bboxes:
+            iou = calc_iou(new_bbox.abs, present_bbox.abs)
+            if iou > 0.03:
+                return False
+
+        return True
+
+    def get_orientation(self, cls_idx):
+        cls_name = self.classes[cls_idx]
+        # print(cls_name)
+        _, cls_orientation = cls_name.rsplit("_", 1)
+
+        if (
+            cls_orientation == "left"
+            or cls_orientation == "right"
+            or cls_orientation == "hor"
+        ):
+            return "hor"
+        else:
+            return "ver"
+
+    def calc_annotation_size(self, bbox, orientation):
+        w_bbox, h_bbox = bbox.abs_dim
+        # print("-----------------------------")
+        # print("AbsDim", bbox.abs_dim)
+        # print("RelDim", bbox.h, bbox.w)
+        scaler = np.random.uniform(0.6, 1.0)
+        # print("Scaler", scaler)
+
+        if orientation == "hor":
+            h_annotation = int(scaler * h_bbox)
+            w_annotation = None
+        else:
+            h_annotation = int(scaler * w_bbox)
+            w_annotation = None
+        # print("AbsH", h_annotation)
+
+        return h_annotation, w_annotation
+
+    def calc_start_coordinates(self, bbox, h_annotation, w_annotation, orientation):
+        ih, iw = bbox.img_dim
+        mx_bbox, my_bbox = bbox.abs_mid
+        x1, y1, x2, y2 = bbox.abs
+
+        if orientation == "hor":
+            x_annotation_start = int(mx_bbox) - (w_annotation // 2)
+            if x_annotation_start < 0:
+                return None
+
+            # top
+            if random.uniform(0, 1) <= 0.5:
+                y_annotation_start = y1 - 2 - h_annotation
+                if y_annotation_start < 0:
+                    return None
+            # bot
+            else:
+                y_annotation_start = y2 + 2
+        else:
+            y_annotation_start = int(my_bbox) - (h_annotation // 2)
+            if y_annotation_start < 0:
+                return None
+
+            # left
+            if random.uniform(0, 1) <= 0.5:
+                x_annotation_start = x1 - 2 - w_annotation
+                if x_annotation_start < 0:
+                    return None
+            # right
+            else:
+                x_annotation_start = x2 + 2
+
+        # aditionally verify positive img bounds
+        x_annotation_end = x_annotation_start + w_annotation
+        if x_annotation_end > iw:
+            return None
+
+        y_annotation_end = y_annotation_start + h_annotation
+        if y_annotation_end > ih:
+            return None
+
+        return y_annotation_start, x_annotation_start
+
+    def has_text(self, bboxes):
+        for _, _, _, _, cls_ in bboxes:
+            if int(cls_) == self.text_idx:
+                return True
+
+        return False
+
+    def is_ground(self, cls_):
+        return cls_ in self.ground_idxs
+
+
+def load_imgs(dir_, read_type=cv.IMREAD_ANYCOLOR):
+    imgs = []
+
+    def read(path):
+        img = cv.imread(str(path), read_type)
+        imgs.append(img)
+
+    img_paths = list_imgs(dir_)
+    with ThreadPoolExecutor(max_workers=32) as executor:
+        for path in img_paths:
+            executor.submit(read, path)
+
+    return imgs

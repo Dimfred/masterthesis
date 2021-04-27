@@ -1,6 +1,6 @@
-from os import remove
 import cv2 as cv
 import numpy as np
+import os
 
 from config import config
 import utils
@@ -16,17 +16,17 @@ def is_annotated(path):
 
 counter = 0
 
+
 def next_text_path():
     global counter
     path = config.texts_dir / f"{str(counter).zfill(3)}_text.png"
-    counter +=1
+    counter += 1
     return str(path)
-
 
 
 def main():
     for path in config.texts_dir.glob("**/*.*"):
-        sh.remove(path)
+        os.remove(path)
 
     classes = utils.Yolo.parse_classes(config.train_dir / "classes.txt")
     img_paths = utils.list_imgs(config.train_dir)
@@ -57,24 +57,33 @@ def main():
             if is_annotated(fg_path):
                 executor.submit(read, fg_path)
 
-
     texts = []
     for fg_path, fg, img_path, img, label_path, bboxes in fgs_imgs_bboxes:
         mask = fg * img
-        for bbox in bboxes:
-            if classes[bbox.label] != "text":
-                continue
 
-            x1, y1, x2, y2 = bbox.abs
-            text = mask[y1:y2, x1:x2]
-            text[text == 0] = 255
+        text_idxs = [
+            idx for idx, bbox in enumerate(bboxes) if classes[bbox.label] == "text"
+        ]
 
-            out_path = next_text_path()
-            cv.imwrite(out_path, text)
+        for text_idx in text_idxs:
+            is_okay = True
 
+            text_bbox = bboxes[text_idx]
+            for bbox_idx, bbox in enumerate(bboxes):
+                if bbox_idx == text_idx:
+                    continue
 
+                if utils.calc_iou(bbox.abs, text_bbox.abs) > 0.0:
+                    is_okay = False
+                    break
 
+            if is_okay:
+                x1, y1, x2, y2 = text_bbox.abs
+                text = mask[y1:y2, x1:x2]
+                text[text == 0] = 255
 
+                out_path = next_text_path()
+                cv.imwrite(out_path, text)
 
 
 if __name__ == "__main__":
