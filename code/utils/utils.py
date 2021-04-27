@@ -943,7 +943,7 @@ class TextProjection(AA.core.transforms_interface.DualTransform):
     def apply_to_bbox(self, bbox, new_img, new_bboxes, **params):
         return bbox
 
-    @stopwatch("main")
+    # @stopwatch("main")
     def get_params_dependent_on_targets(self, params):
         img = params["image"]
         bboxes = params["bboxes"]
