@@ -9,7 +9,7 @@ import albumentations as AA
 import random
 from concurrent.futures import ThreadPoolExecutor
 
-# from numba import njit
+import numba as nb
 
 from pathlib import Path
 from cached_property import cached_property
@@ -913,6 +913,7 @@ class Orientation:
             return "b"
 
 
+@nb.njit
 def project(src, dst, y, x):
     where_src = np.argwhere(src != 255)
     y, x = int(y), int(x)
