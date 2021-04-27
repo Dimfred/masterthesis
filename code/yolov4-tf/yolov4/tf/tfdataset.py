@@ -325,8 +325,9 @@ class TFDataset:
             x, y, idx = next_data()
             if augmentations is not None:
                 x, y = augmentations(x, y)
+                # DEBUG
                 # utils.show(x)
-                utils.show_bboxes(x, y, type_="class_to_front")
+                # utils.show_bboxes(x, y, type_="class_to_front")
 
             # TODO bad
             if not self.data_augmentation:
@@ -371,6 +372,13 @@ class TFDataset:
             output_types=output_types,
             output_shapes=output_shapes,
         )
+        dataset = dataset.map(lambda *args: args, num_parallel_calls=self.n_workers)
+        dataset = dataset.prefetch(50)
+
+        # DEBUG
+        # return iter(self._generator())
+        return iter(dataset)
+
         # can be used to parallelize
         # dataset = dataset.interleave(
         #     lambda *args: tf.data.Dataset.from_generator(
@@ -382,11 +390,6 @@ class TFDataset:
         #     cycle_length=1,
         #     num_parallel_calls=1
         # )
-        dataset = dataset.map(lambda *args: args, num_parallel_calls=self.n_workers)
-        dataset = dataset.prefetch(50)
-
-        return iter(self._generator())
-        return iter(dataset)
 
     def __len__(self):
         return len(self.dataset)
