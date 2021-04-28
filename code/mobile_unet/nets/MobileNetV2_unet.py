@@ -36,6 +36,7 @@ class MobileNetV2_unet(nn.Module):
         # self.dense0 = conv_1x1_bn(320, 1280)
 
         self.dconv1 = nn.ConvTranspose2d(1280, 96, 4, padding=1, stride=2)
+        # TODO upsample bilinear
         self.invres1 = InvertedResidual(192, 96, 1, 6)
 
         self.dconv2 = nn.ConvTranspose2d(96, 32, 4, padding=1, stride=2)
