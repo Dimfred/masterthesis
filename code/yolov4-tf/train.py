@@ -90,18 +90,20 @@ def train_augmentations(image, bboxes):
         # ], p=0.3),
         # A.Blur(blur_limit=3, p=0.3),
         # A.GaussNoise(p=0.3),
-        utils.TextProjection(
-            text_idx=classes.index("text"),
-            ground_idxs=[
-                classes.index("gr_left"),
-                classes.index("gr_right"),
-                classes.index("gr_bot"),
-                classes.index("gr_top")
-            ],
-            texts=utils.load_imgs(config.texts_dir, cv.IMREAD_GRAYSCALE),
-            classes=utils.Yolo.parse_classes(config.train_out_dir / "classes.txt"),
-            always_apply=True
-        ),
+
+        # SLOW AF and not a real bonus, but could be just wrong
+        # utils.TextProjection(
+        #     text_idx=classes.index("text"),
+        #     ground_idxs=[
+        #         classes.index("gr_left"),
+        #         classes.index("gr_right"),
+        #         classes.index("gr_bot"),
+        #         classes.index("gr_top")
+        #     ],
+        #     texts=utils.load_imgs(config.texts_dir, cv.IMREAD_GRAYSCALE),
+        #     classes=utils.Yolo.parse_classes(config.train_out_dir / "classes.txt"),
+        #     always_apply=True
+        # ),
         base_augmentations
     ], bbox_params=A.BboxParams("yolo"))
 
