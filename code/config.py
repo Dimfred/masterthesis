@@ -380,4 +380,4 @@ config.labels_and_files_to_remove = [
 ]
 
 ## experiment
-config.yolo.pexperiment = f"LR {config.yolo.lr}"
+config.yolo.pexperiment = f"LR_{config.yolo.lr}"

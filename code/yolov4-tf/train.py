@@ -203,5 +203,6 @@ if __name__ == "__main__":
         # resize_model=resize_model,
         pexperiment=config.yolo.pexperiment,
         burn_in=config.yolo.burn_in,
+        checkpoint_dir=config.yolo.checkpoint_dir,
     )
     trainer.train(train_dataset, valid_dataset)

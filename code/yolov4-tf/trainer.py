@@ -49,6 +49,7 @@ class Trainer:
         burn_in=1000,
         resize_model=None,
         pexperiment=None,
+        checkpoint_dir=None,
     ):
         self.yolo = yolo
         self.model = yolo.model
@@ -81,6 +82,7 @@ class Trainer:
         self.resize_model = resize_model
 
         self.pexperiment = pexperiment
+        self.checkpoint_dir = checkpoint_dir
 
     def train(self, train_ds, valid_ds, **kwargs):
         trainable_vars = self.model.trainable_variables
@@ -144,6 +146,11 @@ class Trainer:
                     self.best_mAP = mAP50
                     self.best_mAP_step = self.step_counter
                     self.best_mAP_pretty = pretty
+
+                    weight_path = (
+                        self.checkpoint_dir / f"{self.pexperiment}_best.weights"
+                    )
+                    self.yolo.save_weights(str(weight_path), weights_type="yolo")
 
             # TODO resize network?
             if self.resize_model is not None:
