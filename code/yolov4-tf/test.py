@@ -56,11 +56,11 @@ if test_dataset:
 yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
 #dirs = [config.data / "tmp"]
-dirs = [config.valid_out_dir]
+# dirs = [config.valid_out_dir]
 # dirs = [config.unlabeled_dir]
-# dirs = [config.unused_data_dir]
+dirs = [config.unused_data_dir]
 for dir_ in dirs:
     for img_path in utils.list_imgs(dir_):
-        print(str(img_path))
-        utils.show(cv.imread((str(img_path))))
+        # print(str(img_path))
+        # utils.show(cv.imread((str(img_path))))
         yolo.inference(str(img_path))

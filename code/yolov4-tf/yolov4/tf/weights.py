@@ -338,7 +338,7 @@ def panet_tiny_save_weights(panet_tiny, fd):
 
 
 def panet_tiny_small_save_weights(panet_tiny, fd):
-    print("save small")
+    # print("save small")
     for i in range(15, 24):
         layer_name = "yolo_conv2d_%d" % i
 

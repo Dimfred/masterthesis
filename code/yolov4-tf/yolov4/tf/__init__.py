@@ -79,7 +79,7 @@ class YOLOv4(BaseClass):
                 activation=activation1,
                 kernel_regularizer=kernel_regularizer,
                 small=self.small,
-                backbone=backbone
+                backbone=backbone,
             )
         else:
             self.model = yolov4.YOLOv4(
@@ -95,7 +95,6 @@ class YOLOv4(BaseClass):
         self.model.backbone.summary()
         self.model.panet_tiny.summary()
         self.model.yolov3_head_tiny.summary()
-
 
     @cached_property
     def minibatch_idxs(self):
@@ -133,7 +132,9 @@ class YOLOv4(BaseClass):
             yolo.save_weights("checkpoints")
         """
         if weights_type == "yolo":
-            weights.save_weights(self.model, weights_path, tiny=self.tiny)
+            weights.save_weights(
+                self.model, weights_path, tiny=self.tiny, small=self.small
+            )
         elif weights_type == "tf":
             self.model.save_weights(weights_path)
 
@@ -316,7 +317,7 @@ class YOLOv4(BaseClass):
             data_augmentation=training,
             augmentations=augmentations,
             preload=preload,
-            n_workers=n_workers
+            n_workers=n_workers,
         )
 
     def compile(
@@ -333,7 +334,7 @@ class YOLOv4(BaseClass):
                 batch_size=self.batch_size,
                 iou_type=loss_iou_type,
                 verbose=loss_verbose,
-                gamma=loss_gamma
+                gamma=loss_gamma,
             ),
             **kwargs,
         )
