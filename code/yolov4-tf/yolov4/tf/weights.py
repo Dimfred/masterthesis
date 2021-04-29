@@ -338,7 +338,6 @@ def panet_tiny_save_weights(panet_tiny, fd):
 
 
 def panet_tiny_small_save_weights(panet_tiny, fd):
-    # print("save small")
     for i in range(15, 24):
         layer_name = "yolo_conv2d_%d" % i
 
@@ -363,7 +362,6 @@ def yolov4_tiny_save_weignts(yolov4_tiny, fd):
 
 
 def yolov4_tiny_small_save_weignts(yolov4_tiny, fd):
-    print("save small")
     csp_darknet53_tiny = yolov4_tiny.get_layer("CSPDarknet53Tiny")
     csp_darknet53_tiny_save_weights(csp_darknet53_tiny, fd)
 
