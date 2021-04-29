@@ -53,7 +53,8 @@ if test_dataset:
     sys.exit()
 
 
-yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
+loaded = yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
+assert loaded
 
 #dirs = [config.data / "tmp"]
 # dirs = [config.valid_out_dir]

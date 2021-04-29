@@ -163,10 +163,11 @@ class Trainer:
                 tf.print(self.best_mAP_pretty)
                 break
 
-            weight_path = (
-                self.checkpoint_dir / f"{self.pexperiment}_best.weights"
-            )
-            self.yolo.save_weights(str(weight_path), weights_type="yolo")
+            # DEBUG
+            # weight_path = (
+            #     self.checkpoint_dir / f"{self.pexperiment}_best.weights"
+            # )
+            # self.yolo.save_weights(str(weight_path), weights_type="yolo")
 
     @tf.function
     def train_step(self, inputs, labels):

@@ -366,4 +366,4 @@ def yolov4_tiny_small_save_weignts(yolov4_tiny, fd):
     csp_darknet53_tiny_save_weights(csp_darknet53_tiny, fd)
 
     panet_tiny_small = yolov4_tiny.get_layer("PANetTiny")
-    panet_tiny_save_weights(panet_tiny_small, fd)
+    panet_tiny_small_save_weights(panet_tiny_small, fd)
