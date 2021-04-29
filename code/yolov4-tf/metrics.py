@@ -54,13 +54,13 @@ for input_size in (608,):  # 832):
     yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
     # yolo.load_weights(config.weights_dir / "yolov4-tiny-100.weights", weights_type=config.yolo.weights_type)
 
-    dir_ = config.valid_out_dir
+    dir_ = config.test_out_dir
 
     preds, gts = [], []
     for img_path in utils.list_imgs(dir_):
         if filter_(img_path):
-            # print(file_)
-            ground_truth_path = utils.yolo_label_from_img(img_path)
+            print(img_path)
+            ground_truth_path = utils.Yolo.label_from_img(img_path)
 
             img = cv.imread(str(img_path), cv.IMREAD_GRAYSCALE)
             img = utils.resize_max_axis(img, 1000)

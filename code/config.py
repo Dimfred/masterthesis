@@ -37,6 +37,9 @@ config.merged_dir = config.data / "merged"
 # texts
 config.texts_dir = config.data / "texts"
 
+# unused_data
+config.unused_data_dir = config.data / "unused_data"
+
 # mnist
 config.mnist_dir = config.data / "mnist"
 config.mnist_train_dir = config.mnist_dir / "train"
@@ -67,7 +70,7 @@ config.yolo.input_size = 608  # 608, 736, 832, 928, 960, 1120, 1280, 1600
 config.yolo.channels = 1
 config.yolo.tiny = True
 config.yolo.small = True
-config.yolo.weights_type = "yolo"
+config.yolo.weights_type = "yolo" # yolo, tf
 config.yolo.activation = "leaky"  # leaky, hswish
 config.yolo.backbone = "yolo"  # yolo, mobilenetv3-large, mobilenetv3-small
 config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights"
@@ -80,18 +83,17 @@ config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
 config.yolo.loss_gamma = 0.0  # 0.5
 
 config.yolo.burn_in = 1000
-config.yolo.lr = 0.01
+config.yolo.lr = 0.0025
 config.yolo.decay = 0.00025
 config.yolo.momentum = 0.90
 config.yolo.label_smoothing = 0.1
 
 config.yolo.max_steps = 4000
-config.yolo.map_after_steps = 300  # 500
+config.yolo.map_after_steps = 500
 config.yolo.map_on_step_mod = 20  # 50
 config.yolo.validation_freq = 10 if utils.isme() else 10
 config.yolo.n_workers = 12 if utils.isme() else 32
 config.yolo.validation_steps = -1 if utils.isme() else 2
-
 
 config.yolo.checkpoint_dir = Path("checkpoints")
 config.yolo.preload_dataset = True
@@ -119,10 +121,15 @@ architecture_type = {
         str(config.train_dir / "classes.txt"),
         str(config.weights_dir / "label.weights"),
     ),
+    "text": (
+        str(config.train_out_dir / "classes.txt"),
+        str(config.weights_dir / "text.weights")
+    )
 }
 
 # config.yolo.architecture_type = "edges"
-config.yolo.architecture_type = "stripped"
+# config.yolo.architecture_type = "stripped"
+config.yolo.architecture_type = "text"
 classes, weights = architecture_type[config.yolo.architecture_type]
 config.yolo.classes = classes
 config.yolo.weights = weights

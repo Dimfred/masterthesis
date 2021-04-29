@@ -235,12 +235,14 @@ def yolov4_tiny_small_load_weights(yolov4_tiny, fd):
 ########
 
 
-def save_weights(model, weights_file, tiny: bool = False):
+def save_weights(model, weights_file, tiny: bool = False, small: bool = False):
     with open(weights_file, "wb") as fd:
         # major, minor, revision, seen, _
         np.array([0, 2, 5, 32032000, 0], dtype=np.int32).tofile(fd)
 
-        if tiny:
+        if tiny and small:
+            yolov4_tiny_small_save_weignts(model, fd)
+        elif tiny:
             yolov4_tiny_save_weignts(model, fd)
         else:
             yolov4_save_weights(model, fd)
@@ -335,6 +337,15 @@ def panet_tiny_save_weights(panet_tiny, fd):
         yolo_conv2d_save_weights(yolo_conv2d, fd)
 
 
+def panet_tiny_small_save_weights(panet_tiny, fd):
+    print("save small")
+    for i in range(15, 24):
+        layer_name = "yolo_conv2d_%d" % i
+
+        yolo_conv2d = panet_tiny.get_layer(layer_name)
+        yolo_conv2d_save_weights(yolo_conv2d, fd)
+
+
 def yolov4_save_weights(yolov4, fd):
     csp_darknet53 = yolov4.get_layer("CSPDarknet53")
     csp_darknet53_save_weights(csp_darknet53, fd)
@@ -349,3 +360,12 @@ def yolov4_tiny_save_weignts(yolov4_tiny, fd):
 
     panet_tiny = yolov4_tiny.get_layer("PANetTiny")
     panet_tiny_save_weights(panet_tiny, fd)
+
+
+def yolov4_tiny_small_save_weignts(yolov4_tiny, fd):
+    print("save small")
+    csp_darknet53_tiny = yolov4_tiny.get_layer("CSPDarknet53Tiny")
+    csp_darknet53_tiny_save_weights(csp_darknet53_tiny, fd)
+
+    panet_tiny_small = yolov4_tiny.get_layer("PANetTiny")
+    panet_tiny_save_weights(panet_tiny_small, fd)
