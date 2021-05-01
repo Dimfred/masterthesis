@@ -263,7 +263,7 @@ class TFDataset:
 
             print("Preloading dataset...")
             start = time.perf_counter()
-            with ThreadPoolExecutor(max_workers=16) as executor:
+            with ThreadPoolExecutor(max_workers=32) as executor:
                 for idx, item in enumerate(_dataset):
                     img_path = item[0]
                     executor.submit(_read_and_store, img_path, idx)
@@ -375,9 +375,10 @@ class TFDataset:
         dataset = dataset.map(lambda *args: args, num_parallel_calls=self.n_workers)
         dataset = dataset.prefetch(50)
 
-        # DEBUG
-        # return iter(self._generator())
         return iter(dataset)
+
+        # DEBUG if i want to remove the tf part to see smth
+        # return iter(self._generator())
 
         # can be used to parallelize
         # dataset = dataset.interleave(

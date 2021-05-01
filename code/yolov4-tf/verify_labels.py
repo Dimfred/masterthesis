@@ -7,6 +7,7 @@ from yolov4.tf import YOLOv4
 import sys
 import os
 from pathlib import Path
+import itertools as it
 
 import utils
 from utils import YoloBBox
@@ -21,16 +22,14 @@ def write_class_name(img, text):
 
 
 if __name__ == "__main__":
-    label_dir = Path(sys.argv[1])
+    # label_dir = Path(sys.argv[1])
 
     all_bboxes = []
-    for file_ in os.listdir(label_dir):
-        if not utils.is_img(file_):
-            continue
-
-        img_path = label_dir / file_
-        label_path = utils.Yolo.label_from_img(img_path)
-
+    for img_path, label_path in it.chain(
+        utils.Yolo.load_dataset(config.train_dir),
+        utils.Yolo.load_dataset(config.valid_dir),
+        utils.Yolo.load_dataset(config.test_dir),
+    ):
         img = cv.imread(str(img_path), cv.IMREAD_GRAYSCALE)
         img = utils.resize_max_axis(img, 1200)
 

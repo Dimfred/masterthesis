@@ -69,7 +69,7 @@ for input_size in (608,):  # 832):
             gt = utils.load_ground_truth(ground_truth_path)
             gts.append(gt)
 
-            pred = yolo.predict(img)
+            pred = yolo.predict(img, iou_threshold=0.05, score_threshold=0.05)
             preds.append(pred)
 
     img_shape = (input_size, input_size)
