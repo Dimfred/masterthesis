@@ -1,12 +1,11 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Multi Layer Perceptron with two layers\relax }}{9}{}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Example convolution of a 4x4 input (blue) with a 3x3 kernel (dark blue) and a stride of 1, resulting in a 2x2 output (cyan) \cite {conv_arithmetic}\relax }}{10}{}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Predicted bounding boxes before and after a non-maximum suppression was applied \cite {nms_before_after}\relax }}{13}{}%
-\contentsline {figure}{\numberline {2.4}{\ignorespaces Example of results obtained through the Selective Search algorithm with increasing region scale from left to right \cite {selective_search}\relax }}{14}{}%
-\contentsline {figure}{\numberline {2.5}{\ignorespaces The Faster R-CNN Network Architecture \cite {faster_rcnn_pic} TODO img quality sucks\relax }}{15}{}%
-\contentsline {figure}{\numberline {2.6}{\ignorespaces Final bounding box calculation in the YOLOv4 network based on an anchor box \cite {yolov2}\relax }}{22}{}%
-\contentsline {figure}{\numberline {2.7}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite {map_article}\relax }}{27}{}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces All used \acp {ECC} in this thesis in German notation: 1. Voltage Source, 2. Current Source, 3. Resistor, 4. Inductor, 5. Capacitor, 6. Diode, 7. Ground\relax }}{3}{}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces A MLP with two hidden layers (two neurons in the first and one in the last), each input gets multiplied with each weight of each neuron, summed up and fed into an activation function to produce the input for the next layer, where this process is repeated.\relax }}{8}{}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Example convolution of a 4x4 input (blue) with a 3x3 kernel (dark blue) and a stride of 1, resulting in a 2x2 output (cyan) \cite {conv_arithmetic}\relax }}{12}{}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Example of results obtained through the Selective Search algorithm (top) with increasing region scale from left to right and bounding boxes drawn around those regions (bottom). Selective Search produces sub-segmentations of objects in an image, considering size, color, texture and shape based features for the grouping of the regions. \cite {selective_search}\relax }}{15}{}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Final bounding box calculation in the YOLOv4 network based on an anchor box \cite {yolov2}\relax }}{22}{}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite {map_article}\relax }}{27}{}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

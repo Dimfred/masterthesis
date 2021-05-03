@@ -34,6 +34,7 @@ class Mish(Layer):
         # pylint: disable=no-self-use
         return x * backend.tanh(backend.softplus(x))
 
+
 # class HSigmoid(K.nn.Module):
 #     def __init__(self, inplace=True):
 #         super(HSigmoid, self).__init__()
@@ -51,7 +52,8 @@ class Mish(Layer):
 #     def forward(self, x):
 #         return x * self.sigmoid(x)
 
-class HardSigmoid(tf.keras.layers.Layer):
+
+class HardSigmoid(Layer):
     def __init__(self, name="HardSigmoid", **kwargs):
         super(HardSigmoid, self).__init__(name=name, **kwargs)
         self.relu6 = tf.keras.layers.ReLU(max_value=6, name="ReLU6", **kwargs)
@@ -64,7 +66,7 @@ class HardSigmoid(tf.keras.layers.Layer):
         return dict(list(base_config.items()))
 
 
-class HardSwish(tf.keras.layers.Layer):
+class HardSwish(Layer):
     def __init__(self, name="HardSwish", **kwargs):
         super(HardSwish, self).__init__(name=name, **kwargs)
         self.relu6 = tf.keras.layers.ReLU(max_value=6, name="ReLU6", **kwargs)
@@ -75,6 +77,7 @@ class HardSwish(tf.keras.layers.Layer):
     def get_config(self):
         base_config = super(HardSwish, self).get_config()
         return dict(list(base_config.items()))
+
 
 class YOLOConv2D(Layer):
     def __init__(

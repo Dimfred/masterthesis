@@ -1,12 +1,5 @@
 \begin{thebibliography}{{Fel}10}
 
-\bibitem[Ana]{faster_rcnn_pic}
-S.~Ananth.
-\newblock Faster r-cnn for object detection.
-\newblock
-  \url{https://towardsdatascience.com/faster-r-cnn-for-object-detection-a-technical-summary-474c5b857b46}.
-\newblock Accessed: 07.04.2021.
-
 \bibitem[Boc20]{yolov4}
 A.~Bochkovskiy, C~Wang, and H.~Liao.
 \newblock Yolov4: Optimal speed and accuracy of object detection, 2020.
@@ -23,6 +16,11 @@ J.~Bridle.
 \newblock In Fran{\c{c}}oise~Fogelman Souli{\'e} and Jeanny H{\'e}rault,
   editors, {\em Neurocomputing}, pages 227--236, Berlin, Heidelberg, 1990.
   Springer Berlin Heidelberg.
+
+\bibitem[Dig19]{mish}
+M.~Diganta.
+\newblock Mish: {A} self regularized non-monotonic neural activation function.
+\newblock {\em CoRR}, abs/1908.08681, 2019.
 
 \bibitem[Dum16]{conv_arithmetic}
 V.~Dumoulin and F.~Visin.
@@ -41,18 +39,22 @@ R.~Gershick.
 \newblock In {\em Proceedings of the IEEE International Conference on Computer
   Vision (ICCV)}, December 2015.
 
+\bibitem[Ghi20]{copypaste_aug}
+G.~Ghiasi, Y.~Cui, A.~Srinivas, R.~Qian, T.~Lin, E.~Cubuk, Q.~Le, and B.~Zoph.
+\newblock Simple copy-paste is a strong data augmentation method for instance
+  segmentation, 2020.
+
 \bibitem[Gir13]{rcnn}
 R.~Girshick, J.~Donahue, T.~Darrell, and J.~Malik.
 \newblock Rich feature hierarchies for accurate object detection and semantic
   segmentation.
 \newblock {\em CoRR}, abs/1311.2524, 2013.
 
-\bibitem[Gra10]{cca}
-C.~Grana, D.~Borghesani, and R.~Cucchiara.
-\newblock Optimized block-based connected components labeling with decision
-  trees.
-\newblock {\em IEEE transactions on image processing : a publication of the
-  IEEE Signal Processing Society}, 19(6):1596--609, Jun 2010.
+\bibitem[Goo16]{dl_mit}
+I.~Goodfellow, Y.~Bengio, and A.~Courville.
+\newblock {\em Deep Learning}.
+\newblock MIT Press, 2016.
+\newblock \url{http://www.deeplearningbook.org}.
 
 \bibitem[Gro73]{mlp}
 S.~Grossberg.
@@ -65,10 +67,16 @@ K.~He, X.~Zhang, S.~Ren, and J.~Sun.
 \newblock Deep residual learning for image recognition.
 \newblock {\em CoRR}, abs/1512.03385, 2015.
 
-\bibitem[Hos17]{learn_nms}
-J.~Hosang, R.~Benenson, and B.~Schiele.
-\newblock Learning non-maximum suppression.
-\newblock {\em CoRR}, abs/1705.02950, 2017.
+\bibitem[How17]{mnetv1}
+A.~Howard, M.~Zhu, B.~Chen, D.~Kalenichenko, W.~Wang, T.~Weyand, M.~Andreetto,
+  and H.~Adam.
+\newblock Mobilenets: Efficient convolutional neural networks for mobile vision
+  applications, 2017.
+
+\bibitem[How19]{mnetv3}
+A.~Howard, M.~Sandler, G.~Chu, L.~Chen, B.~Chen, M.~Tan, W.~Wang, Y.~Zhu,
+  R.~Pang, Vijay V., Q.~Le, and H.~Adam.
+\newblock Searching for mobilenetv3, 2019.
 
 \bibitem[Hua16]{densenet}
 G.~Huang, Z.~Liu, and K.~Weinberger.
@@ -94,6 +102,26 @@ S.~Ioffe and C.~Szegedy.
 \newblock Batch normalization: Accelerating deep network training by reducing
   internal covariate shift.
 \newblock {\em CoRR}, abs/1502.03167, 2015.
+
+\bibitem[Jad20]{loss_function_segmentation}
+S.~Jadon.
+\newblock A survey of loss functions for semantic segmentation.
+\newblock {\em 2020 IEEE Conference on Computational Intelligence in
+  Bioinformatics and Computational Biology (CIBCB)}, Oct 2020.
+
+\bibitem[Kai19]{center_net}
+D.~Kaiwen, B.~Song, X.~Lingxi, Q.~Honggang, H.~Qingming, and T.~Qi.
+\newblock Centernet: Keypoint triplets for object detection.
+\newblock {\em CoRR}, abs/1904.08189, 2019.
+
+\bibitem[Kin17]{adam}
+D.~Kingma and J.~Ba.
+\newblock Adam: A method for stochastic optimization, 2017.
+
+\bibitem[Law18]{corner_net}
+H.~Law and J.~Deng.
+\newblock Cornernet: Detecting objects as paired keypoints.
+\newblock {\em CoRR}, abs/1808.01244, 2018.
 
 \bibitem[LeC99]{lecun_lenet}
 Y.~LeCun, P.~Haffner, L.~Bottou, and Y.~Bengio.
@@ -124,6 +152,21 @@ A.~Maier, V.~Christlein, K.~Breininger, and S.~Vesal.
 W.~McCulloch and W.~Pitts.
 \newblock A logical calculus of the ideas immanent in nervous activity.
 \newblock {\em Bulletin of mathematical biophysics}, 5:115--143, 1943.
+
+\bibitem[Pri20]{sliding_window_satelite}
+M.~Pritt.
+\newblock Deep learning for recognizing mobile targets in satellite imagery,
+  2020.
+
+\bibitem[Ram17]{swish}
+P.~Ramachandran, B.~Zoph, and Q.~Le.
+\newblock Searching for activation functions.
+\newblock {\em CoRR}, abs/1710.05941, 2017.
+
+\bibitem[Ram21]{sgd_momentum}
+A.~Ramezani{-}Kebrya, A.~Khisti, and B.~Liang.
+\newblock On the generalization of stochastic gradient descent with momentum.
+\newblock {\em CoRR}, abs/2102.13653, 2021.
 
 \bibitem[Red15]{yolov1}
 J.~Redmon, S.~Divvala, R.~Girshick, and A.~Farhadi.
@@ -157,23 +200,21 @@ F.~Rosenblatt.
   organization in the brain.
 \newblock {\em Psychological Review}, pages 65--386, 1958.
 
-\bibitem[Sam]{nms_before_after}
-K.~Sambasivarao.
-\newblock Non-maximum suppression ({NMS}).
-\newblock
-  \url{https://towardsdatascience.com/non-maximum-suppression-nms-93ce178e177c}.
-\newblock Accessed: 02.04.2021.
-
-\bibitem[Sim14]{vgg}
-K.~Simonyan and A.~Zisserman.
-\newblock Very deep convolutional networks for large-scale image recognition.
-\newblock {\em arXiv preprint arXiv:1409.1556}, 2014.
+\bibitem[Sho19]{augmentation_survey}
+C.~Shorten and T.~Khoshgoftaar.
+\newblock A survey on image data augmentation for deep learning.
+\newblock {\em Journal of Big Data}, 6(1), July 2019.
 
 \bibitem[Sze14]{inception}
 C.~Szegedy, W.~Liu, Y.~Jia, P.~Sermanet, S.~Reed, D.~Anguelov, D.~Erhan,
   V.~Vanhoucke, and A.~Rabinovich.
 \newblock Going deeper with convolutions.
 \newblock {\em CoRR}, abs/1409.4842, 2014.
+
+\bibitem[Tia20]{fcos}
+Z.~Tian, C.~Shen, H.~Chen, and T.~He.
+\newblock {FCOS:} {A} simple and strong anchor-free object detector.
+\newblock {\em CoRR}, abs/2006.09214, 2020.
 
 \bibitem[vdS11]{selective_search}
 K.~van~de Sande, J.~Uijlings, T.~Gevers, and A.~Smeulders.

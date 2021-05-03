@@ -6,10 +6,10 @@
 \contentsline {table}{\numberline {2.4}{\ignorespaces LTspice symbol attribute syntax\relax }}{5}{}%
 \contentsline {table}{\numberline {2.5}{\ignorespaces LTspice ground syntax\relax }}{6}{}%
 \contentsline {table}{\numberline {2.6}{\ignorespaces LTspice wire syntax\relax }}{6}{}%
-\contentsline {table}{\numberline {2.7}{\ignorespaces CSPDarknet53Tiny Architecture\relax }}{20}{}%
-\contentsline {table}{\numberline {2.8}{\ignorespaces Convolutional Base Block in YOLOv4 (YOLOConv)\relax }}{20}{}%
+\contentsline {table}{\numberline {2.7}{\ignorespaces The CSPDarknet53Tiny Architecture is a scaled version of the original CSPDarknet53 architecture \cite {yolov4}. The definition for YOLOConv can be found in table 2.8\hbox {}. MaxPool indicates here the Max Pooling operation as described in sec. 2.3.3\hbox {}. The network is build out of five blocks, the first block reducing the image size and the following blocks building up features. Further, features from three different scales are taken and used as skip connections to the following network.\relax }}{20}{}%
+\contentsline {table}{\numberline {2.8}{\ignorespaces Convolutional basic building block in YOLOv4 (YOLOConv). A convolutional layer, followed by a batch normalization layer, followed by a leaky ReLU activation function.\relax }}{20}{}%
 \contentsline {table}{\numberline {2.9}{\ignorespaces PANetTiny Architecture\relax }}{21}{}%
-\contentsline {table}{\numberline {2.10}{\ignorespaces Confusion Matrix\relax }}{26}{}%
+\contentsline {table}{\numberline {2.10}{\ignorespaces A Confusion Matrix\relax }}{25}{}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

@@ -27,9 +27,25 @@ import tensorflow as tf
 from tensorflow.keras import backend
 from tensorflow.keras.callbacks import Callback
 from tensorflow.keras.losses import BinaryCrossentropy, Loss, Reduction
+from tensorflow.python.keras.utils import tf_utils
 
 from numba import njit
 import numpy as np
+import sys
+
+
+def nan_panic(tensor, name):
+    msg = f"""
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!! {name} !!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+"""
+    tf.debugging.check_numerics(tensor, msg, name=name)
+
 
 
 class YOLOv4Loss(Loss):
@@ -67,6 +83,9 @@ class YOLOv4Loss(Loss):
 
         y_true = tf.reshape(y_true, shape=(-1, g_height * g_width * 3, box_size))
         y_pred = tf.reshape(y_pred, shape=(-1, g_height * g_width * 3, box_size))
+        nan_panic(y_true, "y_true")
+        nan_panic(y_pred, "y_pred")
+
         # print("ypred", y_pred.shape)
 
         truth_xywh = y_true[..., 0:4]
@@ -87,15 +106,19 @@ class YOLOv4Loss(Loss):
         num_obj = tf.reduce_sum(one_obj, axis=[1, 2])
         # print("after", num_obj.shape)
         one_noobj = 1.0 - one_obj
+        nan_panic(one_noobj, "one_noobj")
         # Dim(batch, g_height * g_width * 3, 1)
         one_obj_mask = one_obj > 0.5
+        # nan_panic(one_obj_mask, "one_obj_mask")
 
         zero = tf.zeros((1, g_height * g_width * 3, 1), dtype=tf.float32)
 
         # IoU Loss
         xiou = self.bbox_xiou(truth_xywh, pred_xywh)
+        nan_panic(xiou, "xiou")
         xiou_scale = 2.0 - truth_xywh[..., 2:3] * truth_xywh[..., 3:4]
         xiou_loss = one_obj * xiou_scale * (1.0 - xiou[..., tf.newaxis])
+        nan_panic(xiou_loss, "xiou_loss")
         # print("xiou_loss.shape\n{}".format(xiou_loss.shape))
         xiou_loss = 3 * tf.reduce_mean(tf.reduce_sum(xiou_loss, axis=(1, 2)))
         # print("xiou_loss.shape\n{}".format(xiou_loss.shape))
@@ -143,19 +166,23 @@ class YOLOv4Loss(Loss):
         # print("max_iou", max_iou)
 
         conf_obj_loss = one_obj * (0.0 - backend.log(pred_conf + 1e-9))
+        nan_panic(conf_obj_loss, "conf_obj_loss")
         conf_noobj_loss = (
             one_noobj
             * tf.cast(max_iou < 0.5, dtype=tf.float32)
             * (0.0 - backend.log(1.0 - pred_conf + 1e-9))
         )
+        nan_panic(conf_noobj_loss, "conf_noobj_loss")
         conf_loss = tf.reduce_mean(
             tf.reduce_sum(conf_obj_loss + conf_noobj_loss, axis=(1, 2))
         )
+        nan_panic(conf_loss, "conf_loss")
 
         # Probabilities Loss
         prob_loss = self.prob_binaryCrossentropy(truth_prob, pred_prob)
         prob_loss = one_obj * prob_loss[..., tf.newaxis]
         prob_loss = tf.reduce_mean(tf.reduce_sum(prob_loss, axis=(1, 2)) * num_classes)
+        nan_panic(prob_loss, "prob_loss")
 
         total_loss = xiou_loss + conf_loss + prob_loss
 
@@ -174,6 +201,8 @@ class YOLOv4Loss(Loss):
                 "total_loss",
                 total_loss,
             )
+
+        # tf.print(total_loss)
 
         return total_loss
 

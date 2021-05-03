@@ -6,9 +6,8 @@
 \contentsline {subsection}{\numberline {1.3.2}Contribution}{1}{}%
 \contentsline {chapter}{\numberline {2}Theory}{3}{}%
 \contentsline {section}{\numberline {2.1}Electrical Circuit Diagrams}{3}{}%
-\contentsline {section}{\numberline {2.2}LTspice}{3}{}%
-\contentsline {subsection}{\numberline {2.2.1}General}{4}{}%
-\contentsline {subsection}{\numberline {2.2.2}File Definition}{4}{}%
+\contentsline {section}{\numberline {2.2}LTspice}{4}{}%
+\contentsline {subsection}{\numberline {2.2.1}LTspice Schematic File Syntax}{4}{}%
 \contentsline {subsubsection}{Header}{4}{}%
 \contentsline {subsubsection}{Symbols}{4}{}%
 \contentsline {subsubsection}{Symbol Attributes}{5}{}%
@@ -16,37 +15,28 @@
 \contentsline {subsubsection}{Wire}{6}{}%
 \contentsline {section}{\numberline {2.3}Artificial Neural Networks}{6}{}%
 \contentsline {subsection}{\numberline {2.3.1}General Concepts}{6}{}%
-\contentsline {subsubsection}{Learning Procedure}{7}{}%
-\contentsline {subsubsection}{Forward Propagation}{7}{}%
-\contentsline {subsubsection}{Loss}{8}{}%
-\contentsline {subsubsection}{Backward Propagation}{8}{}%
-\contentsline {subsubsection}{Optimization}{8}{}%
-\contentsline {subsection}{\numberline {2.3.2}Convolutional Neural Networks}{8}{}%
-\contentsline {subsubsection}{Convolutional Layer}{9}{}%
-\contentsline {subsubsection}{Pooling Layer}{10}{}%
-\contentsline {subsubsection}{Fully-Connected Layer}{10}{}%
-\contentsline {subsection}{\numberline {2.3.3}Activation Functions}{11}{}%
-\contentsline {subsubsection}{Sigmoid}{11}{}%
-\contentsline {subsubsection}{Hard Sigmoid}{11}{}%
-\contentsline {subsubsection}{Rectified Linear Unit (ReLU)}{11}{}%
+\contentsline {subsubsection}{Multi Layer Perceptron}{7}{}%
+\contentsline {subsubsection}{Learning Procedure}{8}{}%
+\contentsline {subsection}{\numberline {2.3.2}Activation Functions}{10}{}%
+\contentsline {subsubsection}{Sigmoid}{10}{}%
+\contentsline {subsubsection}{Rectified Linear Unit (ReLU)}{10}{}%
 \contentsline {subsubsection}{ReLU6}{11}{}%
 \contentsline {subsubsection}{Hard Swish}{11}{}%
-\contentsline {subsection}{\numberline {2.3.4}Loss Functions}{11}{}%
-\contentsline {subsubsection}{Skip Connections}{11}{}%
-\contentsline {subsection}{\numberline {2.3.5}Batch Normalization}{11}{}%
-\contentsline {subsection}{\numberline {2.3.6}Dropout}{11}{}%
-\contentsline {section}{\numberline {2.4}Data Augmentation}{11}{}%
-\contentsline {section}{\numberline {2.5}Object Detection}{11}{}%
-\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{12}{}%
-\contentsline {subsubsection}{Sliding Window}{12}{}%
-\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{13}{}%
-\contentsline {subsubsection}{Fast R-CNN}{13}{}%
-\contentsline {subsubsection}{Faster R-CNN}{15}{}%
-\contentsline {subsubsection}{Single Shot Detector}{16}{}%
-\contentsline {subsubsection}{TODO? Anchor Box Free Detection?}{16}{}%
+\contentsline {subsection}{\numberline {2.3.3}Convolutional Neural Networks}{11}{}%
+\contentsline {subsubsection}{Convolutional Layer}{12}{}%
+\contentsline {subsubsection}{Pooling Layer}{12}{}%
+\contentsline {subsubsection}{Fully-Connected Layer}{13}{}%
+\contentsline {subsection}{\numberline {2.3.4}Batch Normalization}{13}{}%
+\contentsline {section}{\numberline {2.4}Data Augmentation}{13}{}%
+\contentsline {section}{\numberline {2.5}Object Detection}{14}{}%
+\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{14}{}%
+\contentsline {subsubsection}{Sliding Window}{14}{}%
+\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{14}{}%
+\contentsline {subsubsection}{Fast R-CNN}{15}{}%
+\contentsline {subsubsection}{Anchor Box Based Single Shot Detectors}{16}{}%
+\contentsline {subsubsection}{Anchor Box Free Single Shot Detectors}{16}{}%
 \contentsline {subsection}{\numberline {2.5.2}Intersection Over Union (IoU)}{16}{}%
-\contentsline {subsection}{\numberline {2.5.3}IoU Based Loss Functions}{16}{}%
-\contentsline {subsection}{\numberline {2.5.4}Anchor Boxes}{17}{}%
+\contentsline {subsection}{\numberline {2.5.3}IoU Based Loss Functions}{17}{}%
 \contentsline {section}{\numberline {2.6}You Only Look Once (YOLO)}{18}{}%
 \contentsline {subsubsection}{General}{18}{}%
 \contentsline {subsubsection}{Backbone}{19}{}%
@@ -54,19 +44,15 @@
 \contentsline {subsubsection}{Head}{21}{}%
 \contentsline {subsubsection}{Loss}{22}{}%
 \contentsline {subsubsection}{Non-Maximum Suppression (NMS)}{23}{}%
-\contentsline {section}{\numberline {2.7}Segmentation}{24}{}%
-\contentsline {section}{\numberline {2.8}Connected Components Analysis}{24}{}%
-\contentsline {section}{\numberline {2.9}Optical Character Recognition}{25}{}%
-\contentsline {section}{\numberline {2.10}Hypergraphs}{25}{}%
-\contentsline {section}{\numberline {2.11}Metrics}{25}{}%
+\contentsline {section}{\numberline {2.7}Segmentation}{25}{}%
+\contentsline {section}{\numberline {2.8}Hypergraphs}{25}{}%
+\contentsline {section}{\numberline {2.9}Metrics}{25}{}%
 \contentsline {subsubsection}{Confusion Matrix}{25}{}%
-\contentsline {subsubsection}{Precision}{25}{}%
+\contentsline {subsubsection}{Precision}{26}{}%
 \contentsline {subsubsection}{Recall}{26}{}%
-\contentsline {subsubsection}{F1-Score}{26}{}%
-\contentsline {subsubsection}{Accuracy}{26}{}%
 \contentsline {subsubsection}{Average Precision (AP)}{26}{}%
-\contentsline {subsubsection}{Mean Average Precision (mAP)}{27}{}%
-\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{27}{}%
+\contentsline {subsubsection}{Mean Average Precision (mAP)}{26}{}%
+\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{26}{}%
 \contentsline {chapter}{\numberline {3}Material and Methods}{29}{}%
 \contentsline {section}{\numberline {3.1}Data}{29}{}%
 \contentsline {subsection}{\numberline {3.1.1}Statistics}{29}{}%

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.4.12)  21 APR 2021 08:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.1)  3 MAY 2021 15:20
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -637,129 +637,113 @@ Chapter 1.
 
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/01_theory.tex
 Chapter 2.
+(/home/dimfred/workspaces/uni/ma/thesis/tex/main/ecds.tex
 Package acronym Info: Label `acro:ECD' newly defined as it shall be overridden
-although it is yet undefined on input line 5.
+although it is yet undefined on input line 2.
 Package acronym Info: Label `acro:ECC' newly defined as it shall be overridden
-although it is yet undefined on input line 5.
-(/home/dimfred/workspaces/uni/ma/thesis/tex/main/ltspice.tex
-Underfull \vbox (badness 5939) has occurred while \output is active []
+although it is yet undefined on input line 2.
+<imgs/eccs/all.png, id=64, 1696.3375pt x 256.96pt>
+File: imgs/eccs/all.png Graphic file (type png)
+<use imgs/eccs/all.png>
+Package pdftex.def Info: imgs/eccs/all.png  used on input line 15.
+(pdftex.def)             Requested size: 455.24408pt x 68.96059pt.
+) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ltspice.tex
+Underfull \vbox (badness 5050) has occurred while \output is active []
 
  [3
 
 
-] [4] [5]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ann.tex
+ </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/eccs/all.png>] [4] [5]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ann.tex
 Package acronym Info: Label `acro:ANN' newly defined as it shall be overridden
 although it is yet undefined on input line 4.
  [6]
 Package acronym Info: Label `acro:MLP' newly defined as it shall be overridden
 although it is yet undefined on input line 19.
- [7]
+Package acronym Info: Label `acro:FC' newly defined as it shall be overridden
+although it is yet undefined on input line 28.
+ [7] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/mlp_fig.tex)
 Package acronym Info: Label `acro:MSE' newly defined as it shall be overridden
-although it is yet undefined on input line 44.
- (/home/dimfred/workspaces/uni/ma/thesis/tex/main/mlp_fig.tex)
+although it is yet undefined on input line 71.
+ [8]
+Package acronym Info: Label `acro:CE' newly defined as it shall be overridden
+although it is yet undefined on input line 78.
+ [9]
+Package acronym Info: Label `acro:ReLU' newly defined as it shall be overridden
+although it is yet undefined on input line 138.
+Package acronym Info: Label `acro:LReLU' newly defined as it shall be overridden
+although it is yet undefined on input line 149.
+ [10]
 Package acronym Info: Label `acro:CNN' newly defined as it shall be overridden
-although it is yet undefined on input line 73.
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 77.
- (/usr/share/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [8] [9]
-<imgs/conv_example_full.png, id=95, 979.66pt x 259.97125pt>
+although it is yet undefined on input line 197.
+ [11]
+<imgs/conv_example_full.png, id=106, 979.66pt x 259.97125pt>
 File: imgs/conv_example_full.png Graphic file (type png)
 <use imgs/conv_example_full.png>
-Package pdftex.def Info: imgs/conv_example_full.png  used on input line 105.
+Package pdftex.def Info: imgs/conv_example_full.png  used on input line 223.
 (pdftex.def)             Requested size: 455.24408pt x 120.80605pt.
- [10 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/conv_example_full.png>]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/object_detection.tex [11]
-Overfull \hbox (1.64465pt too wide) in paragraph at lines 10--17
-\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x[]; y[]; w[]; h[]\OT1/cmr/m/n/12 )$\OT1/ptm/m/n/12 (-20) . Here, $\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x[]; y[]\OT1/cmr/m/n/12 )$ \OT1/ptm/m/n/12 (-20) de-fine the rel-a-tive cen-ter of the bound-ing box and $\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 w[]; h[]\OT1/cmr/m/n/12 )$
- []
+ [12 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/conv_example_full.png>]
+Package acronym Info: Label `acro:BatchNorm' newly defined as it shall be overridden
+although it is yet undefined on input line 248.
+) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/data_augmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/object_detection.tex
+Underfull \vbox (badness 1661) has occurred while \output is active []
 
-Package acronym Info: Label `acro:NMS' newly defined as it shall be overridden
-although it is yet undefined on input line 30.
-<imgs/nms_before_after.png, id=105, 702.625pt x 323.2075pt>
-File: imgs/nms_before_after.png Graphic file (type png)
-<use imgs/nms_before_after.png>
-Package pdftex.def Info: imgs/nms_before_after.png  used on input line 41.
-(pdftex.def)             Requested size: 284.52756pt x 130.88351pt.
+ [13]
 Package acronym Info: Label `acro:R-CNN' newly defined as it shall be overridden
-although it is yet undefined on input line 49.
+although it is yet undefined on input line 55.
 Package acronym Info: Label `acro:SVM' newly defined as it shall be overridden
-although it is yet undefined on input line 56.
-
-Underfull \vbox (badness 5374) has occurred while \output is active []
-
- [12]
-<imgs/selective_search.png, id=109, 702.625pt x 462.72874pt>
+although it is yet undefined on input line 59.
+ [14]
+<imgs/selective_search.png, id=117, 702.625pt x 462.72874pt>
 File: imgs/selective_search.png Graphic file (type png)
 <use imgs/selective_search.png>
-Package pdftex.def Info: imgs/selective_search.png  used on input line 61.
+Package pdftex.def Info: imgs/selective_search.png  used on input line 64.
 (pdftex.def)             Requested size: 284.52756pt x 187.38293pt.
- [13 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/nms_before_after.png (PNG copy)>]
 Package acronym Info: Label `acro:RoI' newly defined as it shall be overridden
-although it is yet undefined on input line 76.
-Package acronym Info: Label `acro:RPN' newly defined as it shall be overridden
-although it is yet undefined on input line 98.
- [14 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/selective_search.png>]
-<imgs/faster_rcnn.jpg, id=116, 702.625pt x 526.96875pt>
-File: imgs/faster_rcnn.jpg Graphic file (type jpg)
-<use imgs/faster_rcnn.jpg>
-Package pdftex.def Info: imgs/faster_rcnn.jpg  used on input line 105.
-(pdftex.def)             Requested size: 398.33858pt x 298.75908pt.
-Package acronym Info: Label `acro:IoU' newly defined as it shall be overridden
-although it is yet undefined on input line 118.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [15 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/faster_rcnn.jpg>]
-Package acronym Info: Label `acro:GIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 138.
-Package acronym Info: Label `acro:DIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 150.
-Package acronym Info: Label `acro:CIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 150.
- [16]
-Package acronym Info: Label `acro:EIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 182.
+although it is yet undefined on input line 74.
+ [15 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/selective_search.png>]
 Package acronym Info: Label `acro:YOLO' newly defined as it shall be overridden
-although it is yet undefined on input line 196.
+although it is yet undefined on input line 103.
 Package acronym Info: Label `acro:SSD' newly defined as it shall be overridden
-although it is yet undefined on input line 196.
-) [17] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/yolo.tex
+although it is yet undefined on input line 103.
+Package acronym Info: Label `acro:YOLOv1' newly defined as it shall be overridden
+although it is yet undefined on input line 118.
+Package acronym Info: Label `acro:FCOS' newly defined as it shall be overridden
+although it is yet undefined on input line 118.
+Package acronym Info: Label `acro:IoU' newly defined as it shall be overridden
+although it is yet undefined on input line 119.
+ [16]
+Package acronym Info: Label `acro:GIoU' newly defined as it shall be overridden
+although it is yet undefined on input line 146.
+Package acronym Info: Label `acro:DIoU' newly defined as it shall be overridden
+although it is yet undefined on input line 158.
+Package acronym Info: Label `acro:CIoU' newly defined as it shall be overridden
+although it is yet undefined on input line 158.
+ [17]
+Package acronym Info: Label `acro:EIoU' newly defined as it shall be overridden
+although it is yet undefined on input line 190.
+) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/yolo.tex
 Package acronym Info: Label `acro:YOLOv4' newly defined as it shall be overridden
 although it is yet undefined on input line 5.
-
-Underfull \vbox (badness 1406) has occurred while \output is active []
-
  [18]
-Package acronym Info: Label `acro:ReLU' newly defined as it shall be overridden
-although it is yet undefined on input line 21.
 Package acronym Info: Label `acro:PANet' newly defined as it shall be overridden
-although it is yet undefined on input line 88.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
+although it is yet undefined on input line 85.
  [19] [20]
-<imgs/bbox_calculation.png, id=136, 804.00375pt x 620.3175pt>
+<imgs/bbox_calculation.png, id=137, 804.00375pt x 620.3175pt>
 File: imgs/bbox_calculation.png Graphic file (type png)
 <use imgs/bbox_calculation.png>
-Package pdftex.def Info: imgs/bbox_calculation.png  used on input line 145.
+Package pdftex.def Info: imgs/bbox_calculation.png  used on input line 142.
 (pdftex.def)             Requested size: 170.71652pt x 131.70924pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [21]
-Package acronym Info: Label `acro:CE' newly defined as it shall be overridden
-although it is yet undefined on input line 167.
- [22 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/bbox_calculation.png>] [23]
-LaTeX Font Info:    Trying to load font information for OMS+ptm on input line 228.
+ [21] [22 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/bbox_calculation.png>]
+Package acronym Info: Label `acro:NMS' newly defined as it shall be overridden
+although it is yet undefined on input line 214.
+ [23]
+LaTeX Font Info:    Trying to load font information for OMS+ptm on input line 224.
  (/usr/share/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 228.
-) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/cca.tex
-Package acronym Info: Label `acro:CCA' newly defined as it shall be overridden
-although it is yet undefined on input line 5.
- [24]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/metrics.tex
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 224.
+) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/metrics.tex
 Package acronym Info: Label `acro:TP' newly defined as it shall be overridden
 although it is yet undefined on input line 5.
 Package acronym Info: Label `acro:FP' newly defined as it shall be overridden
@@ -768,20 +752,25 @@ Package acronym Info: Label `acro:FN' newly defined as it shall be overridden
 although it is yet undefined on input line 7.
 Package acronym Info: Label `acro:TN' newly defined as it shall be overridden
 although it is yet undefined on input line 7.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [24]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [25]
 Package acronym Info: Label `acro:AP' newly defined as it shall be overridden
 although it is yet undefined on input line 64.
-<imgs/pr_curve.png, id=156, 1509.64pt x 748.7975pt>
+<imgs/pr_curve.png, id=157, 1509.64pt x 748.7975pt>
 File: imgs/pr_curve.png Graphic file (type png)
 <use imgs/pr_curve.png>
 Package pdftex.def Info: imgs/pr_curve.png  used on input line 78.
 (pdftex.def)             Requested size: 398.33858pt x 197.57346pt.
- [26]
 Package acronym Info: Label `acro:mAP' newly defined as it shall be overridden
 although it is yet undefined on input line 86.
 Package acronym Info: Label `acro:mIoU' newly defined as it shall be overridden
 although it is yet undefined on input line 96.
-)) [27 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pr_curve.png (PNG copy)>] [28
+ [26])) [27 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pr_curve.png (PNG copy)>] [28
 
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
 Chapter 3.
@@ -842,7 +831,7 @@ Appendix A.
 
 
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 7.
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 57.
  (/usr/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
@@ -850,34 +839,29 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `pcr' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-
-Overfull \hbox (60.8078pt too wide) in paragraph at lines 4--9
-\OT1/pcr/m/n/12 faster-[]r-[]cnn-[]for-[]object-[]detection-[]a-[]technical-[]summary-[]474c5b857b46$\OT1/ptm/m/n/12 (-20) . 
- []
-
-[41
+ [41
 
 
 
 ]
-Overfull \hbox (17.20782pt too wide) in paragraph at lines 79--85
+Overfull \hbox (17.20782pt too wide) in paragraph at lines 87--93
 \OT1/pcr/m/n/12 map-[]mean-[]average-[]precision-[]for-[]object-[]detection-[]45c121a31173$\OT1/ptm/m/n/12 (-20) , 
  []
 
 [42] [43])) [44] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
 Here is how much of TeX's memory you used:
- 20842 strings out of 479383
- 386154 string characters out of 5875830
- 710599 words of memory out of 5000000
- 37320 multiletter control sequences out of 15000+600000
- 437441 words of font info for 181 fonts, out of 8000000 for 9000
+ 20872 strings out of 479383
+ 386494 string characters out of 5875831
+ 706451 words of memory out of 5000000
+ 37329 multiletter control sequences out of 15000+600000
+ 438766 words of font info for 196 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 80i,13n,85p,553b,1361s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 80i,13n,85p,699b,1360s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (52 pages, 745741 bytes).
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (52 pages, 870464 bytes).
 PDF statistics:
  274 PDF objects out of 1000 (max. 8388607)
  178 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 24715 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 24198 words of extra memory for PDF output out of 24883 (max. 10000000)
 

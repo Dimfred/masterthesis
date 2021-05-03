@@ -23,13 +23,19 @@
 \acronymused{ECC}
 \acronymused{ECC}
 \acronymused{ECC}
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}LTspice}{3}{}\protected@file@percent }
+\acronymused{ECC}
+\acronymused{ECC}
+\acronymused{ECC}
 \acronymused{ECD}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}General}{4}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}File Definition}{4}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces All used \acp {ECC} in this thesis in German notation: 1. Voltage Source, 2. Current Source, 3. Resistor, 4. Inductor, 5. Capacitor, 6. Diode, 7. Ground\relax }}{3}{}\protected@file@percent }
+\acronymused{ECC}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:used_eccs}{{2.1}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}LTspice}{4}{}\protected@file@percent }
+\acronymused{ECD}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}LTspice Schematic File Syntax}{4}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Header}{4}{}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces LTspice header syntax\relax }}{4}{}\protected@file@percent }
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{tab:ltheader_syntax}{{2.1}{4}}
 \@writefile{toc}{\contentsline {subsubsection}{Symbols}{4}{}\protected@file@percent }
 \acronymused{ECC}
@@ -42,6 +48,7 @@
 \@writefile{lot}{\contentsline {table}{\numberline {2.4}{\ignorespaces LTspice symbol attribute syntax\relax }}{5}{}\protected@file@percent }
 \newlabel{tab:ltsymattr_syntax}{{2.4}{5}}
 \citation{bioneuron}
+\citation{perceptron}
 \@writefile{toc}{\contentsline {subsubsection}{Ground}{6}{}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {2.5}{\ignorespaces LTspice ground syntax\relax }}{6}{}\protected@file@percent }
 \newlabel{tab:ltflag_syntax}{{2.5}{6}}
@@ -54,174 +61,205 @@
 \AC@undonewlabel{acro:ANN}
 \newlabel{acro:ANN}{{2.3.1}{6}}
 \acronymused{ANN}
-\citation{perceptron}
 \citation{mlp}
+\citation{dl}
+\citation{dl_mit}
+\citation{dl}
+\citation{dl_mit}
+\citation{softmax}
 \newlabel{form:perceptron}{{2.1}{7}}
+\@writefile{toc}{\contentsline {subsubsection}{Multi Layer Perceptron}{7}{}\protected@file@percent }
 \AC@undonewlabel{acro:MLP}
 \newlabel{acro:MLP}{{2.3.1}{7}}
 \acronymused{MLP}
 \acronymused{MLP}
+\newlabel{eq:identity}{{2.2}{7}}
+\AC@undonewlabel{acro:FC}
+\newlabel{acro:FC}{{2.3.1}{7}}
+\acronymused{FC}
+\newlabel{eq:fc_weights}{{2.4}{7}}
+\citation{yolov1}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces A MLP with two hidden layers (two neurons in the first and one in the last), each input gets multiplied with each weight of each neuron, summed up and fed into an activation function to produce the input for the next layer, where this process is repeated.\relax }}{8}{}\protected@file@percent }
+\newlabel{fig:mlp}{{2.2}{8}}
 \acronymused{MLP}
+\@writefile{toc}{\contentsline {subsubsection}{Learning Procedure}{8}{}\protected@file@percent }
+\citation{loss_function_segmentation}
+\citation{sgd_momentum}
+\citation{adam}
+\citation{dl}
+\citation{mish}
+\AC@undonewlabel{acro:MSE}
+\newlabel{acro:MSE}{{2.3.1}{9}}
+\acronymused{MSE}
+\newlabel{eq:mse}{{2.6}{9}}
+\AC@undonewlabel{acro:CE}
+\newlabel{acro:CE}{{2.3.1}{9}}
+\acronymused{CE}
+\newlabel{eq:ce}{{2.7}{9}}
 \acronymused{MLP}
-\@writefile{toc}{\contentsline {subsubsection}{Learning Procedure}{7}{}\protected@file@percent }
+\citation{dl}
+\citation{mnetv1}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Activation Functions}{10}{}\protected@file@percent }
+\newlabel{sec:activation_functions}{{2.3.2}{10}}
 \acronymused{ANN}
-\@writefile{toc}{\contentsline {subsubsection}{Forward Propagation}{7}{}\protected@file@percent }
+\acronymused{ANN}
+\@writefile{toc}{\contentsline {subsubsection}{Sigmoid}{10}{}\protected@file@percent }
+\acronymused{ANN}
+\acronymused{ANN}
+\newlabel{eq:sigmoid}{{2.11}{10}}
+\@writefile{toc}{\contentsline {subsubsection}{Rectified Linear Unit (ReLU)}{10}{}\protected@file@percent }
+\AC@undonewlabel{acro:ReLU}
+\newlabel{acro:ReLU}{{2.3.2}{10}}
+\acronymused{ReLU}
+\acronymused{ReLU}
+\acronymused{ReLU}
+\AC@undonewlabel{acro:LReLU}
+\newlabel{acro:LReLU}{{2.3.2}{10}}
+\acronymused{LReLU}
+\acronymused{LReLU}
+\acronymused{ReLU}
+\citation{mnetv3}
+\citation{swish}
 \citation{lecun_lenet}
 \citation{inception}
 \citation{resnet}
 \citation{densenet}
-\@writefile{toc}{\contentsline {subsubsection}{Loss}{8}{}\protected@file@percent }
-\AC@undonewlabel{acro:MSE}
-\newlabel{acro:MSE}{{2.3.1}{8}}
-\acronymused{MSE}
-\acronymused{MSE}
-\newlabel{eq:mse}{{2.2}{8}}
-\@writefile{toc}{\contentsline {subsubsection}{Backward Propagation}{8}{}\protected@file@percent }
-\acronymused{ANN}
-\acronymused{MLP}
-\acronymused{MLP}
-\@writefile{toc}{\contentsline {subsubsection}{Optimization}{8}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Convolutional Neural Networks}{8}{}\protected@file@percent }
+\citation{dl}
+\@writefile{toc}{\contentsline {subsubsection}{ReLU6}{11}{}\protected@file@percent }
+\acronymused{ReLU}
+\@writefile{toc}{\contentsline {subsubsection}{Hard Swish}{11}{}\protected@file@percent }
+\newlabel{eq:hard_sigmoid}{{2.16}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Convolutional Neural Networks}{11}{}\protected@file@percent }
 \acronymused{MLP}
 \acronymused{ANN}
 \AC@undonewlabel{acro:CNN}
-\newlabel{acro:CNN}{{2.3.2}{8}}
+\newlabel{acro:CNN}{{2.3.3}{11}}
 \acronymused{CNN}
 \acronymused{CNN}
-\citation{dl}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Multi Layer Perceptron with two layers\relax }}{9}{}\protected@file@percent }
-\newlabel{fig:mlp}{{2.1}{9}}
-\@writefile{toc}{\contentsline {subsubsection}{Convolutional Layer}{9}{}\protected@file@percent }
-\acronymused{CNN}
-\newlabel{eq:conv}{{2.3}{9}}
 \citation{conv_arithmetic}
 \citation{conv_arithmetic}
 \citation{dl}
-\citation{softmax}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Example convolution of a 4x4 input (blue) with a 3x3 kernel (dark blue) and a stride of 1, resulting in a 2x2 output (cyan) \cite  {conv_arithmetic}\relax }}{10}{}\protected@file@percent }
-\newlabel{fig:conv_example}{{2.2}{10}}
-\@writefile{toc}{\contentsline {subsubsection}{Pooling Layer}{10}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Example convolution of a 4x4 input (blue) with a 3x3 kernel (dark blue) and a stride of 1, resulting in a 2x2 output (cyan) \cite  {conv_arithmetic}\relax }}{12}{}\protected@file@percent }
+\newlabel{fig:conv_example}{{2.3}{12}}
+\@writefile{toc}{\contentsline {subsubsection}{Convolutional Layer}{12}{}\protected@file@percent }
 \acronymused{CNN}
-\@writefile{toc}{\contentsline {subsubsection}{Fully-Connected Layer}{10}{}\protected@file@percent }
+\newlabel{eq:conv}{{2.17}{12}}
+\@writefile{toc}{\contentsline {subsubsection}{Pooling Layer}{12}{}\protected@file@percent }
+\newlabel{sec:max_pooling}{{2.3.3}{12}}
 \acronymused{CNN}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Activation Functions}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Sigmoid}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Hard Sigmoid}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Rectified Linear Unit (ReLU)}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{ReLU6}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Hard Swish}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Loss Functions}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Skip Connections}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Batch Normalization}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.6}Dropout}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Data Augmentation}{11}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.5}Object Detection}{11}{}\protected@file@percent }
+\citation{batchnorm}
+\citation{augmentation_survey}
+\citation{copypaste_aug}
 \citation{yolov1}
-\citation{learn_nms}
-\citation{nms_before_after}
-\citation{nms_before_after}
+\@writefile{toc}{\contentsline {subsubsection}{Fully-Connected Layer}{13}{}\protected@file@percent }
+\acronymused{FC}
+\acronymused{CNN}
+\acronymused{FC}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Batch Normalization}{13}{}\protected@file@percent }
+\acronymused{ReLU}
+\acronymused{ReLU}
+\AC@undonewlabel{acro:BatchNorm}
+\newlabel{acro:BatchNorm}{{2.3.4}{13}}
+\acronymused{BatchNorm}
+\acronymused{ANN}
+\acronymused{BatchNorm}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Data Augmentation}{13}{}\protected@file@percent }
+\acronymused{CNN}
+\acronymused{ECD}
+\citation{sliding_window_satelite}
 \citation{rcnn}
 \citation{selective_search}
 \citation{bbox_regressor}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{12}{}\protected@file@percent }
-\newlabel{sec:hostory_obj_detection}{{2.5.1}{12}}
-\@writefile{toc}{\contentsline {subsubsection}{Sliding Window}{12}{}\protected@file@percent }
-\AC@undonewlabel{acro:NMS}
-\newlabel{acro:NMS}{{2.5.1}{12}}
-\acronymused{NMS}
-\acronymused{NMS}
-\acronymused{NMS}
-\acronymused{NMS}
-\citation{selective_search}
-\citation{selective_search}
-\citation{vgg}
-\citation{fast_rcnn}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Predicted bounding boxes before and after a non-maximum suppression was applied \cite  {nms_before_after}\relax }}{13}{}\protected@file@percent }
-\newlabel{fig:nms_before_after}{{2.3}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{13}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Object Detection}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{14}{}\protected@file@percent }
+\newlabel{sec:hostory_obj_detection}{{2.5.1}{14}}
+\@writefile{toc}{\contentsline {subsubsection}{Sliding Window}{14}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{14}{}\protected@file@percent }
 \AC@undonewlabel{acro:R-CNN}
-\newlabel{acro:R-CNN}{{2.5.1}{13}}
+\newlabel{acro:R-CNN}{{2.5.1}{14}}
 \acronymused{R-CNN}
+\citation{selective_search}
+\citation{selective_search}
+\citation{fast_rcnn}
+\citation{rcnn}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Example of results obtained through the Selective Search algorithm (top) with increasing region scale from left to right and bounding boxes drawn around those regions (bottom). Selective Search produces sub-segmentations of objects in an image, considering size, color, texture and shape based features for the grouping of the regions. \cite  {selective_search}\relax }}{15}{}\protected@file@percent }
+\newlabel{fig:selective_search}{{2.4}{15}}
 \acronymused{CNN}
 \acronymused{CNN}
 \AC@undonewlabel{acro:SVM}
-\newlabel{acro:SVM}{{2.5.1}{13}}
+\newlabel{acro:SVM}{{2.5.1}{15}}
 \acronymused{SVM}
-\@writefile{toc}{\contentsline {subsubsection}{Fast R-CNN}{13}{}\protected@file@percent }
-\acronymused{R-CNN}
-\acronymused{CNN}
 \acronymused{SVM}
-\acronymused{CNN}
-\citation{fast_rcnn}
-\citation{rcnn}
-\citation{faster_rcnn}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Example of results obtained through the Selective Search algorithm with increasing region scale from left to right \cite  {selective_search}\relax }}{14}{}\protected@file@percent }
-\newlabel{fig:selective_search}{{2.4}{14}}
+\@writefile{toc}{\contentsline {subsubsection}{Fast R-CNN}{15}{}\protected@file@percent }
 \acronymused{R-CNN}
 \acronymused{R-CNN}
-\acronymused{CNN}
+\acronymused{R-CNN}
 \acronymused{CNN}
 \acronymused{CNN}
 \AC@undonewlabel{acro:RoI}
-\newlabel{acro:RoI}{{2.5.1}{14}}
+\newlabel{acro:RoI}{{2.5.1}{15}}
 \acronymused{RoI}
 \acronymused{CNN}
 \acronymused{RoI}
-\acronymused{RoI}
-\acronymused{SVM}
-\acronymused{SVM}
-\acronymused{R-CNN}
-\citation{faster_rcnn_pic}
-\citation{faster_rcnn_pic}
-\citation{giou}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces The Faster R-CNN Network Architecture \cite  {faster_rcnn_pic} TODO img quality sucks\relax }}{15}{}\protected@file@percent }
-\newlabel{fig:faster_rcnn}{{2.5}{15}}
-\@writefile{toc}{\contentsline {subsubsection}{Faster R-CNN}{15}{}\protected@file@percent }
-\acronymused{R-CNN}
-\acronymused{R-CNN}
-\acronymused{R-CNN}
-\AC@undonewlabel{acro:RPN}
-\newlabel{acro:RPN}{{2.5.1}{15}}
-\acronymused{RPN}
-\acronymused{R-CNN}
-\acronymused{CNN}
-\acronymused{RPN}
-\acronymused{RPN}
-\citation{iou}
-\citation{iou}
-\citation{giou}
-\citation{eiou}
-\citation{diou}
-\@writefile{toc}{\contentsline {subsubsection}{Single Shot Detector}{16}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{TODO? Anchor Box Free Detection?}{16}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Intersection Over Union (IoU)}{16}{}\protected@file@percent }
-\AC@undonewlabel{acro:IoU}
-\newlabel{acro:IoU}{{2.5.2}{16}}
-\acronymused{IoU}
-\acronymused{IoU}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}IoU Based Loss Functions}{16}{}\protected@file@percent }
-\acronymused{MSE}
-\acronymused{IoU}
-\acronymused{IoU}
-\newlabel{eq:iou_loss}{{2.7}{16}}
-\AC@undonewlabel{acro:GIoU}
-\newlabel{acro:GIoU}{{2.5.3}{16}}
-\acronymused{GIoU}
-\acronymused{IoU}
-\acronymused{GIoU}
-\acronymused{GIoU}
-\acronymused{IoU}
-\acronymused{GIoU}
-\newlabel{eq:giou_loss}{{2.8}{16}}
-\citation{eiou}
-\citation{eiou}
 \citation{faster_rcnn}
 \citation{yolov1}
 \citation{ssd}
 \citation{focalloss}
-\citation{yolov1}
-\citation{yolov2}
+\citation{yolov3}
 \citation{faster_rcnn}
+\citation{yolov2}
+\citation{yolov1}
+\citation{corner_net}
+\citation{center_net}
+\citation{fcos}
+\citation{fcos}
+\citation{center_net}
+\citation{yolov4}
+\citation{giou}
+\citation{iou}
+\acronymused{RoI}
+\acronymused{SVM}
+\acronymused{R-CNN}
+\@writefile{toc}{\contentsline {subsubsection}{Anchor Box Based Single Shot Detectors}{16}{}\protected@file@percent }
+\acronymused{R-CNN}
+\AC@undonewlabel{acro:YOLO}
+\newlabel{acro:YOLO}{{2.5.1}{16}}
+\acronymused{YOLO}
+\AC@undonewlabel{acro:SSD}
+\newlabel{acro:SSD}{{2.5.1}{16}}
+\acronymused{SSD}
+\@writefile{toc}{\contentsline {subsubsection}{Anchor Box Free Single Shot Detectors}{16}{}\protected@file@percent }
+\AC@undonewlabel{acro:YOLOv1}
+\newlabel{acro:YOLOv1}{{2.5.1}{16}}
+\acronymused{YOLOv1}
+\AC@undonewlabel{acro:FCOS}
+\newlabel{acro:FCOS}{{2.5.1}{16}}
+\acronymused{FCOS}
+\AC@undonewlabel{acro:IoU}
+\newlabel{acro:IoU}{{2.5.1}{16}}
+\acronymused{IoU}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Intersection Over Union (IoU)}{16}{}\protected@file@percent }
+\acronymused{IoU}
+\acronymused{IoU}
+\citation{iou}
+\citation{giou}
+\citation{eiou}
+\citation{diou}
+\citation{eiou}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}IoU Based Loss Functions}{17}{}\protected@file@percent }
+\acronymused{MSE}
+\acronymused{IoU}
+\acronymused{IoU}
+\newlabel{eq:iou_loss}{{2.20}{17}}
+\AC@undonewlabel{acro:GIoU}
+\newlabel{acro:GIoU}{{2.5.3}{17}}
+\acronymused{GIoU}
+\acronymused{IoU}
+\acronymused{GIoU}
+\acronymused{GIoU}
+\acronymused{IoU}
+\acronymused{GIoU}
+\newlabel{eq:giou_loss}{{2.21}{17}}
 \acronymused{IoU}
 \AC@undonewlabel{acro:DIoU}
 \newlabel{acro:DIoU}{{2.5.3}{17}}
@@ -231,30 +269,21 @@
 \acronymused{CIoU}
 \acronymused{GIoU}
 \acronymused{DIoU}
-\newlabel{eq:diou_loss}{{2.9}{17}}
+\newlabel{eq:diou_loss}{{2.22}{17}}
 \acronymused{DIoU}
 \acronymused{CIoU}
 \acronymused{CIoU}
-\newlabel{eq:ciou_loss}{{2.10}{17}}
-\newlabel{eq:ciou_nu}{{2.11}{17}}
-\newlabel{eq:ciou_alpha}{{2.12}{17}}
-\AC@undonewlabel{acro:EIoU}
-\newlabel{acro:EIoU}{{2.5.3}{17}}
-\acronymused{EIoU}
-\newlabel{eq:eiou_loss}{{2.13}{17}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.4}Anchor Boxes}{17}{}\protected@file@percent }
+\citation{eiou}
 \citation{yolov1}
 \citation{yolov4}
 \citation{yolov4_tiny}
-\acronymused{R-CNN}
-\AC@undonewlabel{acro:YOLO}
-\newlabel{acro:YOLO}{{2.5.4}{18}}
-\acronymused{YOLO}
-\AC@undonewlabel{acro:SSD}
-\newlabel{acro:SSD}{{2.5.4}{18}}
-\acronymused{SSD}
-\acronymused{R-CNN}
-\acronymused{IoU}
+\newlabel{eq:ciou_loss}{{2.23}{18}}
+\newlabel{eq:ciou_nu}{{2.24}{18}}
+\newlabel{eq:ciou_alpha}{{2.25}{18}}
+\AC@undonewlabel{acro:EIoU}
+\newlabel{acro:EIoU}{{2.5.3}{18}}
+\acronymused{EIoU}
+\newlabel{eq:eiou_loss}{{2.26}{18}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.6}You Only Look Once (YOLO)}{18}{}\protected@file@percent }
 \acronymused{YOLO}
 \acronymused{YOLO}
@@ -266,38 +295,36 @@
 \@writefile{toc}{\contentsline {subsubsection}{General}{18}{}\protected@file@percent }
 \acronymused{YOLOv4}
 \citation{batchnorm}
+\citation{yolov4}
+\citation{yolov4}
 \citation{pannet}
 \citation{yolov4_tiny}
-\citation{yolov3}
 \@writefile{toc}{\contentsline {subsubsection}{Backbone}{19}{}\protected@file@percent }
 \acronymused{YOLOv4}
-\AC@undonewlabel{acro:ReLU}
-\newlabel{acro:ReLU}{{2.6}{19}}
 \acronymused{ReLU}
 \@writefile{toc}{\contentsline {subsubsection}{Neck}{19}{}\protected@file@percent }
 \acronymused{YOLOv4}
 \AC@undonewlabel{acro:PANet}
 \newlabel{acro:PANet}{{2.6}{19}}
 \acronymused{PANet}
-\@writefile{lot}{\contentsline {table}{\numberline {2.7}{\ignorespaces CSPDarknet53Tiny Architecture\relax }}{20}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2.7}{\ignorespaces The CSPDarknet53Tiny Architecture is a scaled version of the original CSPDarknet53 architecture \cite  {yolov4}. The definition for YOLOConv can be found in table 2.8\hbox {}. MaxPool indicates here the Max Pooling operation as described in sec. 2.3.3\hbox {}. The network is build out of five blocks, the first block reducing the image size and the following blocks building up features. Further, features from three different scales are taken and used as skip connections to the following network.\relax }}{20}{}\protected@file@percent }
 \newlabel{tab:darknet_tiny_arch}{{2.7}{20}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.8}{\ignorespaces Convolutional Base Block in YOLOv4 (YOLOConv)\relax }}{20}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2.8}{\ignorespaces Convolutional basic building block in YOLOv4 (YOLOConv). A convolutional layer, followed by a batch normalization layer, followed by a leaky ReLU activation function.\relax }}{20}{}\protected@file@percent }
 \newlabel{tab:yoloconv}{{2.8}{20}}
+\citation{yolov3}
 \citation{yolov2}
 \citation{yolov2}
 \@writefile{lot}{\contentsline {table}{\numberline {2.9}{\ignorespaces PANetTiny Architecture\relax }}{21}{}\protected@file@percent }
 \newlabel{tab:panet_tiny_arch}{{2.9}{21}}
 \@writefile{toc}{\contentsline {subsubsection}{Head}{21}{}\protected@file@percent }
 \acronymused{YOLOv4}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Final bounding box calculation in the YOLOv4 network based on an anchor box \cite  {yolov2}\relax }}{22}{}\protected@file@percent }
-\newlabel{fig:bbox_calculation}{{2.6}{22}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Final bounding box calculation in the YOLOv4 network based on an anchor box \cite  {yolov2}\relax }}{22}{}\protected@file@percent }
+\newlabel{fig:bbox_calculation}{{2.5}{22}}
 \@writefile{toc}{\contentsline {subsubsection}{Loss}{22}{}\protected@file@percent }
 \acronymused{YOLO}
 \acronymused{IoU}
-\AC@undonewlabel{acro:CE}
-\newlabel{acro:CE}{{2.6}{22}}
 \acronymused{CE}
-\newlabel{eq:yolo_lclass}{{2.15}{22}}
+\newlabel{eq:yolo_lclass}{{2.28}{22}}
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{GIoU}
@@ -306,16 +333,18 @@
 \acronymused{EIoU}
 \citation{diou}
 \citation{soft_nms}
-\newlabel{eq:yolo_lbbox}{{2.16}{23}}
+\newlabel{eq:yolo_lbbox}{{2.29}{23}}
 \acronymused{CE}
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{IoU}
-\newlabel{eq:yolo_lobj}{{2.18}{23}}
-\newlabel{eq:yolo_lnoobj}{{2.19}{23}}
+\newlabel{eq:yolo_lobj}{{2.31}{23}}
+\newlabel{eq:yolo_lnoobj}{{2.32}{23}}
 \acronymused{YOLO}
-\newlabel{eq:yolo_loss}{{2.20}{23}}
+\newlabel{eq:yolo_loss}{{2.33}{23}}
 \@writefile{toc}{\contentsline {subsubsection}{Non-Maximum Suppression (NMS)}{23}{}\protected@file@percent }
+\AC@undonewlabel{acro:NMS}
+\newlabel{acro:NMS}{{2.6}{23}}
 \acronymused{NMS}
 \acronymused{DIoU}
 \acronymused{NMS}
@@ -325,27 +354,23 @@
 \acronymused{DIoU}
 \newlabel{alg1}{{2.1}{24}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}DIoU-NMS Algorithm TODO caption to bottom and format}{24}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.7}Segmentation}{24}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.8}Connected Components Analysis}{24}{}\protected@file@percent }
-\citation{cca}
-\AC@undonewlabel{acro:CCA}
-\newlabel{acro:CCA}{{2.8}{25}}
-\acronymused{CCA}
-\@writefile{toc}{\contentsline {section}{\numberline {2.9}Optical Character Recognition}{25}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.10}Hypergraphs}{25}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.11}Metrics}{25}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2.10}{\ignorespaces A Confusion Matrix\relax }}{25}{}\protected@file@percent }
+\newlabel{tab:confmat}{{2.10}{25}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.7}Segmentation}{25}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.8}Hypergraphs}{25}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.9}Metrics}{25}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Confusion Matrix}{25}{}\protected@file@percent }
 \AC@undonewlabel{acro:TP}
-\newlabel{acro:TP}{{2.11}{25}}
+\newlabel{acro:TP}{{2.9}{25}}
 \acronymused{TP}
 \AC@undonewlabel{acro:FP}
-\newlabel{acro:FP}{{2.11}{25}}
+\newlabel{acro:FP}{{2.9}{25}}
 \acronymused{FP}
 \AC@undonewlabel{acro:FN}
-\newlabel{acro:FN}{{2.11}{25}}
+\newlabel{acro:FN}{{2.9}{25}}
 \acronymused{FN}
 \AC@undonewlabel{acro:TN}
-\newlabel{acro:TN}{{2.11}{25}}
+\newlabel{acro:TN}{{2.9}{25}}
 \acronymused{TN}
 \acronymused{FN}
 \acronymused{TN}
@@ -357,43 +382,39 @@
 \acronymused{TP}
 \acronymused{FP}
 \acronymused{TP}
-\@writefile{toc}{\contentsline {subsubsection}{Precision}{25}{}\protected@file@percent }
+\citation{map_article}
+\citation{map_article}
+\@writefile{toc}{\contentsline {subsubsection}{Precision}{26}{}\protected@file@percent }
 \acronymused{TP}
-\citation{map_article}
-\citation{map_article}
-\@writefile{lot}{\contentsline {table}{\numberline {2.10}{\ignorespaces Confusion Matrix\relax }}{26}{}\protected@file@percent }
-\newlabel{tab:confmat}{{2.10}{26}}
-\newlabel{eq:precision}{{2.21}{26}}
+\newlabel{eq:precision}{{2.34}{26}}
 \@writefile{toc}{\contentsline {subsubsection}{Recall}{26}{}\protected@file@percent }
-\newlabel{eq:recall}{{2.22}{26}}
-\@writefile{toc}{\contentsline {subsubsection}{F1-Score}{26}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Accuracy}{26}{}\protected@file@percent }
+\newlabel{eq:recall}{{2.35}{26}}
 \@writefile{toc}{\contentsline {subsubsection}{Average Precision (AP)}{26}{}\protected@file@percent }
 \AC@undonewlabel{acro:AP}
-\newlabel{acro:AP}{{2.11}{26}}
+\newlabel{acro:AP}{{2.9}{26}}
 \acronymused{AP}
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{AP}
-\newlabel{eq:ap}{{2.23}{26}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite  {map_article}\relax }}{27}{}\protected@file@percent }
-\acronymused{IoU}
-\newlabel{fig:pr_curve}{{2.7}{27}}
-\@writefile{toc}{\contentsline {subsubsection}{Mean Average Precision (mAP)}{27}{}\protected@file@percent }
+\newlabel{eq:ap}{{2.36}{26}}
+\@writefile{toc}{\contentsline {subsubsection}{Mean Average Precision (mAP)}{26}{}\protected@file@percent }
 \acronymused{AP}
 \AC@undonewlabel{acro:mAP}
-\newlabel{acro:mAP}{{2.11}{27}}
+\newlabel{acro:mAP}{{2.9}{26}}
 \acronymused{mAP}
 \acronymused{AP}
-\newlabel{eq:map}{{2.24}{27}}
-\@writefile{toc}{\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{27}{}\protected@file@percent }
+\newlabel{eq:map}{{2.37}{26}}
+\@writefile{toc}{\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{26}{}\protected@file@percent }
 \AC@undonewlabel{acro:mIoU}
-\newlabel{acro:mIoU}{{2.11}{27}}
+\newlabel{acro:mIoU}{{2.9}{26}}
 \acronymused{mIoU}
 \acronymused{IoU}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite  {map_article}\relax }}{27}{}\protected@file@percent }
+\acronymused{IoU}
+\newlabel{fig:pr_curve}{{2.6}{27}}
 \acronymused{IoU}
 \acronymused{mIoU}
-\newlabel{eq:miou}{{2.25}{27}}
+\newlabel{eq:miou}{{2.38}{27}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}Material and Methods}{29}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -428,6 +449,7 @@
 \newacro{OCR}[\AC@hyperlink{OCR}{OCR}]{Optical Character Recognition}
 \newacro{R-CNN}[\AC@hyperlink{R-CNN}{R-CNN}]{Regions with CNN features}
 \newacro{YOLO}[\AC@hyperlink{YOLO}{YOLO}]{You Only Look Once}
+\newacro{YOLOv1}[\AC@hyperlink{YOLOv1}{YOLOv1}]{You Only Look Once Version 1}
 \newacro{YOLOv4}[\AC@hyperlink{YOLOv4}{YOLOv4}]{You Only Look Once Version 4}
 \newacro{SVM}[\AC@hyperlink{SVM}{SVM}]{Support Vector Machine}
 \newacro{RoI}[\AC@hyperlink{RoI}{RoI}]{Region of Interest}
@@ -440,6 +462,7 @@
 \newacro{CE}[\AC@hyperlink{CE}{CE}]{Cross Entropy}
 \newacro{SSD}[\AC@hyperlink{SSD}{SSD}]{Single Shot Multibox Detector}
 \newacro{ReLU}[\AC@hyperlink{ReLU}{ReLU}]{Rectified Linear Unit}
+\newacro{LReLU}[\AC@hyperlink{LReLU}{LReLU}]{Leaky ReLU}
 \newacro{PANet}[\AC@hyperlink{PANet}{PANet}]{Path Aggregation Network}
 \newacro{mAP}[\AC@hyperlink{mAP}{mAP}]{Mean Average Precision}
 \newacro{AP}[\AC@hyperlink{AP}{AP}]{Average Precision}
@@ -448,6 +471,9 @@
 \newacro{TN}[\AC@hyperlink{TN}{TN}]{True Negative}
 \newacro{FP}[\AC@hyperlink{FP}{FP}]{False Positive}
 \newacro{FN}[\AC@hyperlink{FN}{FN}]{False Negative}
+\newacro{FC}[\AC@hyperlink{FC}{FC}]{Fully-Connected}
+\newacro{BatchNorm}[\AC@hyperlink{BatchNorm}{BatchNorm}]{Batch Normalization}
+\newacro{FCOS}[\AC@hyperlink{FCOS}{FCOS}]{Fully Convolutional One Stage Detector}
 \@input{mt-lof.aux}
 \@input{mt-lot.aux}
 \@input{mt-lit.aux}

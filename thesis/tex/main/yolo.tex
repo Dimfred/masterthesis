@@ -16,10 +16,7 @@ The final prediction is then a vector with bounding box regression offsets for t
 
 \subsubsection{Backbone}
 
-- TODO backbone is a smaller scale of the original Darknet53
-
 The backbone of the \ac{YOLOv4} network is mostly formed out of YOLOConv layers (tab. \ref{tab:yoloconv}), which is sequentially build out of a convolutional layer, a batch normalization layer and a leaky \ac{ReLU} activation function, following the principles of \cite{batchnorm}.
-
 
 The initial two layers (c0, c1) use an increased stride and a valid padding to first reduce the input size of the image.
 The following layers always use three $3x3$ convolutions, followed by one $1x1$ convolution and a max pooling layer to half the feature map size.
@@ -36,32 +33,32 @@ $S$, $M$, $L$ indicates here the size of the detected object (small, medium, lar
 \begin{tabular}{l|c|c|c|c|c|c|c}
     \textbf{Layer} & \textbf{Input} & \textbf{Type} & \textbf{Filters} & \textbf{Size} & \textbf{Stride} & \textbf{Padding} & \textbf{Output} \\
     \hline
-    \textbf{Reduction Layer} & & & & & &\\
+    \textbf{Reduction Block} & & & & & &\\
     c0 & img & YOLOConv & 32 & 3x3 & 2 & valid\\
     c1 & c0 & YOLOConv & 64 & 3x3 & 2 & valid\\
-    \textbf{Layer 1} & & & & & &\\
+    \textbf{Block 1} & & & & & &\\
     c2 & c1 & YOLOConv & 64 & 3x3 & 1 & same\\
     c3 & c2 & YOLOConv & 32 & 3x3 & 1 & same\\
     c4 & c3 & YOLOConv & 32 & 3x3 & 1 & same\\
     c5 & c3 \& c4 & YOLOConv & 64 & 1x1 & 1 & same\\
     m0 & c2 \& c5 & MaxPool &  & 2x2 & 2 & same\\
-    \textbf{Layer 2} & & & & & &\\
+    \textbf{Block 2} & & & & & &\\
     c6 & m0 & YOLOConv & 128 & 3x3 & 1 & same\\
     c7 & c6 & YOLOConv & 64 & 3x3 & 1 & same\\
     c8 & c7 & YOLOConv & 64 & 3x3 & 1 & same\\
     c9 & c7 \& c8 & YOLOConv & 128 & 1x1 & 1 & same & $Skip_S$\\
     m1 & c6 \& c9 & MaxPool & & 2x2  & 2 & same\\
-    \textbf{Layer 3} & & & & & &\\
+    \textbf{Block 3} & & & & & &\\
     c10 & m1 & YOLOConv & 256 & 3x3 & 1 & same\\
     c11 & c10 & YOLOConv & 128 & 3x3 & 1 & same\\
     c12 & c11 & YOLOConv & 128 & 3x3 & 1 & same\\
     c13 & c11 \& c12 & YOLOConv &  256 & 1x1 & 1 & same & $Skip_M$\\
     m2 & c10 \& c13 & MaxPool & & 2x2 & 2 & same\\
-    \textbf{Layer 4} & & & & & &\\
+    \textbf{Block 4} & & & & & &\\
     c14 & m2 & YOLOConv & 512 & 3x3 & 1 & same & $Skip_L$\\
 \end{tabular}
 
-\caption{CSPDarknet53Tiny Architecture}
+\caption{The CSPDarknet53Tiny Architecture is a scaled version of the original CSPDarknet53 architecture \cite{yolov4}. The definition for YOLOConv can be found in table \ref{tab:yoloconv}. MaxPool indicates here the Max Pooling operation as described in sec. \ref{sec:max_pooling}. The network is build out of five blocks, the first block reducing the image size and the following blocks building up features. Further, features from three different scales are taken and used as skip connections to the following network.}
 \label{tab:darknet_tiny_arch}
 \end{center}
 \end{table}
@@ -73,11 +70,11 @@ $S$, $M$, $L$ indicates here the size of the detected object (small, medium, lar
     \textbf{Sequence} & \textbf{Parameter}\\
     \hline
     Convolution & see tab. \ref{tab:darknet_tiny_arch}; l2 kernel regularization $5x10^{-3}$\\
-    BatchNormalization &\\
+    BatchNorm &\\
     LeakyReLU & $\alpha = 0.1$\\
 
 \end{tabular}
-\caption{Convolutional Base Block in YOLOv4 (YOLOConv)}
+\caption{Convolutional basic building block in YOLOv4 (YOLOConv). A convolutional layer, followed by a batch normalization layer, followed by a leaky ReLU activation function.}
 \label{tab:yoloconv}
 
 \end{center}
@@ -162,7 +159,6 @@ The loss can be separated into three main parts:
 In the following $1_{sb}^{obj}$ denotes that the anchor box $b$ in grid cell $s$ is responsible for detecting the object.
 Before training responsibility is assigned by making that anchor box responsible which has the highest \ac{IoU} with the ground truth bounding box.
 Furthermore, $S^2$ denotes the number of grid cells in a particular scale and $B$ and the number of anchor boxes present in a grid cell.
-All predicted values are denoted with a ``hat'' (e.g. $\hat{P}$).
 
 The class loss (eq. \ref{eq:yolo_lclass}) is calculated by taking the sum of all possible anchor boxes and the sum of all independent class losses, which is calculated with the \ac{CE} Loss.
 An anchor box only contributes to the loss, when an object is labeled to be present in it.

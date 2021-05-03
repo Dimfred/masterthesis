@@ -23,7 +23,7 @@ def ffloat(f):
 
 # _callbacks = [
 #     callbacks.LearningRateScheduler(lr_scheduler),
-#     callbacks.TerminateOnNaN(),
+    # callbacks.TerminateOnNaN(),
 #     callbacks.TensorBoard(log_dir="./log"),
 #     SaveWeightsCallback(
 #         yolo=yolo,

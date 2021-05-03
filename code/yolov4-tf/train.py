@@ -18,6 +18,7 @@ if len(physical_devices) > 0:
 
 from tensorflow.keras import callbacks, optimizers
 import time
+import sys
 
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
@@ -191,6 +192,7 @@ if __name__ == "__main__":
 
         return lr
 
+    run = sys.argv[1]
     # gib ihm
     trainer = Trainer(
         yolo,
@@ -201,7 +203,7 @@ if __name__ == "__main__":
         map_on_step_mod=config.yolo.map_on_step_mod,
         lr_scheduler=lr_scheduler,
         # resize_model=resize_model,
-        pexperiment=config.yolo.pexperiment,
+        pexperiment=f"{config.yolo.pexperiment}_r{run}",
         burn_in=config.yolo.burn_in,
         checkpoint_dir=config.yolo.checkpoint_dir,
     )

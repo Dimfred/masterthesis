@@ -3,86 +3,204 @@
 
 The basic building blocks of an \ac{ANN} are Artificial Neurons, which are inspired by  their biological counterparts.
 Biological neurons receive a signal via dendrites and output the processed signal through the axon \cite{bioneuron}.
-TODO How the signal is processed depends on the biological structure of the neuron.
-In general a biological neuron produces an output signal, when a certain activation potential is reached.
 
-The first artificial neuron was proposed in 1958 by Rosenblatt \cite{perceptron} and is known as the Rosenblatt Perceptron.
+The first artificial neuron, the Perceptron, was proposed by Rosenblatt \cite{perceptron}.
 The decision rule for the Perceptron is described by eq. \ref{form:perceptron}.
-It states that the output $\hat{y} \in \{-1, 1\}$ is defined by the sign of the dot product of a weight vector $V \in \R^{n \times 1}$ with an input vector $x \in \R^{n \times 1}$.
-The decision boundary of this function is a linear function, which means non-linear problems like the XOR-problem, can't be solved with the perceptron TODO CITE.
+It states that the output $\hat{y} \in \{-1, 1\}$ is defined by the sign of the dot product of a weight vector $V \in \R^{n}$ with an input vector $x \in \R^{n}$.
+The decision boundary of this function is a linear function, which means non-linear problems like the XOR-problem, can't be solved with the perceptron.
 
 \begin{equation}
     \hat{y} = sign(V^Tx)
     \label{form:perceptron}
 \end{equation}
 
+\subsubsection{Multi Layer Perceptron}
+
 To tackle this insufficiency the \ac{MLP} was introduced \cite{mlp}, which is able to solve non-linear problems.
-The \ac{MLP} is created by using the output of multiple perceptrons as an input to another perceptron.
-In fig. \ref{fig:mlp} the general structure of a \ac{MLP} is shown.
-This particular \ac{MLP} has two neurons in the first layer and one in the second layer.
-In general the number for neurons inside a layer, as the number of layers is not bounded.
+Generally, a \ac{MLP} consists of three layer types: one input layer, one or more hidden layers and one output layer.
+The input layer is the identity function (eq. \ref{eq:identity}), which forwards the input $x \in \R^n$ without change to the following hidden layer.
+
+\begin{equation}
+    I(x) = x
+    \label{eq:identity}
+\end{equation}
+
+The hidden layer, which is also called a \ac{FC} layer \cite{dl} is build out of one to $m \in \N$ Perceptrons.
+The output output vector $\hat{y} \in \R^m$ is calculated by multiplying $x$ with each weight vector $V \in R^n$ and adding a constant bias vector $b \in \R^m$ to the calculation \cite{dl_mit}.
+
+\begin{equation}
+    \hat{y} = (V_1^Tx, \cdots, V_m^Tx)^T + b
+\end{equation}
+
+The calculation can further be simplified by using a weight matrix, which combines all weights $V$ and the bias $b$.
+The output $\hat{y}$ is then simply the matrix multiplication of the weight matrix $W \in R^{(n+1) \times m}$ with the input vector $x$.
+Note that, to fit the dimensionality $x$ has to be extended with a \textit{1} at the end hence results in $x \in \R^{(n+1)}$ \cite{dl}.
+The current output vector $\hat{y}$ is just a linear transformation of the input vector $x$, but biological neurons are also able to process a received signal non-linearly \cite{dl_mit}, therefore activation functions $f_{a}: \R^n \to \R^n$ are used to mimic this behavior.
+Some commonly used activation functions and specifically the ones used in this thesis are presented in section \ref{sec:activation_functions}.
+Combining the activation function and the matrix multiplication results in the following formula:
+
+\begin{equation}
+    \hat{y} = f_a(W^Tx)
+    \label{eq:fc_weights}
+\end{equation}
+
+The last missing layer type is the output layer, which in a classification setting outputs a vector of conditional class probabilities $\hat{y} \in \R^n$, where $n$ is the number of classes.
+Commonly the softmax activation function is used to produce such an output \cite{softmax}.
+The softmax function takes as input the output of a previous layer and outputs a vector of pseudo probabilities by taking the fraction of the exponential function applied to an element of the input vector, divided by the sum of all exponential function outputs applied to all elements of the input vector.
+A pseudo probability element in the output vector is defined as follows:
+
+\begin{equation}
+    softmax(x)_i = \frac{e^{x_i}}{\sum_{j=1}^Ne^{x_j}}
+\end{equation}
+
+Since the output of one layer is the input for the following layer a \ac{MLP} can be mathematically described in a chain like function structure as $f^{(O)}( f^{(n)} ( \cdots f^{(1)} (f^{(I)}(x))))$, where $f^{(I)}$ is the input layer, $f^{(O)}$ the output layer and $f^{(1)} \cdots f^{(n)}$ are the amount of $n$ hidden layers, respectively.
+
+\input{main/mlp_fig}
+
+% The \ac{MLP} is created by using the output of multiple perceptrons as an input to another perceptron.
+% In fig. \ref{fig:mlp} the general structure of a \ac{MLP} is shown.
+% This particular \ac{MLP} has two neurons in the first layer and one in the second layer.
+% In general the number for neurons inside a layer, as the number of layers is not bounded.
 
 \subsubsection{Learning Procedure}
-The learning procedure of an \ac{ANN} is as follows:
 
-\begin{enumerate}
-    \item The input data gets fed into the network and produces an output.
-    \item The similarity of the output and the desired output (label) are measured using a loss function.
-    \item The loss is used to calculate the gradients by propagating it back through the network TODO chainrule.
-    \item The gradients are used in a gradient descent algorithm to update and optimize the weights of the network.
-    \item The above is performed until the weights don't change anymore.
-\end{enumerate}
+In the first step the input data is fed to the network producing an output $\hat{y}$.
+This step is called forward propagation and is just the above described method of calculating the output of a layer and using it as the input for the next one.
 
-\subsubsection{Forward Propagation}
-As with the perceptron the input vector $x$ gets multiplied with the corresponding weights $W_{n,i}$, where $n$ denotes the index of the neuron in the layer and $i$ the index of the input vector $x$.
-After the multiplication the results are summed up and are forwarded to an activation function.
-The results of the activation function are now inputs for the second layer and the above is repeated.
-In the end, the second layer activation function produces an output $\hat{y}$.
-
-\subsubsection{Loss}
-After the output $\hat{y}$ was calculated a loss function is applied to $\hat{y}$ and the  label $y$.
-The most prominent of these loss functions is the \ac{MSE} (see eq. \ref{eq:mse}).
-The \ac{MSE} takes the labels and the output and calculates the sum of the differences between the two vectors.
-Finally, the mean is taken of the resulting sum, where $n$ here denotes the dimensionality of $y$ and $\hat{y}$.
+Afterwards, the output $\hat{y} \in \R^n$ is compared to the desired output $y \in \R^n$ using a loss function $L(y, \hat{y}): (\R^n, \R^n) \to \R$.
+A common loss function is the \ac{MSE} \cite{yolov1}, which calculates the mean sum of the squared differences between the inputs $y$ and $\hat{y}$ (eq. \ref{eq:mse}).
 
 \begin{equation}
     \label{eq:mse}
     MSE(y, \hat{y}) = \frac{1}{n} \sum_{i=1}^{n}(y_i - \hat{y}_i)^2
 \end{equation}
 
-\subsubsection{Backward Propagation}
+Another common example of a loss function would be the \ac{CE} Loss (eq. \ref{eq:ce}), which measures the difference between two probability distributions for a given random variable or a set of events. \cite{loss_function_segmentation}
 
-To make an \ac{ANN} learn the
+\begin{equation}
+    \label{eq:ce}
+    CE(y, \hat{y}) =
+    \begin{cases}
+        -log(\hat{y}), & \text{if } y = 1\\
+        -log(1 - \hat{y}), & \text{else}
+    \end{cases}
+\end{equation}
 
-While in the perceptron the sign function is used as an activation function, for \acp{MLP} this is not a good choice, because the sign function is non-differentiable.
-In particular, this is important because a gradient is needed to update the weights of an \ac{MLP} during training.
+The resulting loss value is used to calculate the gradients with respect to the last layer weights. Due to the above described chained function structure of an \ac{MLP} the chain rule can be used to propagate the error back through the network and calculate the gradients for all remaining layers.
 
-\input{main/mlp_fig}
+After all gradients have been calculated the weights of each layer are optimized.
+A simple optimizer is the stochastic gradient descent, whose update rule is defined as:
 
-\subsubsection{Optimization}
+\begin{equation}
+    w^{(k+1)} = w^{(k)} - \eta \nabla L(w^{(k)})
+\end{equation}
+
+Here, $w^{(k+1)}$ denotes the updated weights, and $w^{(k)}$ the current state of the weights.
+$\eta$ is the learning rate of the network, which is essentially the amount of the gradient which should be used to update the weights.
+Typically an $0 < \eta < 1$ is chosen, since big values have shown to make the training process unstable, resulting in divergence of the loss.
+Further, $\nabla L(w^{(k)})$ should denote here the gradients with respect to the loss function at the respective layer.
+
+To accelerate the training the stochastic gradient descent can be extended by a momentum term \cite{sgd_momentum}.
+The momentum term and the resulting update rule are defined as follows:
+
+\begin{equation}
+    v^{(k)} = \mu v^{(k-1)} - \eta \nabla L(w^{(k)})
+\end{equation}
+
+\begin{equation}
+    w^{(k+1)} = w^{(k)} + v^{(k)}
+\end{equation}
+
+$\mu$ denotes here the momentum value which is typically set to $0.9$, $0.99$ respectively \cite{adam}.
+The idea is that one can incorporate the weighted value of the previous update, to accelerate in directions with persistent gradient \cite{dl}.
+
+\subsection{Activation Functions}
+\label{sec:activation_functions}
+
+Non-linear activation functions play a crucial role in the performance of an \ac{ANN}, since this enables function approximation \cite{mish}.
+In the Perceptron the \textit{sign} function was used, but due to its non-differentiable property it isn't suited for the use in \acp{ANN}, since back propagation requires differentiability of the activation function.
+Therefore, various differentiable activation functions have been introduced.
+
+\subsubsection{Sigmoid}
+
+The sigmoid activation function (eq. \ref{eq:sigmoid}) is a smooth differentiable activation function, which maps its input to a $\{0, 1\}$-space.
+It is commonly used in output layers, since the output of the sigmoid can be interpreted as a probability.
+A major drawback of the sigmoid lies in the saturating property for $x \to \pm \infty$, when it's used as an activation function in trainable layers of \acp{ANN}.
+Due to this the training process suffers from the so called vanishing gradient problem, where the derivative of the sigmoid tends to go towards zero and hence does not provide an update to the weights of the \ac{ANN}.
+
+\begin{equation}
+    \sigma(x) = \frac{1}{1 + e^{-x}}
+    \label{eq:sigmoid}
+\end{equation}
+
+\subsubsection{Rectified Linear Unit (ReLU)}
+
+The \ac{ReLU} activation function solves the gradient vanishing problem by introducing a linear term for input values $x > 0$, while maintaining the non-linearity property by setting all negative input values to $0$.
+The \ac{ReLU} activation function is defined as follows:
+
+\begin{equation}
+    ReLU(x) =
+    \begin{cases}
+        x, & \text{if } x > 0\\
+        0, & \text{else}
+    \end{cases}
+\end{equation}
+
+A variation of the \ac{ReLU} activation function is the \ac{LReLU} activation function, where additionally negative values are scaled linearly.
+\ac{LReLU} was introduced to tackle the dying \ac{ReLU} problem, where the network only predicts negative values and hence all gradients become zero \cite{dl}.
+It is defined as follows:
+
+\begin{equation}
+    LReLU(x) =
+    \begin{cases}
+        x, & \text{if } x > 0\\
+        \alpha x, & \text{else}
+    \end{cases}
+\end{equation}
+
+\subsubsection{ReLU6}
+
+ReLU6 is a modification of the classical \ac{ReLU}, where the output activation is limited to 6.
+It is often used in resource constrained environments, especially in cases of low precision computation, since it has shown to perform robust in such cases. \cite{mnetv1}
+
+\begin{equation}
+    ReLU6(x) =
+    \begin{cases}
+        6, & \text{if } x >= 6\\
+        x, & \text{if } 0 < x < 6\\
+        0, & else
+    \end{cases}
+\end{equation}
+
+\subsubsection{Hard Swish}
+
+Hard Swish \cite{mnetv3} is an approximation of the original Swish activation function, which was discovered by the researchers at Google in their extensive search for novel activation functions \cite{swish}.
+Hard Swish is calculated by multiplying the input with a piece-wise linear sigmoid approximation, the Hard Sigmoid (eq. \ref{eq:hard_sigmoid}).
+As with ReLU6, Hard Swish is used in resource constrained environments.
+
+\begin{equation}
+    Swish_{hard}(x) = x \sigma_{hard}(x)
+\end{equation}
+
+\begin{equation}
+    \sigma_{hard}(x) = \frac{ReLU6(x + 3)}{6}
+    \label{eq:hard_sigmoid}
+\end{equation}
+
 
 \subsection{Convolutional Neural Networks}
 
 While \acp{MLP} perform pretty well on vectorial data, multidimensional data like images for example, can only be fed to a network when it was previously flattened into a vector.
 One problem that arises is that when flattening for example an image of size $100 \times 100$, this would already require the input size of the network to have $10.000$ weights per neuron in the next layer.
-This increases drastically the capacity of the network and hence requires a larger training set.
 Additionally nearby pixels in images are often highly correlated and classical unstructured \ac{ANN} fails to capture such spatial dependencies. \cite{lecun_lenet}
 
-- TODO transforms and bla
-
-The proposed alternative therefor are \acp{CNN}, which have shown to perform pretty well over the last decade in several image related benchmarks. \cite{inception}, \cite{resnet}, \cite{densenet}.
-The classical \ac{CNN} architecture is comprised of three different layer types:
-
-\begin{itemize}
-    \item convolutional layers
-    \item pooling layers
-    \item fully-connected layers
-\end{itemize}
+The proposed alternative therefor are \acp{CNN}, which have shown to perform pretty well over the last decade in several image related benchmarks. \cite{inception} \cite{resnet} \cite{densenet}.
+The classical \ac{CNN} architecture is comprised of three different layer types: convolutional layers, pooling layers and fully-connected layers.
 
 \subsubsection{Convolutional Layer}
 Convolutional layers form the major component in a \ac{CNN}.
-As the name suggest the underlying mathematical foundation of those layers is the convolution.
-The equation for a convolution (see eq. \ref{eq:conv}), states that a function $f$ convolved with another function $g$, is the multiplication of those two functions, while $g$ is shifted over $f$.
+As the name suggest the underlying mathematical foundation of those layers is the convolution operation.
+The equation for a convolution (eq. \ref{eq:conv}), states that a function $f$ convolved with another function $g$, is the multiplication of those two functions, while $g$ is shifted over $f$.
 The final result is then obtained by taking the integral over the whole domain. \cite{dl}
 
 \begin{equation}
@@ -91,10 +209,10 @@ The final result is then obtained by taking the integral over the whole domain. 
 \end{equation}
 
 In simpler terms that just means there is an image $I \in \R^{WxHxC}$, where $W$ and $H$ are the width and height of the image and $C$ being the number of channels.
-Furthermore, there is a kernel $K$ with $K \in \R^{W_KxH_KxC}$.
+Further, there is a kernel $K \in \R^{W_KxH_KxC}$.
 The image and the kernel are now convolved by moving the kernel over the image and at each position an element-wise multiplication of the overlapping area of the image and the kernel is taken.
 Afterwards, the result is summed up and used as an output element in the convolution result.
-Finally, the kernel is shifted further until the whole image has been convolved.
+Finally, the kernel is shifted further until the whole image has been processed.
 How much pixel a kernel is shifted at a time depends on the used stride.
 The higher the stride the less local information is preserved.
 Typically a stride of $1$ or $2$ is used.
@@ -108,54 +226,24 @@ An example of a convolution of a $4\times4$ input with a $3\times3$ kernel and a
 \end{center}
 \end{figure}
 
-- TODO size of output?
-
-- TODO padding?
-
 \subsubsection{Pooling Layer}
+\label{sec:max_pooling}
+
 Pooling layers in \acp{CNN} are used to further reduce the dimensionality of the output.
 During the pooling operation information across spatial locations is fused by sliding a window (typically of size $2\times2$ or $3\times3$) over the input and performing a function on the values inside the window.
 In the case of max pooling the used function is the $MAX$ function, therefore only the maximum value inside the window is considered and used in the pooling output.
 This decreases the number of parameters and hence reduces the computational cost. \cite{dl}
 
-- TODO average pooling?
-
-- TODO global average?
-
-- TODO maybe Vincents learnable pooling
-
 \subsubsection{Fully-Connected Layer}
-The fully-connected layer as described in \ref{sec:deep_basics} is the final layer inside a \ac{CNN}.
-Before the calculations of this layer are applied, the input tensor is flattened into a vector.
-The input corresponds to some high level features which were previously build through the convolutional and pooling layers.
-The last operation in this output layer in a multi-class classification task is normally a softmax activation function \cite{softmax}, which produces a probability vector.
-Each element in the vector corresponds to the probability of a class in the task.
-The softmax function is defined as:
 
-\begin{equation}
-    softmax(x)_i = \frac{e^{x_i}}{\sum_{j=1}^Ne^{x_j}}
-\end{equation}
-
-Which basically means that the output probability $softmax(x)_i$ is defined as the fraction of the exponential function applied to an element of the vector, divided by the sum of all exponential function outputs applied to all elements of the vector.
-
-\subsection{Activation Functions}
-
-\subsubsection{Sigmoid}
-
-\subsubsection{Hard Sigmoid}
-
-\subsubsection{Rectified Linear Unit (ReLU)}
-
-\subsubsection{ReLU6}
-
-\subsubsection{Hard Swish}
-
-\subsection{Loss Functions}
-
-- TODO CE
-
-\subsubsection{Skip Connections}
+The \ac{FC} layer as described in \ref{sec:deep_basics} is the final layer inside a \ac{CNN}.
+The high-level features, which were previously build through the convolutional and max pooling layers, are flattened into a fixed size vector and passed for classification to the \ac{FC} layer.
 
 \subsection{Batch Normalization}
 
-\subsection{Dropout}
+A common problem while training with the \ac{ReLU} activation function is that the outputs are non-zero centered, since \ac{ReLU} is non-zero centered.
+So with each layer the output distribution gets shifted from the input distribution.
+This observed phenomenon is called the \textit{internal co-variate shift} and forces the network to adapt to the shifting output distribution.
+The adaption produces an overhead, which is expressed in a longer training time of the network.
+Therefore, Ioffe and Szegedy \cite{batchnorm} introduced \ac{BatchNorm}, a trainable layer for \ac{ANN}.
+The \ac{BatchNorm} layer normalizes the feature maps along the batch axis to have zero-mean and a standard deviation of one, which not only decreases the training time, but also allows for higher learning rates and less careful initialization of the network weights.
