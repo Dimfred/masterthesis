@@ -25,6 +25,7 @@ from os import makedirs, path
 
 import tensorflow as tf
 from tensorflow.keras import backend
+import tensorflow.keras.backend as K
 from tensorflow.keras.callbacks import Callback
 from tensorflow.keras.losses import BinaryCrossentropy, Loss, Reduction
 from tensorflow.python.keras.utils import tf_utils
@@ -117,7 +118,8 @@ class YOLOv4Loss(Loss):
         xiou = self.bbox_xiou(truth_xywh, pred_xywh)
         nan_panic(xiou, "xiou")
         xiou_scale = 2.0 - truth_xywh[..., 2:3] * truth_xywh[..., 3:4]
-        xiou_loss = one_obj * xiou_scale * (1.0 - xiou[..., tf.newaxis])
+        # normalizer 0.75
+        xiou_loss = 0.75 * one_obj * xiou_scale * (1.0 - xiou[..., tf.newaxis])
         nan_panic(xiou_loss, "xiou_loss")
         # print("xiou_loss.shape\n{}".format(xiou_loss.shape))
         xiou_loss = 3 * tf.reduce_mean(tf.reduce_sum(xiou_loss, axis=(1, 2)))
@@ -165,18 +167,27 @@ class YOLOv4Loss(Loss):
         )
         # print("max_iou", max_iou)
 
-        conf_obj_loss = one_obj * (0.0 - backend.log(pred_conf + 1e-8))
+        # conf_obj_loss = one_obj * (0.0 - backend.log(pred_conf + 1e-8))
+        # obj_normalizer = 1.0
+        conf_obj_loss =  K.sum(K.binary_crossentropy(one_obj, pred_conf))
         nan_panic(conf_obj_loss, "conf_obj_loss")
-        conf_noobj_loss = (
-            one_noobj
-            * tf.cast(max_iou < 0.5, dtype=tf.float32)
-            * (0.0 - backend.log(1.0 - pred_conf + 1e-8))
-        )
-        nan_panic(conf_noobj_loss, "conf_noobj_loss")
-        conf_loss = tf.reduce_mean(
-            tf.reduce_sum(conf_obj_loss + conf_noobj_loss, axis=(1, 2))
-        )
-        nan_panic(conf_loss, "conf_loss")
+        conf_loss = conf_obj_loss
+
+        # conf_noobj_loss =
+        # conf_noobj_loss = (
+        #     one_noobj
+        #     * tf.cast(max_iou < 0.5, dtype=tf.float32)
+        #     # * (0.0 - backend.log(1.0 - pred_conf + 1e-8))
+        #     * K.binary_cross_entropy(1.0 - pred_conf)
+        # )
+        # nan_panic(conf_noobj_loss, "conf_noobj_loss")
+        # conf_loss = tf.reduce_mean(
+        #     tf.reduce_sum(conf_obj_loss + conf_noobj_loss, axis=(1, 2))
+        # )
+        # nan_panic(conf_loss, "conf_loss")
+        # conf_loss = K.sum(
+        #     K.binary_crossentropy()
+        # )
 
         # Probabilities Loss
         prob_loss = self.prob_binaryCrossentropy(truth_prob, pred_prob)
