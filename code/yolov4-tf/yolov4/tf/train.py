@@ -121,7 +121,8 @@ class YOLOv4Loss(Loss):
         xiou_loss = 0.75 * one_obj * xiou_scale * (1.0 - xiou[..., tf.newaxis])
         nan_panic(xiou_loss, "xiou_loss")
         # print("xiou_loss.shape\n{}".format(xiou_loss.shape))
-        xiou_loss = 3 * tf.reduce_mean(tf.reduce_sum(xiou_loss, axis=(1, 2)))
+        # xiou_loss = 3 * tf.reduce_mean(tf.reduce_sum(xiou_loss, axis=(1, 2)))
+        xiou_loss = 0.75 * tf.reduce_sum(xiou_loss, axis=(1, 2))
         # print("xiou_loss.shape\n{}".format(xiou_loss.shape))
 
         # Confidence Loss
@@ -168,15 +169,13 @@ class YOLOv4Loss(Loss):
 
         # conf_obj_loss = one_obj * (0.0 - backend.log(pred_conf + 1e-8))
         # obj_normalizer = 1.0
-        conf_obj_loss = tf.reduce_mean(
-            tf.reduce_sum(K.categorical_crossentropy(one_obj, pred_conf), axis=(1, 2))
+        conf_obj_loss = tf.reduce_sum(
+            K.binary_crossentropy(one_obj, pred_conf), axis=(1, 2)
         )
-        conf_noobj_loss = tf.reduce_mean(
-            tf.reduce_sum(
-                tf.cast(max_iou < 0.5, dtype=tf.float32)
-                * K.categorical_crossentropy(one_noobj, 1.0 - pred_conf),
-                axis=(1, 2),
-            )
+        conf_noobj_loss = tf.reduce_sum(
+            tf.cast(max_iou < 0.5, dtype=tf.float32)
+            * K.binary_crossentropy(one_noobj, 1.0 - pred_conf),
+            axis=(1, 2),
         )
 
         nan_panic(conf_obj_loss, "conf_obj_loss")
@@ -204,10 +203,11 @@ class YOLOv4Loss(Loss):
         # Probabilities Loss
         prob_loss = self.prob_binaryCrossentropy(truth_prob, pred_prob)
         prob_loss = one_obj * prob_loss[..., tf.newaxis]
-        prob_loss = tf.reduce_mean(tf.reduce_sum(prob_loss, axis=(1, 2)) * num_classes)
+        # prob_loss = tf.reduce_mean(tf.reduce_sum(prob_loss, axis=(1, 2)) * num_classes)
+        prob_loss = tf.reduce_sum(prob_loss, axis=(1, 2)) #* num_classes
         nan_panic(prob_loss, "prob_loss")
 
-        total_loss = xiou_loss + conf_loss + prob_loss
+        total_loss = tf.reduce_mean(xiou_loss + conf_loss + prob_loss)
 
         if self.verbose != 0:
             # tf.print(
