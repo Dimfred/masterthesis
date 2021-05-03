@@ -48,7 +48,6 @@ def nan_panic(tensor, name):
     tf.debugging.check_numerics(tensor, msg, name=name)
 
 
-
 class YOLOv4Loss(Loss):
     def __init__(self, batch_size, iou_type, verbose=0, gamma=0.0):
         super(YOLOv4Loss, self).__init__(name="YOLOv4Loss")
@@ -169,9 +168,17 @@ class YOLOv4Loss(Loss):
 
         # conf_obj_loss = one_obj * (0.0 - backend.log(pred_conf + 1e-8))
         # obj_normalizer = 1.0
-        conf_obj_loss =  K.sum(K.binary_crossentropy(one_obj, pred_conf))
+        conf_obj_loss = K.sum(K.binary_crossentropy(one_obj, pred_conf))
+        conf_noobj_loss = K.sum(
+            tf.cast(max_iou < 0.5, dtype=tf.float32)
+            * K.binary_crossentropy(one_noobj, 1.0 - pred_conf)
+        )
+
         nan_panic(conf_obj_loss, "conf_obj_loss")
-        conf_loss = conf_obj_loss
+        nan_panic(conf_noobj_loss, "conf_noobj_loss")
+
+        conf_loss = conf_obj_loss + conf_noobj_loss
+        conf_loss /= 64
 
         # conf_noobj_loss =
         # conf_noobj_loss = (
