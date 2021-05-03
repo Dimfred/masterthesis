@@ -169,12 +169,12 @@ class YOLOv4Loss(Loss):
         # conf_obj_loss = one_obj * (0.0 - backend.log(pred_conf + 1e-8))
         # obj_normalizer = 1.0
         conf_obj_loss = tf.reduce_mean(
-            tf.reduce_sum(K.binary_crossentropy(one_obj, pred_conf), axis=(1, 2))
+            tf.reduce_sum(K.categorical_crossentropy(one_obj, pred_conf), axis=(1, 2))
         )
         conf_noobj_loss = tf.reduce_mean(
             tf.reduce_sum(
                 tf.cast(max_iou < 0.5, dtype=tf.float32)
-                * K.binary_crossentropy(one_noobj, 1.0 - pred_conf),
+                * K.categorical_crossentropy(one_noobj, 1.0 - pred_conf),
                 axis=(1, 2),
             )
         )
