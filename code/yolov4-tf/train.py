@@ -198,6 +198,7 @@ if __name__ == "__main__":
         yolo,
         max_steps=config.yolo.max_steps,
         validation_freq=config.yolo.validation_freq,
+        batch_size=config.yolo.batch_size,
         accumulation_steps=config.yolo.accumulation_steps,
         map_after_steps=config.yolo.map_after_steps,
         map_on_step_mod=config.yolo.map_on_step_mod,
