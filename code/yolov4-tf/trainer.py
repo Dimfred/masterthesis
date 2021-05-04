@@ -23,7 +23,7 @@ def ffloat(f):
 
 # _callbacks = [
 #     callbacks.LearningRateScheduler(lr_scheduler),
-    # callbacks.TerminateOnNaN(),
+# callbacks.TerminateOnNaN(),
 #     callbacks.TensorBoard(log_dir="./log"),
 #     SaveWeightsCallback(
 #         yolo=yolo,
@@ -42,6 +42,7 @@ class Trainer:
         lr_scheduler=None,
         max_steps=1,
         validation_freq=2,
+        batch_size=2,
         accumulation_steps=1,
         map_after_steps=1,
         map_on_step_mod=1,
@@ -69,6 +70,7 @@ class Trainer:
         self.max_steps = max_steps
         self.validation_freq = validation_freq
         self.lr_scheduler = LearningRateScheduler(self.model, lr_scheduler)
+        self.batch_size = batch_size
         self.accumulation_steps = accumulation_steps
         self.map_after_steps = map_after_steps
         self.map_on_step_mod = map_on_step_mod
@@ -178,6 +180,8 @@ class Trainer:
             output = self.model(inputs, training=True)
             for lidx, (o, l) in enumerate(zip(output, labels)):
                 loss = self.model.loss(y_pred=o, y_true=l)
+                loss /= self.batch_size * self.accumulation_steps
+
                 total_loss += loss
                 losses[lidx] = loss
 
@@ -192,6 +196,8 @@ class Trainer:
         outputs = self.model(inputs, training=False)
         for lidx, (o, l) in enumerate(zip(outputs, labels)):
             loss = self.model.loss(y_pred=o, y_true=l)
+            loss /= self.batch_size * self.accumulation_steps
+
             total_loss += loss
             losses[lidx] = loss
 
