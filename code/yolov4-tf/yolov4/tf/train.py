@@ -45,7 +45,7 @@ def rm_nan_or_inf(tensor):
     where_nan = tf.math.is_nan(tensor)
     where_inf = tf.math.is_inf(tensor)
 
-    where_not_any = tf.math.logical_or(where_nan, where_inf)
+    where_not_any = tf.math.logical_not(tf.math.logical_or(where_nan, where_inf))
     where_not_any = tf.cast(where_not_any, dtype=tf.float32)
 
     tensor = tf.math.multiply_no_nan(tensor, where_not_any)
