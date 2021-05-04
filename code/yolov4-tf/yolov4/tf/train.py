@@ -86,14 +86,10 @@ class YOLOv4Loss(Loss):
         nan_panic(y_true, "y_true")
         nan_panic(y_pred, "y_pred")
 
-        # print("ypred", y_pred.shape)
 
         truth_xywh = y_true[..., 0:4]
-        # print("truth_xywh", truth_xywh.shape)
         truth_conf = y_true[..., 4:5]
-        # print("truth_conf", truth_conf.shape)
         truth_prob = y_true[..., 5:]
-        # print("truth_prob", truth_prob.shape)
 
         num_classes = truth_prob.shape[-1]
 
@@ -102,9 +98,9 @@ class YOLOv4Loss(Loss):
         pred_prob = y_pred[..., 5:]
 
         one_obj = truth_conf
-        num_obj = tf.reduce_sum(one_obj, axis=[1, 2])
         one_noobj = 1.0 - one_obj
         nan_panic(one_noobj, "one_noobj")
+        num_obj = tf.reduce_sum(one_obj, axis=[1, 2])
         one_obj_mask = one_obj > 0.5
 
         zero = tf.zeros((1, g_height * g_width * 3, 1), dtype=tf.float32)
@@ -116,16 +112,15 @@ class YOLOv4Loss(Loss):
         # normalizer 0.75
         xiou_loss = one_obj * xiou_scale * (1.0 - xiou[..., tf.newaxis])
         nan_panic(xiou_loss, "xiou_loss")
-        # print("xiou_loss.shape\n{}".format(xiou_loss.shape))
+        xiou_loss = tf.reduce_sum(xiou_loss)
+
         # xiou_loss = 3 * tf.reduce_mean(tf.reduce_sum(xiou_loss, axis=(1, 2)))
         # xiou_loss = tf.reduce_sum(xiou_loss, axis=(1, 2))
-        xiou_loss = tf.reduce_sum(xiou_loss)
-        # print("xiou_loss.shape\n{}".format(xiou_loss.shape))
 
         # Confidence Loss
         i0 = tf.constant(0)
 
-        def body(i, max_iou):
+        def find_max_iou_per_anchor(i, max_iou):
             object_mask = tf.reshape(one_obj_mask[i, ...], shape=(-1,))
             truth_bbox = tf.boolean_mask(truth_xywh[i, ...], mask=object_mask)
             # g_height * g_width * 3,      1, xywh
@@ -155,25 +150,29 @@ class YOLOv4Loss(Loss):
 
         _, max_iou = tf.while_loop(
             self.while_cond,
-            body,
+            find_max_iou_per_anchor,
             [i0, zero],
             shape_invariants=[
                 i0.get_shape(),
                 tf.TensorShape([None, g_height * g_width * 3, 1]),
             ],
         )
-        # print("max_iou", max_iou)
 
         # conf_obj_loss = one_obj * (0.0 - backend.log(pred_conf + 1e-8))
         # obj_normalizer = 1.0
+        conf_obj_loss = K.categorical_crossentropy(one_obj, pred_conf)
+        print(conf_obj_loss.shape)
+
         conf_obj_loss = tf.reduce_sum(
+            conf_obj_loss
             # K.binary_crossentropy(one_obj, pred_conf), axis=(1, 2)
-            K.binary_crossentropy(one_obj, pred_conf)
+            # K.binary_crossentropy(one_obj, pred_conf)
         )
         # print(conf_obj_loss.shape)
         conf_noobj_loss = tf.reduce_sum(
             tf.cast(max_iou < 0.5, dtype=tf.float32)
-            * K.binary_crossentropy(one_noobj, pred_conf),
+            # * K.binary_crossentropy(one_noobj, pred_conf),
+            * K.categorical_crossentropy(one_obj, pred_conf)
             # axis=(1, 2),
         )
 
