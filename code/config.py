@@ -90,9 +90,9 @@ config.yolo.label_smoothing = 0.1
 
 config.yolo.max_steps = 4000
 # step > this == 0 => perform mAP
-config.yolo.map_after_steps = 500
+config.yolo.map_after_steps = 1000 # 500
 # step % this == 0 => perform mAP
-config.yolo.map_on_step_mod = 20  # 50
+config.yolo.map_on_step_mod = 100 #20  # 50
 config.yolo.validation_freq = 10 if utils.isme() else 10
 config.yolo.n_workers = 12 if utils.isme() else 32
 config.yolo.validation_steps = -1 if utils.isme() else 2
