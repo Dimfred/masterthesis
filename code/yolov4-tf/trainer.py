@@ -180,7 +180,7 @@ class Trainer:
             output = self.model(inputs, training=True)
             for lidx, (o, l) in enumerate(zip(output, labels)):
                 loss = self.model.loss(y_pred=o, y_true=l)
-                loss /= self.batch_size * self.accumulation_steps
+                # loss /= self.batch_size * self.accumulation_steps
 
                 total_loss += loss
                 losses[lidx] = loss
@@ -196,7 +196,7 @@ class Trainer:
         outputs = self.model(inputs, training=False)
         for lidx, (o, l) in enumerate(zip(outputs, labels)):
             loss = self.model.loss(y_pred=o, y_true=l)
-            loss /= self.batch_size * self.accumulation_steps
+            # loss /= self.batch_size * self.accumulation_steps
 
             total_loss += loss
             losses[lidx] = loss
