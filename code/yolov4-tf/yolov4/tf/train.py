@@ -157,13 +157,13 @@ class YOLOv4Loss(Loss):
         conf_obj_loss = -K.log(pred_conf + 1e-8) * one_obj
         conf_obj_loss = tf.clip_by_value(conf_obj_loss, 0, tf.float32.max)
         # nan_panic(conf_obj_loss, "conf_obj_loss")
-        conf_obj_loss = tf.reduce_sum(conf_obj_loss, axis=1)
 
         conf_noobj_mask = tf.cast(max_iou < 0.5, dtype=tf.float32) * one_noobj
         conf_noobj_loss = -K.log(1.0 - pred_conf + 1e-8) * conf_noobj_mask
         conf_noobj_loss = tf.clip_by_value(conf_noobj_loss, 0, tf.float32.max)
         # nan_panic(conf_noobj_loss, "conf_noobj_loss")
-        conf_noobj_loss = tf.reduce_sum(conf_noobj_loss, axis=1)
+
+        conf_loss = tf.reduce_sum(conf_obj_loss + conf_noobj_loss, axis=(1, 2))
 
         # conf_noobj_loss = (
         #     one_noobj
@@ -187,7 +187,7 @@ class YOLOv4Loss(Loss):
         # prob_loss = tf.reduce_mean(tf.reduce_sum(prob_loss, axis=(1, 2)) * num_classes)
 
         xiou_loss = 3.0 * tf.reduce_mean(xiou_loss)
-        conf_loss = 1.0 * (tf.reduce_mean(conf_obj_loss) + tf.reduce_mean(conf_obj_loss))
+        conf_loss = 1.0 * tf.reduce_mean(conf_loss)
         prob_loss = 1.0 * tf.reduce_mean(prob_loss * num_classes)
 
         total_loss = xiou_loss + conf_loss + prob_loss
