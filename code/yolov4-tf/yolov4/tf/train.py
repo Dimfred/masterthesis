@@ -189,11 +189,10 @@ class YOLOv4Loss(Loss):
         # Probabilities Loss
         prob_loss = self.prob_binaryCrossentropy(truth_prob, pred_prob)
         prob_loss = one_obj * prob_loss[..., tf.newaxis]
-        prob_loss = tf.reduce_sum(prob_loss, axis=(1, 2))  # * num_classes
+        prob_loss = tf.reduce_sum(prob_loss, axis=(1, 2))
         nan_panic(prob_loss, "prob_loss")
 
         # prob_loss = tf.reduce_mean(tf.reduce_sum(prob_loss, axis=(1, 2)) * num_classes)
-        # prob_loss = tf.reduce_sum(prob_loss, axis=(1, 2)) #* num_classes
 
         total_loss = tf.reduce_mean(
             0.75 * xiou_loss + 1.0 * conf_loss + 1.0 * prob_loss * num_classes
