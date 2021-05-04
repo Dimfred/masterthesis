@@ -162,9 +162,8 @@ class YOLOv4Loss(Loss):
         nan_panic(conf_obj_loss, "conf_obj_loss")
         conf_obj_loss = tf.reduce_sum(conf_obj_loss, axis=1)
 
-        conf_noobj_loss = tf.squeeze(
-            tf.cast(max_iou < 0.5, dtype=tf.float32)
-        ) * K.categorical_crossentropy(one_noobj, pred_conf)
+        conf_noobj_mask = tf.squeeze(tf.cast(max_iou < 0.5, dtype=tf.float32)) * one_noobj
+        conf_noobj_loss = K.categorical_crossentropy(conf_noobj_mask, pred_conf)
         nan_panic(conf_noobj_loss, "conf_noobj_loss")
         conf_noobj_loss = tf.reduce_sum(conf_noobj_loss, axis=1)
 
