@@ -41,11 +41,12 @@ def rm_nan_or_inf(tensor):
 
     # where_inf = tf.where(tf.math.is_inf(tensor))
     # tensor[where_inf] = 0.0
-    where_not_nan = tf.math.logical_not(tf.math.is_nan(tensor))
-    where_not_inf = tf.math.logical_not(tf.math.is_inf(tensor))
-    where_not_any = tf.cast(
-        tf.math.logical_or(where_not_nan, where_not_inf), dtype=tf.float32
-    )
+
+    where_nan = tf.math.is_nan(tensor)
+    where_inf = tf.math.is_inf(tensor)
+
+    where_not_any = tf.math.logical_or(where_nan, where_inf)
+    where_not_any = tf.cast(where_not_any, dtype=tf.float32)
 
     tensor = tf.math.multiply_no_nan(tensor, where_not_any)
 
@@ -182,19 +183,20 @@ class YOLOv4Loss(Loss):
         # nan_panic(conf_loss, "conf_loss")
 
         conf_obj_loss = -K.log(pred_conf + 1e-8) * one_obj
-        conf_obj_loss = rm_nan_or_inf(conf_obj_loss)
         # nan_panic(conf_obj_loss, "conf_obj_loss")
 
         conf_noobj_mask = tf.cast(max_iou < 0.5, dtype=tf.float32) * one_noobj
         conf_noobj_loss = -K.log(1.0 - pred_conf + 1e-8) * conf_noobj_mask
-        conf_noobj_loss = rm_nan_or_inf(conf_obj_loss)
         # nan_panic(conf_noobj_loss, "conf_noobj_loss")
 
-        conf_loss = tf.reduce_sum(conf_obj_loss + conf_noobj_loss, axis=(1, 2))
+        conf_loss = conf_obj_loss + conf_noobj_loss
+        conf_loss = rm_nan_or_inf(conf_loss)
+        conf_loss = tf.reduce_sum(conf_loss, axis=(1, 2))
 
         # Probabilities Loss
         prob_loss = self.prob_binaryCrossentropy(truth_prob, pred_prob)
         prob_loss = one_obj * prob_loss[..., tf.newaxis]
+        prob_loss = rm_nan_or_inf(prob_loss)
         prob_loss = tf.reduce_sum(prob_loss, axis=(1, 2))
         # nan_panic(prob_loss, "prob_loss")
 
