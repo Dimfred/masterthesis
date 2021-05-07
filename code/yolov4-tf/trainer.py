@@ -49,7 +49,7 @@ class Trainer:
         lr=0.00026,
         burn_in=1000,
         resize_model=None,
-        pexperiment=None,
+        experiment=None,
         checkpoint_dir=None,
     ):
         self.yolo = yolo
@@ -61,7 +61,7 @@ class Trainer:
         self.mAP = utils.MeanAveragePrecision(
             self.yolo.classes,
             self.yolo.input_size,
-            iou_threshs=[0.5, 0.6, 0.7, 0.8],
+            iou_threshs=[0.5, 0.75],
         )
         self.best_mAP = 0.0
         self.best_mAP_step = 0
@@ -83,8 +83,15 @@ class Trainer:
 
         self.resize_model = resize_model
 
-        self.pexperiment = pexperiment
+        self.experiment = experiment
         self.checkpoint_dir = checkpoint_dir
+
+        self.train_summary_writer = tf.summary.create_file_writer(
+            self.experiment.tb_train_dir
+        )
+        self.valid_summary_writer = tf.summary.create_file_writer(
+            self.experiment.tb_valid_dir
+        )
 
     def train(self, train_ds, valid_ds, **kwargs):
         trainable_vars = self.model.trainable_variables
@@ -144,15 +151,23 @@ class Trainer:
                 tf.print(pretty)
 
                 mAP50 = self.mAP.get_maps(results)[0][1]
+                mAP75 = self.mAP.get_maps(results)[1][1]
+
+                self.log_summary(
+                    self.valid_summary_writer, "mAP@50", mAP50, step=self.step_counter
+                )
+                self.log_summary(
+                    self.valid_summary_writer, "mAP@75", mAP75, step=self.step_counter
+                )
+
                 if mAP50 > self.best_mAP:
                     self.best_mAP = mAP50
                     self.best_mAP_step = self.step_counter
                     self.best_mAP_pretty = pretty
 
-                    weight_path = (
-                        self.checkpoint_dir / f"{self.pexperiment}_best.weights"
+                    self.yolo.save_weights(
+                        str(self.experiment.weights), weights_type="yolo"
                     )
-                    self.yolo.save_weights(str(weight_path), weights_type="yolo")
 
             # TODO resize network?
             if self.resize_model is not None:
@@ -163,6 +178,12 @@ class Trainer:
 
             if self.step_counter >= self.max_steps:
                 tf.print(self.best_mAP_pretty)
+                with open(self.experiment.results, "w") as f:
+                    f.write(
+                        self.best_mAP_pretty
+                        if self.best_mAP_pretty is not None
+                        else "test"
+                    )
                 break
 
             # DEBUG
@@ -231,13 +252,18 @@ class Trainer:
 
     def print_train(self, losses):
         took = ffloat(time.perf_counter() - self.train_time)
-        loss_sum = ffloat(losses.sum())
+        loss_sum = losses.sum()
+        self.log_summary(
+            self.train_summary_writer, "loss", loss_sum, step=self.step_counter
+        )
+
+        loss_sum = ffloat(loss_sum)
         losses = (ffloat(l) for l in losses)
 
         # fmt: off
         p = [["Batch", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall"]]
         p += [[self.step_counter, f"{took}s", loss_sum, *losses, self.overall_train_time]]
-        p += [["Experiment", self.pexperiment]]
+        p += [["Experiment", str(self.experiment.experiment_param)]]
         p += [["BestMAP50", "{:.5f}%".format(self.best_mAP * 100)]]
         p += [["BestMAPStep", self.best_mAP_step]]
         print(tabulate(p))
@@ -247,7 +273,12 @@ class Trainer:
 
     def print_valid(self, losses):
         took = ffloat(time.perf_counter() - self.valid_time)
-        loss_sum = ffloat(losses.sum())
+        loss_sum = losses.sum()
+        self.log_summary(
+            self.valid_summary_writer, "loss", loss_sum, step=self.step_counter
+        )
+
+        loss_sum = ffloat(loss_sum)
         losses = (ffloat(l) for l in losses)
 
         # fmt: off
@@ -262,3 +293,7 @@ class Trainer:
 
         took = time.perf_counter() - self.train_time_start
         return str(datetime.timedelta(seconds=took)).split(".")[0]
+
+    def log_summary(self, writer, *args, **kwargs):
+        with writer.as_default():
+            tf.summary.scalar(*args, **kwargs)

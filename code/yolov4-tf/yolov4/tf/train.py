@@ -36,12 +36,6 @@ import sys
 
 
 def rm_nan_or_inf(tensor):
-    # where_nan = tf.where(tf.math.is_nan(tensor))
-    # tensor[where_nan] = 0.0
-
-    # where_inf = tf.where(tf.math.is_inf(tensor))
-    # tensor[where_inf] = 0.0
-
     where_nan = tf.math.is_nan(tensor)
     where_inf = tf.math.is_inf(tensor)
 
@@ -190,13 +184,13 @@ class YOLOv4Loss(Loss):
         # nan_panic(conf_noobj_loss, "conf_noobj_loss")
 
         conf_loss = conf_obj_loss + conf_noobj_loss
-        conf_loss = rm_nan_or_inf(conf_loss)
+        # conf_loss = rm_nan_or_inf(conf_loss)
         conf_loss = tf.reduce_sum(conf_loss, axis=(1, 2))
 
         # Probabilities Loss
         prob_loss = self.prob_binaryCrossentropy(truth_prob, pred_prob)
         prob_loss = one_obj * prob_loss[..., tf.newaxis]
-        prob_loss = rm_nan_or_inf(prob_loss)
+        # prob_loss = rm_nan_or_inf(prob_loss)
         prob_loss = tf.reduce_sum(prob_loss, axis=(1, 2))
         # nan_panic(prob_loss, "prob_loss")
 

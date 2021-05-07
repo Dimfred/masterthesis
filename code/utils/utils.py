@@ -1139,3 +1139,56 @@ def load_imgs(dir_, read_type=cv.IMREAD_ANYCOLOR):
             executor.submit(read, path)
 
     return imgs
+
+
+
+
+
+# - experiments
+#   - init_lr
+#       - lr1
+#           - run1
+#               - best_weights
+#               - results
+#               - tensorboard
+#               -
+#           - run2
+#       - lr2
+#   - offline_augs
+#   - online_augs
+#   - grid
+
+class YoloExperiment:
+    def __init__(self, experiment_dir, experiment_name, experiment_param, run):
+        self.experiment_dir = experiment_dir
+        self.experiment_name = self.experiment_dir / experiment_name
+        self.experiment_param = self.experiment_name / experiment_param
+        self.run = self.experiment_param / f"run{run}"
+
+        self.weights = self.run / "best.weights"
+        self.results = self.run / "results_raw.txt"
+        self.tb_train_dir = str(self.run / "train")
+        self.tb_valid_dir = str(self.run / "valid")
+
+    def init(self):
+        self.create_if_not_exists(self.experiment_dir)
+        self.create_if_not_exists(self.experiment_name)
+        self.create_if_not_exists(self.experiment_param)
+        self.clean_path(self.run)
+        self.create_if_not_exists(self.run)
+
+    def create_if_not_exists(self, path):
+        if not path.exists():
+            path.mkdir()
+
+    def clean_path(self, path):
+        if not path.exists():
+            return
+
+        for child in path.glob("*"):
+            if child.is_file():
+                child.unlink()
+            else:
+                self.clean_path(child)
+
+        path.rmdir()
