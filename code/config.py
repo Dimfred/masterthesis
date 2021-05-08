@@ -385,7 +385,7 @@ config.labels_and_files_to_remove = [
 ]
 
 ## experiment
-config.yolo.experiment_dir = Path("experiments")
+config.yolo.experiment_dir = Path("experiments_yolo")
 
 # config.yolo.experiment_name = "lr_init"
 # config.yolo.experiment_param = f"LR_{config.yolo.lr}"
