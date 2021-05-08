@@ -5,16 +5,7 @@ On the y-axis the truth values $T_*$ of a class are defined and on the x-axis th
 When the truth class and the hypothesis match, which is the case on the diagonal of the matrix, this results in a \ac{TP}.
 The other case is when the hypothesis does not match the truth value, which can be seen for each class to the left and the right side of the diagonal this is called a \ac{FP}.
 The number of \ac{FN} and \ac{TN} is not presented in the confusion matrix.
-\acp{FN} are the number of missing correct predictions, i.e. $FN = TP_{Should} - TP_{Is}$.
-Further, \acp{TN} are the number of all possible predictions
-
-- TODO
-
-Further, in the context of object detection \acp{TP} and \acp{FP} are obtained by measuring the overlap of two bounding boxes, i.e. bounding box $A$ and $B$ are considered to be a \ac{TP} when $IoU(A, B) > threshold$ and the predicted classes of $A$ and $B$ matches, else it is an \ac{FP} candidate.
-\ac{FP} candidate means that first all predicted bounding boxes have to be checked and mapped against a \ac{TP}, only after that the \ac{FP} candidates can be checked whether they were mapped against a \ac{TP}
-
-- TODO that sucks
-
+\acp{FN} are the number of missing predictions, which can occur e.g. in object detection when no bounding box is predicted at all.
 
 \begin{table}
 \begin{center}
@@ -28,10 +19,15 @@ Further, in the context of object detection \acp{TP} and \acp{FP} are obtained b
     \hline
     $\Sigma$  & & & & & $N$\\
 \end{tabular}
-\caption{A Confusion Matrix}
+\caption{A Confusion Matrix. Truth values are on the y-axis, while the hypothesis (prediction) is on the x-axis. Along the diagonal are the \ac{TP} values.}
 \label{tab:confmat}
 \end{center}
 \end{table}
+
+In the context of object detection \acp{TP} and \acp{FP} are obtained by measuring the overlap of two bounding boxes, i.e. bounding box $A$ and $B$ are considered to be a \ac{TP} when $IoU(A, B) > threshold$ and the predicted classes of $A$ and $B$ matches, else it is a \ac{FP}.
+After that all assigned \acp{TP} have to be rechecked, such that no ground truth has two matches.
+If such a case occurs the one with the lowest \ac{IoU} with the ground truth bounding box can be reassigned to a \ac{FN}, if again it satisfices the \ac{IoU} criteria.
+
 
 \subsubsection{Precision}
 
@@ -75,8 +71,8 @@ by taking the integral over the domain of the curve (eq. \ref{eq:ap}).
 
 \begin{figure}
 \begin{center}
-    \includegraphics[width=14cm]{imgs/pr_curve.png}
-    \caption{Example of a precision-recall curve, where precision and recall were calculated for different \ac{IoU} thresholds and sorted and plotted by their recall values \cite{map_article}}
+    \includegraphics[width=11cm]{imgs/pr_curve.png}
+    \caption{Example of a precision-recall curve, where precision and recall were calculated for different \ac{IoU} thresholds and sorted and plotted by their recall values \cite{map_article}. The \ac{AP} is the area under the curve.}
     \label{fig:pr_curve}
 \end{center}
 \end{figure}

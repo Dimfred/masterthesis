@@ -83,7 +83,7 @@ config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
 config.yolo.loss_gamma = 0.0  # 0.5
 
 config.yolo.burn_in = 1000
-config.yolo.lr = 0.0025
+config.yolo.lr = 0.0005
 config.yolo.decay = 0.00025
 config.yolo.momentum = 0.90
 config.yolo.label_smoothing = 0.1
@@ -201,10 +201,6 @@ config.augment.unet.img_params.channels = 1  # config.unet.channels
 config.augment.unet.img_params.keep_ar = True
 config.augment.unet.img_params.resize = 640  # resizes longest image axis to that size
 
-# whether to perform flip and rotation on the dataset
-config.augment.perform_rotation = False
-config.augment.perform_flip = False
-config.augment.include_merged = False
 config.augment.augment_valid = False
 
 # transition occurs always with the clock (90°)
@@ -390,5 +386,17 @@ config.labels_and_files_to_remove = [
 
 ## experiment
 config.yolo.experiment_dir = Path("experiments")
-config.yolo.experiment_name = "lr_init"
-config.yolo.experiment_param = f"LR_{config.yolo.lr}"
+
+# config.yolo.experiment_name = "lr_init"
+# config.yolo.experiment_param = f"LR_{config.yolo.lr}"
+
+# whether to perform flip and rotation on the dataset
+config.augment.perform_rotation = True
+config.augment.perform_flip = False
+config.augment.include_merged = False
+
+config.yolo.experiment_name = "offline_aug"
+config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
+
+# config.yolo.experiment_name = "online_aug_grid"
+# config.yolo.experiment_param = "online_aug_grid"

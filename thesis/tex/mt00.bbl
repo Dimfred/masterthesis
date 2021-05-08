@@ -1,4 +1,4 @@
-\begin{thebibliography}{{Fel}10}
+\begin{thebibliography}{{G"u}20}
 
 \bibitem[Boc20]{yolov4}
 A.~Bochkovskiy, C~Wang, and H.~Liao.
@@ -61,6 +61,13 @@ S.~Grossberg.
 \newblock Contour enhancement, short term memory, and constancies in
   reverberating neural networks.
 \newblock {\em Studies in Applied Mathematics}, 52(3):213--257, 1973.
+
+\bibitem[{G"u}20]{ecd_basecnn}
+M.~{G"unay}, M.~{K"oseoglu}, and "O. {Yildirim}.
+\newblock Classification of hand-drawn basic circuit components using
+  convolutional neural networks.
+\newblock In {\em 2020 International Congress on Human-Computer Interaction,
+  Optimization and Robotic Applications (HORA)}, pages 1--5, 2020.
 
 \bibitem[He15]{resnet}
 K.~He, X.~Zhang, S.~Ren, and J.~Sun.

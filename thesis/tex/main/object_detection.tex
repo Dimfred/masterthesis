@@ -11,8 +11,8 @@ Where the bounding box is presented as a tuple of values.
 The first two values indicate the center of the bounding box relative to the image size, while the latter two values indicate the width and the height of the bounding box also relative to the image size.
 All values can be calculated by dividing the absolute value by the corresponding image value.
 For example $x_{rel}$ would be calculated by dividing the absolute x-coordinate $x_{abs}$ by the width of the image.
-Same goes for $y_{rel}$, but here the value is divided by the image height.
-$w_{rel}$ and $h_{rel}$ are calculated following the principles above.
+Same applies for $y_{rel}$, except here the value is divided by the image height.
+$w_{rel}$ and $h_{rel}$ are calculated following the same principles.
 The advantages of this format are, that the definition of the bounding box becomes invariant to the image size.
 The image can be resized without having to recalculate the bounding box, as it is the case with other formats which use an absolute definition for bounding boxes.
 

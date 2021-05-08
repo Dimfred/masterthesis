@@ -8,44 +8,44 @@ A level-1 auxiliary file: mt-lof.aux
 A level-1 auxiliary file: mt-lot.aux
 A level-1 auxiliary file: mt-lit.aux
 Database file #1: mt.bib
-You've used 45 entries,
+You've used 46 entries,
             2543 wiz_defined-function locations,
-            773 strings with 10608 characters,
-and the built_in function-call counts, 16761 in all, are:
-= -- 1535
-> -- 1013
-< -- 47
-+ -- 340
-- -- 335
-* -- 1187
-:= -- 2849
-add.period$ -- 132
-call.type$ -- 45
-change.case$ -- 344
-chr.to.int$ -- 45
-cite$ -- 45
-duplicate$ -- 638
-empty$ -- 1084
-format.name$ -- 424
-if$ -- 3316
+            778 strings with 10863 characters,
+and the built_in function-call counts, 17216 in all, are:
+= -- 1577
+> -- 1032
+< -- 49
++ -- 346
+- -- 341
+* -- 1216
+:= -- 2916
+add.period$ -- 135
+call.type$ -- 46
+change.case$ -- 351
+chr.to.int$ -- 46
+cite$ -- 46
+duplicate$ -- 661
+empty$ -- 1122
+format.name$ -- 432
+if$ -- 3418
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 35
-newline$ -- 221
-num.names$ -- 139
-pop$ -- 383
+missing$ -- 36
+newline$ -- 226
+num.names$ -- 142
+pop$ -- 393
 preamble$ -- 1
-purify$ -- 391
+purify$ -- 399
 quote$ -- 0
-skip$ -- 543
+skip$ -- 561
 stack$ -- 0
-substring$ -- 452
-swap$ -- 65
-text.length$ -- 47
-text.prefix$ -- 44
+substring$ -- 471
+swap$ -- 72
+text.length$ -- 49
+text.prefix$ -- 45
 top$ -- 0
-type$ -- 352
+type$ -- 360
 warning$ -- 0
-while$ -- 102
-width$ -- 49
-write$ -- 557
+while$ -- 106
+width$ -- 50
+write$ -- 570

@@ -1,24 +1,31 @@
 \relax 
 \AC@reset@newl@bel
 \bibstyle{alphamod}
+\citation{ecd_basecnn}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{1}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {1.1}Motivation}{1}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {1.2}Related Works}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Goals of the Thesis}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}Task Description}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}Contribution}{1}{}\protected@file@percent }
+\AC@undonewlabel{acro:ECD}
+\newlabel{acro:ECD}{{1.2}{1}}
+\acronymused{ECD}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}Classification of Eletrical Circuit Components}{1}{}\protected@file@percent }
+\AC@undonewlabel{acro:CNN}
+\newlabel{acro:CNN}{{1.2.1}{1}}
+\acronymused{CNN}
+\AC@undonewlabel{acro:ECC}
+\newlabel{acro:ECC}{{1.2.1}{1}}
+\acronymused{ECC}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Goals of the Thesis}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}Task Description}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}Contribution}{2}{}\protected@file@percent }
 \citation{iec60617}
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Theory}{3}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}Electrical Circuit Diagrams}{3}{}\protected@file@percent }
-\AC@undonewlabel{acro:ECD}
-\newlabel{acro:ECD}{{2.1}{3}}
 \acronymused{ECD}
-\AC@undonewlabel{acro:ECC}
-\newlabel{acro:ECC}{{2.1}{3}}
 \acronymused{ECC}
 \acronymused{ECC}
 \acronymused{ECC}
@@ -132,8 +139,6 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Convolutional Neural Networks}{11}{}\protected@file@percent }
 \acronymused{MLP}
 \acronymused{ANN}
-\AC@undonewlabel{acro:CNN}
-\newlabel{acro:CNN}{{2.3.3}{11}}
 \acronymused{CNN}
 \acronymused{CNN}
 \citation{conv_arithmetic}
@@ -313,26 +318,31 @@
 \newlabel{tab:yoloconv}{{2.8}{20}}
 \citation{yolov3}
 \citation{yolov2}
+\citation{fast_rcnn}
+\citation{faster_rcnn}
 \citation{yolov2}
+\citation{fast_rcnn}
+\citation{faster_rcnn}
 \@writefile{lot}{\contentsline {table}{\numberline {2.9}{\ignorespaces PANetTiny Architecture\relax }}{21}{}\protected@file@percent }
 \newlabel{tab:panet_tiny_arch}{{2.9}{21}}
 \@writefile{toc}{\contentsline {subsubsection}{Head}{21}{}\protected@file@percent }
 \acronymused{YOLOv4}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Final bounding box calculation in the YOLOv4 network based on an anchor box \cite  {yolov2}\relax }}{22}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Bounding box calculation in the YOLOv4 network based on a prior anchor box \cite  {yolov2}. The $b_*$ indicate the final prediction, $p_*$ indicate parameters of the prior bounding box and $c_*$ indicate the prior bounding box spatial offset based on the current cell. The final center coordinate offset is predicted non-linearly with a sigmoid function, while the final width and height are predicted linearly, as it is done in \cite  {fast_rcnn} and \cite  {faster_rcnn}.\relax }}{22}{}\protected@file@percent }
 \newlabel{fig:bbox_calculation}{{2.5}{22}}
 \@writefile{toc}{\contentsline {subsubsection}{Loss}{22}{}\protected@file@percent }
 \acronymused{YOLO}
 \acronymused{IoU}
+\acronymused{YOLOv4}
 \acronymused{CE}
 \newlabel{eq:yolo_lclass}{{2.28}{22}}
+\citation{diou}
+\citation{soft_nms}
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{GIoU}
 \acronymused{DIoU}
 \acronymused{CIoU}
 \acronymused{EIoU}
-\citation{diou}
-\citation{soft_nms}
 \newlabel{eq:yolo_lbbox}{{2.29}{23}}
 \acronymused{CE}
 \acronymused{IoU}
@@ -342,9 +352,9 @@
 \newlabel{eq:yolo_lnoobj}{{2.32}{23}}
 \acronymused{YOLO}
 \newlabel{eq:yolo_loss}{{2.33}{23}}
-\@writefile{toc}{\contentsline {subsubsection}{Non-Maximum Suppression (NMS)}{23}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Non-Maximum Suppression (NMS)}{24}{}\protected@file@percent }
 \AC@undonewlabel{acro:NMS}
-\newlabel{acro:NMS}{{2.6}{23}}
+\newlabel{acro:NMS}{{2.6}{24}}
 \acronymused{NMS}
 \acronymused{DIoU}
 \acronymused{NMS}
@@ -354,8 +364,9 @@
 \acronymused{DIoU}
 \newlabel{alg1}{{2.1}{24}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}DIoU-NMS Algorithm TODO caption to bottom and format}{24}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2.10}{\ignorespaces A Confusion Matrix\relax }}{25}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2.10}{\ignorespaces A Confusion Matrix. Truth values are on the y-axis, while the hypothesis (prediction) is on the x-axis. Along the diagonal are the \ac {TP} values.\relax }}{25}{}\protected@file@percent }
 \newlabel{tab:confmat}{{2.10}{25}}
+\acronymused{TP}
 \@writefile{toc}{\contentsline {section}{\numberline {2.7}Segmentation}{25}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2.8}Hypergraphs}{25}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2.9}Metrics}{25}{}\protected@file@percent }
@@ -373,15 +384,14 @@
 \newlabel{acro:TN}{{2.9}{25}}
 \acronymused{TN}
 \acronymused{FN}
-\acronymused{TN}
 \acronymused{TP}
 \acronymused{FP}
 \acronymused{TP}
 \acronymused{FP}
-\acronymused{FP}
 \acronymused{TP}
-\acronymused{FP}
-\acronymused{TP}
+\acronymused{IoU}
+\acronymused{FN}
+\acronymused{IoU}
 \citation{map_article}
 \citation{map_article}
 \@writefile{toc}{\contentsline {subsubsection}{Precision}{26}{}\protected@file@percent }
@@ -409,8 +419,9 @@
 \newlabel{acro:mIoU}{{2.9}{26}}
 \acronymused{mIoU}
 \acronymused{IoU}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite  {map_article}\relax }}{27}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite  {map_article}. The \ac {AP} is the area under the curve.\relax }}{27}{}\protected@file@percent }
 \acronymused{IoU}
+\acronymused{AP}
 \newlabel{fig:pr_curve}{{2.6}{27}}
 \acronymused{IoU}
 \acronymused{mIoU}

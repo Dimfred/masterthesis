@@ -60,11 +60,11 @@ class CircuitAugmentator:
                         self.train_files.append((merged_img, merged_label))
                         break
 
-            for merged_img, merged_label in merged_files:
-                for img_path, _ in self.valid_files:
-                    if str(merged_img.name).startswith(img_path.stem):
-                        self.valid_files.append((merged_img, merged_label))
-                        break
+            # for merged_img, merged_label in merged_files:
+            #     for img_path, _ in self.valid_files:
+            #         if str(merged_img.name).startswith(img_path.stem):
+            #             self.valid_files.append((merged_img, merged_label))
+            #             break
 
         by_img_name = lambda x: x[0]
         self.train_files = sorted(self.train_files, key=by_img_name)

@@ -84,13 +84,12 @@ $S$, $M$, $L$ indicates here the size of the detected object (small, medium, lar
 
 The neck of the \ac{YOLOv4} network is a scaled version of the \ac{PANet} \cite{pannet} and is further referred to as PANet-tiny \cite{yolov4_tiny}.
 The PANet-tiny receives as input the outputs of the backbone and produces three output tensors, where each output tensor is a prediction for a particular scale of object.
-Outputs have a size of $(2^{L-1}*S)x(2^{L-1}*S)$, where $L$ is the output layer number.
-Hence, the spatial size of the output is doubled with increasing network depth.
-Therefore, $Pred_L$ has a size of $SxS$, $Pred_M$ has a size of $2Sx2S$ and $Pred_S$ has a size of $4Sx4S$.
+Each prediction output has twice the featuremap size of the previous output, except for the most lowest output ($Pred_L$), which has the size of the last backbone output block.
+Therefore, $Pred_L$ has a size of $S \times S$, $Pred_M$ has a size of $2S \times 2S$ and $Pred_S$ has a size of $4S \times 4S$, where $S \times S$ .
 Generally, the PANet-tiny is build by using a separate output branch to produce a prediction, followed by an upsampling layer, where the feature map is bilinearly upsampled and convolved together with the skip connection from the backbone to serve again as input for the next output branch.
-Each output branch is a $1x1$ convolution and hence acts as a fully-connected layer.
-The output size of each output layer is $3*(5+C)$, where $3$ are the number of anchor boxes in that particular scale, $5$ are the number of bounding box parameters (4 regression offsets, 1 objectness score) and $C$ are the number of classes.
-So the final output tensor of the network is $(2^{L-1}*S)x(2^{L-1}*S)x(3*(5+C))$.
+Each output branch is a $1 \times 1$ convolution and hence acts as a fully-connected layer.
+The output size of each output layer is $3 \dot (5+C)$, where $3$ are the number of anchor boxes in that particular scale, $5$ are the number of bounding box parameters (4 regression offsets, 1 objectness score) and $C$ are the number of classes.
+So the final output tensor of the network is $(2^{O-1}*S) \times (2^{O-1}*S) \times (3*(5+C))$.
 
 
 \begin{table}
@@ -139,8 +138,8 @@ Finally, the objectness score as well as the class probabilities are also calcul
 
 \begin{figure}
 \begin{center}
-    \includegraphics[width=6cm]{imgs/bbox_calculation.png}
-    \caption{Final bounding box calculation in the YOLOv4 network based on an anchor box \cite{yolov2}}
+    \includegraphics[width=8cm]{imgs/bbox_calculation.png}
+    \caption{Bounding box calculation in the YOLOv4 network based on a prior anchor box \cite{yolov2}. The $b_*$ indicate the final prediction, $p_*$ indicate parameters of the prior bounding box and $c_*$ indicate the prior bounding box spatial offset based on the current cell. The final center coordinate offset is predicted non-linearly with a sigmoid function, while the final width and height are predicted linearly, as it is done in \cite{fast_rcnn} and \cite{faster_rcnn}.}
     \label{fig:bbox_calculation}
 \end{center}
 \end{figure}
@@ -157,8 +156,8 @@ The loss can be separated into three main parts:
 \end{enumerate}
 
 In the following $1_{sb}^{obj}$ denotes that the anchor box $b$ in grid cell $s$ is responsible for detecting the object.
-Before training responsibility is assigned by making that anchor box responsible which has the highest \ac{IoU} with the ground truth bounding box.
-Furthermore, $S^2$ denotes the number of grid cells in a particular scale and $B$ and the number of anchor boxes present in a grid cell.
+Before training, responsibility is assigned by making that anchor box responsible which has the highest \ac{IoU} with the ground truth bounding box.
+Furthermore, $S^2$ denotes the number of grid cells in a particular scale and $B$ the number of anchor boxes present in a grid cell (three in \ac{YOLOv4}).
 
 The class loss (eq. \ref{eq:yolo_lclass}) is calculated by taking the sum of all possible anchor boxes and the sum of all independent class losses, which is calculated with the \ac{CE} Loss.
 An anchor box only contributes to the loss, when an object is labeled to be present in it.

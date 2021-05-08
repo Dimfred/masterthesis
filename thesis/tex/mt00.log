@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.1)  3 MAY 2021 15:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.1)  7 MAY 2021 15:15
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -629,19 +629,22 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 \tf@toc=\write4
  [8] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/00_introduction.tex
 Chapter 1.
-) [1
+Package acronym Info: Label `acro:ECD' newly defined as it shall be overridden
+although it is yet undefined on input line 7.
+Package acronym Info: Label `acro:CNN' newly defined as it shall be overridden
+although it is yet undefined on input line 14.
+Package acronym Info: Label `acro:ECC' newly defined as it shall be overridden
+although it is yet undefined on input line 14.
+)
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [1
 
 
 
-] [2
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/01_theory.tex
+] [2] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/01_theory.tex
 Chapter 2.
 (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ecds.tex
-Package acronym Info: Label `acro:ECD' newly defined as it shall be overridden
-although it is yet undefined on input line 2.
-Package acronym Info: Label `acro:ECC' newly defined as it shall be overridden
-although it is yet undefined on input line 2.
 <imgs/eccs/all.png, id=64, 1696.3375pt x 256.96pt>
 File: imgs/eccs/all.png Graphic file (type png)
 <use imgs/eccs/all.png>
@@ -651,6 +654,7 @@ Package pdftex.def Info: imgs/eccs/all.png  used on input line 15.
 Underfull \vbox (badness 5050) has occurred while \output is active []
 
  [3
+
 
 
  </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/eccs/all.png>] [4] [5]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ann.tex
@@ -672,10 +676,7 @@ Package acronym Info: Label `acro:ReLU' newly defined as it shall be overridden
 although it is yet undefined on input line 138.
 Package acronym Info: Label `acro:LReLU' newly defined as it shall be overridden
 although it is yet undefined on input line 149.
- [10]
-Package acronym Info: Label `acro:CNN' newly defined as it shall be overridden
-although it is yet undefined on input line 197.
- [11]
+ [10] [11]
 <imgs/conv_example_full.png, id=106, 979.66pt x 259.97125pt>
 File: imgs/conv_example_full.png Graphic file (type png)
 <use imgs/conv_example_full.png>
@@ -731,18 +732,21 @@ although it is yet undefined on input line 85.
 <imgs/bbox_calculation.png, id=137, 804.00375pt x 620.3175pt>
 File: imgs/bbox_calculation.png Graphic file (type png)
 <use imgs/bbox_calculation.png>
-Package pdftex.def Info: imgs/bbox_calculation.png  used on input line 142.
-(pdftex.def)             Requested size: 170.71652pt x 131.70924pt.
+Package pdftex.def Info: imgs/bbox_calculation.png  used on input line 141.
+(pdftex.def)             Requested size: 227.62204pt x 175.61862pt.
  [21] [22 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/bbox_calculation.png>]
 Package acronym Info: Label `acro:NMS' newly defined as it shall be overridden
-although it is yet undefined on input line 214.
+although it is yet undefined on input line 213.
+
+Underfull \vbox (badness 7133) has occurred while \output is active []
+
  [23]
-LaTeX Font Info:    Trying to load font information for OMS+ptm on input line 224.
+LaTeX Font Info:    Trying to load font information for OMS+ptm on input line 223.
  (/usr/share/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 224.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 223.
 ) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/metrics.tex
 Package acronym Info: Label `acro:TP' newly defined as it shall be overridden
 although it is yet undefined on input line 5.
@@ -760,16 +764,16 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [25]
 Package acronym Info: Label `acro:AP' newly defined as it shall be overridden
-although it is yet undefined on input line 64.
+although it is yet undefined on input line 60.
 <imgs/pr_curve.png, id=157, 1509.64pt x 748.7975pt>
 File: imgs/pr_curve.png Graphic file (type png)
 <use imgs/pr_curve.png>
-Package pdftex.def Info: imgs/pr_curve.png  used on input line 78.
-(pdftex.def)             Requested size: 398.33858pt x 197.57346pt.
+Package pdftex.def Info: imgs/pr_curve.png  used on input line 74.
+(pdftex.def)             Requested size: 312.9803pt x 155.24118pt.
 Package acronym Info: Label `acro:mAP' newly defined as it shall be overridden
-although it is yet undefined on input line 86.
+although it is yet undefined on input line 82.
 Package acronym Info: Label `acro:mIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 96.
+although it is yet undefined on input line 92.
  [26])) [27 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pr_curve.png (PNG copy)>] [28
 
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
@@ -844,21 +848,21 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 
 ]
-Overfull \hbox (17.20782pt too wide) in paragraph at lines 87--93
+Overfull \hbox (16.53606pt too wide) in paragraph at lines 94--100
 \OT1/pcr/m/n/12 map-[]mean-[]average-[]precision-[]for-[]object-[]detection-[]45c121a31173$\OT1/ptm/m/n/12 (-20) , 
  []
 
 [42] [43])) [44] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
 Here is how much of TeX's memory you used:
- 20872 strings out of 479383
- 386494 string characters out of 5875831
- 706451 words of memory out of 5000000
- 37329 multiletter control sequences out of 15000+600000
+ 20873 strings out of 479383
+ 386507 string characters out of 5875831
+ 707470 words of memory out of 5000000
+ 37330 multiletter control sequences out of 15000+600000
  438766 words of font info for 196 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  80i,13n,85p,699b,1360s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (52 pages, 870464 bytes).
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (52 pages, 873830 bytes).
 PDF statistics:
  274 PDF objects out of 1000 (max. 8388607)
  178 compressed objects within 2 object streams
