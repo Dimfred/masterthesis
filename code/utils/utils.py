@@ -462,7 +462,7 @@ class MeanAveragePrecision:
         ]
 
     def prettify(self, results):
-        ffloat = lambda f: "{:.4f}".format(f)
+        ffloat = lambda f: "{:.6f}".format(f)
 
         map_header = ["mAP@{}".format(iou_thresh) for iou_thresh in self.iou_threshs]
         ap_header = ["AP@{}".format(iou_thresh) for iou_thresh in self.iou_threshs]
