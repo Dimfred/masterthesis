@@ -401,13 +401,13 @@ config.augment.include_merged = True
 # config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
 
-config.yolo.augment.rotate = 10 # 10, 20, 30, 40
-config.yolo.experiment_name = "rotate"
-config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
-
-# config.yolo.augment.random_scale = 0.1 # 0.1, 0.2, 0.3
+# config.yolo.augment.rotate = 10 # 10, 20, 30, 40
 # config.yolo.experiment_name = "rotate"
 # config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
+
+config.yolo.augment.random_scale = 0.1 # 0.1, 0.2, 0.3
+config.yolo.experiment_name = "random_scale"
+config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
 
 # config.yolo.augment.bbox_safe_crop = True
 # config.yolo.experiment_name = "rotate"
