@@ -74,7 +74,7 @@ def train_augmentations(image, bboxes):
     _train_augmentations = A.Compose([
         # has to happen before the crop if not can happen that bboxes disappear
         A.Rotate(
-            limit=10,
+            limit=config.yolo.augment.rotate,
             border_mode=cv.BORDER_CONSTANT,
             p=0.5,
         ),
