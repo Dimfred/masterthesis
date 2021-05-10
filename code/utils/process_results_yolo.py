@@ -107,7 +107,7 @@ def process_lr_init():
 def process_offline_aug():
     def build_paths(P, F, R, runs):
         return [
-            f"experiements_yolo/offline_aug/offaug_P{int(P)}_F{int(F)}_R{int(R)}/run{run}/results_raw.txt"
+            f"experiments_yolo/offline_aug/offaug_P{int(P)}_F{int(F)}_R{int(R)}/run{run}/results_raw.txt"
             for run in runs
         ]
 
@@ -125,6 +125,7 @@ def process_offline_aug():
     pretty = [""]
     for (P, F, R), _ in params_runs:
         pretty.append(f"P{P}F{F}R{R}")
+        pretty.append("")
     pretty = [pretty]
 
     pretty = make_mean_std_pretty(pretty, params_runs)
@@ -146,12 +147,12 @@ def main():
     #####################
     #### lr_init ########
     #####################
-    process_lr_init()
+    # process_lr_init()
 
     #####################
     #### offline_aug ####
     #####################
-    # process_offline_aug()
+    process_offline_aug()
 
     #####################
     #### online_aug #####

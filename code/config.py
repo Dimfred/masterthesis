@@ -106,6 +106,8 @@ config.yolo.run_eagerly = (
     # False
 )
 
+config.yolo.augment = EasyDict()
+
 # classes and corresponding trained weights
 architecture_type = {
     # uses only german symbols without edges and T's
@@ -392,11 +394,37 @@ config.yolo.experiment_dir = Path("experiments_yolo")
 
 # whether to perform flip and rotation on the dataset
 config.augment.perform_rotation = True
-config.augment.perform_flip = False
-config.augment.include_merged = False
+config.augment.perform_flip = True
+config.augment.include_merged = True
 
-config.yolo.experiment_name = "offline_aug"
-config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
+# config.yolo.experiment_name = "offline_aug"
+# config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
-# config.yolo.experiment_name = "online_aug_grid"
-# config.yolo.experiment_param = "online_aug_grid"
+
+config.yolo.augment.rotate = 10 # 10, 20, 30, 40
+config.yolo.experiment_name = "rotate"
+config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
+
+# config.yolo.augment.random_scale = 0.1 # 0.1, 0.2, 0.3
+# config.yolo.experiment_name = "rotate"
+# config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
+
+# config.yolo.augment.bbox_safe_crop = True
+# config.yolo.experiment_name = "rotate"
+# config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
+
+# config.yolo.augment.clahe = True
+# config.yolo.experiment_name = "rotate"
+# config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
+
+# config.yolo.color_jitter = 0.1 # 0.1, 0.2, 0.3
+# config.yolo.experiment_name = "rotate"
+# config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
+
+# config.yolo.gaussian_noise = True
+# config.yolo.experiment_name = "rotate"
+# config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
+
+# config.yolo.blur = 3 # 5
+# config.yolo.experiment_name = "rotate"
+# config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"

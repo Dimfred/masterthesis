@@ -73,11 +73,11 @@ def train_augmentations(image, bboxes):
     # TODO synchronize BN???
     _train_augmentations = A.Compose([
         # has to happen before the crop if not can happen that bboxes disappear
-        # A.Rotate(
-        #     limit=10,
-        #     border_mode=cv.BORDER_CONSTANT,
-        #     p=0.5,
-        # ),
+        A.Rotate(
+            limit=10,
+            border_mode=cv.BORDER_CONSTANT,
+            p=0.5,
+        ),
         # A.RandomScale(scale_limit=0.5, p=0.5),
         # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
         # A.RandomSizedBBoxSafeCrop(
