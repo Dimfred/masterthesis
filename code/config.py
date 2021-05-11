@@ -405,9 +405,13 @@ config.augment.include_merged = True
 # config.yolo.experiment_name = "rotate"
 # config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
 
-config.yolo.augment.random_scale = 0.1 # 0.1, 0.2, 0.3
-config.yolo.experiment_name = "random_scale"
-config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
+# config.yolo.augment.random_scale = 0.1 # 0.1, 0.2, 0.3
+# config.yolo.experiment_name = "random_scale"
+# config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
+
+config.yolo.augment.color_jitter = 0.1 # 0.1, 0.2, 0.3
+config.yolo.experiment_name = "color_jitter"
+config.yolo.experiment_param = f"color_jitter_{config.yolo.augment.color_jitter}"
 
 # config.yolo.augment.bbox_safe_crop = True
 # config.yolo.experiment_name = "rotate"
@@ -417,9 +421,6 @@ config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}
 # config.yolo.experiment_name = "rotate"
 # config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
 
-# config.yolo.color_jitter = 0.1 # 0.1, 0.2, 0.3
-# config.yolo.experiment_name = "rotate"
-# config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
 
 # config.yolo.gaussian_noise = True
 # config.yolo.experiment_name = "rotate"

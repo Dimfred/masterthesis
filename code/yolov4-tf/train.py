@@ -78,7 +78,7 @@ def train_augmentations(image, bboxes):
         #     border_mode=cv.BORDER_CONSTANT,
         #     p=0.5,
         # ),
-        A.RandomScale(scale_limit=config.yolo.augment.random_scale, p=0.5),
+        # A.RandomScale(scale_limit=config.yolo.augment.random_scale, p=0.5),
         # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
         # A.RandomSizedBBoxSafeCrop(
         #     width=None, # unused
@@ -87,7 +87,13 @@ def train_augmentations(image, bboxes):
         # ),
         # A.OneOf([
         # A.CLAHE(p=0.5),
-        # A.ColorJitter(p=0.5),
+        A.ColorJitter(
+            brightness=config.yolo.augment.color_jitter,
+            contrast=config.yolo.augment.color_jitter,
+            saturation=config.yolo.augment.color_jitter,
+            hue=config.yolo.augment.color_jitter,
+            p=0.5
+        ),
         # ], p=0.3),
         # A.Blur(blur_limit=3, p=0.3),
         # A.GaussNoise(p=0.3),
