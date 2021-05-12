@@ -466,10 +466,21 @@ class LabelAdjuster:
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) == 0 or sys.argv[1] == "train":
+    if len(sys.argv) == 0:
+        print("train / valid / test")
+        sys.exit()
+
+    tar = sys.argv[1]
+    if tar == "train":
         label_dir = config.train_dir
-    else:
+    elif tar == "valid":
         label_dir = config.valid_dir
+    elif tar == "test":
+        label_dir = config.test_dir
+    else:
+        print(f"{tar} invalid")
+        sys.exit()
+
     # label_dir = config.train_out_dir
     # label_dir = config.data / "tmp"
     for img_path in utils.list_imgs(label_dir):

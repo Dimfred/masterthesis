@@ -95,8 +95,8 @@ def train_augmentations(image, bboxes):
         #     p=0.5
         # ),
         # ], p=0.3),
-        A.GaussNoise(p=0.5),
-        # A.Blur(blur_limit=config.yolo.augment.gaussian_noise, p=0.5),
+        # A.GaussNoise(p=0.5),
+        A.Blur(blur_limit=config.yolo.augment.blur, p=0.5),
 
         # SLOW AF and not a real bonus, but could be just wrong
         # utils.TextProjection(

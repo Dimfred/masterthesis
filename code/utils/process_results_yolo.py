@@ -302,25 +302,121 @@ def dump_bbox_safe_crop_aug():
     dump_csv("experiments_yolo/bbox_safe_crop/results.csv", results)
 
 
+def dump_clahe_aug():
+    def build_paths(experiment_param, runs):
+        return [
+            f"experiments_yolo/clahe/clahe_{experiment_param}/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    lr_runs = ((1, (0, 1, 2, 3, 4)),)
+
+    results = []
+    for sc, runs in lr_runs:
+        paths = build_paths(sc, runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"Clahe@0.5: {sc}", "", "", "", "", "", "mean", "std", "",
+                f"Clahe@0.75: {sc}", "", "", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv("experiments_yolo/clahe/results.csv", results)
+
+
+def dump_gaussian_noise_aug():
+    def build_paths(experiment_param, runs):
+        return [
+            f"experiments_yolo/gaussian_noise/gaussian_noise_{experiment_param}/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    lr_runs = ((1, (0, 1, 2, 3, 4)),)
+
+    results = []
+    for sc, runs in lr_runs:
+        paths = build_paths(sc, runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"GaussianNoise@0.5: {sc}", "", "", "", "", "", "mean", "std", "",
+                f"GaussianNoise@0.75: {sc}", "", "", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv("experiments_yolo/gaussian_noise/results.csv", results)
+
+
+def dump_blur_aug():
+    def build_paths(experiment_param, runs):
+        return [
+            f"experiments_yolo/blur/blur_{experiment_param}/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    lr_runs = ((3, (0, 1, 2, 3, 4)), (5, (0, 1, 2, 3, 4)))
+
+    results = []
+    for sc, runs in lr_runs:
+        paths = build_paths(sc, runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"Blur@0.5: {sc}", "", "", "", "", "", "mean", "std", "",
+                f"Blur@0.75: {sc}", "", "", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv("experiments_yolo/blur/results.csv", results)
+
+
 def main():
     #####################
     #### lr_init ########
     #####################
     # process_lr_init()
-    dump_lr_init()
+    # dump_lr_init()
 
     #####################
     #### offline_aug ####
     #####################
-    dump_offline_aug()
+    # dump_offline_aug()
 
     #####################
     #### online_aug #####
     #####################
-    dump_rotate_aug()
-    dump_random_scale_aug()
-    dump_color_jitter_aug()
-    dump_bbox_safe_crop_aug()
+    # dump_rotate_aug()
+    # dump_random_scale_aug()
+    # dump_color_jitter_aug()
+    # dump_bbox_safe_crop_aug()
+    # dump_clahe_aug()
+    dump_gaussian_noise_aug()
+    # dump_blur_aug()
 
 
 if __name__ == "__main__":
