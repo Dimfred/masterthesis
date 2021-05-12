@@ -419,7 +419,7 @@ config.augment.include_merged = True
 
 config.yolo.augment.clahe = True
 config.yolo.experiment_name = "clahe"
-config.yolo.experiment_param = f"clahe_{int(config.yolo.augment.clahe})"
+config.yolo.experiment_param = f"clahe_{int(config.yolo.augment.clahe)}"
 
 # config.yolo.gaussian_noise = True
 # config.yolo.experiment_name = "gaussian_noise"
