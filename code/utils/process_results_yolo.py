@@ -42,6 +42,7 @@ def ffloat(val):
     # return [f"{100 * val:.3f}" for val in iterable]
     # return [f"{val:.3f}" for val in iterable]
 
+
 def make_red_green(pretty, cls_names, results):
     for cls_name, result_row in zip(cls_names, results):
         pretty_row = []
@@ -51,19 +52,280 @@ def make_red_green(pretty, cls_names, results):
             else:
                 pretty_row.append(utils.red(ffloat(val)))
 
-
         pretty += [[cls_name, *pretty_row]]
 
     return pretty
 
-def make_mean_std_pretty(pretty, params):
-    pretty_row = [""]
-    for i in range(len(params)):
-        pretty_row.append("mean")
-        pretty_row.append("std")
-    pretty += [pretty_row]
 
-    return pretty
+def dump_csv(path, results):
+    with open(path, "w") as f:
+        results = [",".join(str(v) for v in res_) for res_ in results]
+        for line in results:
+            print(line, file=f)
+
+
+def zip_with_names(cls_names, results):
+    out = []
+    for name, res in zip(cls_names, results):
+        out += [[name, *res]]
+
+    return out
+
+
+def combine_50_75(res_50, res_75):
+    combined = []
+    for line_50, line_75 in zip(res_50, res_75):
+        line = [[*line_50, "", "", "", *line_75]]
+        combined += line
+
+    return combined
+
+
+def dump_lr_init():
+    def build_paths(experiment_param, runs):
+        return [
+            f"experiments_yolo/lr_init/LR_{experiment_param}/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    lr_runs = (
+        (0.01, (0, 1, 2, 3, 4)),
+        (0.005, (0, 2, 3, 4, 5)),
+        (0.0025, (0, 1, 2, 3, 4)),
+        (0.001, (0, 1, 2, 3, 4)),
+        (0.0005, (0, 1, 2, 3, 4)),
+        (0.00025, (0, 1, 2, 3, 4)),
+        (0.0001, (0, 1, 2, 3, 4)),
+    )
+
+    results = []
+    for lr, runs in lr_runs:
+        paths = build_paths(lr, runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"LR@0.5: {lr}", "", "", "", "", "", "mean", "std", "",
+                f"LR@0.75: {lr}", "", "", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv("experiments_yolo/lr_init/results.csv", results)
+
+
+def dump_offline_aug():
+    def build_paths(P, F, R, runs):
+        return [
+            f"experiments_yolo/offline_aug/offaug_P{int(P)}_F{int(F)}_R{int(R)}/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    # (P, F, R), (runs)
+    params_runs = (
+        ((0, 0, 1), (0, 1, 2, 3, 4)),
+        ((0, 1, 0), (0, 1, 2, 3, 4)),
+        ((0, 1, 1), (0, 1, 2, 3, 4)),
+        ((1, 0, 0), (0, 1, 2, 3, 4)),
+        ((1, 0, 1), (0, 1, 2, 3, 4)),
+        ((1, 1, 0), (0, 1, 2, 3, 4)),
+        ((1, 1, 1), (0, 1, 2, 3, 4)),
+    )
+
+    results = []
+    for (P, F, R), runs in params_runs:
+        paths = build_paths(P, F, R, runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"P{P}F{F}R{R}@0.5", "", "", "", "", "", "mean", "std", "",
+                f"P{P}F{F}R{R}@0.75", "", "", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv("experiments_yolo/offline_aug/results.csv", results)
+
+
+def dump_rotate_aug():
+    def build_paths(experiment_param, runs):
+        return [
+            f"experiments_yolo/rotate/rotate_{experiment_param}/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    lr_runs = (
+        (10, (0, 1, 2, 3, 4)),
+        (20, (0, 1, 2, 3, 4)),
+        (30, (0, 1, 2, 3, 4)),
+        (40, (0, 1, 2, 3, 4)),
+    )
+
+    results = []
+    for rot, runs in lr_runs:
+        paths = build_paths(rot, runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"Rotation@0.5: {rot}", "", "", "", "", "", "mean", "std", "",
+                f"Roationt@0.75: {rot}", "", "", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv("experiments_yolo/rotate/results.csv", results)
+
+
+def dump_random_scale_aug():
+    def build_paths(experiment_param, runs):
+        return [
+            f"experiments_yolo/random_scale/random_scale_{experiment_param}/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    lr_runs = (
+        (0.1, (0, 1, 2, 3, 4)),
+        (0.2, (0, 1, 2, 3, 4)),
+        (0.3, (0, 1, 2, 3, 4)),
+        (0.4, (0, 1, 2, 3, 4)),
+        (0.5, (0, 1, 2, 3, 4)),
+    )
+
+    results = []
+    for scale, runs in lr_runs:
+        paths = build_paths(scale, runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"Scale@0.5: {scale}", "", "", "", "", "", "mean", "std", "",
+                f"Scale@0.75: {scale}", "", "", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv("experiments_yolo/random_scale/results.csv", results)
+
+
+def dump_color_jitter_aug():
+    def build_paths(experiment_param, runs):
+        return [
+            f"experiments_yolo/color_jitter/color_jitter_{experiment_param}/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    lr_runs = (
+        (0.1, (0, 1, 2, 3, 4)),
+        (0.2, (0, 1, 2, 3, 4)),
+        (0.3, (0, 1, 2, 3, 4)),
+        (0.4, (0, 1, 2, 3, 4)),
+        (0.5, (0, 1, 2, 3, 4)),
+    )
+
+    results = []
+    for color_jitter, runs in lr_runs:
+        paths = build_paths(color_jitter, runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"ColorJitter@0.5: {color_jitter}", "", "", "", "", "", "mean", "std", "",
+                f"ColorJitter@0.75: {color_jitter}", "", "", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv("experiments_yolo/color_jitter/results.csv", results)
+
+
+def dump_bbox_safe_crop_aug():
+    def build_paths(experiment_param, runs):
+        return [
+            f"experiments_yolo/bbox_safe_crop/bbox_safe_crop_{experiment_param}/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    lr_runs = ((1, (0, 1, 2, 3, 4)),)
+
+    results = []
+    for sc, runs in lr_runs:
+        paths = build_paths(sc, runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"SafeCrop@0.5: {sc}", "", "", "", "", "", "mean", "std", "",
+                f"SafeCrop@0.75: {sc}", "", "", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv("experiments_yolo/bbox_safe_crop/results.csv", results)
+
+
+def main():
+    #####################
+    #### lr_init ########
+    #####################
+    # process_lr_init()
+    dump_lr_init()
+
+    #####################
+    #### offline_aug ####
+    #####################
+    dump_offline_aug()
+
+    #####################
+    #### online_aug #####
+    #####################
+    dump_rotate_aug()
+    dump_random_scale_aug()
+    dump_color_jitter_aug()
+    dump_bbox_safe_crop_aug()
+
+
+if __name__ == "__main__":
+    main()
+
 
 def process_lr_init():
     def build_paths(experiment_param, runs):
@@ -143,22 +405,11 @@ def process_offline_aug():
     print(tabulate(pretty))
 
 
-def main():
-    #####################
-    #### lr_init ########
-    #####################
-    # process_lr_init()
+def make_mean_std_pretty(pretty, params):
+    pretty_row = [""]
+    for i in range(len(params)):
+        pretty_row.append("mean")
+        pretty_row.append("std")
+    pretty += [pretty_row]
 
-    #####################
-    #### offline_aug ####
-    #####################
-    process_offline_aug()
-
-    #####################
-    #### online_aug #####
-    #####################
-    # process_online_aug()
-
-
-if __name__ == "__main__":
-    main()
+    return pretty

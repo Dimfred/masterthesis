@@ -417,13 +417,13 @@ config.augment.include_merged = True
 # config.yolo.experiment_name = "bbox_safe_crop"
 # config.yolo.experiment_param = f"bbox_safe_crop_{int(config.yolo.augment.bbox_safe_crop)}"
 
-config.yolo.augment.clahe = True
-config.yolo.experiment_name = "clahe"
-config.yolo.experiment_param = f"clahe_{int(config.yolo.augment.clahe)}"
+# config.yolo.augment.clahe = True
+# config.yolo.experiment_name = "clahe"
+# config.yolo.experiment_param = f"clahe_{int(config.yolo.augment.clahe)}"
 
-# config.yolo.gaussian_noise = True
-# config.yolo.experiment_name = "gaussian_noise"
-# config.yolo.experiment_param = f"gaussian_noise_{config.yolo.augment.gaussian_noise}"
+config.yolo.gaussian_noise = True
+config.yolo.experiment_name = "gaussian_noise"
+config.yolo.experiment_param = f"gaussian_noise_{config.yolo.augment.gaussian_noise}"
 
 # config.yolo.blur = 3 # 5
 # config.yolo.experiment_name = "blur"
