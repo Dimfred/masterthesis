@@ -413,13 +413,13 @@ config.augment.include_merged = True
 # config.yolo.experiment_name = "color_jitter"
 # config.yolo.experiment_param = f"color_jitter_{config.yolo.augment.color_jitter}"
 
-config.yolo.augment.bbox_safe_crop = True
-config.yolo.experiment_name = "bbox_safe_crop"
-config.yolo.experiment_param = f"bbox_safe_crop_{int(config.yolo.augment.bbox_safe_crop)}"
+# config.yolo.augment.bbox_safe_crop = True
+# config.yolo.experiment_name = "bbox_safe_crop"
+# config.yolo.experiment_param = f"bbox_safe_crop_{int(config.yolo.augment.bbox_safe_crop)}"
 
-# config.yolo.augment.clahe = True
-# config.yolo.experiment_name = "clahe"
-# config.yolo.experiment_param = f"clahe_{int(config.yolo.augment.clahe})"
+config.yolo.augment.clahe = True
+config.yolo.experiment_name = "clahe"
+config.yolo.experiment_param = f"clahe_{int(config.yolo.augment.clahe})"
 
 # config.yolo.gaussian_noise = True
 # config.yolo.experiment_name = "gaussian_noise"
