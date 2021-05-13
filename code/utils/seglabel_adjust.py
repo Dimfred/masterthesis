@@ -126,21 +126,21 @@ class Crop(AppState):
         ymin, ymax = min(y1, y2), max(y1, y2)
 
         # everything background inside the roi
-        img[ymin:ymax, xmin:xmax] = Mask.bg
+        img[ymin:ymax, xmin:xmax] = colors.blue
 
         self.app.img = img
 
         if self.app._mask is None:
             self.app._mask = np.zeros(img.shape[:2], dtype=np.uint8)
 
-        self.app._mask[y1:y2, x1:x2] = Mask.bg
+        self.app._mask[y1:y2, x1:x2] = Mask.fg
         self.app._crop = (x1, y1, x2 - x1, y2 - y1)
 
         self.render()
 
     def render(self):
         img = self.app.img
-        cv.rectangle(img, self.p1, self.p2, colors.black)
+        cv.rectangle(img, self.p1, self.p2, colors.blue)
         self.app._show_img = img
 
 
@@ -386,8 +386,8 @@ class LabelAdjuster:
         self._show_img = self.img
         self._fg_img = self.img
 
-        cv.namedWindow(self.outwin_name, cv.WINDOW_AUTOSIZE)
-        cv.namedWindow(self.inwin_name, cv.WINDOW_AUTOSIZE)
+        cv.namedWindow(self.outwin_name, cv.WINDOW_GUI_NORMAL)
+        cv.namedWindow(self.inwin_name, cv.WINDOW_GUI_NORMAL)
 
         self.app_state = BaseState(self)
         self.app_state = DrawBackground(self)
@@ -398,6 +398,7 @@ class LabelAdjuster:
             img = self.render_state(img)
             img = self.render_brush(img)
             img = self.render_cross(img)
+            img = make_green(img)
 
             cv.imshow(self.inwin_name, img)
             cv.imshow(self.outwin_name, self._original_img)
@@ -461,6 +462,17 @@ class LabelAdjuster:
         img = cv.line(img, top, bot, colors.red, 1)
 
         return img
+
+import numba as nb
+
+@nb.njit
+def make_green(img):
+    for row in img:
+        for val in row:
+            if val[0] == 0:
+                val[1] = 128
+
+    return img
 
 
 if __name__ == "__main__":

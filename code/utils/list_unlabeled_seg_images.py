@@ -8,9 +8,11 @@ def list_unlabeled(dir_):
 
     img_paths = utils.list_imgs(dir_)
     for img_path in img_paths:
-        seg_path = utils.segmentation_label_from_img(img_path)
-        if not seg_path.exists():
-            print(img_path.name)
+        print(img_path.name)
+    # for img_path in img_paths:
+    #     seg_path = utils.segmentation_label_from_img(img_path)
+    #     if not seg_path.exists():
+    #         print(img_path.name)
 
 
 list_unlabeled(config.train_dir)
