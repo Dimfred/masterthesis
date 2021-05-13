@@ -372,6 +372,8 @@ class LabelAdjuster:
         color_type = cv.IMREAD_GRAYSCALE if channels == 1 else None
         img = cv.imread(self._img_path, color_type)
         img = utils.resize_max_axis(img, resize)
+        img = make_less_black(img)
+
 
         self._img = img
         self._original_img = self.img
@@ -474,6 +476,16 @@ def make_green(img):
 
     return img
 
+@nb.njit
+def make_less_black(img):
+    for row in img:
+        for val in row:
+            if val[0] == 0 and val[1] == 0 and val[2] == 0:
+                val[0] = 1
+                val[1] = 1
+                val[2] = 1
+
+    return img
 
 if __name__ == "__main__":
     import sys

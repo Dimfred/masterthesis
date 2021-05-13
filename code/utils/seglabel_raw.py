@@ -220,13 +220,13 @@ for img_name in [
     # "07_11_c_a.png",
     # "07_12_c_a.png",
     # "07_13_c_a.png",
-    # "08_00.png",
-    # "08_01.png",
-    # "08_02.png",
-    # "08_03.png",
-    # "08_04.png",
-    # "08_05.png",
-    # "08_06.png",
+    "08_00.png",
+    "08_01.png",
+    "08_02.png",
+    "08_03.png",
+    "08_04.png",
+    "08_05.png",
+    "08_06.png",
     # "08_07_c.png",
     # "08_08_c.png",
     # "08_09_c.png",
@@ -254,14 +254,14 @@ for img_name in [
     # "22_01.jpg",
     # "22_02.jpg",
     # "22_03.jpg",
-    "22_04_c.jpg",
-    "22_05_c.jpg",
-    "22_06_c.jpg",
-    "25_00_c_a.jpg",
-    "25_01_c_a.jpg",
-    "25_02_a.jpg",
-    "26_01_c.jpg",
-    "28_00_c_a.png",
+    # "22_04_c.jpg",
+    # "22_05_c.jpg",
+    # "22_06_c.jpg",
+    # "25_00_c_a.jpg",
+    # "25_01_c_a.jpg",
+    # "25_02_a.jpg",
+    # "26_01_c.jpg",
+    # "28_00_c_a.png",
 ]:
     print(img_name)
     low, blur, dilations = 120, 3, 5
@@ -272,6 +272,14 @@ for img_name in [
     path = str(label_dir / img_name)
     img = cv.imread(path)
     img = utils.resize_max_axis(img, 1000)
+
+    # only for alex and jonas
+    for row in img:
+        for val in row:
+            if val[0] == 0 and val[1] == 0 and val[2] == 0:
+                val[0] = 1
+                val[1] = 1
+                val[2] = 1
 
     orig = img.copy()
 

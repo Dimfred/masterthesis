@@ -160,6 +160,39 @@ def dump_offline_aug():
 
     dump_csv("experiments_yolo/offline_aug/results.csv", results)
 
+def dump_offline_baseline_aug():
+    def build_paths(runs):
+        return [
+            f"experiments_yolo/offline_baseline/offline_baseline/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    # (P, F, R), (runs)
+    params_runs = (
+        (0, 1, 2),
+    )
+
+    results = []
+    for runs in params_runs:
+        paths = build_paths(runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"OffBase@0.5", "", "", "", "mean", "std", "",
+                f"OffBase@0.75", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv("experiments_yolo/offline_baseline/results.csv", results)
 
 def dump_rotate_aug():
     def build_paths(experiment_param, runs):
@@ -406,6 +439,7 @@ def main():
     #### offline_aug ####
     #####################
     dump_offline_aug()
+    dump_offline_baseline_aug()
 
     #####################
     #### online_aug #####
