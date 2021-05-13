@@ -1,133 +1,137 @@
 # augmentation
 import albumentations as A
-import cv2 as cv
-import numpy as np
 
-import tensorflow as tf
-import tensorflow.keras as K
-from tensorflow.python.keras.backend import backend
-import tensorflow_addons as tfa
+# SLOW AF and not a real bonus, but could be just wrong
+# utils.TextProjection(
+#     text_idx=classes.index("text"),
+#     ground_idxs=[
+#         classes.index("gr_left"),
+#         classes.index("gr_right"),
+#         classes.index("gr_bot"),
+#         classes.index("gr_top")
+#     ],
+#     texts=utils.load_imgs(config.texts_dir, cv.IMREAD_GRAYSCALE),
+#     classes=utils.Yolo.parse_classes(config.train_out_dir / "classes.txt"),
+#     always_apply=True
+# ),
 
-import numba as nb
-from torch.nn.modules import activation
+def main():
+    import cv2 as cv
+    import numpy as np
 
-# has to be called right after tf import
-physical_devices = tf.config.experimental.list_physical_devices("GPU")
-if len(physical_devices) > 0:
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    import tensorflow as tf
+    import tensorflow.keras as K
+    from tensorflow.python.keras.backend import backend
+    import tensorflow_addons as tfa
 
-from tensorflow.keras import callbacks, optimizers
-import time
-import sys
+    import numba as nb
+    from torch.nn.modules import activation
 
-AUTOTUNE = tf.data.experimental.AUTOTUNE
+    # has to be called right after tf import
+    physical_devices = tf.config.experimental.list_physical_devices("GPU")
+    if len(physical_devices) > 0:
+        tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-# model
-from yolov4.tf import YOLOv4
-from yolov4.tf.train import SaveWeightsCallback
-from trainer import Trainer
+    from tensorflow.keras import callbacks, optimizers
+    import time
+    import sys
 
-# utils
-import utils
-from config import config
+    AUTOTUNE = tf.data.experimental.AUTOTUNE
 
-utils.seed("tf", "np", "imgaug")
+    # model
+    from yolov4.tf import YOLOv4
+    from yolov4.tf.train import SaveWeightsCallback
+    from trainer import Trainer
 
+    # utils
+    import utils
+    from config import config
 
-def create_model():
-    yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-    yolo.classes = config.yolo.classes
-    yolo.input_size = config.yolo.input_size
-    yolo.channels = config.yolo.channels
-    yolo.batch_size = config.yolo.batch_size
-    yolo.make_model(activation1=config.yolo.activation, backbone=config.yolo.backbone)
-    yolo.model.summary()
+    def create_model():
+        yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
+        yolo.classes = config.yolo.classes
+        yolo.input_size = config.yolo.input_size
+        yolo.channels = config.yolo.channels
+        yolo.batch_size = config.yolo.batch_size
+        yolo.make_model(activation1=config.yolo.activation, backbone=config.yolo.backbone)
+        yolo.model.summary()
 
-    # yolo.load_weights(config.yolo.pretrained_weights, weights_type=config.yolo.weights_type)
-    # yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
+        # yolo.load_weights(config.yolo.pretrained_weights, weights_type=config.yolo.weights_type)
+        # yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
-    return yolo
-
-
-# fmt:off
-base_augmentations = A.Compose([
-    # A.Normalize(mean=config.train.mean, std=config.train.std, max_pixel_value=255),
-    A.PadIfNeeded(
-        min_height=1000,
-        min_width=1000,
-        border_mode=cv.BORDER_CONSTANT,
-        value=0,
-        always_apply=True
-    ),
-    A.Resize(
-        width=config.yolo.input_size,
-        height=config.yolo.input_size,
-        always_apply=True
-    ),
-])
-
-classes = utils.Yolo.parse_classes(config.train_out_dir / "classes.txt")
-
-def train_augmentations(image, bboxes):
-    # TODO mixup?
-    # TODO synchronize BN???
-    _train_augmentations = A.Compose([
-        # has to happen before the crop if not can happen that bboxes disappear
-        # A.Rotate(
-        #     limit=config.yolo.augment.rotate,
-        #     border_mode=cv.BORDER_CONSTANT,
-        #     p=0.5,
-        # ),
-        # A.RandomScale(scale_limit=config.yolo.augment.random_scale, p=0.5),
-        # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
-        # A.RandomSizedBBoxSafeCrop(
-        #     width=None, # unused
-        #     height=None, # unused
-        #     p=0.5,
-        # ),
-        # A.OneOf([
-        # A.CLAHE(p=0.5),
-        # A.ColorJitter(
-        #     brightness=config.yolo.augment.color_jitter,
-        #     contrast=config.yolo.augment.color_jitter,
-        #     saturation=config.yolo.augment.color_jitter,
-        #     hue=config.yolo.augment.color_jitter,
-        #     p=0.5
-        # ),
-        # ], p=0.3),
-        # A.GaussNoise(p=0.5),
-        A.Blur(blur_limit=config.yolo.augment.blur, p=0.5),
-
-        # SLOW AF and not a real bonus, but could be just wrong
-        # utils.TextProjection(
-        #     text_idx=classes.index("text"),
-        #     ground_idxs=[
-        #         classes.index("gr_left"),
-        #         classes.index("gr_right"),
-        #         classes.index("gr_bot"),
-        #         classes.index("gr_top")
-        #     ],
-        #     texts=utils.load_imgs(config.texts_dir, cv.IMREAD_GRAYSCALE),
-        #     classes=utils.Yolo.parse_classes(config.train_out_dir / "classes.txt"),
-        #     always_apply=True
-        # ),
-        base_augmentations
-    ], bbox_params=A.BboxParams("yolo"))
-
-    augmented = _train_augmentations(image=image, bboxes=bboxes)
-    return augmented["image"], augmented["bboxes"]
-
-def valid_augmentations(image, bboxes):
-    _valid_augmentations = A.Compose([
-        base_augmentations,
-    ], bbox_params=A.BboxParams("yolo"))
-
-    augmented = _valid_augmentations(image=image, bboxes=bboxes)
-    return augmented["image"], augmented["bboxes"]
-# fmt:on
+        return yolo
 
 
-if __name__ == "__main__":
+    # fmt:off
+    base_augmentations = A.Compose([
+        # A.Normalize(mean=config.train.mean, std=config.train.std, max_pixel_value=255),
+        A.PadIfNeeded(
+            min_height=1000,
+            min_width=1000,
+            border_mode=cv.BORDER_CONSTANT,
+            value=0,
+            always_apply=True
+        ),
+        A.Resize(
+            width=config.yolo.input_size,
+            height=config.yolo.input_size,
+            always_apply=True
+        ),
+    ])
+
+    classes = utils.Yolo.parse_classes(config.train_out_dir / "classes.txt")
+
+    def train_augmentations(image, bboxes):
+        # TODO mixup?
+        # TODO synchronize BN???
+        _train_augmentations = A.Compose([
+            # has to happen before the crop if not can happen that bboxes disappear
+            # A.Rotate(
+            #     limit=config.yolo.augment.rotate,
+            #     border_mode=cv.BORDER_CONSTANT,
+            #     p=0.5,
+            # ),
+            # A.RandomScale(scale_limit=config.yolo.augment.random_scale, p=0.5),
+            # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
+            # A.RandomSizedBBoxSafeCrop(
+            #     width=None, # unused
+            #     height=None, # unused
+            #     p=0.5,
+            # ),
+            # A.OneOf([
+            # A.CLAHE(p=0.5),
+            # A.ColorJitter(
+            #     brightness=config.yolo.augment.color_jitter,
+            #     contrast=config.yolo.augment.color_jitter,
+            #     saturation=config.yolo.augment.color_jitter,
+            #     hue=config.yolo.augment.color_jitter,
+            #     p=0.5
+            # ),
+            # ], p=0.3),
+            # A.GaussNoise(p=0.5),
+            # A.Blur(blur_limit=config.yolo.augment.blur, p=0.5),
+
+            base_augmentations
+        ], bbox_params=A.BboxParams("yolo"))
+
+        augmented = _train_augmentations(image=image, bboxes=bboxes)
+        return augmented["image"], augmented["bboxes"]
+
+    def valid_augmentations(image, bboxes):
+        _valid_augmentations = A.Compose([
+            base_augmentations,
+        ], bbox_params=A.BboxParams("yolo"))
+
+        augmented = _valid_augmentations(image=image, bboxes=bboxes)
+        return augmented["image"], augmented["bboxes"]
+    # fmt:on
+
+
+    # load run and seed
+    run = sys.argv[1]
+    seed = config.train.seeds[int(run)]
+    utils.seed_all(seed)
+
     # model creation
     yolo = create_model()
     print("---------------------------------------------------")
@@ -147,15 +151,6 @@ if __name__ == "__main__":
     #     momentum=config.yolo.momentum,
     #     weight_decay=config.yolo.decay,
     # )
-
-    # TODO would be nice to have
-    def resize_model(model, input_size):
-        model.layers.pop(0)
-        model.summary()
-        new_input = K.layers.Input((input_size, input_size, config.yolo.channels))
-        new_outputs = model(new_input)
-        new_model = K.Model(new_input, new_outputs)
-        return new_model
 
     yolo.compile(
         optimizer=optimizer,
@@ -198,8 +193,6 @@ if __name__ == "__main__":
 
         return lr
 
-    run = sys.argv[1]
-
     experiment = utils.YoloExperiment(
         config.yolo.experiment_dir,
         config.yolo.experiment_name,
@@ -223,3 +216,7 @@ if __name__ == "__main__":
         checkpoint_dir=config.yolo.checkpoint_dir,
     )
     trainer.train(train_dataset, valid_dataset)
+
+
+if __name__ == "__main__":
+    main()

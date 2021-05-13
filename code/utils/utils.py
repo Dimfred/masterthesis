@@ -777,19 +777,29 @@ class A:
         return [to_front(bbox) for bbox in bboxes]
 
 
-def seed(*args):
-    # fmt: off
-    if "tf" in args:
-        import tensorflow as tf
-        tf.random.set_seed(42)
+def seed_all(seed, all_=True):
+    import tensorflow as tf
+    tf.random.set_seed(seed)
 
-    if "np" in args:
-        import numpy as np
-        np.random.seed(1337)
+    import numpy as np
+    np.random.seed(seed)
 
-    if "imgaug" in args:
-        import imgaug
-        imgaug.random.seed(0xDEADBEEF)
+    import imgaug
+    imgaug.random.seed(seed)
+
+    import random
+    random.seed(seed)
+
+    # import torch
+    # torch.manual_seed(seed)
+    print("----------------------------------------------------------")
+    print("----------------------------------------------------------")
+    print("----------------------------------------------------------")
+    print("----------------------------------------------------------")
+    print(f"Seeding {seed}: tf, np, imgaug, python")
+    print("----------------------------------------------------------")
+    print("----------------------------------------------------------")
+    print("----------------------------------------------------------")
 
     # fmt: on
 

@@ -415,8 +415,8 @@ def main():
     # dump_color_jitter_aug()
     # dump_bbox_safe_crop_aug()
     # dump_clahe_aug()
-    dump_gaussian_noise_aug()
-    # dump_blur_aug()
+    # dump_gaussian_noise_aug()
+    dump_blur_aug()
 
 
 if __name__ == "__main__":

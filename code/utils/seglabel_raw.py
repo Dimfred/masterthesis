@@ -14,12 +14,12 @@ label_dir = config.test_dir
 
 for img_name in [
     ############ TEST
-    "07_09_c_a.png",
+    # "07_09_c_a.png",
     # "07_10_c_a.png",
     # "07_11_c_a.png",
     # "07_12_c_a.png",
     # "07_13_c_a.png",
-    # "08_11_c_a.png",
+    "08_11_c_a.png",
     # "08_12_c_a.png",
     # "08_13_c_a.png",
     # "08_14_c_a.png",
@@ -289,9 +289,9 @@ for img_name in [
     # "33_27_a.jpg",
     # "33_29_a.jpg",
 ]:
-    low = 60
+    low, blur = 140, 5
+
     high = 2 * low
-    blur = 5
     blur_size = (blur, blur)
 
 
