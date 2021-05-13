@@ -160,8 +160,9 @@ class Trainer:
                     self.valid_summary_writer, "mAP@75", mAP75, step=self.step_counter
                 )
 
-                if mAP50 > self.best_mAP:
-                    self.best_mAP = mAP50
+                if mAP75 > self.best_mAP:
+                    # self.best_mAP = mAP50
+                    self.best_mAP = mAP75
                     self.best_mAP_step = self.step_counter
                     self.best_mAP_pretty = pretty
 

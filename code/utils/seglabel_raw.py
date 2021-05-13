@@ -8,9 +8,9 @@ import os
 import utils
 from config import config
 
-label_dir = config.train_dir
+# label_dir = config.train_dir
 # label_dir = config.valid_dir
-# label_dir = config.test_dir
+label_dir = config.test_dir
 
 for img_name in [
     ###########
@@ -131,52 +131,52 @@ for img_name in [
     # "24_01_c.jpg",
     # "24_02_c_a.jpg",
     # "24_03_c_a.jpg",
-    "27_00_a.png",
-    "27_01_a.png",
-    "27_02_a.png",
-    "27_03_a.png",
-    "27_04_a.png",
-    "27_05_a.png",
-    "27_06_a.png",
-    "27_07_a.png",
-    "27_08_a.png",
-    "29_00_a.png",
-    "29_01_a.png",
-    "29_02_a.png",
-    "29_03_a.png",
-    "29_04_a.png",
-    "29_05_a.png",
-    "29_06_a.png",
-    "29_07_a.png",
-    "29_08_a.png",
-    "32_00_a.jpg",
-    "32_01_a.jpg",
-    "32_02_a.jpg",
-    "32_03_a.jpg",
-    "32_04_a.jpg",
-    "33_00_a.jpg",
-    "33_01_a.jpg",
-    "33_02_a.jpg",
-    "33_03_a.jpg",
-    "33_04_a.jpg",
-    "33_05_a.jpg",
-    "33_07_a.jpg",
-    "33_08_a.jpg",
-    "33_09_a.jpg",
-    "33_10_a.jpg",
-    "33_12_a.jpg",
-    "33_13_a.jpg",
-    "33_14_a.jpg",
-    "33_15_a.jpg",
-    "33_16_a.jpg",
-    "33_17_a.jpg",
-    "33_18_a.jpg",
-    "33_19_a.jpg",
-    "33_20_a.jpg",
-    "33_21_a.jpg",
-    "33_22_a.jpg",
-    "33_27_a.jpg",
-    "33_29_a.jpg",
+    # "27_00_a.png",
+    # "27_01_a.png",
+    # "27_02_a.png",
+    # "27_03_a.png",
+    # "27_04_a.png",
+    # "27_05_a.png",
+    # "27_06_a.png",
+    # "27_07_a.png",
+    # "27_08_a.png",
+    # "29_00_a.png",
+    # "29_01_a.png",
+    # "29_02_a.png",
+    # "29_03_a.png",
+    # "29_04_a.png",
+    # "29_05_a.png",
+    # "29_06_a.png",
+    # "29_07_a.png",
+    # "29_08_a.png",
+    # "32_00_a.jpg",
+    # "32_01_a.jpg",
+    # "32_02_a.jpg",
+    # "32_03_a.jpg",
+    # "32_04_a.jpg",
+    # "33_00_a.jpg",
+    # "33_01_a.jpg",
+    # "33_02_a.jpg",
+    # "33_03_a.jpg",
+    # "33_04_a.jpg",
+    # "33_05_a.jpg",
+    # "33_07_a.jpg",
+    # "33_08_a.jpg",
+    # "33_09_a.jpg",
+    # "33_10_a.jpg",
+    # "33_12_a.jpg",
+    # "33_13_a.jpg",
+    # "33_14_a.jpg",
+    # "33_15_a.jpg",
+    # "33_16_a.jpg",
+    # "33_17_a.jpg",
+    # "33_18_a.jpg",
+    # "33_19_a.jpg",
+    # "33_20_a.jpg",
+    # "33_21_a.jpg",
+    # "33_22_a.jpg",
+    # "33_27_a.jpg",
+    # "33_29_a.jpg",
     ###########
     ## VALID ##
     ###########
@@ -254,17 +254,17 @@ for img_name in [
     # "22_01.jpg",
     # "22_02.jpg",
     # "22_03.jpg",
-    # "22_04_c.jpg",
-    # "22_05_c.jpg",
-    # "22_06_c.jpg",
-    # "25_00_c_a.jpg",
-    # "25_01_c_a.jpg",
-    # "25_02_a.jpg",
-    # "26_01_c.jpg",
-    # "28_00_c_a.png",
+    "22_04_c.jpg",
+    "22_05_c.jpg",
+    "22_06_c.jpg",
+    "25_00_c_a.jpg",
+    "25_01_c_a.jpg",
+    "25_02_a.jpg",
+    "26_01_c.jpg",
+    "28_00_c_a.png",
 ]:
     print(img_name)
-    low, blur, dilations = 60, 3, 5
+    low, blur, dilations = 120, 3, 5
 
     high = 2 * low
     blur_size = (blur, blur)
@@ -276,7 +276,8 @@ for img_name in [
     orig = img.copy()
 
     # img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    img = cv.GaussianBlur(img, blur_size, sigmaX=1.0, sigmaY=1.0)
+    if blur != 1:
+        img = cv.GaussianBlur(img, blur_size, sigmaX=1.0, sigmaY=1.0)
 
     img = cv.Canny(img, low, high)
     img = cv.dilate(img, cv.getStructuringElement(cv.MORPH_CROSS, (3, 3)), iterations=5)

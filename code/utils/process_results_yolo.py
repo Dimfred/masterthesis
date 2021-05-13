@@ -107,8 +107,8 @@ def dump_lr_init():
         results += [
             [],
             [
-                f"LR@0.5: {lr}", "", "", "", "mean", "std", "",
-                f"LR@0.75: {lr}", "", "", "", "mean", "std"],
+                f"LR@0.5: {lr}", "", "mean", "std", "",
+                f"LR@0.75: {lr}", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -129,13 +129,13 @@ def dump_offline_aug():
 
     # (P, F, R), (runs)
     params_runs = (
-        ((0, 0, 1), (0, 1, 2, 3, 4)),
-        ((0, 1, 0), (0, 1, 2, 3, 4)),
-        ((0, 1, 1), (0, 1, 2, 3, 4)),
-        ((1, 0, 0), (0, 1, 2, 3, 4)),
-        ((1, 0, 1), (0, 1, 2, 3, 4)),
-        ((1, 1, 0), (0, 1, 2, 3, 4)),
-        ((1, 1, 1), (0, 1, 2, 3, 4)),
+        ((0, 0, 1), (0, 1, 2)),
+        ((0, 1, 0), (0, 1, 2)),
+        ((0, 1, 1), (0, 1, 2)),
+        ((1, 0, 0), (0, 1, 2)),
+        ((1, 0, 1), (0, 1, 2)),
+        ((1, 1, 0), (0, 1, 2)),
+        ((1, 1, 1), (0, 1, 2)),
     )
 
     results = []
@@ -147,8 +147,8 @@ def dump_offline_aug():
         results += [
             [],
             [
-                f"P{P}F{F}R{R}@0.5", "", "", "", "", "", "mean", "std", "",
-                f"P{P}F{F}R{R}@0.75", "", "", "", "", "", "mean", "std"],
+                f"P{P}F{F}R{R}@0.5", "", "", "", "mean", "std", "",
+                f"P{P}F{F}R{R}@0.75", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -184,8 +184,8 @@ def dump_rotate_aug():
         results += [
             [],
             [
-                f"Rotation@0.5: {rot}", "", "", "", "", "", "mean", "std", "",
-                f"Roationt@0.75: {rot}", "", "", "", "", "", "mean", "std"],
+                f"Rotation@0.5: {rot}", "", "", "", "mean", "std", "",
+                f"Roationt@0.75: {rot}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -221,8 +221,8 @@ def dump_random_scale_aug():
         results += [
             [],
             [
-                f"Scale@0.5: {scale}", "", "", "", "", "", "mean", "std", "",
-                f"Scale@0.75: {scale}", "", "", "", "", "", "mean", "std"],
+                f"Scale@0.5: {scale}", "", "", "", "mean", "std", "",
+                f"Scale@0.75: {scale}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -258,8 +258,8 @@ def dump_color_jitter_aug():
         results += [
             [],
             [
-                f"ColorJitter@0.5: {color_jitter}", "", "", "", "", "", "mean", "std", "",
-                f"ColorJitter@0.75: {color_jitter}", "", "", "", "", "", "mean", "std"],
+                f"ColorJitter@0.5: {color_jitter}", "", "", "", "mean", "std", "",
+                f"ColorJitter@0.75: {color_jitter}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -289,8 +289,8 @@ def dump_bbox_safe_crop_aug():
         results += [
             [],
             [
-                f"SafeCrop@0.5: {sc}", "", "", "", "", "", "mean", "std", "",
-                f"SafeCrop@0.75: {sc}", "", "", "", "", "", "mean", "std"],
+                f"SafeCrop@0.5: {sc}", "", "", "", "mean", "std", "",
+                f"SafeCrop@0.75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -320,8 +320,8 @@ def dump_clahe_aug():
         results += [
             [],
             [
-                f"Clahe@0.5: {sc}", "", "", "", "", "", "mean", "std", "",
-                f"Clahe@0.75: {sc}", "", "", "", "", "", "mean", "std"],
+                f"Clahe@0.5: {sc}", "", "", "", "mean", "std", "",
+                f"Clahe@0.75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -351,8 +351,8 @@ def dump_gaussian_noise_aug():
         results += [
             [],
             [
-                f"GaussianNoise@0.5: {sc}", "", "", "", "", "", "mean", "std", "",
-                f"GaussianNoise@0.75: {sc}", "", "", "", "", "", "mean", "std"],
+                f"GaussianNoise@0.5: {sc}", "", "", "", "mean", "std", "",
+                f"GaussianNoise@0.75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -382,8 +382,8 @@ def dump_blur_aug():
         results += [
             [],
             [
-                f"Blur@0.5: {sc}", "", "", "", "", "", "mean", "std", "",
-                f"Blur@0.75: {sc}", "", "", "", "", "", "mean", "std"],
+                f"Blur@0.5: {sc}", "", "", "", "mean", "std", "",
+                f"Blur@0.75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -400,12 +400,12 @@ def main():
     #### lr_init ########
     #####################
     # process_lr_init()
-    dump_lr_init()
+    # dump_lr_init()
 
     #####################
     #### offline_aug ####
     #####################
-    # dump_offline_aug()
+    dump_offline_aug()
 
     #####################
     #### online_aug #####
