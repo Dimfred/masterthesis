@@ -101,35 +101,6 @@ class Trainer:
         epoch_loss = running_loss / len(data_loader.dataset)
         return epoch_loss
 
-        # inputs = inputs.to(self.device)
-        # # labels = one_hot()
-        # labels = labels.to(self.device)
-        # pred = model(inputs)
-        # loss = self.criterion(pred, labels)
-        # loss.backward()
-
-        # if (self.batch_counter + 1) % self.subdivision == 0:
-
-        # with torch.set_grad_enabled(True):
-        # outputs = outputs.to("cpu")
-        # labels = labels.to("cpu")
-        # outputs = torch.cat([outputs, 1 - outputs], 1)
-        # print(outputs.shape)
-        # loss = self.criterion(pred, labels)
-        # loss.backward()
-        # optimizer.step()
-
-        # TODO why the fuck does the model not output the same size???
-        # labels = torch.nn.functional.interpolate(
-        #     labels, scale_factor=0.5, mode="linear", align_corners=False
-        # )
-        # outputs = torch.nn.functional.interpolate(
-        #     outputs, scale_factor=2, mode="bilinear", align_corners=False
-        # )
-        # print("outputs.shape\n{}".format(outputs.shape))
-
-        # running_loss += loss.item() #* inputs.size(0)
-
     def _val_on_epoch(self, model, optimizer):
         model.eval()
         data_loader = self.data_loaders[1]

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.1)  7 MAY 2021 15:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.1)  14 MAY 2021 17:20
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -635,17 +635,30 @@ Package acronym Info: Label `acro:CNN' newly defined as it shall be overridden
 although it is yet undefined on input line 14.
 Package acronym Info: Label `acro:ECC' newly defined as it shall be overridden
 although it is yet undefined on input line 14.
-)
-Underfull \vbox (badness 10000) has occurred while \output is active []
+/home/dimfred/workspaces/uni/ma/thesis/tex/main/00_introduction.tex:20: Missing $ inserted.
+<inserted text> 
+                $
+l.20 - base_
+            cnn
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
 
- [1
+/home/dimfred/workspaces/uni/ma/thesis/tex/main/00_introduction.tex:21: Missing $ inserted.
+<inserted text> 
+                $
+l.21 
+     
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+[1
 
 
 
-] [2] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/01_theory.tex
+]) [2] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/01_theory.tex
 Chapter 2.
 (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ecds.tex
-<imgs/eccs/all.png, id=64, 1696.3375pt x 256.96pt>
+<imgs/eccs/all.png, id=66, 1696.3375pt x 256.96pt>
 File: imgs/eccs/all.png Graphic file (type png)
 <use imgs/eccs/all.png>
 Package pdftex.def Info: imgs/eccs/all.png  used on input line 15.
@@ -862,7 +875,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  80i,13n,85p,699b,1360s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (52 pages, 873830 bytes).
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (52 pages, 874645 bytes).
 PDF statistics:
  274 PDF objects out of 1000 (max. 8388607)
  178 compressed objects within 2 object streams

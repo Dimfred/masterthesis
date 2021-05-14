@@ -82,8 +82,6 @@ def main():
     classes = utils.Yolo.parse_classes(config.train_out_dir / "classes.txt")
 
     def train_augmentations(image, bboxes):
-        # TODO mixup?
-        # TODO synchronize BN???
         _train_augmentations = A.Compose([
             # has to happen before the crop if not can happen that bboxes disappear
             # A.Rotate(

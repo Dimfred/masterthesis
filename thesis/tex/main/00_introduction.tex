@@ -14,7 +14,26 @@ To provide some context for the task, the following subsections present approach
 G"unay et al. \cite{ecd_basecnn} compared in their work the accuracy of various common \ac{CNN} architectures trained on a dataset of hand-drawn \acp{ECC}.
 The dataset consisted of four classes (resistor, capacitor, inductor, voltage source) and had overall a size of 863 images. best cnn 83\%
 
+
+-- Classification only
+
+- base_cnn
+
+- anngeo
+- letters, numbers and 7 symbols 20 / class
+- different moment features
+- fed into ann
+
+- texturesmo
+- 20 eccs 150 samples / class
+- hog, texture based features optimized with ReliefF
+- fed in to SMO (Sequential minimal optimization)
 - fourier svm
+
+- ctxindependentsvm
+
+-- Object Detection
+
 - logical gates (AND, OR, NOT)
 - segmentation of components based on closed region
 - draw bbox around region
@@ -22,7 +41,35 @@ The dataset consisted of four classes (resistor, capacitor, inductor, voltage so
 - 180 samples
 - 83 \% accuracy
 
--
+- knn recog
+- full circuits, with 4 different classes
+- 100 images of circuits
+- segmentation of components
+- knn classification based on features (area, major / minor axis, centroid, orientation
+    eccentricity)
+- 90\% on training set
+
+- seghogsvm
+- 10 classes
+- 35 components / class
+- 350 components: 200 train / 150 test
+- segmentation based on closed shape, connected lines, disconnected lines
+- hog features
+- svm
+- 87.71\% accuracy (including segmentation)
+
+
+-- FULL CONV
+
+- knnfull
+
+- yolobool
+
+-- Online Recognition
+
+- hmm
+
+- hmm2
 
 
 

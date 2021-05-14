@@ -54,7 +54,8 @@ for input_size in (608,):  # 832):
     yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
     # yolo.load_weights(config.weights_dir / "yolov4-tiny-100.weights", weights_type=config.yolo.weights_type)
 
-    dir_ = config.test_out_dir
+    # dir_ = config.test_out_dir
+    dir_ = config.valid_out_dir
 
     preds, gts = [], []
     for img_path in utils.list_imgs(dir_):

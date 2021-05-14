@@ -205,10 +205,9 @@ def dump_rotate_aug():
         ]
 
     lr_runs = (
-        (10, (0, 1, 2, 3, 4)),
-        (20, (0, 1, 2, 3, 4)),
-        (30, (0, 1, 2, 3, 4)),
-        (40, (0, 1, 2, 3, 4)),
+        (10, (0, 1, 2)),
+        (20, (0, 1, 2)),
+        (30, (0, 1, 2)),
     )
 
     results = []
@@ -241,11 +240,11 @@ def dump_random_scale_aug():
         ]
 
     lr_runs = (
-        (0.1, (0, 1, 2, 3, 4)),
-        (0.2, (0, 1, 2, 3, 4)),
-        (0.3, (0, 1, 2, 3, 4)),
-        (0.4, (0, 1, 2, 3, 4)),
-        (0.5, (0, 1, 2, 3, 4)),
+        (0.1, (0, 1, 2)),
+        (0.2, (0, 1, 2)),
+        (0.3, (0, 1, 2)),
+        (0.4, (0, 1, 2)),
+        (0.5, (0, 1, 2)),
     )
 
     results = []
@@ -278,11 +277,11 @@ def dump_color_jitter_aug():
         ]
 
     lr_runs = (
-        (0.1, (0, 1, 2, 3, 4)),
-        (0.2, (0, 1, 2, 3, 4)),
-        (0.3, (0, 1, 2, 3, 4)),
-        (0.4, (0, 1, 2, 3, 4)),
-        (0.5, (0, 1, 2, 3, 4)),
+        (0.1, (0, 1, 2)),
+        (0.2, (0, 1, 2)),
+        (0.3, (0, 1, 2)),
+        (0.4, (0, 1, 2)),
+        (0.5, (0, 1, 2)),
     )
 
     results = []
@@ -338,37 +337,6 @@ def dump_bbox_safe_crop_aug():
     dump_csv("experiments_yolo/bbox_safe_crop/results.csv", results)
 
 
-def dump_clahe_aug():
-    def build_paths(experiment_param, runs):
-        return [
-            f"experiments_yolo/clahe/clahe_{experiment_param}/run{run}/results_raw.txt"
-            for run in runs
-        ]
-
-    lr_runs = ((1, (0, 1, 2, 3, 4)),)
-
-    results = []
-    for sc, runs in lr_runs:
-        paths = build_paths(sc, runs)
-        pred_50, pred_75, cls_names = parse_results(paths)
-
-        # fmt: off
-        results += [
-            [],
-            [
-                f"Clahe@0.5: {sc}", "", "", "", "mean", "std", "",
-                f"Clahe@0.5:0.75: {sc}", "", "", "", "mean", "std"],
-            [],
-        ]
-        # fmt: on
-        res_50 = zip_with_names(cls_names, pred_50)
-        res_75 = zip_with_names(cls_names, pred_75)
-        combined = combine_50_75(res_50, res_75)
-        results += combined
-
-    dump_csv("experiments_yolo/clahe/results.csv", results)
-
-
 def dump_gaussian_noise_aug():
     def build_paths(experiment_param, runs):
         return [
@@ -376,7 +344,7 @@ def dump_gaussian_noise_aug():
             for run in runs
         ]
 
-    lr_runs = ((1, (0, 1, 2, 3, 4)),)
+    lr_runs = ((1, (0, 1, 2)),)
 
     results = []
     for sc, runs in lr_runs:
@@ -407,7 +375,7 @@ def dump_blur_aug():
             for run in runs
         ]
 
-    lr_runs = ((3, (0, 1, 2, 3, 4)), (5, (0, 1, 2, 3, 4)))
+    lr_runs = ((3, (0, 1, 2)), (5, (0, 1, 2)))
 
     results = []
     for sc, runs in lr_runs:
@@ -442,16 +410,15 @@ def main():
     #### offline_aug ####
     #####################
     # dump_offline_aug()
-    dump_offline_baseline_aug()
+    # dump_offline_baseline_aug()
 
     #####################
     #### online_aug #####
     #####################
     # dump_rotate_aug()
-    # dump_random_scale_aug()
+    dump_random_scale_aug()
     # dump_color_jitter_aug()
     # dump_bbox_safe_crop_aug()
-    # dump_clahe_aug()
     # dump_gaussian_noise_aug()
     # dump_blur_aug()
 

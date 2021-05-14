@@ -57,7 +57,7 @@ yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
 #dirs = [config.data / "tmp"]
 # dirs = [config.valid_out_dir]
-dirs = [config.test_out_dir]
+# dirs = [config.test_out_dir]
 # dirs = [config.unlabeled_dir]
 # dirs = [config.unused_data_dir]
 for dir_ in dirs:

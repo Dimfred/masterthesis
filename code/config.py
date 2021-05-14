@@ -168,7 +168,7 @@ config.unet.lr_burn_in = 10
 # loss functions
 config.unet.focal_alpha = 0.1
 config.unet.focal_gamma = 2
-config.unet.focal_reduction = "mean"
+config.unet.focal_reduction = "sum"
 
 # optimizers
 config.unet.amsgrad = True
@@ -183,8 +183,7 @@ config.unet.checkpoint_path = None
 config.unet.output_dir = Path("outputs")
 
 # utility
-config.unet.random_state = 42
-config.unet.n_workers = 16 if not utils.isme() else 1
+config.unet.n_workers = 32 if not utils.isme() else 1
 
 ###################
 ## augmentations ##
