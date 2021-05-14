@@ -2,6 +2,7 @@
 
 import cv2 as cv
 import numpy as np
+import numba as nb
 
 import os
 
@@ -220,22 +221,22 @@ for img_name in [
     # "07_11_c_a.png",
     # "07_12_c_a.png",
     # "07_13_c_a.png",
-    "08_00.png",
-    "08_01.png",
-    "08_02.png",
-    "08_03.png",
-    "08_04.png",
-    "08_05.png",
-    "08_06.png",
+    # "08_00.png",
+    # "08_01.png",
+    # "08_02.png",
+    # "08_03.png",
+    # "08_04.png",
+    # "08_05.png",
+    # "08_06.png",
     # "08_07_c.png",
     # "08_08_c.png",
     # "08_09_c.png",
     # "08_10_c.png",
     # "08_11_c_a.png",
-    # "08_12_c_a.png",
-    # "08_13_c_a.png",
-    # "08_14_c_a.png",
-    # "08_15_c_a.png",
+    "08_12_c_a.png",
+    "08_13_c_a.png",
+    "08_14_c_a.png",
+    "08_15_c_a.png",
     # "10_00.png",
     # "11_00.jpg",
     # "11_01.jpg",
@@ -263,8 +264,21 @@ for img_name in [
     # "26_01_c.jpg",
     # "28_00_c_a.png",
 ]:
+
+    @nb.njit
+    def less_black(img):
+        # only for alex and jonas
+        for row in img:
+            for val in row:
+                if val[0] == 0 and val[1] == 0 and val[2] == 0:
+                    val[0] = 1
+                    val[1] = 1
+                    val[2] = 1
+
+        return img
+
     print(img_name)
-    low, blur, dilations = 120, 3, 5
+    low, blur, dilations = 160, 5, 5
 
     high = 2 * low
     blur_size = (blur, blur)
@@ -272,14 +286,8 @@ for img_name in [
     path = str(label_dir / img_name)
     img = cv.imread(path)
     img = utils.resize_max_axis(img, 1000)
+    img = less_black(img)
 
-    # only for alex and jonas
-    for row in img:
-        for val in row:
-            if val[0] == 0 and val[1] == 0 and val[2] == 0:
-                val[0] = 1
-                val[1] = 1
-                val[2] = 1
 
     orig = img.copy()
 

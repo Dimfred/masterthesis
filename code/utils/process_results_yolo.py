@@ -169,7 +169,8 @@ def dump_offline_baseline_aug():
 
     # (P, F, R), (runs)
     params_runs = (
-        (0, 1, 2),
+        ((0, 1, 1), (0, 1, 2)),
+        ((1, 1, 1), (0, 1, 2)),
     )
 
     results = []
@@ -182,7 +183,7 @@ def dump_offline_baseline_aug():
             [],
             [
                 f"OffBase@0.5", "", "", "", "mean", "std", "",
-                f"OffBase@0.75", "", "", "", "mean", "std"],
+                f"OffBase@0.5:0.75", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -218,7 +219,7 @@ def dump_rotate_aug():
             [],
             [
                 f"Rotation@0.5: {rot}", "", "", "", "mean", "std", "",
-                f"Roationt@0.75: {rot}", "", "", "", "mean", "std"],
+                f"Roationt@0.5:0.75: {rot}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -255,7 +256,7 @@ def dump_random_scale_aug():
             [],
             [
                 f"Scale@0.5: {scale}", "", "", "", "mean", "std", "",
-                f"Scale@0.75: {scale}", "", "", "", "mean", "std"],
+                f"Scale@0.5:0.75: {scale}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -292,7 +293,7 @@ def dump_color_jitter_aug():
             [],
             [
                 f"ColorJitter@0.5: {color_jitter}", "", "", "", "mean", "std", "",
-                f"ColorJitter@0.75: {color_jitter}", "", "", "", "mean", "std"],
+                f"ColorJitter@0.5:0.75: {color_jitter}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -323,7 +324,7 @@ def dump_bbox_safe_crop_aug():
             [],
             [
                 f"SafeCrop@0.5: {sc}", "", "", "", "mean", "std", "",
-                f"SafeCrop@0.75: {sc}", "", "", "", "mean", "std"],
+                f"SafeCrop@0.5:0.75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -354,7 +355,7 @@ def dump_clahe_aug():
             [],
             [
                 f"Clahe@0.5: {sc}", "", "", "", "mean", "std", "",
-                f"Clahe@0.75: {sc}", "", "", "", "mean", "std"],
+                f"Clahe@0.5:0.75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -385,7 +386,7 @@ def dump_gaussian_noise_aug():
             [],
             [
                 f"GaussianNoise@0.5: {sc}", "", "", "", "mean", "std", "",
-                f"GaussianNoise@0.75: {sc}", "", "", "", "mean", "std"],
+                f"GaussianNoise@0.5:0.75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -416,7 +417,7 @@ def dump_blur_aug():
             [],
             [
                 f"Blur@0.5: {sc}", "", "", "", "mean", "std", "",
-                f"Blur@0.75: {sc}", "", "", "", "mean", "std"],
+                f"Blur@0.5:0.75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
