@@ -402,14 +402,14 @@ config.augment.include_merged = True
 # config.yolo.experiment_name = "offline_aug"
 # config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
-config.yolo.experiment_name = "offline_baseline"
-config.yolo.experiment_param = f"offline_baseline_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
+# config.yolo.experiment_name = "offline_baseline"
+# config.yolo.experiment_param = f"offline_baseline_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
-# config.yolo.augment.rotate = 10 # 10, 20, 30, 40
-# config.yolo.experiment_name = "rotate"
-# config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
+config.yolo.augment.rotate = 10 # 10, 20, 30
+config.yolo.experiment_name = "rotate"
+config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
 
-# config.yolo.augment.random_scale = 0.1 # 0.1, 0.2, 0.3
+# config.yolo.augment.random_scale = 0.1 # 0.1, 0.2, 0.3, 0.4, 0.5
 # config.yolo.experiment_name = "random_scale"
 # config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
 
@@ -420,10 +420,6 @@ config.yolo.experiment_param = f"offline_baseline_P{int(config.augment.include_m
 # config.yolo.augment.bbox_safe_crop = True
 # config.yolo.experiment_name = "bbox_safe_crop"
 # config.yolo.experiment_param = f"bbox_safe_crop_{int(config.yolo.augment.bbox_safe_crop)}"
-
-# config.yolo.augment.clahe = True
-# config.yolo.experiment_name = "clahe"
-# config.yolo.experiment_param = f"clahe_{int(config.yolo.augment.clahe)}"
 
 # config.yolo.augment.gaussian_noise = True
 # config.yolo.experiment_name = "gaussian_noise"

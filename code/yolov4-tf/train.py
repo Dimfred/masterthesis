@@ -98,8 +98,6 @@ def main():
             #     height=None, # unused
             #     p=0.5,
             # ),
-            # A.OneOf([
-            # A.CLAHE(p=0.5),
             # A.ColorJitter(
             #     brightness=config.yolo.augment.color_jitter,
             #     contrast=config.yolo.augment.color_jitter,
@@ -107,7 +105,6 @@ def main():
             #     hue=config.yolo.augment.color_jitter,
             #     p=0.5
             # ),
-            # ], p=0.3),
             # A.GaussNoise(p=0.5),
             # A.Blur(blur_limit=config.yolo.augment.blur, p=0.5),
 
