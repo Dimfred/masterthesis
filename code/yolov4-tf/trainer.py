@@ -61,7 +61,7 @@ class Trainer:
         self.mAP = utils.MeanAveragePrecision(
             self.yolo.classes,
             self.yolo.input_size,
-            iou_threshs=[0.5, 0.75],
+            iou_threshs=(0.5, (0.5, 0.76, 0.05)),
         )
         self.best_mAP = 0.0
         self.best_mAP_step = 0
@@ -151,18 +151,18 @@ class Trainer:
                 tf.print(pretty)
 
                 mAP50 = self.mAP.get_maps(results)[0][1]
-                mAP75 = self.mAP.get_maps(results)[1][1]
+                mAP50_75 = self.mAP.get_maps(results)[1][1]
 
                 self.log_summary(
                     self.valid_summary_writer, "mAP@50", mAP50, step=self.step_counter
                 )
                 self.log_summary(
-                    self.valid_summary_writer, "mAP@75", mAP75, step=self.step_counter
+                    self.valid_summary_writer, "mAP@50_75", mAP50_75, step=self.step_counter
                 )
 
-                if mAP75 > self.best_mAP:
+                if mAP50_75 > self.best_mAP:
                     # self.best_mAP = mAP50
-                    self.best_mAP = mAP75
+                    self.best_mAP = mAP50_75
                     self.best_mAP_step = self.step_counter
                     self.best_mAP_pretty = pretty
 

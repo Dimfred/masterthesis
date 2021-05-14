@@ -74,7 +74,7 @@ for input_size in (608,):  # 832):
 
     img_shape = (input_size, input_size)
     mAP = utils.MeanAveragePrecision(
-        yolo.classes, img_shape, iou_threshs=[0.5, 0.6, 0.7, 0.8]
+        yolo.classes, img_shape, iou_threshs=(0.5, (0.5, 0.76, 0.05))
     )
     mAP.add(preds, gts)
     results = mAP.compute()

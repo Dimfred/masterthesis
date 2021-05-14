@@ -403,7 +403,7 @@ config.augment.include_merged = True
 # config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
 config.yolo.experiment_name = "offline_baseline"
-config.yolo.experiment_param = "offline_baseline"
+config.yolo.experiment_param = f"offline_baseline_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
 # config.yolo.augment.rotate = 10 # 10, 20, 30, 40
 # config.yolo.experiment_name = "rotate"

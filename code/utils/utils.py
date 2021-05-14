@@ -441,10 +441,39 @@ class MeanAveragePrecision:
         if show:
             start = time.perf_counter()
 
-        results = [
-            self._map.value(iou_thresholds=iou_thresh)
-            for iou_thresh in self.iou_threshs
-        ]
+        results = []
+        for idx, iou_thresh in enumerate(self.iou_threshs):
+            if isinstance(iou_thresh, list) or isinstance(iou_thresh, tuple):
+                threshs = np.arange(*iou_thresh)
+                print(threshs)
+                results_ = [
+                    self._map.value(iou_thresholds=iou_thresh_)
+                    for iou_thresh_ in threshs
+                ]
+
+                mAP = np.array([res_["mAP"] for res_ in results_]).mean()
+                # cls_idx, {"ap": val, bla}
+                aps_for_all_ious = [
+                    sorted(res_[iou_thresh_].items())
+                    for res_, iou_thresh_ in zip(results_, threshs)
+                ]
+                # n_classes = len(aps_for_all_ious)
+                aps_for_all_ious = [
+                    np.vstack([res_dict["ap"] for cls_idx, res_dict in aps_at_iou])
+                    for aps_at_iou in aps_for_all_ious
+                ]
+                aps_for_all_ious = np.hstack(aps_for_all_ious)
+                mean_aps = aps_for_all_ious.mean(axis=1)
+
+                combined_results = {
+                    iou_thresh: {
+                        cls_idx: {"ap": ap} for cls_idx, ap in enumerate(mean_aps)
+                    }
+                }
+                combined_results["mAP"] = mAP
+                results.append(combined_results)
+            else:
+                results.append(self._map.value(iou_thresholds=iou_thresh))
 
         if show:
             end = time.perf_counter()
@@ -779,15 +808,19 @@ class A:
 
 def seed_all(seed, all_=True):
     import tensorflow as tf
+
     tf.random.set_seed(seed)
 
     import numpy as np
+
     np.random.seed(seed)
 
     import imgaug
+
     imgaug.random.seed(seed)
 
     import random
+
     random.seed(seed)
 
     # import torch
@@ -973,7 +1006,6 @@ class TextProjection(AA.core.transforms_interface.DualTransform):
             if np.random.uniform() < self.annotation_probability:
                 continue
 
-
             orientation = self.get_orientation(bbox.label)
             h_annotation, w_annotation = self.calc_annotation_size(bbox, orientation)
             text = random.choice(self.texts).copy()
@@ -1016,7 +1048,6 @@ class TextProjection(AA.core.transforms_interface.DualTransform):
                     text_bbox.label,
                 )
             )
-
 
         # DEBUG
         # alb_bboxes = [AlbumentationsBBox(img.shape).from_rel(bbox) for bbox in bboxes]
@@ -1152,9 +1183,6 @@ def load_imgs(dir_, read_type=cv.IMREAD_ANYCOLOR):
     return imgs
 
 
-
-
-
 # - experiments
 #   - init_lr
 #       - lr1
@@ -1168,6 +1196,7 @@ def load_imgs(dir_, read_type=cv.IMREAD_ANYCOLOR):
 #   - offline_augs
 #   - online_augs
 #   - grid
+
 
 class YoloExperiment:
     def __init__(self, experiment_dir, experiment_name, experiment_param, run):
