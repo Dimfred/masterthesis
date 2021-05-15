@@ -105,9 +105,6 @@ class Trainer:
             # training step
             step_grads, step_losses = self.train_step(inputs, labels)
 
-            if not np.isfinite(step_losses).all():
-                raise ValueError("NaN DETECTED")
-
             accumulated_losses = tloss_accu.accumulate(step_losses)
             accumulated_grads = grad_accu.accumulate(step_grads)
             if accumulated_grads is None:
@@ -119,6 +116,9 @@ class Trainer:
                 self.lr_scheduler(self.step_counter, base_lr, burn_in)
 
             self.model.optimizer.apply_gradients(accumulated_grads)
+
+            if self.step_counter % 100 == 0 and not np.isfinite(step_losses).all():
+                raise ValueError("NaN DETECTED")
 
             # summary
             self.print_train(accumulated_losses)
@@ -181,6 +181,7 @@ class Trainer:
             self.print_valid(vlosses)
 
             if self.step_counter >= self.max_steps:
+
                 tf.print(self.best_mAP_pretty)
                 with open(self.experiment.results, "w") as f:
                     f.write(
