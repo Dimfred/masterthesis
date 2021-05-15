@@ -28,10 +28,6 @@ from dataset import MaskDataset
 from nets.MobileNetV2_unet import MobileNetV2_unet
 from trainer import Trainer
 
-
-EXPERIMENT = "unet"
-OUT_DIR = "outputs/{}".format(EXPERIMENT)
-
 # dimfred
 import utils
 from config import config
@@ -104,38 +100,11 @@ def get_data_loaders(train_files, val_files, img_size=224):
     return train_loader, valid_loader
 
 
-def save_best_model(model, df_hist):
-    if df_hist["val_loss"].tail(1).iloc[0] <= df_hist["val_loss"].min():
-        torch.save(model.state_dict(), "{}/best.pth".format(OUT_DIR))
-
-
-def write_on_board(writer, df_hist):
-    row = df_hist.tail(1).iloc[0]
-
-    writer.add_scalars(
-        "{}/loss".format(EXPERIMENT),
-        {
-            "train": row.train_loss,
-            "val": row.val_loss,
-            "lr": row.lr,
-        },
-        row.epoch,
-    )
-
-
-def log_hist(df_hist):
-    last = df_hist.tail(1)
-    best = df_hist.sort_values("val_loss").head(1)
-    summary = pd.concat((last, best)).reset_index(drop=True)
-    summary["name"] = ["Last", "Best"]
-    logger.debug(summary[["name", "epoch", "train_loss", "val_loss"]])
-    logger.debug("")
-
-def lr_scheduler(optimizer, step, iteration, num_iter):
-    lr = optimizer.param_groups[0]["lr"]
+def lr_scheduler(optimizer, step):
+    lr = config.unet.lr
 
     if step < config.unet.burn_in:
-        multiplier = (step / config.unet.burn_in)**4
+        multiplier = (step / config.unet.burn_in) ** 4
         lr = lr * multiplier
 
     for param_group in optimizer.param_groups:
@@ -144,19 +113,9 @@ def lr_scheduler(optimizer, step, iteration, num_iter):
     return lr
 
 
-
 # TODO print training params at the beginning
 def main(img_size, pretrained):
-
-
-    writer = SummaryWriter(flush_secs=10)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    def on_after_epoch(m, df_hist):
-        # save_best_model(n, m, df_hist)
-        save_best_model(m, df_hist)
-        write_on_board(writer, df_hist)
-        log_hist(df_hist)
 
     train_files = utils.list_imgs(config.train_out_dir)
     val_files = utils.list_imgs(config.valid_out_dir)
@@ -172,15 +131,6 @@ def main(img_size, pretrained):
         model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
     model.to(device)
 
-    ##########
-    ## LOSS ##
-    ##########
-    loss = losses.focal.FocalLoss(
-        config.unet.focal_alpha,
-        config.unet.focal_gamma,
-        config.unet.focal_reduction,
-    )
-
     ###############
     ## OPTIMIZER ##
     ###############
@@ -193,24 +143,28 @@ def main(img_size, pretrained):
     # )
 
     optimizer = optimizers.SGD(
-        model.parameters(),
-        lr=config.unet.lr,
-        momentum=config.unet.momentum
+        model.parameters(), lr=config.unet.lr, momentum=config.unet.momentum
     )
+
+    ##########
+    ## LOSS ##
+    ##########
+    loss = losses.focal.FocalLoss(
+        config.unet.focal_alpha,
+        config.unet.focal_gamma,
+        config.unet.focal_reduction,
+    )
+
 
     trainer = Trainer(
-        data_loaders,
-        loss,
-        device,
+        data_loaders=data_loaders,
+        loss=loss,
         batch_size=config.unet.batch_size,
         subdivision=config.unet.subdivision,
-        on_after_epoch=on_after_epoch,
         lr_scheduler=lr_scheduler,
+        device=device,
     )
-    hist = trainer.train(model, optimizer, num_epochs=config.unet.n_epochs)
-
-    hist.to_csv("{}/{}-hist.csv".format(OUT_DIR, 0), index=False)
-    writer.close()
+    trainer.train(model, optimizer, num_epochs=config.unet.n_epochs)
 
 
 if __name__ == "__main__":

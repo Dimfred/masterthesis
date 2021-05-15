@@ -2,34 +2,67 @@ import pandas as pd
 import numpy as np
 import torch
 
+from torch.utils.tensorboard import SummaryWriter
+
 
 class Trainer:
     def __init__(
         self,
         data_loaders,
-        criterion,
+        loss,
         device,
         batch_size=32,
         subdivision=1,
-        on_after_epoch=None,
         lr_scheduler=None,
+        experiment=None
     ):
-        self.data_loaders = data_loaders
-        self.criterion = criterion
         self.device = device
-        self.history = []
-        self.on_after_epoch = on_after_epoch
+
+        # config
+        self.train_ds, self.valid_ds = data_loaders
+        self.loss = loss
 
         self.batch_size = batch_size
         assert self.batch_size % 2 == 0
-
         self.subdivision = subdivision
         assert subdivision > 0
-
         self.lr_scheduler = lr_scheduler
 
-    def train(self, model, optimizer, num_epochs):
-        for epoch in range(num_epochs):
+        # runtime
+        self.step_counter = 0
+        self.early_stopping = 1000
+        self.early_stopping_counter = 0
+
+
+        # logging
+        self.experiment = experiment
+        self.train_summary_writer = SummaryWriter(self.experiment.tb_train_dir)
+        self.valid_summary_writer = SummaryWriter(self.experiment.tb_valid_dir)
+
+
+    def train(self, model, optimizer, n_steps):
+        self.model = model
+        self.optimizer = optimizer
+
+        while True:
+            for inputs, labels in self.train_ds:
+                self.step_counter += 1
+
+                if self.step_counter >= 1000:
+                    self.early_stopping_counter += 1
+
+                if self.lr_scheduler is not None:
+                    lr = self.lr_scheduler(optimizer, self.step_counter)
+
+                loss = self.train_step(inputs, labels)
+
+
+
+
+
+
+
+        for step in range(1, n_steps + 1):
             train_epoch_loss = self._train_on_epoch(model, optimizer, epoch)
             val_epoch_loss = self._val_on_epoch(model, optimizer)
 
@@ -45,6 +78,21 @@ class Trainer:
                 self.on_after_epoch(model, pd.DataFrame(self.history))
 
         return pd.DataFrame(self.history)
+
+    def train_step(self, inputs, labels):
+        subbatch_size = int(self.batch_size / self.subdivision)
+
+        for subdiv in range(self.subdivision):
+            start, end = subdiv * subbatch_size, (subdiv + 1) * subbatch_size
+            sub_inputs, sub_labels = inputs[start:end], labels[start:end]
+
+            sub_inputs.to(self.device)
+            sub_labels.to(self.device)
+
+            loss =
+
+
+
 
     def _train_on_epoch(self, model, optimizer, epoch):
         model.train()
@@ -77,7 +125,7 @@ class Trainer:
                         sub_labels = sub_labels.to(self.device)
 
                         pred = model(sub_input)
-                        loss = self.criterion(pred, sub_labels)
+                        loss = self.loss(pred, sub_labels)
                         loss.backward()
 
                 with torch.set_grad_enabled(True):
@@ -92,7 +140,7 @@ class Trainer:
                 optimizer.zero_grad()
                 with torch.set_grad_enabled(True):
                     pred = model(inputs)
-                    loss = self.criterion(pred, labels)
+                    loss = self.loss(pred, labels)
                     loss.backward()
                     optimizer.step()
 
@@ -123,7 +171,7 @@ class Trainer:
                         sub_labels = sub_labels.to(self.device)
 
                         pred = model(sub_input)
-                        loss = self.criterion(pred, sub_labels)
+                        loss = self.loss(pred, sub_labels)
                         loss.backward()
 
                         # pred: minibatch, cls, y, x
@@ -153,7 +201,7 @@ class Trainer:
                 optimizer.zero_grad()
                 with torch.set_grad_enabled(False):
                     pred = model(inputs)
-                    loss = self.criterion(pred, labels)
+                    loss = self.loss(pred, labels)
                     optimizer.step()
 
                 running_loss += loss.item() * inputs.size(0)

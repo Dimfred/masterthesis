@@ -399,6 +399,36 @@ def dump_blur_aug():
     dump_csv("experiments_yolo/blur/results.csv", results)
 
 
+def dump_all_augs(param):
+    def build_paths(runs):
+        return [
+            f"experiments_yolo/all_augs_{param}_jitter_blur_noise/all_augs/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    lr_runs = ((0, 1, 2)), ((0, 1, 2))
+
+    results = []
+    for runs in lr_runs:
+        paths = build_paths(runs)
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"AllAugs@0.5: {param}", "", "", "", "mean", "std", "",
+                f"AllAugs@0.5:0.75: {param}", "", "", "", "mean", "std"],
+            [],
+        ]
+        # fmt: on
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv(f"experiments_yolo/all_augs_{param}_jitter_blur_noise/results.csv", results)
+
 def main():
     #####################
     #### lr_init ########
@@ -419,97 +449,11 @@ def main():
     # dump_random_scale_aug()
     # dump_color_jitter_aug()
     # dump_bbox_safe_crop_aug()
-    dump_gaussian_noise_aug()
-    dump_blur_aug()
+    # dump_gaussian_noise_aug()
+    # dump_blur_aug()
+    dump_all_augs("with")
+    dump_all_augs("without")
 
 
 if __name__ == "__main__":
     main()
-
-
-def process_lr_init():
-    def build_paths(experiment_param, runs):
-        return [
-            f"experiments_yolo/lr_init/LR_{experiment_param}/run{run}/results_raw.txt"
-            for run in runs
-        ]
-
-    lr_runs = (
-        (0.01, (0, 1, 2, 3, 4)),
-        (0.005, (0, 2, 3, 4, 5)),
-        (0.0025, (0, 1, 2, 3, 4)),
-        (0.001, (0, 1, 2, 3, 4)),
-        (0.0005, (0, 1, 2, 3, 4)),
-        (0.00025, (0, 1, 2, 3, 4)),
-        (0.0001, (0, 1, 2, 3, 4)),
-    )
-
-    pretty = [""]
-    for lr, _ in lr_runs:
-        pretty.append(f"lr:{lr}")
-        pretty.append("")
-    pretty = [pretty]
-
-    pretty = make_mean_std_pretty(pretty, lr_runs)
-
-    # create results
-    results = []
-    for lr, runs in lr_runs:
-        paths = build_paths(lr, runs)
-        pred_50, pred_75, cls_names = parse_results(paths)
-
-        mean, std = mean_and_std(pred_50)
-        results += (mean, std)
-    results = np.hstack(results)
-
-    pretty = make_red_green(pretty, cls_names, results)
-    print(tabulate(pretty))
-
-
-def process_offline_aug():
-    def build_paths(P, F, R, runs):
-        return [
-            f"experiments_yolo/offline_aug/offaug_P{int(P)}_F{int(F)}_R{int(R)}/run{run}/results_raw.txt"
-            for run in runs
-        ]
-
-    # (P, F, R), (runs)
-    params_runs = (
-        ((0, 0, 1), (0, 1, 2, 3, 4)),
-        ((0, 1, 0), (0, 1, 2, 3, 4)),
-        ((0, 1, 1), (0, 1, 2, 3, 4)),
-        ((1, 0, 0), (0, 1, 2, 3, 4)),
-        ((1, 0, 1), (0, 1, 2, 3, 4)),
-        ((1, 1, 0), (0, 1, 2, 3, 4)),
-        ((1, 1, 1), (0, 1, 2, 3, 4)),
-    )
-
-    pretty = [""]
-    for (P, F, R), _ in params_runs:
-        pretty.append(f"P{P}F{F}R{R}")
-        pretty.append("")
-    pretty = [pretty]
-
-    pretty = make_mean_std_pretty(pretty, params_runs)
-
-    results = []
-    for (P, F, R), runs in params_runs:
-        paths = build_paths(P, F, R, runs)
-        pred_50, pred_75, cls_names = parse_results(paths)
-
-        mean, std = mean_and_std(pred_50)
-        results += (mean, std)
-    results = np.hstack(results)
-
-    pretty = make_red_green(pretty, cls_names, results)
-    print(tabulate(pretty))
-
-
-def make_mean_std_pretty(pretty, params):
-    pretty_row = [""]
-    for i in range(len(params)):
-        pretty_row.append("mean")
-        pretty_row.append("std")
-    pretty += [pretty_row]
-
-    return pretty

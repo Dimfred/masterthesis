@@ -88,7 +88,7 @@ config.yolo.max_steps = 4000
 # step > this == 0 => perform mAP
 config.yolo.map_after_steps = 500
 # step % this == 0 => perform mAP
-config.yolo.map_on_step_mod = 20  # 50
+config.yolo.map_on_step_mod = 10
 config.yolo.validation_freq = 10 if utils.isme() else 10
 config.yolo.n_workers = 12 if utils.isme() else 32
 config.yolo.validation_steps = -1 if utils.isme() else 2
@@ -150,25 +150,26 @@ config.unet.weights = Path("mobile_unet/weights/best.pth")
 
 # training
 config.unet.lr = 3e-4
-config.unet.batch_size = 32 if not utils.isme() else 8
-config.unet.subdivision = 4 if not utils.isme() else 2
+config.unet.batch_size = 64 if not utils.isme() else 32
+config.unet.subdivision = 2 if not utils.isme() else 4
 # minibatch_size = batch_size / subdivision
 config.unet.n_epochs = 1000
+
+# optimizers
+config.unet.amsgrad = True
+config.unet.decay = 0.00005
+config.unet.betas = (0.90, 0.999)
 
 # lr scheduler
 config.unet.lr_decay = "fixed"  # "cos" # "linear", "schedule", step
 config.unet.lr_decay_fixed = [300, 500]
-config.unet.lr_burn_in = 10
+config.unet.lr_burn_in = 1000
 
 # loss functions
 config.unet.focal_alpha = 0.1
 config.unet.focal_gamma = 2
 config.unet.focal_reduction = "sum"
 
-# optimizers
-config.unet.amsgrad = True
-config.unet.decay = 0.00005
-config.unet.betas = (0.90, 0.999)
 
 # priority[pretrained] > priority[checkpoint]
 config.unet.pretrained_path = None
@@ -422,7 +423,16 @@ config.yolo.augment.blur = 3 # 5
 # config.yolo.experiment_name = "blur"
 # config.yolo.experiment_param = f"blur_{config.yolo.augment.blur}"
 
-# grid
+# all augs
+# config.yolo.experiment_name = "all_augs_with_jitter_noise_blur"
+# config.yolo.experiment_param = "all_augs"
+
+config.yolo.experiment_name = "all_augs_without_jitter_noise_blur"
+config.yolo.experiment_param = "all_augs"
+
+################
+#### grid ######
+################
 
 # activation
 config.yolo.activation = "leaky"  # leaky, hswish
@@ -438,10 +448,18 @@ config.yolo.lr = 0.00025 # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
 # loss
 config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
 
-
-# all augs
-config.yolo.experiment_name = "all_augs"
-config.yolo.experiment_param = "all_augs"
-
 # config.yolo.experiment_name = "grid"
 # config.yolo.experiment_param = f"grid_act_{config.yolo.activation}_bs_{config.yolo.real_batch_size}_lr_{config.yolo.lr}_loss_{config.yolo.loss}"
+
+# fmt: off
+params = [
+    ["Activation", config.yolo.activation],
+    ["BatchSize", config.yolo.real_batch_size],
+    ["LR", config.yolo.lr],
+    ["Loss", config.yolo.loss],
+]
+# fmt: on
+
+
+# config.yolo.experiment_name = "test"
+# config.yolo.experiment_param = "test"

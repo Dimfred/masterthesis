@@ -37,12 +37,17 @@ class MaskDataset(Dataset):
         else:
             self.mask_transform = mask_transform
 
+        self.imgs = [np.array(Image.open(img_path)) for img_path in self.img_files]
+        self.masks = [np.load(mask_path) for mask_path in self.mask_files]
+
     def __getitem__(self, idx):
-        img = Image.open(self.img_files[idx])
-        img = np.array(img)
+        # img = Image.open(self.img_files[idx])
+        # img = np.array(img)
         # img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-        mask = np.load(self.mask_files[idx])
+        # mask = np.load(self.mask_files[idx])
+        img = self.imgs[idx].copy()
+        mask = self.masks[idx].copy()
 
         augmented = self.transform(image=img, mask=mask)
 
@@ -63,10 +68,10 @@ class MaskDataset(Dataset):
         # utils.show(img)
 
         # grayscale
-        # img = np.expand_dims(img, axis=2)
+        img = np.expand_dims(img, axis=2)
 
         # grayscale and rgb pretrained
-        img = np.repeat(img[..., np.newaxis], 3, -1)
+        # img = np.repeat(img[..., np.newaxis], 3, -1)
 
         img = img / 255.0
         img = img.transpose((2, 0, 1))

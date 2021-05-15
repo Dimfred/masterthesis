@@ -77,6 +77,9 @@ class Trainer:
         self.lr = lr
         self.burn_in = burn_in
 
+        self.early_stopping = 700
+        self.early_stopping_counter = 0
+
         self.train_time = time.perf_counter()
         self.valid_time = time.perf_counter()
         self.train_time_start = time.perf_counter()
@@ -112,6 +115,11 @@ class Trainer:
 
             # apply optimization
             self.step_counter += 1
+
+            # early stopping
+            if self.step_counter >= 1000:
+                self.early_stopping_counter += 1
+
             if self.lr_scheduler:
                 self.lr_scheduler(self.step_counter, base_lr, burn_in)
 
@@ -164,6 +172,8 @@ class Trainer:
                 )
 
                 if mAP50_75 > self.best_mAP:
+                    self.early_stopping_counter = 0
+
                     # self.best_mAP = mAP50
                     self.best_mAP = mAP50_75
                     self.best_mAP_step = self.step_counter
@@ -173,12 +183,11 @@ class Trainer:
                         str(self.experiment.weights), weights_type="yolo"
                     )
 
-            # TODO resize network?
-            if self.resize_model is not None:
-                raise NotImplementedError("Resizing not implemented.")
-                self.model = self.resize_model(self.model, 576)
-
             self.print_valid(vlosses)
+
+            if self.early_stopping_counter >= self.early_stopping:
+                # will stop the training in the step below
+                self.step_counter = 5000
 
             if self.step_counter >= self.max_steps:
 

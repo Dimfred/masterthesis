@@ -69,17 +69,27 @@ class BackgroundMerger:
             # print("DEBUG: zero pad height")
             # zero pad height
             missing_height = fgh - bgh
+            # utils.show(self.bg_img)
             self.bg_img = np.pad(
-                self.bg_img, ((0, missing_height), (0, 0), (0, 0)), mode="constant"
+                self.bg_img,
+                ((0, missing_height), (0, 0), (0, 0)),
+                mode="reflect",
             )
+            # utils.show(self.bg_img)
+            # self.bg_img = cv.resize(self.bg_img, self.fg_img.shape[:2])
 
         elif bgw < fgw:
-            # print("DEBUG: zero pad width")
-            # zero pad width
+            # self.bg_img = cv.resize(self.bg_img, self.fg_img.shape[:2])
+            #     # print("DEBUG: zero pad width")
+            #     # zero pad width
             missing_width = fgw - bgw
+            # utils.show(self.bg_img)
             self.bg_img = np.pad(
-                self.bg_img, ((0, 0), (0, missing_width), (0, 0)), mode="constant"
+                self.bg_img,
+                ((0, 0), (0, missing_width), (0, 0)),
+                mode="reflect",
             )
+            # utils.show(self.bg_img)
 
         else:
             # crop the background
@@ -92,11 +102,12 @@ if __name__ == "__main__":
     for f in dir_list:
         os.remove(str(f))
 
-
     bg_paths = config.backgrounds_dir.glob("**/*.*")
     fg_paths = list(config.foregrounds_dir.glob("**/*.*"))
     img_paths = [utils.img_from_fg(config.train_dir, fg_path) for fg_path in fg_paths]
-    img_paths.extend(utils.img_from_fg(config.valid_dir, fg_path) for fg_path in fg_paths)
+    img_paths.extend(
+        utils.img_from_fg(config.valid_dir, fg_path) for fg_path in fg_paths
+    )
 
     def read_and_store(path, target):
         img = cv.imread(str(path))

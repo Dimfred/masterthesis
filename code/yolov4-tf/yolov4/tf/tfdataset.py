@@ -326,7 +326,6 @@ class TFDataset:
             if augmentations is not None:
                 x, y = augmentations(x, y)
                 # DEBUG
-                # utils.show(x)
                 # utils.show_bboxes(x, y, type_="class_to_front")
 
             # TODO bad
@@ -377,7 +376,7 @@ class TFDataset:
         dataset = dataset.map(lambda *args: args, num_parallel_calls=self.n_workers)
         dataset = dataset.prefetch(50)
 
-        # return iter(dataset)
+        return iter(dataset)
 
         # DEBUG if i want to remove the tf part to see smth
         return iter(self._generator())

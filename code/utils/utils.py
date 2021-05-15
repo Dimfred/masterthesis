@@ -67,8 +67,8 @@ def show_bboxes(img, bboxes, orig=None, type_="gt"):
         raise ValueError(f"Unknown bbox type '{type_}' in show_bboxes.")
 
     cimg = img.copy()
-    # if len(cimg.shape) == 1:
-    #     cimg = cv.cvtColor(cv.COLOR_GRAY2BGR)
+    if cimg.shape[2] == 1:
+        cimg = cv.cvtColor(cimg, cv.COLOR_GRAY2BGR)
 
     for bbox in bboxes:
         x1, y1, x2, y2 = bbox.abs
@@ -1199,6 +1199,42 @@ def load_imgs(dir_, read_type=cv.IMREAD_ANYCOLOR):
 
 
 class YoloExperiment:
+    def __init__(self, experiment_dir, experiment_name, experiment_param, run):
+        self.experiment_dir = experiment_dir
+        self.experiment_name = self.experiment_dir / experiment_name
+        self.experiment_param = self.experiment_name / experiment_param
+        self.run = self.experiment_param / f"run{run}"
+
+        self.weights = self.run / "best.weights"
+        self.results = self.run / "results_raw.txt"
+        self.tb_train_dir = str(self.run / "train")
+        self.tb_valid_dir = str(self.run / "valid")
+
+    def init(self):
+        self.create_if_not_exists(self.experiment_dir)
+        self.create_if_not_exists(self.experiment_name)
+        self.create_if_not_exists(self.experiment_param)
+        self.clean_path(self.run)
+        self.create_if_not_exists(self.run)
+
+    def create_if_not_exists(self, path):
+        if not path.exists():
+            path.mkdir()
+
+    def clean_path(self, path):
+        if not path.exists():
+            return
+
+        for child in path.glob("*"):
+            if child.is_file():
+                child.unlink()
+            else:
+                self.clean_path(child)
+
+        path.rmdir()
+
+
+class UnetExperiment:
     def __init__(self, experiment_dir, experiment_name, experiment_param, run):
         self.experiment_dir = experiment_dir
         self.experiment_name = self.experiment_dir / experiment_name
