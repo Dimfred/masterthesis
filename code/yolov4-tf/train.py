@@ -148,7 +148,8 @@ def main():
     config.yolo.activation = activation
 
     batch_size = int(bs)
-    config.yolo.batch_size = batch_size // config.yolo.accumulation_steps
+    config.yolo.batch_size = 16
+    config.yolo.accumulation_steps = batch_size // config.yolo.batch_size
     config.yolo.real_batch_size = (
         config.yolo.batch_size * config.yolo.accumulation_steps
     )

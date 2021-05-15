@@ -163,18 +163,18 @@ Using best of above
 | leaky  | 64 | 0.00025  | eiou |      |      |      |
 | leaky  | 64 | 0.0001   | ciou |      |      |      |
 | leaky  | 64 | 0.0001   | eiou |      |      |      |
-| hswish | 32 | 0.005    | ciou |      |      |      |
-| hswish | 32 | 0.005    | eiou |      |      |      |
-| hswish | 32 | 0.0025   | ciou |      |      |      |
-| hswish | 32 | 0.0025   | eiou |      |      |      |
-| hswish | 32 | 0.001    | ciou |      |      |      |
-| hswish | 32 | 0.001    | eiou |      |      |      |
-| hswish | 32 | 0.0005   | ciou |      |      |      |
-| hswish | 32 | 0.0005   | eiou |      |      |      |
-| hswish | 32 | 0.00025  | ciou |      |      |      |
-| hswish | 32 | 0.00025  | eiou |      |      |      |
-| hswish | 32 | 0.0001   | ciou |      |      |      |
-| hswish | 32 | 0.0001   | eiou |      |      |      |
+| hswish | 32 | 0.005    | ciou | O    |      |      |
+| hswish | 32 | 0.005    | eiou | O    |      |      |
+| hswish | 32 | 0.0025   | ciou | O    |      |      |
+| hswish | 32 | 0.0025   | eiou | O    |      |      |
+| hswish | 32 | 0.001    | ciou | O    |      |      |
+| hswish | 32 | 0.001    | eiou | O    |      |      |
+| hswish | 32 | 0.0005   | ciou | O    |      |      |
+| hswish | 32 | 0.0005   | eiou | O    |      |      |
+| hswish | 32 | 0.00025  | ciou | O    |      |      |
+| hswish | 32 | 0.00025  | eiou | O    |      |      |
+| hswish | 32 | 0.0001   | ciou | O    |      |      |
+| hswish | 32 | 0.0001   | eiou | O    |      |      |
 | hswish | 64 | 0.005    | ciou |      |      |      |
 | hswish | 64 | 0.005    | eiou |      |      |      |
 | hswish | 64 | 0.0025   | ciou |      |      |      |

@@ -440,44 +440,38 @@ config.yolo.experiment_param = "all_augs"
 ################
 
 
-def grid_from_params(grid_params):
-    activation, batch_size, lr, loss = grid_params
+# activation
+config.yolo.activation = None  # leaky, hswish
 
-    # activation
-    config.yolo.activation = activation  # leaky, hswish
+# batch
+config.yolo.batch_size = 2 if utils.isme() else 16
+config.yolo.accumulation_steps = (
+    8 if utils.isme() else 2
+)
+config.yolo.real_batch_size = (
+    config.yolo.batch_size * config.yolo.accumulation_steps
+)
 
-    # batch
-    config.yolo.batch_size = 2 if utils.isme() else 16
-    config.yolo.accumulation_steps = (
-        8 if utils.isme() else batch_size // config.yolo.batch_size
-    )
-    config.yolo.real_batch_size = (
-        config.yolo.batch_size * config.yolo.accumulation_steps
-    )
+# lr
+config.yolo.lr = None  # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
 
-    # lr
-    config.yolo.lr = lr  # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
+# loss
+config.yolo.loss = None  # "ciou", "eiou", "diou"
 
-    # loss
-    config.yolo.loss = loss  # "ciou", "eiou", "diou"
+config.yolo.experiment_name = "grid"
+config.yolo.experiment_param = (
+    lambda a, bs, lr, l: f"grid_act_{a}_bs_{bs}_lr_{lr}_loss_{l}"
+)
 
-    config.yolo.experiment_name = "grid"
-    config.yolo.experiment_param = (
-        lambda a, bs, lr, l: f"grid_act_{a}_bs_{bs}_lr_{lr}_loss_{l}"
-    )
+# fmt: off
+# params = [
+#     ["Activation", config.yolo.activation],
+#     ["BatchSize", config.yolo.real_batch_size],
+#     ["LR", config.yolo.lr],
+#     ["Loss", config.yolo.loss],
+# ]
+# fmt: on
 
-    # fmt: off
-    # params = [
-    #     ["Activation", config.yolo.activation],
-    #     ["BatchSize", config.yolo.real_batch_size],
-    #     ["LR", config.yolo.lr],
-    #     ["Loss", config.yolo.loss],
-    # ]
-    # fmt: on
-
-
-grid_params = ["leaky", 32, 0.005, "ciou"]
-grid_from_params(grid_params)
 
 
 # config.yolo.experiment_name = "test"
