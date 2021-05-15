@@ -280,8 +280,8 @@ def dump_color_jitter_aug():
         (0.1, (0, 1, 2)),
         (0.2, (0, 1, 2)),
         (0.3, (0, 1, 2)),
-        (0.4, (0, 1, 2)),
-        (0.5, (0, 1, 2)),
+        # (0.4, (0, 1, 2)),
+        # (0.5, (0, 1, 2)),
     )
 
     results = []
@@ -313,7 +313,7 @@ def dump_bbox_safe_crop_aug():
             for run in runs
         ]
 
-    lr_runs = ((1, (0, 1, 2, 3, 4)),)
+    lr_runs = ((1, (0, 1, 2)),)
 
     results = []
     for sc, runs in lr_runs:
@@ -416,11 +416,11 @@ def main():
     #### online_aug #####
     #####################
     # dump_rotate_aug()
-    dump_random_scale_aug()
+    # dump_random_scale_aug()
     # dump_color_jitter_aug()
     # dump_bbox_safe_crop_aug()
-    # dump_gaussian_noise_aug()
-    # dump_blur_aug()
+    dump_gaussian_noise_aug()
+    dump_blur_aug()
 
 
 if __name__ == "__main__":

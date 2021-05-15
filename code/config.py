@@ -73,15 +73,10 @@ config.yolo.channels = 1
 config.yolo.tiny = True
 config.yolo.small = True
 config.yolo.weights_type = "yolo"  # yolo, tf
-config.yolo.activation = "leaky"  # leaky, hswish
 config.yolo.backbone = "yolo"  # yolo, mobilenetv3-large, mobilenetv3-small
 config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights"
 
 ## training
-config.yolo.batch_size = 2 if utils.isme() else 16
-config.yolo.accumulation_steps = 8 if utils.isme() else 4
-config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_steps
-config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
 config.yolo.loss_gamma = 0.0  # 0.5
 
 config.yolo.burn_in = 1000
@@ -389,7 +384,6 @@ config.labels_and_files_to_remove = [
 ## experiment
 config.yolo.experiment_dir = Path("experiments_yolo")
 
-config.yolo.lr = 0.00025 # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
 # config.yolo.experiment_name = "lr_init"
 # config.yolo.experiment_param = f"LR_{config.yolo.lr}"
 
@@ -404,26 +398,50 @@ config.augment.include_merged = True
 # config.yolo.experiment_name = "offline_baseline"
 # config.yolo.experiment_param = f"offline_baseline_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
-config.yolo.augment.rotate = 10 # 10, 20, 30
-config.yolo.experiment_name = "rotate"
-config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
+config.yolo.augment.rotate = 20 # 10, 20, 30
+# config.yolo.experiment_name = "rotate"
+# config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
 
-# config.yolo.augment.random_scale = 0.1 # 0.1, 0.2, 0.3, 0.4, 0.5
+config.yolo.augment.random_scale = 0.3 # 0.1, 0.2, 0.3, 0.4, 0.5
 # config.yolo.experiment_name = "random_scale"
 # config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
 
-# config.yolo.augment.color_jitter = 0.1 # 0.1, 0.2, 0.3
+config.yolo.augment.color_jitter = 0.2 # 0.1, 0.2, 0.3
 # config.yolo.experiment_name = "color_jitter"
 # config.yolo.experiment_param = f"color_jitter_{config.yolo.augment.color_jitter}"
 
-# config.yolo.augment.bbox_safe_crop = True
+config.yolo.augment.bbox_safe_crop = True
 # config.yolo.experiment_name = "bbox_safe_crop"
 # config.yolo.experiment_param = f"bbox_safe_crop_{int(config.yolo.augment.bbox_safe_crop)}"
 
-# config.yolo.augment.gaussian_noise = True
+config.yolo.augment.gaussian_noise = True
 # config.yolo.experiment_name = "gaussian_noise"
 # config.yolo.experiment_param = f"gaussian_noise_{int(config.yolo.augment.gaussian_noise)}"
 
-# config.yolo.augment.blur = 3 # 5
+config.yolo.augment.blur = 3 # 5
 # config.yolo.experiment_name = "blur"
 # config.yolo.experiment_param = f"blur_{config.yolo.augment.blur}"
+
+# grid
+
+# activation
+config.yolo.activation = "leaky"  # leaky, hswish
+
+# batch
+config.yolo.batch_size = 2 if utils.isme() else 16
+config.yolo.accumulation_steps = 8 if utils.isme() else 4
+config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_steps
+
+# lr
+config.yolo.lr = 0.00025 # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
+
+# loss
+config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
+
+
+# all augs
+config.yolo.experiment_name = "all_augs"
+config.yolo.experiment_param = "all_augs"
+
+# config.yolo.experiment_name = "grid"
+# config.yolo.experiment_param = f"grid_act_{config.yolo.activation}_bs_{config.yolo.real_batch_size}_lr_{config.yolo.lr}_loss_{config.yolo.loss}"

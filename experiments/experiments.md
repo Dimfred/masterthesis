@@ -107,7 +107,6 @@ X NaN
 | 1    | 1    | 0   | O | O | O |
 | 1    | 1    | 1   | O | O | O | WAS BEST!
 
-
 ------------------------------------------------------------------------------
 
 Using best of above
@@ -124,11 +123,7 @@ Using best of above
 | --------------------------- | --    | --     | --  | --
 | N                           |       |        |     | 15
 
-15 * 3 = 45
-
 ------------------------------------------------------------------------------
-
-Using best of above
 
 | Settings Grid Aug  | V1    | V2      | NumParams     |
 | ------------------ | --    | --      | --            |
@@ -140,12 +135,59 @@ Using best of above
 | Takes              |       |         | 32 * N * 4h   |
 
 
+------------------------------------------------------------------------------
+| acti   | BS | LR       | Loss | Run1 | Run2 | Run3 |
+| ------ | -- | -------- | ---- | ---- | ---- | ---- |
+| leaky  | 32 | 0.005    | ciou |      |      |      |
+| leaky  | 32 | 0.005    | eiou |      |      |      |
+| leaky  | 32 | 0.0025   | ciou |      |      |      |
+| leaky  | 32 | 0.0025   | eiou |      |      |      |
+| leaky  | 32 | 0.001    | ciou |      |      |      |
+| leaky  | 32 | 0.001    | eiou |      |      |      |
+| leaky  | 32 | 0.0005   | ciou |      |      |      |
+| leaky  | 32 | 0.0005   | eiou |      |      |      |
+| leaky  | 32 | 0.00025  | ciou |      |      |      |
+| leaky  | 32 | 0.00025  | eiou |      |      |      |
+| leaky  | 32 | 0.0001   | ciou |      |      |      |
+| leaky  | 32 | 0.0001   | eiou |      |      |      |
+| leaky  | 64 | 0.005    | ciou |      |      |      |
+| leaky  | 64 | 0.005    | eiou |      |      |      |
+| leaky  | 64 | 0.0025   | ciou |      |      |      |
+| leaky  | 64 | 0.0025   | eiou |      |      |      |
+| leaky  | 64 | 0.001    | ciou |      |      |      |
+| leaky  | 64 | 0.001    | eiou |      |      |      |
+| leaky  | 64 | 0.0005   | ciou |      |      |      |
+| leaky  | 64 | 0.0005   | eiou |      |      |      |
+| leaky  | 64 | 0.00025  | ciou |      |      |      |
+| leaky  | 64 | 0.00025  | eiou |      |      |      |
+| leaky  | 64 | 0.0001   | ciou |      |      |      |
+| leaky  | 64 | 0.0001   | eiou |      |      |      |
+| hswish | 32 | 0.005    | ciou |      |      |      |
+| hswish | 32 | 0.005    | eiou |      |      |      |
+| hswish | 32 | 0.0025   | ciou |      |      |      |
+| hswish | 32 | 0.0025   | eiou |      |      |      |
+| hswish | 32 | 0.001    | ciou |      |      |      |
+| hswish | 32 | 0.001    | eiou |      |      |      |
+| hswish | 32 | 0.0005   | ciou |      |      |      |
+| hswish | 32 | 0.0005   | eiou |      |      |      |
+| hswish | 32 | 0.00025  | ciou |      |      |      |
+| hswish | 32 | 0.00025  | eiou |      |      |      |
+| hswish | 32 | 0.0001   | ciou |      |      |      |
+| hswish | 32 | 0.0001   | eiou |      |      |      |
+| hswish | 64 | 0.005    | ciou |      |      |      |
+| hswish | 64 | 0.005    | eiou |      |      |      |
+| hswish | 64 | 0.0025   | ciou |      |      |      |
+| hswish | 64 | 0.0025   | eiou |      |      |      |
+| hswish | 64 | 0.001    | ciou |      |      |      |
+| hswish | 64 | 0.001    | eiou |      |      |      |
+| hswish | 64 | 0.0005   | ciou |      |      |      |
+| hswish | 64 | 0.0005   | eiou |      |      |      |
+| hswish | 64 | 0.00025  | ciou |      |      |      |
+| hswish | 64 | 0.00025  | eiou |      |      |      |
+| hswish | 64 | 0.0001   | ciou |      |      |      |
+| hswish | 64 | 0.0001   | eiou |      |      |      |
 
-lr = 3: => 12d
-lr = 4: => 16d
-lr = 5: => 20d
-lr = 6: => 24d
-lr = 7: => 28d
+
 
 ## OLD
 ------------------------------------------------------------------------------

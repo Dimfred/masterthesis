@@ -83,28 +83,28 @@ def main():
 
     def train_augmentations(image, bboxes):
         _train_augmentations = A.Compose([
+            A.RandomScale(scale_limit=config.yolo.augment.random_scale, p=0.5),
             # has to happen before the crop if not can happen that bboxes disappear
-            # A.Rotate(
-            #     limit=config.yolo.augment.rotate,
-            #     border_mode=cv.BORDER_CONSTANT,
-            #     p=0.5,
-            # ),
-            # A.RandomScale(scale_limit=config.yolo.augment.random_scale, p=0.5),
+            A.Rotate(
+                limit=config.yolo.augment.rotate,
+                border_mode=cv.BORDER_CONSTANT,
+                p=0.5,
+            ),
             # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
-            # A.RandomSizedBBoxSafeCrop(
-            #     width=None, # unused
-            #     height=None, # unused
-            #     p=0.5,
-            # ),
-            # A.ColorJitter(
-            #     brightness=config.yolo.augment.color_jitter,
-            #     contrast=config.yolo.augment.color_jitter,
-            #     saturation=config.yolo.augment.color_jitter,
-            #     hue=config.yolo.augment.color_jitter,
-            #     p=0.5
-            # ),
-            # A.GaussNoise(p=0.5),
-            # A.Blur(blur_limit=config.yolo.augment.blur, p=0.5),
+            A.RandomSizedBBoxSafeCrop(
+                width=None, # unused
+                height=None, # unused
+                p=0.5,
+            ),
+            A.ColorJitter(
+                brightness=config.yolo.augment.color_jitter,
+                contrast=config.yolo.augment.color_jitter,
+                saturation=config.yolo.augment.color_jitter,
+                hue=config.yolo.augment.color_jitter,
+                p=0.5
+            ),
+            A.GaussNoise(p=0.5),
+            A.Blur(blur_limit=config.yolo.augment.blur, p=0.5),
 
             base_augmentations
         ], bbox_params=A.BboxParams("yolo"))
@@ -123,94 +123,107 @@ def main():
 
 
     # load run and seed
-    run = sys.argv[1]
-    seed = config.train.seeds[int(run)]
-    utils.seed_all(seed)
+    run_ = sys.argv[1]
 
-    # model creation
-    yolo = create_model()
-    print("---------------------------------------------------")
-    print("CLASSSES:")
-    print(yolo.classes)
-    print("---------------------------------------------------")
+    # for run in (0, 1, 2):
+    for run in (run_,):
+        done = False
+        while not done:
+            seed = config.train.seeds[int(run)]
+            utils.seed_all(seed)
 
-    # optimizer = optimizers.Adam(learning_rate=config.yolo.lr, amsgrad=False)
-    # optimizer = optimizers.Adam(
-    #     learning_rate=config.yolo.lr, momentum=config.yolo.momentum, amsgrad=True
-    # )
-    optimizer = optimizers.SGD(
-        learning_rate=config.yolo.lr, momentum=config.yolo.momentum
-    )
-    # optimizer = tfa.optimizers.SGDW(
-    #     learning_rate=config.yolo.lr,
-    #     momentum=config.yolo.momentum,
-    #     weight_decay=config.yolo.decay,
-    # )
+            # model creation
+            yolo = create_model()
+            print("---------------------------------------------------")
+            print("CLASSSES:")
+            print(yolo.classes)
+            print("---------------------------------------------------")
 
-    yolo.compile(
-        optimizer=optimizer,
-        loss_iou_type=config.yolo.loss,
-        loss_verbose=0,
-        run_eagerly=config.yolo.run_eagerly,
-        loss_gamma=config.yolo.loss_gamma,
-    )
+            # optimizer = optimizers.Adam(learning_rate=config.yolo.lr, amsgrad=False)
+            # optimizer = optimizers.Adam(
+            #     learning_rate=config.yolo.lr, momentum=config.yolo.momentum, amsgrad=True
+            # )
+            optimizer = optimizers.SGD(
+                learning_rate=config.yolo.lr, momentum=config.yolo.momentum
+            )
+            # optimizer = tfa.optimizers.SGDW(
+            #     learning_rate=config.yolo.lr,
+            #     momentum=config.yolo.momentum,
+            #     weight_decay=config.yolo.decay,
+            # )
 
-    # dataset creation
-    train_dataset = yolo.load_tfdataset(
-        dataset_path=config.train_out_dir / "labels.txt",
-        dataset_type=config.yolo.weights_type,
-        label_smoothing=config.yolo.label_smoothing,
-        preload=config.yolo.preload_dataset,
-        # preload=False,
-        training=True,
-        augmentations=train_augmentations,
-        n_workers=config.yolo.n_workers,
-    )
+            yolo.compile(
+                optimizer=optimizer,
+                loss_iou_type=config.yolo.loss,
+                loss_verbose=0,
+                run_eagerly=config.yolo.run_eagerly,
+                loss_gamma=config.yolo.loss_gamma,
+            )
 
-    valid_dataset = yolo.load_tfdataset(
-        dataset_path=config.valid_out_dir / "labels.txt",
-        dataset_type=config.yolo.weights_type,
-        preload=config.yolo.preload_dataset,
-        training=False,
-        augmentations=valid_augmentations,
-        n_workers=config.yolo.n_workers,
-    )
+            # dataset creation
+            train_dataset = yolo.load_tfdataset(
+                dataset_path=config.train_out_dir / "labels.txt",
+                dataset_type=config.yolo.weights_type,
+                label_smoothing=config.yolo.label_smoothing,
+                preload=config.yolo.preload_dataset,
+                # preload=False,
+                training=True,
+                augmentations=train_augmentations,
+                n_workers=config.yolo.n_workers,
+            )
 
-    def lr_scheduler(step, lr, burn_in):
-        # TODO cosine
-        # cycle = 1000
-        # mult = 2
+            valid_dataset = yolo.load_tfdataset(
+                dataset_path=config.valid_out_dir / "labels.txt",
+                dataset_type=config.yolo.weights_type,
+                preload=config.yolo.preload_dataset,
+                training=False,
+                augmentations=valid_augmentations,
+                n_workers=config.yolo.n_workers,
+            )
 
-        # ORIGINAL DARKNET
-        if step < burn_in:
-            multiplier = (step / burn_in) ** 4
-            return lr * multiplier
+            def lr_scheduler(step, lr, burn_in):
+                # TODO cosine
+                # cycle = 1000
+                # mult = 2
 
-        return lr
+                # ORIGINAL DARKNET
+                if step < burn_in:
+                    multiplier = (step / burn_in) ** 4
+                    return lr * multiplier
 
-    experiment = utils.YoloExperiment(
-        config.yolo.experiment_dir,
-        config.yolo.experiment_name,
-        config.yolo.experiment_param,
-        run,
-    )
+                return lr
 
-    # gib ihm
-    trainer = Trainer(
-        yolo,
-        max_steps=config.yolo.max_steps,
-        validation_freq=config.yolo.validation_freq,
-        batch_size=config.yolo.batch_size,
-        accumulation_steps=config.yolo.accumulation_steps,
-        map_after_steps=config.yolo.map_after_steps,
-        map_on_step_mod=config.yolo.map_on_step_mod,
-        lr_scheduler=lr_scheduler,
-        # resize_model=resize_model,
-        experiment=experiment,
-        burn_in=config.yolo.burn_in,
-        checkpoint_dir=config.yolo.checkpoint_dir,
-    )
-    trainer.train(train_dataset, valid_dataset)
+            experiment = utils.YoloExperiment(
+                config.yolo.experiment_dir,
+                config.yolo.experiment_name,
+                config.yolo.experiment_param,
+                run,
+            )
+
+            # gib ihm
+            trainer = Trainer(
+                yolo,
+                max_steps=config.yolo.max_steps,
+                validation_freq=config.yolo.validation_freq,
+                batch_size=config.yolo.batch_size,
+                accumulation_steps=config.yolo.accumulation_steps,
+                map_after_steps=config.yolo.map_after_steps,
+                map_on_step_mod=config.yolo.map_on_step_mod,
+                lr_scheduler=lr_scheduler,
+                # resize_model=resize_model,
+                experiment=experiment,
+                burn_in=config.yolo.burn_in,
+                checkpoint_dir=config.yolo.checkpoint_dir,
+            )
+            try:
+                trainer.train(train_dataset, valid_dataset)
+                done = True
+            except Exception as e:
+                print("---------------------------------------------")
+                print("---------------------------------------------")
+                print(e)
+                print("---------------------------------------------")
+                print("---------------------------------------------")
 
 
 if __name__ == "__main__":
