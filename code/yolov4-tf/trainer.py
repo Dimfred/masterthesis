@@ -105,7 +105,7 @@ class Trainer:
             # training step
             step_grads, step_losses = self.train_step(inputs, labels)
 
-            if np.isfinite(step_losses).all():
+            if not np.isfinite(step_losses).all():
                 raise ValueError("NaN DETECTED")
 
             accumulated_losses = tloss_accu.accumulate(step_losses)
