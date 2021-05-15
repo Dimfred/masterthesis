@@ -412,7 +412,7 @@ config.yolo.augment.random_scale = 0.3  # 0.1, 0.2, 0.3, 0.4, 0.5
 # config.yolo.experiment_name = "random_scale"
 # config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
 
-# config.yolo.augment.color_jitter = 0.2 # 0.1, 0.2, 0.3
+config.yolo.augment.color_jitter = 0.2 # 0.1, 0.2, 0.3
 # config.yolo.experiment_name = "color_jitter"
 # config.yolo.experiment_param = f"color_jitter_{config.yolo.augment.color_jitter}"
 
@@ -424,7 +424,7 @@ config.yolo.augment.bbox_safe_crop = True
 # config.yolo.experiment_name = "gaussian_noise"
 # config.yolo.experiment_param = f"gaussian_noise_{int(config.yolo.augment.gaussian_noise)}"
 
-# config.yolo.augment.blur = 3 # 5
+config.yolo.augment.blur = 3 # 5
 # config.yolo.experiment_name = "blur"
 # config.yolo.experiment_param = f"blur_{config.yolo.augment.blur}"
 
