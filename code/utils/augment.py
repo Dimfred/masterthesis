@@ -105,21 +105,30 @@ class UNetAugmentator(CircuitAugmentator):
         train_out_dir: Path,
         valid_dir: Path,
         valid_out_dir: Path,
+        test_dir: Path,
+        test_out_dir: Path,
         merged_dir: Path,
         img_params: EasyDict,
         # receives label_dir, returns List[(abs_img_path, abs_label_path)]
         clean: bool = True,
+        perform_flip: bool = False,
+        perform_rotation: bool = False,
     ):
         super().__init__(
             train_dir,
             train_out_dir,
             valid_dir,
             valid_out_dir,
+            test_dir,
+            test_out_dir,
             merged_dir,
             img_params,
             UNetAugmentator.fileloader,
             clean,
         )
+
+        self.perform_flip = perform_flip
+        self.perform_rotation = perform_rotation
 
     @staticmethod
     def fileloader(path: Path):
@@ -133,17 +142,99 @@ class UNetAugmentator(CircuitAugmentator):
 
         return img_label_paths
 
-    def perform(self, files: List[Tuple[Path, Path]], output_dir: Path):
-        for img_path, label_path in files:
-            img = self.imread(img_path)
-
-            self.imwrite(output_dir / img_path.name, img)
-            sh.copy(label_path, output_dir / label_path.name)
-
     def run(self):
-        self.perform(self.train_files, self.train_out_dir)
+        self.perform(
+            self.train_files,
+            self.train_out_dir,
+            perform_augmentation=True,
+            perform_rotation=self.perform_rotation,
+            perform_flip=self.perform_flip
+        )
         self.perform(self.valid_files, self.valid_out_dir)
         self.perform(self.test_dir, self.test_out_dir)
+
+    def perform(
+        self,
+        files: List[Tuple[Path, Path]],
+        output_dir: Path,
+        perform_augmentation = False,
+        perform_rotation = False,
+        perform_flip = False,
+    ):
+        for img_path, label_path in files:
+            img = self.imread(img_path)
+            label = np.load(label_path)
+
+            self.augment(
+                img_path,
+                label_path,
+                perform_flip,
+                perform_rotation,
+                perform_augmentation,
+            )
+
+    def augment(
+        self,
+        img_path,
+        oimg,
+        olabel,
+        output_dir: Path,
+        perform_flip: bool,
+        perform_rotate: bool,
+        perform_augmentation: bool,
+    ):
+        print(f"File: {img_path.name}")
+
+        img = oimg.copy()
+        label = olabel.copy()
+
+        # store the original_img
+        self.write(img_path, img, label, 0, False, output_dir)
+
+        if not perform_augmentation:
+            return
+
+        if perform_rotate:
+            for degree in (90, 180, 270):
+                img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
+                label = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
+
+                self.write(img_path, img, label, degree, False, output_dir)
+
+        if perform_flip:
+            img = cv.flip(img, +1)  # xxyy => yyxx
+            label = cv.flip(label, +1)
+            self.write(img_path, img, label, 0, True, output_dir)
+
+        if perform_rotate and perform_flip:
+            for degree in (90, 180, 270):
+                img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
+                label = cv.rotate(label, cv.ROTATE_90_CLOCKWISE)
+
+                self.write(img_path, img, label, degree, True, output_dir)
+
+    def write(
+        self,
+        img_path: Path,
+        img,
+        label,
+        degree: int,
+        flip: bool,
+        output_dir: Path,
+    ):
+        # {name}_{XXX: degree}_{flip/""}_aug.ext
+        filename = "{filename}_{degree:03d}_{flip}aug".format(
+            filename=img_path.stem,
+            degree=degree,
+            flip=("hflip_" if flip else "nflip_"),
+        )
+
+        img_filename = f"{filename}{img_path.suffix}"
+        label_filename = f"{filename}.npy"
+
+        cv.imwrite(str(output_dir / img_filename), img)
+        np.save(str(output_dir / label_filename), label)
+
 
 
 class YoloAugmentator(CircuitAugmentator):
@@ -178,7 +269,7 @@ class YoloAugmentator(CircuitAugmentator):
             img_params,
             YoloAugmentator.fileloader,
             clean,
-            include_merged
+            include_merged,
         )
 
         self.rot_transition = rot_transition
@@ -606,8 +697,10 @@ def augment(target):
             config.valid_out_dir,
             config.test_dir,
             config.test_out_dir,
-            config.merged_dir,
             config.augment.unet.img_params,
+            include_merged=config.merged_dir,
+            rotate=config.augment.perform_rotation,
+            flip=config.augment.perform_flip,
             clean=True,
         )
         augmentator.run()

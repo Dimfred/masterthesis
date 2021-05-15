@@ -808,29 +808,22 @@ class A:
 
 def seed_all(seed, all_=True):
     import tensorflow as tf
-
-    tf.random.set_seed(seed)
-
+    import torch
     import numpy as np
-
-    np.random.seed(seed)
-
     import imgaug
-
-    imgaug.random.seed(seed)
-
     import random
 
+    tf.random.set_seed(seed)
+    np.random.seed(seed)
+    imgaug.random.seed(seed)
     random.seed(seed)
-
-    # import torch
-    # torch.manual_seed(seed)
+    torch.manual_seed(seed)
 
     print("----------------------------------------------------------")
     print("----------------------------------------------------------")
     print("----------------------------------------------------------")
     print("----------------------------------------------------------")
-    print(f"Seeding {seed}: tf, np, imgaug, python")
+    print(f"Seeding {seed}: tf, torch, np, imgaug, python")
     print("----------------------------------------------------------")
     print("----------------------------------------------------------")
     print("----------------------------------------------------------")

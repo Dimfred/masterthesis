@@ -406,7 +406,7 @@ def dump_all_augs(param):
             for run in runs
         ]
 
-    lr_runs = ((0, 1, 2)), ((0, 1, 2))
+    lr_runs = ((0, 1, 2),)
 
     results = []
     for runs in lr_runs:

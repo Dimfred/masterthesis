@@ -38,15 +38,27 @@ def get_data_loaders(train_files, val_files, img_size=224):
     # fmt:off
     train_transform = A.Compose([
         # rotation
-        A.Rotate(
-            limit=config.unet.augment.rotate,
+        A.PadIfNeeded(
+            min_width=800,
+            min_height=800,
             border_mode=cv.BORDER_CONSTANT,
-            p=0.5
+            value=0,
+            always_apply=True
         ),
         A.RandomScale(
             scale_limit=config.unet.augment.random_scale,
             interpolation=cv.INTER_CUBIC,
             p=0.5
+        ),
+        A.Rotate(
+            limit=config.unet.augment.rotate,
+            border_mode=cv.BORDER_CONSTANT,
+            p=0.5
+        ),
+        A.RandomCrop(
+            width=config.unet.augment.crop_size * img_size,
+            height=config.unet.augment.crop_size * img_size,
+            p=0.5,
         ),
         A.ColorJitter(
             brightness=config.unet.augment.color_jitter,
@@ -55,14 +67,15 @@ def get_data_loaders(train_files, val_files, img_size=224):
             hue=config.unet.augment.color_jitter,
             p=0.5
         ),
-        A.RandomCrop(
-            width=config.unet.augment.crop_size * img_size,
-            height=config.unet.augment.crop_size * img_size,
-            p=0.5,
-        ),
         A.Blur(
             blur_limit=config.unet.augment.blur,
             p=0.5
+        ),
+
+        A.Resize(
+            width=img_size,
+            height=img_size,
+            always_apply=True
         ),
     ])
 
@@ -91,7 +104,7 @@ def get_data_loaders(train_files, val_files, img_size=224):
     )
     valid_loader = DataLoader(
         MaskDataset(val_files, valid_transform),
-        batch_size=config.unet.batch_size,
+        batch_size=23, #config.unet.batch_size,
         shuffle=False,
         pin_memory=True,
         num_workers=config.unet.n_workers,
@@ -115,56 +128,64 @@ def lr_scheduler(optimizer, step):
 
 # TODO print training params at the beginning
 def main(img_size, pretrained):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    import sys
 
-    train_files = utils.list_imgs(config.train_out_dir)
-    val_files = utils.list_imgs(config.valid_out_dir)
-    data_loaders = get_data_loaders(train_files, val_files, config.unet.input_size)
+    run_ = sys.argv[1]
+    for run in (int(run_)):
+    # for run in (0, 1, 2):
+        seed = config.train.seeds[run]
+        utils.seed_all(seed)
 
-    model = MobileNetV2_unet(
-        n_classes=config.unet.n_classes,
-        input_size=config.unet.input_size,
-        channels=config.unet.channels,
-        pretrained=config.unet.pretrained_path,
-    )
-    if config.unet.checkpoint_path is not None and config.unet.pretrained_path is None:
-        model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
-    model.to(device)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    ###############
-    ## OPTIMIZER ##
-    ###############
-    # optimizer = optimizers.Adam(
-    #     model.parameters(),
-    #     lr=config.unet.lr,
-    #     betas=config.unet.betas,
-    #     weight_decay=config.unet.decay,
-    #     amsgrad=config.unet.amsgrad,
-    # )
+        train_files = utils.list_imgs(config.train_out_dir)
+        val_files = utils.list_imgs(config.valid_out_dir)
+        data_loaders = get_data_loaders(train_files, val_files, config.unet.input_size)
 
-    optimizer = optimizers.SGD(
-        model.parameters(), lr=config.unet.lr, momentum=config.unet.momentum
-    )
+        model = MobileNetV2_unet(
+            n_classes=config.unet.n_classes,
+            input_size=config.unet.input_size,
+            channels=config.unet.channels,
+            pretrained=config.unet.pretrained_path,
+        )
+        if config.unet.checkpoint_path is not None and config.unet.pretrained_path is None:
+            model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
+        model.to(device)
 
-    ##########
-    ## LOSS ##
-    ##########
-    loss = losses.focal.FocalLoss(
-        config.unet.focal_alpha,
-        config.unet.focal_gamma,
-        config.unet.focal_reduction,
-    )
+        ###############
+        ## OPTIMIZER ##
+        ###############
+        # optimizer = optimizers.Adam(
+        #     model.parameters(),
+        #     lr=config.unet.lr,
+        #     betas=config.unet.betas,
+        #     weight_decay=config.unet.decay,
+        #     amsgrad=config.unet.amsgrad,
+        # )
+
+        optimizer = optimizers.SGD(
+            model.parameters(), lr=config.unet.lr, momentum=config.unet.momentum
+        )
+
+        ##########
+        ## LOSS ##
+        ##########
+        loss = losses.focal.FocalLoss(
+            config.unet.focal_alpha,
+            config.unet.focal_gamma,
+            config.unet.focal_reduction,
+        )
 
 
-    trainer = Trainer(
-        data_loaders=data_loaders,
-        loss=loss,
-        batch_size=config.unet.batch_size,
-        subdivision=config.unet.subdivision,
-        lr_scheduler=lr_scheduler,
-        device=device,
-    )
-    trainer.train(model, optimizer, num_epochs=config.unet.n_epochs)
+        trainer = Trainer(
+            data_loaders=data_loaders,
+            loss=loss,
+            batch_size=config.unet.batch_size,
+            subdivision=config.unet.subdivision,
+            lr_scheduler=lr_scheduler,
+            device=device,
+        )
+        trainer.train(model, optimizer, num_epochs=config.unet.n_epochs)
 
 
 if __name__ == "__main__":

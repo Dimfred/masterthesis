@@ -151,6 +151,7 @@ config.unet.weights = Path("mobile_unet/weights/best.pth")
 # training
 config.unet.lr = 3e-4
 config.unet.batch_size = 64 if not utils.isme() else 32
+config.unet.valid_batch_size = 23 if not utils.isme() else 4
 config.unet.subdivision = 2 if not utils.isme() else 4
 # minibatch_size = batch_size / subdivision
 config.unet.n_epochs = 1000
@@ -180,6 +181,10 @@ config.unet.output_dir = Path("outputs")
 
 # utility
 config.unet.n_workers = 32 if not utils.isme() else 1
+
+config.unet.experiment_name = "test"
+config.unet.experiment_param = "test"
+
 
 ###################
 ## augmentations ##
@@ -399,15 +404,15 @@ config.augment.include_merged = True
 # config.yolo.experiment_name = "offline_baseline"
 # config.yolo.experiment_param = f"offline_baseline_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
-config.yolo.augment.rotate = 20 # 10, 20, 30
+config.yolo.augment.rotate = 20  # 10, 20, 30
 # config.yolo.experiment_name = "rotate"
 # config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
 
-config.yolo.augment.random_scale = 0.3 # 0.1, 0.2, 0.3, 0.4, 0.5
+config.yolo.augment.random_scale = 0.3  # 0.1, 0.2, 0.3, 0.4, 0.5
 # config.yolo.experiment_name = "random_scale"
 # config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
 
-config.yolo.augment.color_jitter = 0.2 # 0.1, 0.2, 0.3
+# config.yolo.augment.color_jitter = 0.2 # 0.1, 0.2, 0.3
 # config.yolo.experiment_name = "color_jitter"
 # config.yolo.experiment_param = f"color_jitter_{config.yolo.augment.color_jitter}"
 
@@ -415,11 +420,11 @@ config.yolo.augment.bbox_safe_crop = True
 # config.yolo.experiment_name = "bbox_safe_crop"
 # config.yolo.experiment_param = f"bbox_safe_crop_{int(config.yolo.augment.bbox_safe_crop)}"
 
-config.yolo.augment.gaussian_noise = True
+# config.yolo.augment.gaussian_noise = True
 # config.yolo.experiment_name = "gaussian_noise"
 # config.yolo.experiment_param = f"gaussian_noise_{int(config.yolo.augment.gaussian_noise)}"
 
-config.yolo.augment.blur = 3 # 5
+# config.yolo.augment.blur = 3 # 5
 # config.yolo.experiment_name = "blur"
 # config.yolo.experiment_param = f"blur_{config.yolo.augment.blur}"
 
@@ -434,31 +439,40 @@ config.yolo.experiment_param = "all_augs"
 #### grid ######
 ################
 
-# activation
-config.yolo.activation = "leaky"  # leaky, hswish
 
-# batch
-config.yolo.batch_size = 2 if utils.isme() else 16
-config.yolo.accumulation_steps = 8 if utils.isme() else 4
-config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_steps
+def grid_from_params(grid_params):
+    activation, batch_size, lr, loss = grid_params
 
-# lr
-config.yolo.lr = 0.00025 # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
+    # activation
+    config.yolo.activation = activation  # leaky, hswish
 
-# loss
-config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
+    # batch
+    config.yolo.batch_size = 2 if utils.isme() else 16
+    config.yolo.accumulation_steps = (
+        8 if utils.isme() else batch_size // config.yolo.batch_size
+    )
+    config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_steps
 
-# config.yolo.experiment_name = "grid"
-# config.yolo.experiment_param = f"grid_act_{config.yolo.activation}_bs_{config.yolo.real_batch_size}_lr_{config.yolo.lr}_loss_{config.yolo.loss}"
+    # lr
+    config.yolo.lr = lr  # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
 
-# fmt: off
-params = [
-    ["Activation", config.yolo.activation],
-    ["BatchSize", config.yolo.real_batch_size],
-    ["LR", config.yolo.lr],
-    ["Loss", config.yolo.loss],
-]
-# fmt: on
+    # loss
+    config.yolo.loss = loss  # "ciou", "eiou", "diou"
+
+    config.yolo.experiment_name = "grid"
+    config.yolo.experiment_param = f"grid_act_{config.yolo.activation}_bs_{config.yolo.real_batch_size}_lr_{config.yolo.lr}_loss_{config.yolo.loss}"
+
+    # fmt: off
+    params = [
+        ["Activation", config.yolo.activation],
+        ["BatchSize", config.yolo.real_batch_size],
+        ["LR", config.yolo.lr],
+        ["Loss", config.yolo.loss],
+    ]
+    # fmt: on
+
+grid_params = ["leaky", 32, 0.005, "ciou"]
+grid_from_params(grid_params)
 
 
 # config.yolo.experiment_name = "test"

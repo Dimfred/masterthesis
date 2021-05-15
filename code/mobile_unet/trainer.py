@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import torch
+import time
 
 from torch.utils.tensorboard import SummaryWriter
 
@@ -14,7 +15,7 @@ class Trainer:
         batch_size=32,
         subdivision=1,
         lr_scheduler=None,
-        experiment=None
+        experiment=None,
     ):
         self.device = device
 
@@ -33,15 +34,26 @@ class Trainer:
         self.early_stopping = 1000
         self.early_stopping_counter = 0
 
-
         # logging
         self.experiment = experiment
         self.train_summary_writer = SummaryWriter(self.experiment.tb_train_dir)
         self.valid_summary_writer = SummaryWriter(self.experiment.tb_valid_dir)
 
+        # best model
+        self.best_iou = 0
+        self.best_iou_step = 0
+
+        # time
+        self.train_time = 0
+        self.valid_time = 0
+        self.overall_time = 0
 
     def train(self, model, optimizer, n_steps):
+        self.overall_time = time.perf_counter()
+
         self.model = model
+        self.model.train()
+
         self.optimizer = optimizer
 
         while True:
@@ -54,30 +66,19 @@ class Trainer:
                 if self.lr_scheduler is not None:
                     lr = self.lr_scheduler(optimizer, self.step_counter)
 
-                loss = self.train_step(inputs, labels)
+                tloss = self.train_step(inputs, labels)
+                self.train_summary_writer.add_scalar("Loss", tloss, self.step_counter)
+
+                if self.step_counter % 10 == 0:
+                    vloss, iou = self.valid_step()
+                    self.valid_summary_writer.add_scalar("Loss", vloss, self.step_counter)
+                    self.valid_summary_writer.add_scalar("mIoU", iou, self.step_counter)
+
+                    if iou > self.best_iou:
+                        self.best_iou = iou
+                        self.best_iou_step = self.step_counter
 
 
-
-
-
-
-
-        for step in range(1, n_steps + 1):
-            train_epoch_loss = self._train_on_epoch(model, optimizer, epoch)
-            val_epoch_loss = self._val_on_epoch(model, optimizer)
-
-            hist = {
-                "epoch": epoch,
-                "train_loss": train_epoch_loss,
-                "val_loss": val_epoch_loss,
-                "lr": optimizer.param_groups[0]["lr"],
-            }
-            self.history.append(hist)
-
-            if self.on_after_epoch is not None:
-                self.on_after_epoch(model, pd.DataFrame(self.history))
-
-        return pd.DataFrame(self.history)
 
     def train_step(self, inputs, labels):
         subbatch_size = int(self.batch_size / self.subdivision)
@@ -86,68 +87,68 @@ class Trainer:
             start, end = subdiv * subbatch_size, (subdiv + 1) * subbatch_size
             sub_inputs, sub_labels = inputs[start:end], labels[start:end]
 
-            sub_inputs.to(self.device)
-            sub_labels.to(self.device)
+            sub_inputs = sub_inputs.to(self.device)
+            sub_labels = sub_labels.to(self.device)
 
-            loss =
+            pred = self.model(sub_inputs)
+            loss = self.loss(pred, sub_labels)
+            loss.backward()
 
+        with torch.set_grad_enabled(True):
+            self.optimizer.step()
+        self.optimizer.zero_grad()
 
+        return loss.item() / self.batch_size
 
+    def valid_step(self, inputs, labels):
+        self.model.eval()
 
-    def _train_on_epoch(self, model, optimizer, epoch):
-        model.train()
-        data_loader = self.data_loaders[0]
-        running_loss = 0.0
+        pred = self.model(inputs)
+        loss = self.loss(pred, labels)
 
-        optimizer.zero_grad()
+        pred = self.combine_prediction(pred)
+        iou = self.iou(labels, pred)
 
-        data_loader_len = len(data_loader)
-        for batch_idx, (inputs, labels) in enumerate(data_loader):
-            if self.lr_scheduler is not None:
-                lr = self.lr_scheduler(optimizer, epoch, batch_idx, data_loader_len)
+        return loss.item() / 23, iou  # self.batch_size
 
-            if self.subdivision != 1:
-                minibatch_size = int(self.batch_size / self.subdivision)
+        # subbatch_size = int(self.batch_size / self.subdivision)
 
-                batch_idxs = (
-                    (start, end)
-                    for start, end in zip(
-                        range(0, self.batch_size - 1, minibatch_size),
-                        range(minibatch_size, self.batch_size + 1, minibatch_size),
-                    )
-                )
+        # for subdiv in range(self.subdivision):
+        #     start, end = subdiv * subbatch_size, (subdiv + 1) * subbatch_size
+        #     sub_inputs, sub_labels = inputs[start:end], labels[start:end]
 
-                for start, end in batch_idxs:
-                    sub_input, sub_labels = inputs[start:end], labels[start:end]
+        #     sub_inputs = sub_inputs.to(self.device)
+        #     sub_labels = sub_labels.to(self.device)
 
-                    if len(sub_input) != 0:
-                        sub_input = sub_input.to(self.device)
-                        sub_labels = sub_labels.to(self.device)
+        #     pred = self.model(sub_inputs)
+        #     loss = self.loss(pred, sub_labels)
+        #     loss.backward()
 
-                        pred = model(sub_input)
-                        loss = self.loss(pred, sub_labels)
-                        loss.backward()
+        # with torch.set_grad_enabled(True):
+        #     self.optimizer.step()
+        # self.optimizer.zero_grad()
 
-                with torch.set_grad_enabled(True):
-                    optimizer.step()
-                optimizer.zero_grad()
+    def combine_prediction(prediction):
+        prediction[prediction < 0.5] = 0
+        prediction[prediction >= 0.5] = 1
+        fg_pred = prediction[..., 0]
+        bg_pred = prediction[..., 1]
 
-                running_loss += loss.item() * inputs.size(0)
-            else:
-                inputs = inputs.to(self.device)
-                labels = labels.to(self.device)
+        combined = (bg_pred + (1 - fg_pred)) / 2
 
-                optimizer.zero_grad()
-                with torch.set_grad_enabled(True):
-                    pred = model(inputs)
-                    loss = self.loss(pred, labels)
-                    loss.backward()
-                    optimizer.step()
+        return combined
 
-                running_loss += loss.item() * inputs.size(0)
+    def miou(self, target, prediction):
 
-        epoch_loss = running_loss / len(data_loader.dataset)
-        return epoch_loss
+        intersection = torch.logical_and(target, prediction)
+        union = torch.logical_or(target, prediction)
+        iou_score = torch.sum(intersection, axis=(1, 2)) / torch.sum(union, axis=(1, 2))
+
+        return iou_score.mean()
+
+    def log_summary(self, writer, *args, **kwargs):
+        with writer.as_default():
+            torch.summary.scalar(*args, **kwargs)
 
     def _val_on_epoch(self, model, optimizer):
         model.eval()
@@ -185,8 +186,6 @@ class Trainer:
 
                         # TODO
                         tp = (pred == sub_labels).sum()
-
-
 
                 with torch.set_grad_enabled(False):
                     optimizer.step()

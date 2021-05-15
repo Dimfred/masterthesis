@@ -77,7 +77,7 @@ class Trainer:
         self.lr = lr
         self.burn_in = burn_in
 
-        self.early_stopping = 700
+        self.early_stopping = 30000
         self.early_stopping_counter = 0
 
         self.train_time = time.perf_counter()

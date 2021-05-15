@@ -101,8 +101,10 @@ def main():
             #     hue=config.yolo.augment.color_jitter,
             #     p=0.5
             # ),
-            # A.GaussNoise(p=0.5),
-            # A.Blur(blur_limit=config.yolo.augment.blur, p=0.5),
+            # A.Blur(
+            #     blur_limit=config.yolo.augment.blur,
+            #     p=0.5
+            # ),
 
             A.Resize(
                 width=config.yolo.input_size,
@@ -139,8 +141,8 @@ def main():
 
     # load run and seed
     run_ = sys.argv[1]
-    for run in (run_,):
-    # for run in (0, 1, 2):
+    # for run in (run_,):
+    for run in (0, 1, 2):
         done = False
         while not done:
             seed = config.train.seeds[int(run)]
