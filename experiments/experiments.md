@@ -139,18 +139,18 @@ Using best of above
 
 | acti   | BS | LR       | Loss | Run1 | Run2 | Run3 |
 | ------ | -- | -------- | ---- | ---- | ---- | ---- |
-| leaky  | 32 | 0.005    | ciou |      |      |      |
-| leaky  | 32 | 0.005    | eiou |      |      |      |
-| leaky  | 32 | 0.0025   | ciou |      |      |      |
-| leaky  | 32 | 0.0025   | eiou |      |      |      |
-| leaky  | 32 | 0.001    | ciou |      |      |      |
-| leaky  | 32 | 0.001    | eiou |      |      |      |
-| leaky  | 32 | 0.0005   | ciou |      |      |      |
-| leaky  | 32 | 0.0005   | eiou |      |      |      |
-| leaky  | 32 | 0.00025  | ciou |      |      |      |
-| leaky  | 32 | 0.00025  | eiou |      |      |      |
-| leaky  | 32 | 0.0001   | ciou |      |      |      |
-| leaky  | 32 | 0.0001   | eiou |      |      |      |
+| leaky  | 32 | 0.005    | ciou | O    |      |      |
+| leaky  | 32 | 0.005    | eiou | O    |      |      |
+| leaky  | 32 | 0.0025   | ciou | O    |      |      |
+| leaky  | 32 | 0.0025   | eiou | O    |      |      |
+| leaky  | 32 | 0.001    | ciou | O    |      |      |
+| leaky  | 32 | 0.001    | eiou | O    |      |      |
+| leaky  | 32 | 0.0005   | ciou | O    |      |      |
+| leaky  | 32 | 0.0005   | eiou | O    |      |      |
+| leaky  | 32 | 0.00025  | ciou | O    |      |      |
+| leaky  | 32 | 0.00025  | eiou | O    |      |      |
+| leaky  | 32 | 0.0001   | ciou | O    |      |      |
+| leaky  | 32 | 0.0001   | eiou | O    |      |      |
 | leaky  | 64 | 0.005    | ciou |      |      |      |
 | leaky  | 64 | 0.005    | eiou |      |      |      |
 | leaky  | 64 | 0.0025   | ciou |      |      |      |

@@ -15,6 +15,7 @@ import albumentations as A
 #     always_apply=True
 # ),
 
+
 def main():
     import cv2 as cv
     import numpy as np
@@ -53,14 +54,15 @@ def main():
         yolo.input_size = config.yolo.input_size
         yolo.channels = config.yolo.channels
         yolo.batch_size = config.yolo.batch_size
-        yolo.make_model(activation1=config.yolo.activation, backbone=config.yolo.backbone)
+        yolo.make_model(
+            activation1=config.yolo.activation, backbone=config.yolo.backbone
+        )
         yolo.model.summary()
 
         # yolo.load_weights(config.yolo.pretrained_weights, weights_type=config.yolo.weights_type)
         # yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
         return yolo
-
 
     # fmt:off
     base_augmentations = A.Compose([
@@ -94,17 +96,17 @@ def main():
                 p=0.5,
             ),
 
-            # A.ColorJitter(
-            #     brightness=config.yolo.augment.color_jitter,
-            #     contrast=config.yolo.augment.color_jitter,
-            #     saturation=config.yolo.augment.color_jitter,
-            #     hue=config.yolo.augment.color_jitter,
-            #     p=0.5
-            # ),
-            # A.Blur(
-            #     blur_limit=config.yolo.augment.blur,
-            #     p=0.5
-            # ),
+            A.ColorJitter(
+                brightness=config.yolo.augment.color_jitter,
+                contrast=config.yolo.augment.color_jitter,
+                saturation=config.yolo.augment.color_jitter,
+                hue=config.yolo.augment.color_jitter,
+                p=0.5
+            ),
+            A.Blur(
+                blur_limit=config.yolo.augment.blur,
+                p=0.5
+            ),
 
             A.Resize(
                 width=config.yolo.input_size,
@@ -138,6 +140,28 @@ def main():
         return augmented["image"], augmented["bboxes"]
     # fmt:on
 
+
+
+    # grid
+    activation, bs, lr, loss = sys.argv[1:]
+
+    config.yolo.activation = activation
+
+    batch_size = int(bs)
+    config.yolo.batch_size = batch_size // config.yolo.accumulation_steps
+    config.yolo.real_batch_size = (
+        config.yolo.batch_size * config.yolo.accumulation_steps
+    )
+
+    config.yolo.lr = float(lr)
+    config.yolo.loss = loss
+
+    config.yolo.experiment_param = config.yolo.experiment_param(
+        config.yolo.activation,
+        config.yolo.real_batch_size,
+        config.yolo.lr,
+        config.yolo.loss,
+    )
 
     # load run and seed
     # run_ = sys.argv[1]

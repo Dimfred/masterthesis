@@ -402,7 +402,7 @@ def dump_blur_aug():
 def dump_all_augs(param):
     def build_paths(runs):
         return [
-            f"experiments_yolo/all_augs_{param}_jitter_blur_noise/all_augs/run{run}/results_raw.txt"
+            f"experiments_yolo/all_augs_{param}_jitter_noise_blur/all_augs/run{run}/results_raw.txt"
             for run in runs
         ]
 
@@ -427,7 +427,7 @@ def dump_all_augs(param):
         combined = combine_50_75(res_50, res_75)
         results += combined
 
-    dump_csv(f"experiments_yolo/all_augs_{param}_jitter_blur_noise/results.csv", results)
+    dump_csv(f"experiments_yolo/all_augs_{param}_jitter_noise_blur/results.csv", results)
 
 def main():
     #####################
