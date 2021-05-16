@@ -277,7 +277,7 @@ class Trainer:
         # fmt: off
         p = [["Batch", "Took", "LossSum", "LossLarge", "LossMedium", "LossSmall", "Overall"]]
         p += [[self.step_counter, f"{took}s", loss_sum, *losses, self.overall_train_time]]
-        p += [["Experiment", str(self.experiment.experiment_param)]]
+        p += [["Experiment", str(self.experiment.run)]]
         p += [["BestMAP50", "{:.5f}%".format(self.best_mAP * 100)]]
         p += [["BestMAPStep", self.best_mAP_step]]
         print(tabulate(p))

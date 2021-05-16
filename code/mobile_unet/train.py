@@ -56,8 +56,8 @@ def get_data_loaders(train_files, val_files, img_size=224):
             p=0.5
         ),
         A.RandomCrop(
-            width=config.unet.augment.crop_size * img_size,
-            height=config.unet.augment.crop_size * img_size,
+            width=int(config.unet.augment.crop_size * img_size),
+            height=int(config.unet.augment.crop_size * img_size),
             p=0.5,
         ),
         A.ColorJitter(
@@ -104,7 +104,7 @@ def get_data_loaders(train_files, val_files, img_size=224):
     )
     valid_loader = DataLoader(
         MaskDataset(val_files, valid_transform),
-        batch_size=23, #config.unet.batch_size,
+        batch_size=config.unet.valid_batch_size,
         shuffle=False,
         pin_memory=True,
         num_workers=config.unet.n_workers,
@@ -127,12 +127,12 @@ def lr_scheduler(optimizer, step):
 
 
 # TODO print training params at the beginning
-def main(img_size, pretrained):
+def main():
     import sys
 
     run_ = sys.argv[1]
-    for run in (int(run_)):
-    # for run in (0, 1, 2):
+    for run in (int(run_),):
+        # for run in (0, 1, 2):
         seed = config.train.seeds[run]
         utils.seed_all(seed)
 
@@ -148,7 +148,10 @@ def main(img_size, pretrained):
             channels=config.unet.channels,
             pretrained=config.unet.pretrained_path,
         )
-        if config.unet.checkpoint_path is not None and config.unet.pretrained_path is None:
+        if (
+            config.unet.checkpoint_path is not None
+            and config.unet.pretrained_path is None
+        ):
             model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
         model.to(device)
 
@@ -176,6 +179,12 @@ def main(img_size, pretrained):
             config.unet.focal_reduction,
         )
 
+        experiment = utils.UnetExperiment(
+            config.unet.experiment_dir,
+            config.unet.experiment_name,
+            config.unet.experiment_param,
+            run,
+        )
 
         trainer = Trainer(
             data_loaders=data_loaders,
@@ -184,8 +193,9 @@ def main(img_size, pretrained):
             subdivision=config.unet.subdivision,
             lr_scheduler=lr_scheduler,
             device=device,
+            experiment=experiment,
         )
-        trainer.train(model, optimizer, num_epochs=config.unet.n_epochs)
+        trainer.train(model, optimizer)
 
 
 if __name__ == "__main__":

@@ -72,27 +72,27 @@ class MobileNetV2_unet(nn.Module):
             print("Done loading weights.")
 
     def forward(self, x, *args, **kwargs):
-        print((x.shape, "input"))
+        # print((x.shape, "input"))
         for n in range(0, 2):
             x = self.backbone.features[n](x)
 
         x1 = x
-        print((x1.shape, "x1"))
+        # print((x1.shape, "x1"))
 
         for n in range(2, 4):
             x = self.backbone.features[n](x)
         x2 = x
-        print((x2.shape, "x2"))
+        # print((x2.shape, "x2"))
 
         for n in range(4, 7):
             x = self.backbone.features[n](x)
         x3 = x
-        print((x3.shape, "x3"))
+        # print((x3.shape, "x3"))
 
         for n in range(7, 14):
             x = self.backbone.features[n](x)
         x4 = x
-        print((x4.shape, "x4"))
+        # print((x4.shape, "x4"))
 
         # TODO 1x1 layer removed hence 18 instead of 19
         for n in range(14, 18):
@@ -100,37 +100,37 @@ class MobileNetV2_unet(nn.Module):
 
         x = self.backbone.conv(x)
         x5 = x
-        print((x5.shape, "x5"))
+        # print((x5.shape, "x5"))
 
         dc1 = self.dconv1(x)
         up1 = torch.cat([x4, dc1], dim=1)
         up1 = self.invres1(up1)
-        print((dc1.shape, "dc1"))
-        print((up1.shape, "up1"))
+        # print((dc1.shape, "dc1"))
+        # print((up1.shape, "up1"))
 
         dc2 = self.dconv2(up1)
         up2 = torch.cat([x3, dc2], dim=1)
         up2 = self.invres2(up2)
-        print((dc2.shape, "dc2"))
-        print((up2.shape, "up2"))
+        # print((dc2.shape, "dc2"))
+        # print((up2.shape, "up2"))
 
         dc3 = self.dconv3(up2)
         up3 = torch.cat([x2, dc3], dim=1)
         up3 = self.invres3(up3)
-        print((dc3.shape, "dc3"))
-        print((up3.shape, "up3"))
+        # print((dc3.shape, "dc3"))
+        # print((up3.shape, "up3"))
 
         dc4 = self.dconv4(up3)
         up4 = torch.cat([x1, dc4], dim=1)
         up4 = self.invres4(up4)
-        print((dc4.shape, "dc4"))
-        print((up4.shape, "up4"))
+        # print((dc4.shape, "dc4"))
+        # print((up4.shape, "up4"))
 
         up5 = self.dconv5(up4)
-        print((up5.shape, "up5"))
+        # print((up5.shape, "up5"))
 
         x = self.softmax(up5)
-        print((x.shape, "softmax"))
+        # print((x.shape, "softmax"))
 
         if self.mode == "eval":
             print("EVALTRUE")

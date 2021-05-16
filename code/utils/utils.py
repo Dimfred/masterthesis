@@ -1234,7 +1234,7 @@ class UnetExperiment:
         self.experiment_param = self.experiment_name / experiment_param
         self.run = self.experiment_param / f"run{run}"
 
-        self.weights = self.run / "best.weights"
+        self.weights = self.run / "best.pth"
         self.results = self.run / "results_raw.txt"
         self.tb_train_dir = str(self.run / "train")
         self.tb_valid_dir = str(self.run / "valid")

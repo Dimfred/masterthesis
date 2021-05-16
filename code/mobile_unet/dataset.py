@@ -10,6 +10,8 @@ from torch.utils.data import Dataset
 from pathlib import Path
 import os
 import albumentations as A
+import time
+from concurrent.futures import ThreadPoolExecutor
 
 # from torchvision.transforms.transforms import ToTensor
 
@@ -37,8 +39,22 @@ class MaskDataset(Dataset):
         else:
             self.mask_transform = mask_transform
 
-        self.imgs = [np.array(Image.open(img_path)) for img_path in self.img_files]
-        self.masks = [np.load(mask_path) for mask_path in self.mask_files]
+        print("Preloading dataset...")
+        tstart = time.perf_counter()
+        self.imgs, self.masks = [], []
+
+        def load(img_path, mask_path):
+            img = np.array(Image.open(img_path))
+            self.imgs.append(img)
+
+            mask = np.load(mask_path)
+            self.masks.append(mask)
+
+        with ThreadPoolExecutor(max_workers=32) as executor:
+            for img_path, mask_path in zip(self.img_files, self.mask_files):
+                executor.submit(load, img_path, mask_path)
+
+        print("Took:", f"{time.perf_counter() - tstart:.3f}s")
 
     def __getitem__(self, idx):
         # img = Image.open(self.img_files[idx])

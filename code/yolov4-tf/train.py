@@ -143,7 +143,7 @@ def main():
 
 
     # grid
-    activation, bs, lr, loss = sys.argv[1:]
+    activation, bs, lr, loss = sys.argv[1:5]
 
     config.yolo.activation = activation
 
@@ -166,8 +166,14 @@ def main():
 
     # load run and seed
     # run_ = sys.argv[1]
-    # for run in (run_,):
-    for run in (0, 1, 2):
+    # runs = (run_,)
+
+    if sys.argv[5:]:
+        runs = (int(i) for i in sys.argv[5:])
+    else:
+        runs = (0, 1, 2)
+
+    for run in runs:
         done = False
         while not done:
             seed = config.train.seeds[int(run)]

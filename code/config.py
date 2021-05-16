@@ -145,21 +145,23 @@ config.unet = EasyDict()
 # net
 config.unet.n_classes = 2
 config.unet.input_size = 608  # 448  # 448 #224 #608 #416  #288
-config.unet.channels = 3
+config.unet.channels = 1
 config.unet.weights = Path("mobile_unet/weights/best.pth")
 
 # training
-config.unet.lr = 3e-4
-config.unet.batch_size = 64 if not utils.isme() else 32
-config.unet.valid_batch_size = 23 if not utils.isme() else 4
+config.unet.lr = 0.00025
+config.unet.batch_size = 2 if utils.isme() else 64
+config.unet.valid_batch_size = 1 if utils.isme() else 23
 config.unet.subdivision = 2 if not utils.isme() else 4
 # minibatch_size = batch_size / subdivision
 config.unet.n_epochs = 1000
+config.unet.burn_in = 1000
 
 # optimizers
 config.unet.amsgrad = True
 config.unet.decay = 0.00005
 config.unet.betas = (0.90, 0.999)
+config.unet.momentum = 0.95
 
 # lr scheduler
 config.unet.lr_decay = "fixed"  # "cos" # "linear", "schedule", step
@@ -174,16 +176,37 @@ config.unet.focal_reduction = "sum"
 
 # priority[pretrained] > priority[checkpoint]
 config.unet.pretrained_path = None
-config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
+# config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
 config.unet.checkpoint_path = None
 # config.unet.checkpoint_path = Path("weights/checkpoint.pth")
-config.unet.output_dir = Path("outputs")
+# config.unet.output_dir = Path("outputs")
 
 # utility
 config.unet.n_workers = 32 if not utils.isme() else 1
 
+# experiments
+config.unet.experiment_dir = Path("experiments_unet")
+
 config.unet.experiment_name = "test"
 config.unet.experiment_param = "test"
+
+# lr init SGD
+
+# lr init AMSGrad
+
+# offline aug
+
+# online aug
+config.unet.augment = EasyDict()
+
+config.unet.augment.random_scale = 0.3
+config.unet.augment.rotate = 20
+config.unet.augment.crop_size = 0.3
+config.unet.augment.color_jitter = 0.2
+config.unet.augment.blur = 3
+
+
+# grid
 
 
 ###################
@@ -434,6 +457,7 @@ config.yolo.augment.blur = 3 # 5
 
 config.yolo.experiment_name = "all_augs_without_jitter_noise_blur"
 config.yolo.experiment_param = "all_augs"
+
 
 ################
 #### grid ######
