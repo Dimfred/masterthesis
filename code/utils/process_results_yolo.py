@@ -427,7 +427,93 @@ def dump_all_augs(param):
         combined = combine_50_75(res_50, res_75)
         results += combined
 
-    dump_csv(f"experiments_yolo/all_augs_{param}_jitter_noise_blur/results.csv", results)
+    dump_csv(
+        f"experiments_yolo/all_augs_{param}_jitter_noise_blur/results.csv", results
+    )
+
+
+def dump_grid(param):
+    def build_paths(a, bs, lr, l, runs):
+        return [
+            f"experiments_yolo/grid/grid_act{a}_bs_{bs}_lr{lr}_loss_{l}/run{run}/results_raw.txt"
+            for run in runs
+        ]
+
+    grid_params = (
+        ("leaky", 32, 0.005, "ciou"),
+        ("leaky", 32, 0.005, "eiou"),
+        ("leaky", 32, 0.0025, "ciou"),
+        ("leaky", 32, 0.0025, "eiou"),
+        ("leaky", 32, 0.001, "ciou"),
+        ("leaky", 32, 0.001, "eiou"),
+        ("leaky", 32, 0.0005, "ciou"),
+        ("leaky", 32, 0.0005, "eiou"),
+        ("leaky", 32, 0.00025, "ciou"),
+        ("leaky", 32, 0.00025, "eiou"),
+        ("leaky", 32, 0.0001, "ciou"),
+        ("leaky", 32, 0.0001, "eiou"),
+        ("leaky", 64, 0.005, "ciou"),
+        ("leaky", 64, 0.005, "eiou"),
+        ("leaky", 64, 0.0025, "ciou"),
+        ("leaky", 64, 0.0025, "eiou"),
+        ("leaky", 64, 0.001, "ciou"),
+        ("leaky", 64, 0.001, "eiou"),
+        ("leaky", 64, 0.0005, "ciou"),
+        ("leaky", 64, 0.0005, "eiou"),
+        ("leaky", 64, 0.00025, "ciou"),
+        ("leaky", 64, 0.00025, "eiou"),
+        ("leaky", 64, 0.0001, "ciou"),
+        ("leaky", 64, 0.0001, "eiou"),
+        ("hswish", 32, 0.005, "ciou"),
+        ("hswish", 32, 0.005, "eiou"),
+        ("hswish", 32, 0.0025, "ciou"),
+        ("hswish", 32, 0.0025, "eiou"),
+        ("hswish", 32, 0.001, "ciou"),
+        ("hswish", 32, 0.001, "eiou"),
+        ("hswish", 32, 0.0005, "ciou"),
+        ("hswish", 32, 0.0005, "eiou"),
+        ("hswish", 32, 0.00025, "ciou"),
+        ("hswish", 32, 0.00025, "eiou"),
+        ("hswish", 32, 0.0001, "ciou"),
+        ("hswish", 32, 0.0001, "eiou"),
+        ("hswish", 64, 0.005, "ciou"),
+        ("hswish", 64, 0.005, "eiou"),
+        ("hswish", 64, 0.0025, "ciou"),
+        ("hswish", 64, 0.0025, "eiou"),
+        ("hswish", 64, 0.001, "ciou"),
+        ("hswish", 64, 0.001, "eiou"),
+        ("hswish", 64, 0.0005, "ciou"),
+        ("hswish", 64, 0.0005, "eiou"),
+        ("hswish", 64, 0.00025, "ciou"),
+        ("hswish", 64, 0.00025, "eiou"),
+        ("hswish", 64, 0.0001, "ciou"),
+        ("hswish", 64, 0.0001, "eiou"),
+    )
+
+    results = []
+    for a, bs, lr, l in grid_params:
+        paths = build_paths(a, bs, lr, l, (0, 1, 2))
+        pred_50, pred_75, cls_names = parse_results(paths)
+
+        # fmt: off
+        results += [
+            [],
+            [
+                f"Grid@0.5: {'le' if a == 'leaky' else 'hs'}_{bs}_{lr}_{'c' if l == 'ciou' else 'e'}", "", "", "", "mean", "std", "",
+                f"Grid@0.5:0.75: {'le' if a == 'leaky' else 'hs'}_{bs}_{lr}_{'c' if l == 'ciou' else 'e'}", "", "", "", "mean", "std"
+            ],
+            [],
+        ]
+        # fmt: on
+        res_50 = zip_with_names(cls_names, pred_50)
+        res_75 = zip_with_names(cls_names, pred_75)
+        combined = combine_50_75(res_50, res_75)
+        results += combined
+
+    dump_csv(
+        f"experiments_yolo/grid/results.csv", results
+    )
+
 
 def main():
     #####################

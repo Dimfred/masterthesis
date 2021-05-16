@@ -113,6 +113,7 @@ class UNetAugmentator(CircuitAugmentator):
         clean: bool = True,
         perform_flip: bool = False,
         perform_rotation: bool = False,
+        include_merged: bool = False,
     ):
         super().__init__(
             train_dir,
@@ -125,6 +126,7 @@ class UNetAugmentator(CircuitAugmentator):
             img_params,
             UNetAugmentator.fileloader,
             clean,
+            include_merged,
         )
 
         self.perform_flip = perform_flip
@@ -143,23 +145,46 @@ class UNetAugmentator(CircuitAugmentator):
         return img_label_paths
 
     def run(self):
+        print("-----------------------------------------------")
+        print("-----------------------------------------------")
+        print("Augment: TRAIN")
         self.perform(
             self.train_files,
             self.train_out_dir,
             perform_augmentation=True,
             perform_rotation=self.perform_rotation,
-            perform_flip=self.perform_flip
+            perform_flip=self.perform_flip,
         )
-        self.perform(self.valid_files, self.valid_out_dir)
-        self.perform(self.test_dir, self.test_out_dir)
+
+        print("-----------------------------------------------")
+        print("-----------------------------------------------")
+        print("Augment: VALID")
+        self.perform(
+            self.valid_files,
+            self.valid_out_dir,
+            perform_augmentation=True,
+            perform_rotation=self.perform_rotation,
+            perform_flip=self.perform_flip,
+        )
+
+        print("-----------------------------------------------")
+        print("-----------------------------------------------")
+        print("Augment: TEST")
+        self.perform(
+            self.test_files,
+            self.test_out_dir,
+            perform_augmentation=True,
+            perform_rotation=self.perform_rotation,
+            perform_flip=self.perform_flip,
+        )
 
     def perform(
         self,
         files: List[Tuple[Path, Path]],
         output_dir: Path,
-        perform_augmentation = False,
-        perform_rotation = False,
-        perform_flip = False,
+        perform_augmentation=False,
+        perform_rotation=False,
+        perform_flip=False,
     ):
         for img_path, label_path in files:
             img = self.imread(img_path)
@@ -167,7 +192,9 @@ class UNetAugmentator(CircuitAugmentator):
 
             self.augment(
                 img_path,
-                label_path,
+                img,
+                label,
+                output_dir,
                 perform_flip,
                 perform_rotation,
                 perform_augmentation,
@@ -234,7 +261,6 @@ class UNetAugmentator(CircuitAugmentator):
 
         cv.imwrite(str(output_dir / img_filename), img)
         np.save(str(output_dir / label_filename), label)
-
 
 
 class YoloAugmentator(CircuitAugmentator):
@@ -697,10 +723,11 @@ def augment(target):
             config.valid_out_dir,
             config.test_dir,
             config.test_out_dir,
-            config.augment.unet.img_params,
+            config.merged_dir,
+            img_params=config.augment.unet.img_params,
             include_merged=config.merged_dir,
-            rotate=config.augment.perform_rotation,
-            flip=config.augment.perform_flip,
+            perform_rotation=config.augment.perform_rotation,
+            perform_flip=config.augment.perform_flip,
             clean=True,
         )
         augmentator.run()
