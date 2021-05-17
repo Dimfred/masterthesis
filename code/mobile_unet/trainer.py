@@ -20,6 +20,7 @@ class Trainer:
         loss,
         device,
         batch_size=32,
+        valid_batch_size=32,
         subdivision=1,
         lr_scheduler=None,
         experiment=None,
@@ -34,6 +35,8 @@ class Trainer:
         assert self.batch_size % 2 == 0
         self.subdivision = subdivision
         assert subdivision > 0
+        self.valid_batch_size = valid_batch_size
+
         self.lr_scheduler = lr_scheduler
 
         # runtime
@@ -59,7 +62,6 @@ class Trainer:
         self.overall_time = time.perf_counter()
 
         self.optimizer = optimizer
-        self.optimizer.zero_grad()
 
         self.model = model
         self.model.train()
@@ -79,7 +81,12 @@ class Trainer:
 
                 if self.step_counter % 10 == 0:
                     vinputs, vlabels = next(iter(self.valid_ds))
-                    vloss, iou = self.valid_step(vinputs, vlabels)
+                    vloss, pred = self.valid_step(vinputs, vlabels)
+
+                    pred, vlabels = pred.cpu().numpy(), vlabels.cpu().numpy()
+                    pred = self.combine_prediction(pred)
+                    iou = self.miou(vlabels, pred)
+
                     self.print_valid(vloss, iou)
 
                     if iou > self.best_iou:
@@ -90,12 +97,17 @@ class Trainer:
                         )
 
     def train_step(self, inputs, labels):
+        self.optimizer.zero_grad()
+
         subbatch_size = int(self.batch_size / self.subdivision)
 
         with torch.set_grad_enabled(True):
             for subdiv in range(self.subdivision):
                 start, end = subdiv * subbatch_size, (subdiv + 1) * subbatch_size
                 sub_inputs, sub_labels = inputs[start:end], labels[start:end]
+
+                # sub_inputs = sub_inputs.cuda()
+                # sub_labels = sub_labels.cuda()
 
                 sub_inputs = sub_inputs.to(self.device)
                 sub_labels = sub_labels.to(self.device)
@@ -105,7 +117,6 @@ class Trainer:
                 loss.backward()
 
             self.optimizer.step()
-        self.optimizer.zero_grad()
 
         return loss.item() / self.batch_size
 
@@ -117,7 +128,7 @@ class Trainer:
         pretty = [["Step", "Took", "Loss", "Overall"]]
         pretty += [[self.step_counter, f"{took}s", loss, self.overall_train_time]]
         pretty += [["Experiment", self.experiment.run]]
-        pretty += [["BesIoU", self.best_iou]]
+        pretty += [["BesIoU", ffloat(self.best_iou*100)]]
         pretty += [["BestIoUStep", self.best_iou_step]]
         print(tabulate(pretty))
 
@@ -131,44 +142,37 @@ class Trainer:
         return str(datetime.timedelta(seconds=took)).split(".")[0]
 
     def valid_step(self, inputs, labels):
-        self.model.eval()
-
+        self.optimizer.zero_grad()
         with torch.no_grad():
-            inputs = inputs.to(self.device)
-            labels = labels.to(self.device)
+            inputs = inputs.cuda()
+            labels = labels.cuda()
 
             pred = self.model(inputs)
             loss = self.loss(pred, labels)
-            self.optimizer.step()
 
-        self.optimizer.zero_grad()
-
-        pred = self.combine_prediction(pred.to("cpu").numpy())
-        iou = self.iou(labels.to("cpu").numpy(), pred)
-
-        return loss.item() / 23, iou  # self.batch_size
+        return loss.item() / self.valid_batch_size, pred
 
     def print_valid(self, loss, iou):
         self.valid_summary_writer.add_scalar("Loss", loss, self.step_counter)
         self.valid_summary_writer.add_scalar("mIoU", iou, self.step_counter)
 
         pretty = [["Loss", "mIoU"]]
-        pretty += [[utils.green(loss), utils.green(ffloat(iou))]]
+        pretty += [[utils.green(loss), utils.green(ffloat(iou * 100))]]
         print(tabulate(pretty))
 
     def combine_prediction(self, prediction):
         prediction[prediction < 0.5] = 0
         prediction[prediction >= 0.5] = 1
-        fg_pred = prediction[..., 0]
-        bg_pred = prediction[..., 1]
+        bg_pred = prediction[:, 0]
+        fg_pred = prediction[:, 1]
 
-        combined = (bg_pred + (1 - fg_pred)) / 2
+        combined = (fg_pred + (1 - bg_pred)) / 2
 
         return combined
 
     def miou(self, target, prediction):
-        intersection = torch.logical_and(target, prediction)
-        union = torch.logical_or(target, prediction)
-        iou_score = torch.sum(intersection, axis=(1, 2)) / torch.sum(union, axis=(1, 2))
+        intersection = np.logical_and(target, prediction)
+        union = np.logical_or(target, prediction)
+        iou_score = np.sum(intersection, axis=(1, 2)) / np.sum(union, axis=(1, 2))
 
         return iou_score.mean()

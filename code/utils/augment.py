@@ -162,9 +162,9 @@ class UNetAugmentator(CircuitAugmentator):
         self.perform(
             self.valid_files,
             self.valid_out_dir,
-            perform_augmentation=True,
-            perform_rotation=self.perform_rotation,
-            perform_flip=self.perform_flip,
+            perform_augmentation=False,
+            perform_rotation=False,
+            perform_flip=False,
         )
 
         print("-----------------------------------------------")
@@ -173,9 +173,9 @@ class UNetAugmentator(CircuitAugmentator):
         self.perform(
             self.test_files,
             self.test_out_dir,
-            perform_augmentation=True,
-            perform_rotation=self.perform_rotation,
-            perform_flip=self.perform_flip,
+            perform_augmentation=False,
+            perform_rotation=False,
+            perform_flip=False,
         )
 
     def perform(
@@ -224,7 +224,7 @@ class UNetAugmentator(CircuitAugmentator):
         if perform_rotate:
             for degree in (90, 180, 270):
                 img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
-                label = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
+                label = cv.rotate(label, cv.ROTATE_90_CLOCKWISE)
 
                 self.write(img_path, img, label, degree, False, output_dir)
 

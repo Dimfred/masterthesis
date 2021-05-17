@@ -38,39 +38,42 @@ def get_data_loaders(train_files, val_files, img_size=224):
     # fmt:off
     train_transform = A.Compose([
         # rotation
-        A.PadIfNeeded(
-            min_width=800,
-            min_height=800,
-            border_mode=cv.BORDER_CONSTANT,
-            value=0,
-            always_apply=True
-        ),
-        A.RandomScale(
-            scale_limit=config.unet.augment.random_scale,
-            interpolation=cv.INTER_CUBIC,
-            p=0.5
-        ),
-        A.Rotate(
-            limit=config.unet.augment.rotate,
-            border_mode=cv.BORDER_CONSTANT,
-            p=0.5
-        ),
-        A.RandomCrop(
-            width=int(config.unet.augment.crop_size * img_size),
-            height=int(config.unet.augment.crop_size * img_size),
-            p=0.5,
-        ),
-        A.ColorJitter(
-            brightness=config.unet.augment.color_jitter,
-            contrast=config.unet.augment.color_jitter,
-            saturation=config.unet.augment.color_jitter,
-            hue=config.unet.augment.color_jitter,
-            p=0.5
-        ),
-        A.Blur(
-            blur_limit=config.unet.augment.blur,
-            p=0.5
-        ),
+        # A.PadIfNeeded(
+        #     min_width=800,
+        #     min_height=800,
+        #     border_mode=cv.BORDER_CONSTANT,
+        #     value=0,
+        #     mask_value=0,
+        #     always_apply=True
+        # ),
+        # A.RandomScale(
+        #     scale_limit=config.unet.augment.random_scale,
+        #     interpolation=cv.INTER_CUBIC,
+        #     p=0.5
+        # ),
+        # A.Rotate(
+        #     limit=config.unet.augment.rotate,
+        #     border_mode=cv.BORDER_CONSTANT,
+        #     value=0,
+        #     mask_value=0,
+        #     p=0.5
+        # ),
+        # A.RandomCrop(
+        #     width=int(config.unet.augment.crop_size * img_size),
+        #     height=int(config.unet.augment.crop_size * img_size),
+        #     p=0.5,
+        # ),
+        # A.ColorJitter(
+        #     brightness=config.unet.augment.color_jitter,
+        #     contrast=config.unet.augment.color_jitter,
+        #     saturation=config.unet.augment.color_jitter,
+        #     hue=config.unet.augment.color_jitter,
+        #     p=0.5
+        # ),
+        # A.Blur(
+        #     blur_limit=config.unet.augment.blur,
+        #     p=0.5
+        # ),
 
         A.Resize(
             width=img_size,
@@ -80,13 +83,14 @@ def get_data_loaders(train_files, val_files, img_size=224):
     ])
 
     valid_transform = A.Compose([
-        A.PadIfNeeded(
-            min_width=config.augment.unet.img_params.resize,
-            min_height=config.augment.unet.img_params.resize,
-            border_mode=cv.BORDER_CONSTANT,
-            value=0,
-            always_apply=True
-        ),
+        # A.PadIfNeeded(
+        #     min_width=config.augment.unet.img_params.resize,
+        #     min_height=config.augment.unet.img_params.resize,
+        #     border_mode=cv.BORDER_CONSTANT,
+        #     value=0,
+        #     mask_value=0,
+        #     always_apply=True
+        # ),
         A.Resize(
             width=img_size,
             height=img_size,
@@ -137,6 +141,7 @@ def main():
         utils.seed_all(seed)
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # device = torch.device("cpu")
 
         train_files = utils.list_imgs(config.train_out_dir)
         val_files = utils.list_imgs(config.valid_out_dir)
@@ -190,6 +195,7 @@ def main():
             data_loaders=data_loaders,
             loss=loss,
             batch_size=config.unet.batch_size,
+            valid_batch_size=config.unet.valid_batch_size,
             subdivision=config.unet.subdivision,
             lr_scheduler=lr_scheduler,
             device=device,

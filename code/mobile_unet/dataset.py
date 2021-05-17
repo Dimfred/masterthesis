@@ -4,6 +4,7 @@ import cv2 as cv
 import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset
+
 # import torchvision
 
 # from config import IMG_DIR
@@ -16,6 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 # from torchvision.transforms.transforms import ToTensor
 
 import utils
+
 
 def _img_to_mask(img_file: Path) -> Path:
     # return DATA_LFW_DIR / f"raw/masks/{img_file.stem}.ppm"
@@ -41,14 +43,12 @@ class MaskDataset(Dataset):
 
         print("Preloading dataset...")
         tstart = time.perf_counter()
-        self.imgs, self.masks = [], []
+        self.data = []
 
         def load(img_path, mask_path):
-            img = np.array(Image.open(img_path))
-            self.imgs.append(img)
-
+            img = cv.imread(str(img_path), cv.IMREAD_GRAYSCALE)
             mask = np.load(mask_path)
-            self.masks.append(mask)
+            self.data.append((img, mask))
 
         with ThreadPoolExecutor(max_workers=32) as executor:
             for img_path, mask_path in zip(self.img_files, self.mask_files):
@@ -57,22 +57,33 @@ class MaskDataset(Dataset):
         print("Took:", f"{time.perf_counter() - tstart:.3f}s")
 
     def __getitem__(self, idx):
-        # img = Image.open(self.img_files[idx])
-        # img = np.array(img)
-        # img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        img_, mask_ = self.data[idx]
+        img, mask = img_.copy(), mask_.copy()
 
-        # mask = np.load(self.mask_files[idx])
-        img = self.imgs[idx].copy()
-        mask = self.masks[idx].copy()
+        if np.any(mask[mask > 1]):
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("BEFORE FOUND MASK VALUE > 1")
+            print(self.img_files[idx])
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
         augmented = self.transform(image=img, mask=mask)
 
-        mask = np.array(augmented["mask"]).astype(np.int64)
         img = np.array(augmented["image"]).astype(np.float32)
+        mask = np.array(augmented["mask"]).astype(np.int64)
+
+        if np.any(mask[mask > 1]):
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("BEFORE FOUND MASK VALUE > 1")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
 
 
         if utils.isme():
-            print(self.img_files[idx])
+            # print(self.img_files[idx])
             # utils.show(
             #    cv.cvtColor(np.uint8(img), cv.COLOR_RGB2BGR)
             #    * np.uint8(mask)[..., np.newaxis]
