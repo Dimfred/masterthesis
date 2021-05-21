@@ -174,7 +174,8 @@ class Trainer:
         self.optimizer.zero_grad()
 
         # return loss.item() / self.batch_size
-        return total_loss / self.subdivision
+        # return total_loss / self.subdivision
+        return total_loss
 
     def print_train(self, loss):
         took = ffloat(time.perf_counter() - self.train_time)
