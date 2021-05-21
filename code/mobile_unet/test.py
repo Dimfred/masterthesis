@@ -86,8 +86,8 @@ def evaluate():
     # GPU version
     # unable to load it anymore
     # loaded = torch.load("weights/non_transfer_best.pth")
-    # loaded = torch.load("weights/best.pth")
-    loaded = torch.load("experiments_unet/test/test/run0/best.pth")
+    loaded = torch.load("weights/best.pth")
+    # loaded = torch.load("experiments_unet/test/test/run0/best.pth")
     model.load_state_dict(loaded)
     model.to(device)
     model.eval()

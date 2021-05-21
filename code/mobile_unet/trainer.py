@@ -36,12 +36,14 @@ class Trainer:
         valid_subdivision=1,
         lr_scheduler=None,
         experiment=None,
+        loss_type=None,
     ):
         self.device = device
 
         # config
         self.train_ds, self.valid_ds = data_loaders
         self.loss = loss
+        self.loss_type = loss_type
 
         self.batch_size = batch_size
         assert self.batch_size % 2 == 0
@@ -102,7 +104,11 @@ class Trainer:
                     vloss, preds = self.valid_step(vinputs, vlabels)
                     vlabels = vlabels.cpu().numpy()
 
-                    preds = [nn.Softmax(dim=1)(pred) for pred in preds]
+                    if self.loss_type == "focal":
+                        preds = [nn.Softmax(dim=1)(pred) for pred in preds]
+                    else: # binfocal / dice?
+                        preds = [nn.Sigmoid()(pred) for pred in preds]
+
                     preds = [pred.cpu().numpy() for pred in preds]
                     preds = np.concatenate(preds, axis=0)
 
@@ -169,7 +175,6 @@ class Trainer:
                 sub_labels = sub_labels.to(self.device)
 
                 pred = self.model(sub_inputs)
-
                 loss = self.loss(pred, sub_labels) / self.subdivision
                 loss.backward()
                 total_loss += loss.item()
@@ -245,19 +250,17 @@ class Trainer:
         print(tabulate(pretty))
 
     def combine_prediction(self, prediction):
+        if self.loss_type == "focal":
+            bg_pred = prediction[:, 0]
+            fg_pred = prediction[:, 1]
+
+            prediction = (fg_pred + (1 - bg_pred)) / 2
+            # combined = fg_pred
+
         prediction[prediction < 0.5] = 0
         prediction[prediction >= 0.5] = 1
-        bg_pred = prediction[:, 0]
-        fg_pred = prediction[:, 1]
 
-        combined = (fg_pred + (1 - bg_pred)) / 2
-        # combined = fg_pred
-
-        # combined = prediction
-        combined[combined < 0.5] = 0
-        combined[combined >= 0.5] = 1
-
-        return combined
+        return prediction
 
     def miou(self, target, prediction):
         intersection = np.logical_and(target, prediction)

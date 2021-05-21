@@ -51,7 +51,8 @@ class MobileNetV2_unet(nn.Module):
         self.invres4 = InvertedResidual(32, 16, 1, 6)
 
         self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
-        self.invres5 = None
+        # self.invres5 = None
+
         # dimfred
         # self.dconv5 = nn.ConvTranspose2d(16, 8, 4, padding=1, stride=2)
         # self.invres5 = InvertedResidual(8, n_classes, 1, 6)
@@ -133,8 +134,8 @@ class MobileNetV2_unet(nn.Module):
 
         up5 = self.dconv5(up4)
 
-        if self.invres5 is not None:
-            up5 = self.invres5(up5)
+        # if self.invres5 is not None:
+        #     up5 = self.invres5(up5)
         # print((up5.shape, "up5"))
 
         x = up5
@@ -142,17 +143,17 @@ class MobileNetV2_unet(nn.Module):
         # print((x.shape, "softmax"))
         # x = self.sigmoid(x)
 
-        if self.mode == "eval":
-            # print("EVALTRUE")
-            mask_fg = x[0, 0]
-            mask_bg = x[0, 1]
+        # if self.mode == "eval":
+        #     # print("EVALTRUE")
+        #     mask_fg = x[0, 0]
+        #     mask_bg = x[0, 1]
 
-            mask = (1 * mask_bg + (1 - mask_fg)) / 2
-            # mask = mask_fg
-            mask[mask < 0.5] = 0
-            mask[mask >= 0.5] = 1
-            # mask = torch.logical_not(mask)
-            return torch.unsqueeze(mask, 0)
+        #     mask = (1 * mask_bg + (1 - mask_fg)) / 2
+        #     # mask = mask_fg
+        #     mask[mask < 0.5] = 0
+        #     mask[mask >= 0.5] = 1
+        #     # mask = torch.logical_not(mask)
+        #     return torch.unsqueeze(mask, 0)
 
         return x
 

@@ -31,10 +31,11 @@ def get_img_files(path: Path) -> np.ndarray:
 
 
 class MaskDataset(Dataset):
-    def __init__(self, img_files, transform, mask_transform=None):
+    def __init__(self, img_files, transform, mask_transform=None, channels=3):
         self.img_files = [str(f) for f in img_files]
         self.mask_files = [_img_to_mask(f) for f in img_files]
         self.transform = transform
+        self.channels = channels
 
         if mask_transform is None:
             self.mask_transform = transform
@@ -75,11 +76,12 @@ class MaskDataset(Dataset):
 
         # utils.show(img)
 
-        # grayscale
-        # img = np.expand_dims(img, axis=2)
-
         # grayscale and rgb pretrained
-        img = np.repeat(img[..., np.newaxis], 3, -1)
+        if self.channels == 3:
+            img = np.repeat(img[..., np.newaxis], 3, -1)
+        # grayscale
+        else:
+            img = np.expand_dims(img, axis=2)
 
         img = img / 255.0
         img = img.transpose((2, 0, 1))

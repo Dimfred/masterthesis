@@ -144,15 +144,15 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 320 if utils.isme() else 448  # 448  # 448 #224 #608 #416  #288
+config.unet.input_size = 448 if utils.isme() else 448  # 448  # 448 #224 #608 #416  #288
 config.unet.channels = 3
 
 # training
 config.unet.lr = 3e-3 #3e-4 #0.0025
 config.unet.batch_size = 64 if utils.isme() else 64
-config.unet.subdivision = 4 if utils.isme() else 8
+config.unet.subdivision = 16 if utils.isme() else 8
 config.unet.valid_batch_size = 24 if utils.isme() else 24
-config.unet.valid_subdivision = 6 if utils.isme() else 3
+config.unet.valid_subdivision = 1 if utils.isme() else 3
 # minibatch_size = batch_size / subdivision
 config.unet.n_epochs = 1000
 config.unet.burn_in = 100
@@ -161,7 +161,7 @@ config.unet.lr_decay_fixed = [300, 400]
 # optimizers
 config.unet.amsgrad = True
 config.unet.decay = 0.000005
-config.unet.betas = (0.90, 0.999)
+config.unet.betas = (0.95, 0.999)
 config.unet.momentum = 0.95
 
 # loss functions
@@ -172,7 +172,7 @@ config.unet.focal_reduction = "mean"
 
 # priority[pretrained] > priority[checkpoint]
 config.unet.pretrained_path = None
-config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
+# config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
 config.unet.checkpoint_path = None
 # config.unet.checkpoint_path = Path("weights/checkpoint.pth")
 # config.unet.output_dir = Path("outputs")

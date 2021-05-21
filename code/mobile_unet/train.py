@@ -51,14 +51,14 @@ class BinaryFocalLoss(nn.Module):
         self.gamma = gamma
         self.reduction = reduction
         self.eps = 1e-6
+        self.sigmoid = nn.Sigmoid()
 
     def forward(self, pred, target):
-        pred = torch.clip(pred, self.eps, 1.0 - self.eps)
-
+        pred = torch.squeeze(pred)
+        pred = torch.clip(self.sigmoid(pred), self.eps, 1.0 - self.eps)
         where_true_cls = target == 1
 
         p_t = torch.where(where_true_cls, pred, 1 - pred)
-
         alpha = self.alpha * torch.ones_like(pred)
         alpha_t = torch.where(where_true_cls, alpha, 1 - alpha)
 
@@ -170,7 +170,7 @@ def get_data_loaders(train_files, val_files, img_size=224):
     # fmt:on
 
     train_loader = DataLoader(
-        MaskDataset(train_files, train_transform),
+        MaskDataset(train_files, train_transform, config.unet.channels),
         batch_size=config.unet.batch_size,
         shuffle=True,
         pin_memory=True,
@@ -178,7 +178,7 @@ def get_data_loaders(train_files, val_files, img_size=224):
         prefetch_factor=3,
     )
     valid_loader = DataLoader(
-        MaskDataset(val_files, valid_transform),
+        MaskDataset(val_files, valid_transform, channels=config.unet.channels),
         batch_size=config.unet.valid_batch_size,
         shuffle=False,
         pin_memory=True,
@@ -206,11 +206,31 @@ def main():
         data_loaders = get_data_loaders(train_files, val_files, config.unet.input_size)
 
         ##########
+        ## LOSS ##
+        ##########
+        loss_type = "focal"
+        loss = losses.focal.FocalLoss(
+            config.unet.focal_alpha,
+            config.unet.focal_gamma,
+            config.unet.focal_reduction,
+        )
+
+        # loss_type = "dice"
+        # loss = losses.dice.DiceLoss()
+
+        # loss_type = "binfocal"
+        # loss = BinaryFocalLoss(
+        #     config.unet.focal_alpha,
+        #     config.unet.focal_gamma,
+        #     config.unet.focal_reduction,
+        # )
+
+        ##########
         ### V2 ###
         ##########
 
         model = MobileNetV2_unet(
-            n_classes=config.unet.n_classes,
+            n_classes=config.unet.n_classes if loss_type == "focal" else 1,
             input_size=config.unet.input_size,
             channels=config.unet.channels,
             pretrained=config.unet.pretrained_path,
@@ -219,14 +239,18 @@ def main():
             config.unet.checkpoint_path is not None
             and config.unet.pretrained_path is None
         ):
+            print("Preloaded checkpoing path.")
             model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
         model.to(device)
 
         ##########
         ### V3 ###
         ##########
-        # model = AdaptedMobileNetV3(num_classes=config.unet.n_classes, pretrained=False)
+        # model = AdaptedMobileNetV3(num_classes=config.unet.n_classes, pretrained=True)
+        # model = AdaptedMobileNetV3(pretrained=True)
+        # # model = tv.models.segmentation.deeplabv3_mobilenet_v3_large(pretrained=True)
         # model.to(device)
+        # print(str(model))
 
         ###############
         ## OPTIMIZER ##
@@ -265,21 +289,6 @@ def main():
 
         #     return lr
 
-        ##########
-        ## LOSS ##
-        ##########
-        loss = losses.focal.FocalLoss(
-            config.unet.focal_alpha,
-            config.unet.focal_gamma,
-            config.unet.focal_reduction,
-        )
-        # loss = losses.dice.DiceLoss()
-
-        # loss = BinaryFocalLoss(
-        #     config.unet.focal_alpha,
-        #     config.unet.focal_gamma,
-        #     config.unet.focal_reduction,
-        # )
 
         experiment = utils.UnetExperiment(
             config.unet.experiment_dir,
@@ -298,6 +307,7 @@ def main():
             lr_scheduler=lr_scheduler,
             device=device,
             experiment=experiment,
+            loss_type=loss_type
         )
         trainer.train(model, optimizer)
 
