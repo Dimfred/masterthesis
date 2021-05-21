@@ -234,6 +234,7 @@ def main():
             input_size=config.unet.input_size,
             channels=config.unet.channels,
             pretrained=config.unet.pretrained_path,
+            width_multiplier=config.unet.width_multiplier,
         )
         if (
             config.unet.checkpoint_path is not None
