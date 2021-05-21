@@ -241,7 +241,7 @@ def main():
         def lr_scheduler(optimizer, step):
             lr = config.unet.lr
 
-            if step == config.unet.half_lr:
+            if step in config.unet.lr_decay_fixed:
                 lr = lr / 2
                 print("Halfing LR:", lr)
                 for param_group in optimizer.param_groups:

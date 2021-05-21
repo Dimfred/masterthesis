@@ -156,10 +156,7 @@ config.unet.valid_subdivision = 6 if utils.isme() else 3
 # minibatch_size = batch_size / subdivision
 config.unet.n_epochs = 1000
 config.unet.burn_in = 100
-config.unet.half_lr = [300, 400]
-# deprecated
-config.unet.lr_decay = "fixed"  # "cos" # "linear", "schedule", step
-config.unet.lr_decay_fixed = [300, 500]
+config.unet.lr_decay_fixed = [300, 400]
 
 # optimizers
 config.unet.amsgrad = True
