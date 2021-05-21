@@ -4,6 +4,7 @@ import argparse
 import logging
 import os
 from albumentations.augmentations.transforms import CLAHE
+from albumentations.core.composition import OneOf
 
 import numpy as np
 import pandas as pd
@@ -62,12 +63,14 @@ class BinaryFocalLoss(nn.Module):
         alpha_t = torch.where(where_true_cls, alpha, 1 - alpha)
 
         loss = -alpha_t * torch.pow(1 - p_t, self.gamma) * torch.log(p_t)
-        # loss = torch.sum(target_on)
 
         if self.reduction == "none":
             pass
         elif self.reduction == "mean":
-            loss = torch.mean(loss)
+            loss = torch.mean(loss, dim=2)
+            loss = torch.mean(loss, dim=1)
+            loss = loss / loss.shape[0]
+            loss = torch.sum(loss)
         elif self.reduction == "sum":
             loss = torch.sum(loss)
         else:
@@ -93,12 +96,6 @@ def get_data_loaders(train_files, val_files, img_size=224):
         #     mask_value=mask_value,
         #     always_apply=True
         # ),
-        # TODO kinda doesnt work
-        # A.RandomScale(
-        #     scale_limit=config.unet.augment.random_scale,
-        #     interpolation=cv.INTER_CUBIC,
-        #     p=0.5
-        # ),
         A.PadIfNeeded(
             min_width=pad_size,
             min_height=pad_size,
@@ -119,6 +116,21 @@ def get_data_loaders(train_files, val_files, img_size=224):
             height=crop_size,
             p=0.5,
         ),
+        A.OneOf(
+            [
+                A.ColorJitter(
+                    brightness=config.unet.augment.color_jitter,
+                    contrast=config.unet.augment.color_jitter,
+                    saturation=config.unet.augment.color_jitter,
+                    hue=config.unet.augment.color_jitter,
+                    # p=0.5
+                ),
+                A.CLAHE(
+                    # p=0.5
+                ),
+            ],
+            p=0.5
+        ),
         # A.ColorJitter(
         #     brightness=config.unet.augment.color_jitter,
         #     contrast=config.unet.augment.color_jitter,
@@ -126,9 +138,9 @@ def get_data_loaders(train_files, val_files, img_size=224):
         #     hue=config.unet.augment.color_jitter,
         #     p=0.5
         # ),
-        A.CLAHE(
-            p=0.5
-        ),
+        # A.CLAHE(
+        #     p=0.5
+        # ),
         A.Blur(
             blur_limit=config.unet.augment.blur,
             p=0.5
@@ -226,7 +238,16 @@ def main():
             weight_decay=config.unet.decay,
             amsgrad=config.unet.amsgrad,
         )
-        lr_scheduler = None
+        def lr_scheduler(optimizer, step):
+            lr = config.unet.lr
+
+            if step == config.unet.half_lr:
+                lr = lr / 2
+                print("Halfing LR:", lr)
+                for param_group in optimizer.param_groups:
+                    param_group["lr"] = lr
+
+            return lr
 
         # optimizer = optimizers.SGD(
         #     model.parameters(), lr=config.unet.lr, momentum=config.unet.momentum
