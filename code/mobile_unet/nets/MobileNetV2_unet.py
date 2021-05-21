@@ -55,19 +55,20 @@ class MobileNetV2_unet(nn.Module):
 
             self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
         elif width_multiplier == 1.4:
-            self.dconv1 = nn.ConvTranspose2d(1792, 96, 4, padding=1, stride=2)
-            self.invres1 = InvertedResidual(192, 96, 1, 6)
+            self.dconv1 = nn.ConvTranspose2d(1792, 136, 4, padding=1, stride=2)
+            self.invres1 = InvertedResidual(272, 136, 1, 6)
 
-            self.dconv2 = nn.ConvTranspose2d(96, 32, 4, padding=1, stride=2)
-            self.invres2 = InvertedResidual(64, 32, 1, 6)
+            self.dconv2 = nn.ConvTranspose2d(136, 48, 4, padding=1, stride=2)
+            self.invres2 = InvertedResidual(96, 48, 1, 6)
 
-            self.dconv3 = nn.ConvTranspose2d(32, 24, 4, padding=1, stride=2)
-            self.invres3 = InvertedResidual(48, 24, 1, 6)
+            self.dconv3 = nn.ConvTranspose2d(48, 32, 4, padding=1, stride=2)
+            self.invres3 = InvertedResidual(64, 32, 1, 6)
 
-            self.dconv4 = nn.ConvTranspose2d(24, 16, 4, padding=1, stride=2)
-            self.invres4 = InvertedResidual(32, 16, 1, 6)
+            self.dconv4 = nn.ConvTranspose2d(32, 24, 4, padding=1, stride=2)
+            self.invres4 = InvertedResidual(48, 24, 1, 6)
 
-            self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
+            self.dconv5 = nn.ConvTranspose2d(24, n_classes, 4, padding=1, stride=2)
+
         # self.invres5 = None
 
         # dimfred
@@ -101,29 +102,29 @@ class MobileNetV2_unet(nn.Module):
             x = self.backbone.features[n](x)
 
         x1 = x
-        print((x1.shape, "x1"))
+        # print((x1.shape, "x1"))
 
         for n in range(2, 4):
             x = self.backbone.features[n](x)
         x2 = x
-        print((x2.shape, "x2"))
+        # print((x2.shape, "x2"))
 
         for n in range(4, 7):
             x = self.backbone.features[n](x)
         x3 = x
-        print((x3.shape, "x3"))
+        # print((x3.shape, "x3"))
 
         for n in range(7, 14):
             x = self.backbone.features[n](x)
         x4 = x
-        print((x4.shape, "x4"))
+        # print((x4.shape, "x4"))
 
         # TODO 1x1 layer removed hence 18 instead of 19
         for n in range(14, 18):
             x = self.backbone.features[n](x)
 
         x5 = self.backbone.conv(x)
-        print((x5.shape, "x5"))
+        # print((x5.shape, "x5"))
 
         dc1 = self.dconv1(x5)
         up1 = torch.cat([x4, dc1], dim=1)
