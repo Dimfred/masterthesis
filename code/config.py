@@ -145,7 +145,7 @@ config.unet = EasyDict()
 # net
 config.unet.n_classes = 2
 config.unet.input_size = 448 if utils.isme() else 448  # 448  # 448 #224 #608 #416  #288
-config.unet.channels = 3
+config.unet.channels = 1
 
 # training
 config.unet.lr = 3e-3 #3e-4 #0.0025

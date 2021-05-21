@@ -170,7 +170,7 @@ def get_data_loaders(train_files, val_files, img_size=224):
     # fmt:on
 
     train_loader = DataLoader(
-        MaskDataset(train_files, train_transform, config.unet.channels),
+        MaskDataset(train_files, train_transform, channels=config.unet.channels),
         batch_size=config.unet.batch_size,
         shuffle=True,
         pin_memory=True,
