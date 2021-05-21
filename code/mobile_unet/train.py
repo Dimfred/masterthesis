@@ -62,6 +62,7 @@ class BinaryFocalLoss(nn.Module):
         alpha_t = torch.where(where_true_cls, alpha, 1 - alpha)
 
         loss = -alpha_t * torch.pow(1 - p_t, self.gamma) * torch.log(p_t)
+        # loss = torch.sum(target_on)
 
         if self.reduction == "none":
             pass
