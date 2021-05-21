@@ -143,35 +143,35 @@ def main():
 
 
     # grid
-    activation, bs, lr, loss = sys.argv[1:5]
+    #activation, bs, lr, loss = sys.argv[1:5]
 
-    config.yolo.activation = activation
+    #config.yolo.activation = activation
 
-    batch_size = int(bs)
-    config.yolo.batch_size = 16
-    config.yolo.accumulation_steps = batch_size // config.yolo.batch_size
-    config.yolo.real_batch_size = (
-        config.yolo.batch_size * config.yolo.accumulation_steps
-    )
+    #batch_size = int(bs)
+    #config.yolo.batch_size = 16
+    #config.yolo.accumulation_steps = batch_size // config.yolo.batch_size
+    #config.yolo.real_batch_size = (
+    #    config.yolo.batch_size * config.yolo.accumulation_steps
+    #)
 
-    config.yolo.lr = float(lr)
-    config.yolo.loss = loss
+    #config.yolo.lr = float(lr)
+    #config.yolo.loss = loss
 
-    config.yolo.experiment_param = config.yolo.experiment_param(
-        config.yolo.activation,
-        config.yolo.real_batch_size,
-        config.yolo.lr,
-        config.yolo.loss,
-    )
+    #config.yolo.experiment_param = config.yolo.experiment_param(
+    #    config.yolo.activation,
+    #    config.yolo.real_batch_size,
+    #    config.yolo.lr,
+    #    config.yolo.loss,
+    #)
 
     # load run and seed
-    # run_ = sys.argv[1]
-    # runs = (run_,)
+    run_ = sys.argv[1]
+    runs = (run_,)
 
-    if sys.argv[5:]:
-        runs = (int(i) for i in sys.argv[5:])
-    else:
-        runs = (0, 1, 2)
+    #if sys.argv[5:]:
+    #    runs = (int(i) for i in sys.argv[5:])
+    #else:
+    #    runs = (0, 1, 2)
 
     for run in runs:
         done = False

@@ -482,10 +482,10 @@ config.yolo.lr = None  # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
 # loss
 config.yolo.loss = None  # "ciou", "eiou", "diou"
 
-config.yolo.experiment_name = "grid"
-config.yolo.experiment_param = (
-    lambda a, bs, lr, l: f"grid_act_{a}_bs_{bs}_lr_{lr}_loss_{l}"
-)
+#config.yolo.experiment_name = "grid"
+#config.yolo.experiment_param = (
+#    lambda a, bs, lr, l: f"grid_act_{a}_bs_{bs}_lr_{lr}_loss_{l}"
+#)
 
 # fmt: off
 # params = [
@@ -498,5 +498,5 @@ config.yolo.experiment_param = (
 
 
 
-# config.yolo.experiment_name = "test"
-# config.yolo.experiment_param = "test"
+config.yolo.experiment_name = "test"
+config.yolo.experiment_param = "test"

@@ -50,9 +50,11 @@ class MobileNetV2_unet(nn.Module):
         self.dconv4 = nn.ConvTranspose2d(24, 16, 4, padding=1, stride=2)
         self.invres4 = InvertedResidual(32, 16, 1, 6)
 
+        self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
+        self.invres5 = None
         # dimfred
-        self.dconv5 = nn.ConvTranspose2d(16, 8, 4, padding=1, stride=2)
-        self.invres5 = InvertedResidual(8, n_classes, 1, 6)
+        # self.dconv5 = nn.ConvTranspose2d(16, 8, 4, padding=1, stride=2)
+        # self.invres5 = InvertedResidual(8, n_classes, 1, 6)
 
         # self.sigmoid = nn.Sigmoid()
         # self.conv_last = nn.Conv2d(8, 3, 1)
@@ -102,11 +104,10 @@ class MobileNetV2_unet(nn.Module):
         for n in range(14, 18):
             x = self.backbone.features[n](x)
 
-        x = self.backbone.conv(x)
-        x5 = x
+        x5 = self.backbone.conv(x)
         # print((x5.shape, "x5"))
 
-        dc1 = self.dconv1(x)
+        dc1 = self.dconv1(x5)
         up1 = torch.cat([x4, dc1], dim=1)
         up1 = self.invres1(up1)
         # print((dc1.shape, "dc1"))
@@ -131,7 +132,9 @@ class MobileNetV2_unet(nn.Module):
         # print((up4.shape, "up4"))
 
         up5 = self.dconv5(up4)
-        up5 = self.invres5(up5)
+
+        if self.invres5 is not None:
+            up5 = self.invres5(up5)
         # print((up5.shape, "up5"))
 
         x = up5
@@ -150,6 +153,24 @@ class MobileNetV2_unet(nn.Module):
             mask[mask >= 0.5] = 1
             # mask = torch.logical_not(mask)
             return torch.unsqueeze(mask, 0)
+
+        has_nan = torch.any(torch.isnan(x))
+        if has_nan:
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("Has NaN in mnet architecture")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
         return x
 
