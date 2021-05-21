@@ -148,7 +148,7 @@ config.unet.input_size = 416 if utils.isme() else 448  # 448  # 448 #224 #608 #4
 config.unet.channels = 3
 
 # training
-config.unet.lr = 3e-5 #0.0025
+config.unet.lr = 3e-4 #0.0025
 config.unet.batch_size = 32 if utils.isme() else 64
 config.unet.valid_batch_size = 4 if utils.isme() else 8
 config.unet.subdivision = 8 if utils.isme() else 8
