@@ -51,9 +51,10 @@ class MobileNetV2_unet(nn.Module):
         self.invres4 = InvertedResidual(32, 16, 1, 6)
 
         # dimfred
-        self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
+        self.dconv5 = nn.ConvTranspose2d(16, 8, 4, padding=1, stride=2)
+        self.invres5 = InvertedResidual(8, n_classes, 1, 6)
+
         # self.sigmoid = nn.Sigmoid()
-        # self.invres5 = InvertedResidual(16, 8, 1, 6)
         # self.conv_last = nn.Conv2d(8, 3, 1)
 
         # self.softmax = nn.Softmax(dim=1)
@@ -130,6 +131,7 @@ class MobileNetV2_unet(nn.Module):
         # print((up4.shape, "up4"))
 
         up5 = self.dconv5(up4)
+        up5 = self.invres5(up5)
         # print((up5.shape, "up5"))
 
         x = up5
