@@ -80,7 +80,7 @@ def get_data_loaders(train_files, val_files, img_size=224):
     pad_size = int(1.1 * config.augment.unet.img_params.resize)
     crop_size = int(config.unet.augment.crop_size * pad_size)
 
-    print(pad_size, img_size)
+    # print(pad_size, img_size)
     # fmt:off
     train_transform = A.Compose([
         # rotation
