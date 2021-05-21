@@ -94,7 +94,7 @@ class Trainer:
                 # if tloss < 1e-5:
                 #     self.on_nan_or_zero(inputs, labels)
 
-                if self.step_counter % 3 == 0:
+                if self.step_counter % 5 == 0:
                     vinputs, vlabels = next(iter(self.valid_ds))
 
                     vloss, pred = self.valid_step(vinputs, vlabels)
