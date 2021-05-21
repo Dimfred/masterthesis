@@ -174,7 +174,7 @@ class Trainer:
         self.optimizer.zero_grad()
 
         # return loss.item() / self.batch_size
-        return total_loss #/ self.subdivision
+        return total_loss / self.subdivision
 
     def print_train(self, loss):
         took = ffloat(time.perf_counter() - self.train_time)
@@ -210,7 +210,7 @@ class Trainer:
             pred = self.model(inputs)
             loss = self.loss(pred, labels)
 
-        return loss.item() / self.valid_batch_size, pred
+        return loss.item(), pred
 
     def print_valid(self, loss, iou):
         self.valid_summary_writer.add_scalar("Loss", loss, self.step_counter)

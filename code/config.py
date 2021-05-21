@@ -150,8 +150,8 @@ config.unet.channels = 3
 # training
 config.unet.lr = 3e-4 #0.0025
 config.unet.batch_size = 32 if utils.isme() else 64
-config.unet.valid_batch_size = 4 if utils.isme() else 23
-config.unet.subdivision = 8 if utils.isme() else 2
+config.unet.valid_batch_size = 4 if utils.isme() else 8
+config.unet.subdivision = 8 if utils.isme() else 8
 # minibatch_size = batch_size / subdivision
 config.unet.n_epochs = 1000
 config.unet.burn_in = 500
@@ -182,7 +182,7 @@ config.unet.checkpoint_path = None
 config.unet.weights = Path("mobile_unet") / config.weights_dir / "text.pth"
 
 # utility
-config.unet.n_workers = 1 if utils.isme() else 32
+config.unet.n_workers = 1 if utils.isme() else 16
 
 # experiments
 config.unet.experiment_dir = Path("experiments_unet")
