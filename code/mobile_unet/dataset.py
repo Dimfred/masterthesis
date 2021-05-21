@@ -60,45 +60,26 @@ class MaskDataset(Dataset):
         img_, mask_ = self.data[idx]
         img, mask = img_.copy(), mask_.copy()
 
-        if np.any(mask[mask > 1]):
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("BEFORE FOUND MASK VALUE > 1")
-            print(self.img_files[idx])
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        orig = img.copy()
 
         augmented = self.transform(image=img, mask=mask)
-
         img = np.array(augmented["image"]).astype(np.float32)
         mask = np.array(augmented["mask"]).astype(np.int64)
 
-        if np.any(mask[mask > 1]):
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("BEFORE FOUND MASK VALUE > 1")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
-
-
         if utils.isme():
-            # print(self.img_files[idx])
-            # utils.show(
-            #    cv.cvtColor(np.uint8(img), cv.COLOR_RGB2BGR)
-            #    * np.uint8(mask)[..., np.newaxis]
-            # )
-            # utils.show(cv.cvtColor(np.uint8(img), cv.COLOR_RGB2BGR))
-            # utils.show(np.uint8(img))
+            simg = np.uint8(img)
+            smask = np.expand_dims(np.uint8(mask * 255), axis=2)
+            simg_mask = np.uint8(mask * img)
+            utils.show(orig, simg, smask, simg_mask)
             pass
 
         # utils.show(img)
 
         # grayscale
-        img = np.expand_dims(img, axis=2)
+        # img = np.expand_dims(img, axis=2)
 
         # grayscale and rgb pretrained
-        # img = np.repeat(img[..., np.newaxis], 3, -1)
+        img = np.repeat(img[..., np.newaxis], 3, -1)
 
         img = img / 255.0
         img = img.transpose((2, 0, 1))

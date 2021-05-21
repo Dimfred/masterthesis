@@ -190,6 +190,9 @@ class UNetAugmentator(CircuitAugmentator):
             img = self.imread(img_path)
             label = np.load(label_path)
 
+            img = utils.resize_max_axis(img, self.img_params.resize)
+            label = utils.resize_max_axis(label, self.img_params.resize)
+
             self.augment(
                 img_path,
                 img,
@@ -225,18 +228,22 @@ class UNetAugmentator(CircuitAugmentator):
             for degree in (90, 180, 270):
                 img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
                 label = cv.rotate(label, cv.ROTATE_90_CLOCKWISE)
+                # utils.show(img * label)
 
                 self.write(img_path, img, label, degree, False, output_dir)
 
         if perform_flip:
             img = cv.flip(img, +1)  # xxyy => yyxx
             label = cv.flip(label, +1)
+            # utils.show(img * label)
+
             self.write(img_path, img, label, 0, True, output_dir)
 
         if perform_rotate and perform_flip:
             for degree in (90, 180, 270):
                 img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
                 label = cv.rotate(label, cv.ROTATE_90_CLOCKWISE)
+                # utils.show(img * label)
 
                 self.write(img_path, img, label, degree, True, output_dir)
 

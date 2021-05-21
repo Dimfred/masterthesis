@@ -68,8 +68,11 @@ def evaluate():
     # for n, img_path in enumerate(image_files):
         # val_files = image_files[val_idx]
         # val_files = image_files[n]
-    val_files = utils.list_imgs(config.valid_out_dir)
-    data_loader = get_data_loaders(val_files)
+    # val_files = utils.list_imgs(config.valid_out_dir)
+    # data_loader = get_data_loaders(val_files)
+
+    test_files = utils.list_imgs(config.test_out_dir)
+    data_loader = get_data_loaders(test_files)
 
     model = MobileNetV2_unet(
         mode="eval",
@@ -83,7 +86,8 @@ def evaluate():
     # GPU version
     # unable to load it anymore
     # loaded = torch.load("weights/non_transfer_best.pth")
-    loaded = torch.load("weights/best.pth")
+    # loaded = torch.load("weights/best.pth")
+    loaded = torch.load("experiments_unet/test/test/run0/best.pth")
     model.load_state_dict(loaded)
     model.to(device)
     model.eval()
@@ -116,12 +120,13 @@ def evaluate():
                 l = np.uint8(l)
                 o = np.uint8(o)
 
-                # utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
+                utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
 
                 print(l.shape)
                 print(o.shape)
-                iou = np.logical_and(l, o)
-                iou = (iou.sum()) / (l > 0).sum()
+                # iou = np.logical_and(l, o)
+                # iou = (iou.sum()) / (l > 0).sum()
+                iou = calc_iou(l, o)
                 ious.append(iou)
 
 
@@ -139,6 +144,13 @@ def evaluate():
     print("All:", ious)
     print("Mean:", np.array(ious).sum() / len(ious))
 
+def calc_iou(target, prediction):
+    print(target.shape)
+    intersection = np.logical_and(target, prediction)
+    union = np.logical_or(target, prediction)
+    iou_score = np.sum(intersection, axis=(0, 1)) / np.sum(union, axis=(0, 1))
+
+    return iou_score.mean()
 
 if __name__ == "__main__":
     # if not os.path.exists(OUT_DIR):

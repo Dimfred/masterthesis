@@ -197,7 +197,7 @@ class Result:
         )
 
 
-class Evaluator:
+class TopologyEvaluator:
     def __init__(self, gt, pred):
         self.gt = gt.copy()
         self.pred = pred.copy()
@@ -205,6 +205,49 @@ class Evaluator:
     def evaluate(self):
         res = Result()
 
+        n_eccs_gt, n_eccs_pred = self.gt.shape[1], self.pred.shape[1]
+        if n_eccs_gt != n_eccs_pred:
+            print(f"Found FPs: '{(n_eccs_pred - n_eccs_gt) // 2}'")
+            self.pred = self.pred[:, :n_eccs_gt]
+
+            # fp_edge_idxs = []
+            # fp_set_to_zero = []
+            # where_ecc = np.argwhere(self.pred > 0)
+            # for y, x in where_ecc:
+            #     # fps are left so if the idx of any component is greater than the
+            #     # max_gt idx (which is the size of the gts) then this is a fp
+            #     if x >= n_eccs_gt:
+            #         print(f"Found FP at position: {x}")
+            #         if self.pred[y].sum() > 1:
+            #             print("\tFP WHICH INFLUENCES TOPOLOGY!")
+            #             # raise RuntimeError("FP which influences topology")
+            #             # we have to set it to 0 or else no combination will be found
+            #             self.pred[:, x] = 0
+            #         else:
+            #             print("\tDoes not influence Topology.")
+            #             fp_edge_idxs.append(y)
+
+            # # # set all fps to zero which would influence the topology
+            # # for edge_idx, component_idx in fp_set_to_zero:
+            # #     self.pred[edge_idx, component_idx] = 0
+
+            # # remove the fp edges such that the calculation is cheaper
+            # if fp_edge_idxs:
+            #     new_pred = []
+            #     for idx, edge in enumerate(self.pred):
+            #         if idx in fp_edge_idxs:
+            #             continue
+
+            #         new_pred.append(edge)
+            #     self.pred = np.vstack(new_pred)
+
+        # remove non-unique edges
+        # print("Size before:", len(self.pred))
+        new_pred = {tuple(edge) for edge in self.pred}
+        self.pred = np.vstack([np.array(p) for p in new_pred])
+        # print("Size after:", len(self.pred))
+
+        # go match that mofo
         matched_idxs = self.find_perfect_matches(self.gt, self.pred)
 
         unmatched_gt_idxs, unmatched_pred_idxs = self._get_unmatched(matched_idxs)
@@ -260,9 +303,7 @@ class Evaluator:
         res = Result()
         unmatched_gt_idxs, unmatched_pred_idxs = self._get_unmatched(matched_idxs)
 
-        # TODO put this in the inner clause
         # create all permutations of length 2 : len(unmatched_preds)
-
         found = False
         for r in range(2, len(unmatched_pred_idxs) + 1):
             if r == 7:
@@ -367,6 +408,53 @@ class Evaluator:
 
     def _is_perfect_match(self, gt_edge, pred_edge):
         return np.all(gt_edge == pred_edge)
+
+
+class ArrowAndTextMatchingEvaluator:
+    def __init__(self, eval_item, gt_arrows_path, gt_texts_path):
+        self.eval_item = eval_item
+
+        # [(text_arrow_idx, ecc),...]
+        self.gt_arrows = utils.EvalArrowAndTextMatching.parse(gt_arrows_path)
+        self.gt_texts = utils.EvalArrowAndTextMatching.parse(gt_texts_path)
+
+    def evaluate(self):
+        arrow_results = self._evaluate(self.eval_item.matched_arrows, self.gt_arrows)
+        text_results = self._evaluate(self.eval_item.matched_texts, self.gt_texts)
+
+        return arrow_results, text_results
+
+    def _evaluate(self, distances, gt):
+        res = Result()
+        for gt_text_or_arrow_idx, gt_ecc_idx in gt:
+            # [(distance, ecc_idx), ....]
+
+            # happens when the arrow has not been predicted does it tho?
+            if gt_text_or_arrow_idx not in distances:
+                print("TODO is this right?; text matcher eval")
+                res.FNS += 1
+                continue
+
+            # we inserted a fake arrow, this is a false negative since it was not predicted
+            if gt_text_or_arrow_idx in self.eval_item.false_negative_gts:
+                res.FNS += 1
+
+            distance_item = distances[gt_text_or_arrow_idx]
+            nearest = distance_item[0]
+            distance, matched_idx = nearest
+            if matched_idx == gt_ecc_idx:
+                res.TPS += 1
+            else:
+                res.FPS += 1
+
+        # happens when we have a FP arrow / text
+        # the FP can't get matched against a ground truth, so whereever it gets matched
+        # to it will be a false positive
+        # TODO in the threshold case there can be predictions which won't get matched
+        # against anything
+        res.FPS += len(distances) + res.FNS - len(gt)
+
+        return res
 
 
 # OLD

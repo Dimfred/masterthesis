@@ -36,6 +36,8 @@ class MobileNetV2_unet(nn.Module):
         # self.dense0 = conv_1x1_bn(320, 1280)
 
         self.dconv1 = nn.ConvTranspose2d(1280, 96, 4, padding=1, stride=2)
+        # self.dconv1 = nn.UpsamplingBilinear2d(scale_factor=2)
+
         # TODO upsample bilinear
         self.invres1 = InvertedResidual(192, 96, 1, 6)
 
@@ -50,10 +52,11 @@ class MobileNetV2_unet(nn.Module):
 
         # dimfred
         self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
+        # self.sigmoid = nn.Sigmoid()
         # self.invres5 = InvertedResidual(16, 8, 1, 6)
         # self.conv_last = nn.Conv2d(8, 3, 1)
 
-        self.softmax = nn.Softmax(dim=1)
+        # self.softmax = nn.Softmax(dim=1)
 
         # original
         # self.conv_last = nn.Conv2d(16, 3, 1)
@@ -129,11 +132,13 @@ class MobileNetV2_unet(nn.Module):
         up5 = self.dconv5(up4)
         # print((up5.shape, "up5"))
 
-        x = self.softmax(up5)
+        x = up5
+        # x = self.softmax(up5)
         # print((x.shape, "softmax"))
+        # x = self.sigmoid(x)
 
         if self.mode == "eval":
-            print("EVALTRUE")
+            # print("EVALTRUE")
             mask_fg = x[0, 0]
             mask_bg = x[0, 1]
 

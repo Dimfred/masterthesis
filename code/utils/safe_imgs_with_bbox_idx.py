@@ -19,7 +19,7 @@ def main():
 
             x1, y1, x2, y2 = bbox.abs
             cv.putText(
-                img, str(idx), (x1, y1), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2
+                img, str(idx), (x1, y1 + 20), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2
             )
 
         new_img_path = img_path.parent / f"{img_path.stem}_idxs{img_path.suffix}"

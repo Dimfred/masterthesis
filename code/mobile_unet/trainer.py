@@ -6,11 +6,22 @@ from tabulate import tabulate
 
 import utils
 
+
 from torch.utils.tensorboard import SummaryWriter
+import torch.nn as nn
 
 
 def ffloat(f):
     return "{:.5f}".format(f)
+
+
+def bstart():
+    return time.perf_counter()
+
+
+def bend(tstart, name="none"):
+    t = time.perf_counter() - tstart
+    print(f"Took {name}", ffloat(t))
 
 
 class Trainer:
@@ -64,8 +75,8 @@ class Trainer:
         self.optimizer = optimizer
 
         self.model = model
-        self.model.train()
 
+        # valid_iter = iter(self.valid_ds)
         while True:
             for inputs, labels in self.train_ds:
                 self.step_counter += 1
@@ -75,19 +86,28 @@ class Trainer:
 
                 if self.lr_scheduler is not None:
                     lr = self.lr_scheduler(optimizer, self.step_counter)
+                    # print(lr)
 
                 tloss = self.train_step(inputs, labels)
                 self.print_train(tloss)
 
-                if self.step_counter % 10 == 0:
+                if tloss < 1e-5:
+                    self.on_nan_or_zero(inputs, labels)
+
+                if self.step_counter % 3 == 0:
                     vinputs, vlabels = next(iter(self.valid_ds))
+
                     vloss, pred = self.valid_step(vinputs, vlabels)
+                    pred = nn.Softmax(dim=1)(pred)
 
                     pred, vlabels = pred.cpu().numpy(), vlabels.cpu().numpy()
+
                     pred = self.combine_prediction(pred)
                     iou = self.miou(vlabels, pred)
 
                     self.print_valid(vloss, iou)
+
+                    vinputs = vinputs.cpu().numpy()
 
                     if iou > self.best_iou:
                         self.best_iou = iou
@@ -96,29 +116,65 @@ class Trainer:
                             self.model.state_dict(), str(self.experiment.weights)
                         )
 
+                        # if self.step_counter > 600:
+                        #     for img, pred in zip(vinputs, pred):
+                        #         img = np.uint8(img * 255)
+                        #         pred = np.uint8(pred * 255)
+                        #         utils.show(
+                        #             img.transpose((1, 2, 0)),
+                        #             np.expand_dims(pred, axis=2),
+                        #         )
+
+    def on_nan_or_zero(self, inputs, labels):
+        self.model.eval()
+
+        # inputs, labels = inputs.cpu().numpy(), labels.cpu().numpy()
+        for img, mask in zip(inputs, labels):
+            with torch.no_grad():
+                pred = self.model(torch.unsqueeze(img.to(self.device), axis=0))[0]
+
+            img, labels, pred = (
+                img.cpu().numpy(),
+                mask.cpu().numpy(),
+                pred.cpu().numpy(),
+            )
+
+            img = np.uint8(img * 255).transpose((1, 2, 0))
+            mask = np.expand_dims(np.uint8(mask * 255), axis=2)
+
+            pred = pred[1]
+            pred[pred < 0.5] = 0
+            pred[pred >= 0.5] = 1
+            pred = np.expand_dims(np.uint8(pred * 255), axis=2)
+
+            utils.show(img, mask, pred)
+
     def train_step(self, inputs, labels):
+        self.model.train()
         self.optimizer.zero_grad()
 
         subbatch_size = int(self.batch_size / self.subdivision)
 
+        total_loss = 0
         with torch.set_grad_enabled(True):
             for subdiv in range(self.subdivision):
                 start, end = subdiv * subbatch_size, (subdiv + 1) * subbatch_size
                 sub_inputs, sub_labels = inputs[start:end], labels[start:end]
 
-                # sub_inputs = sub_inputs.cuda()
-                # sub_labels = sub_labels.cuda()
-
                 sub_inputs = sub_inputs.to(self.device)
                 sub_labels = sub_labels.to(self.device)
 
                 pred = self.model(sub_inputs)
-                loss = self.loss(pred, sub_labels)
+
+                loss = self.loss(pred, sub_labels) / self.subdivision
                 loss.backward()
+                total_loss += loss.item()
 
             self.optimizer.step()
+        self.optimizer.zero_grad()
 
-        return loss.item() / self.batch_size
+        # return loss.item() / self.batch_size
+        return total_loss #/ self.subdivision
 
     def print_train(self, loss):
         took = ffloat(time.perf_counter() - self.train_time)
@@ -126,9 +182,11 @@ class Trainer:
         self.train_summary_writer.add_scalar("Loss", loss, self.step_counter)
 
         pretty = [["Step", "Took", "Loss", "Overall"]]
-        pretty += [[self.step_counter, f"{took}s", loss, self.overall_train_time]]
+        pretty += [
+            [self.step_counter, f"{took}s", ffloat(loss * 1000), self.overall_train_time]
+        ]
         pretty += [["Experiment", self.experiment.run]]
-        pretty += [["BesIoU", ffloat(self.best_iou*100)]]
+        pretty += [["BesIoU", f"{ffloat(self.best_iou*100)}%"]]
         pretty += [["BestIoUStep", self.best_iou_step]]
         print(tabulate(pretty))
 
@@ -142,6 +200,8 @@ class Trainer:
         return str(datetime.timedelta(seconds=took)).split(".")[0]
 
     def valid_step(self, inputs, labels):
+        self.model.eval()
+
         self.optimizer.zero_grad()
         with torch.no_grad():
             inputs = inputs.cuda()
@@ -157,7 +217,7 @@ class Trainer:
         self.valid_summary_writer.add_scalar("mIoU", iou, self.step_counter)
 
         pretty = [["Loss", "mIoU"]]
-        pretty += [[utils.green(loss), utils.green(ffloat(iou * 100))]]
+        pretty += [[utils.green(ffloat(loss * 1000)), f"{utils.green(ffloat(iou * 100))}%"]]
         print(tabulate(pretty))
 
     def combine_prediction(self, prediction):
@@ -167,6 +227,11 @@ class Trainer:
         fg_pred = prediction[:, 1]
 
         combined = (fg_pred + (1 - bg_pred)) / 2
+        # combined = fg_pred
+
+        # combined = prediction
+        combined[combined < 0.5] = 0
+        combined[combined >= 0.5] = 1
 
         return combined
 

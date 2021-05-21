@@ -54,8 +54,8 @@ for input_size in (608,):  # 832):
     yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
     # yolo.load_weights(config.weights_dir / "yolov4-tiny-100.weights", weights_type=config.yolo.weights_type)
 
-    # dir_ = config.test_out_dir
-    dir_ = config.valid_out_dir
+    dir_ = config.test_out_dir
+    # dir_ = config.valid_out_dir
 
     preds, gts = [], []
     for img_path in utils.list_imgs(dir_):
@@ -70,12 +70,12 @@ for input_size in (608,):  # 832):
             gt = utils.load_ground_truth(ground_truth_path)
             gts.append(gt)
 
-            pred = yolo.predict(img, iou_threshold=0.1, score_threshold=0.1)
+            pred = yolo.predict(img, iou_threshold=0.2, score_threshold=0.10)
             preds.append(pred)
 
     img_shape = (input_size, input_size)
     mAP = utils.MeanAveragePrecision(
-        yolo.classes, img_shape, iou_threshs=(0.5, (0.5, 0.76, 0.05))
+        yolo.classes, img_shape, iou_threshs=(0.4, 0.5, (0.5, 0.76, 0.05))
     )
     mAP.add(preds, gts)
     results = mAP.compute()

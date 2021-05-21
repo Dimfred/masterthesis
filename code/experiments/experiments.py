@@ -20,224 +20,249 @@ from utils import YoloBBox
 import itertools as it
 
 
-def nms(img):
-    Y, X = img.shape[:2]
-
-    img = img.copy()
-    for y in range(1, Y):
-        for x in range(1, X):
-            val = img[y, x]
-            ry2 = range(max(y - 1, 1), min(y + 1, Y))
-            rx2 = range(max(x - 1, 1), min(x + 1, X))
-            for y2, x2 in zip(ry2, rx2):
-                if img[y2, x2] > val:
-                    img[y, x] = 0
-                    break
-
-    return img
 
 
-def intersection(l1, l2):
-    # l1, l2 in hough form = (rho, theta)
-    rho1, theta1 = l1[0]
-    rho2, theta2 = l2[0]
-
-    # fmt: off
-    A = np.array([
-        [np.cos(theta1), np.sin(theta1)],
-        [np.cos(theta2), np.sin(theta2)]
-    ])
-    b = np.array([
-        [rho1],
-        [rho2]
-    ])
-    # fmt: on
-
-    try:
-        x0, y0 = np.linalg.solve(A, b)
-        x0, y0 = int(np.round(x0)), int(np.round(y0))
-    except:
-        return None, None
-
-    return x0, y0
+import torch as t
+import torch.nn as nn
 
 
-for img_name in [
-    "00_19.jpg",
-    "00_20.jpg",
-    "07_05.png",
-    "07_06.png",
-    "07_07.png",
-    "07_08.png",
-    "08_07.png",
-    "08_08.png",
-    "08_09.png",
-    "08_10.png",
-]:
-    print(img_name)
-    img_name = config.valid_dir / img_name
-    img = cv.imread(str(img_name), cv.IMREAD_GRAYSCALE)
-    img = utils.resize_max_axis(img, 1000)
-
-    show = img.copy()
-    show = cv.cvtColor(show, cv.COLOR_GRAY2BGR)
-
-    # img = cv.GaussianBlur(img, (3, 3), 1) #, sigmaX=1.2, sigmaY=1.2)
-
-    img = cv.adaptiveThreshold(
-        img,
-        maxValue=255,
-        adaptiveMethod=cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-        thresholdType=cv.THRESH_BINARY_INV,
-        # TODO
-        blockSize=11,
-        # TODO
-        C=2,
-    )
-    # utils.show(img)
-
-    cross = cv.getStructuringElement(cv.MORPH_CROSS, (3, 3))
-    square = np.ones((2, 2))
-
-    kernel = square
-    img = cv.morphologyEx(
-        img,
-        cv.MORPH_OPEN,
-        kernel,
-        iterations=1,
-    )
-    utils.show(img)
-
-    ground_truth = utils.load_ground_truth(utils.label_file_from_img(img_name))
-    bboxes = [YoloBBox(img.shape).from_ground_truth(gt) for gt in ground_truth]
-
-    all_xs = []
-    all_ys = []
-    for bbox in bboxes:
-        x1, y1, x2, y2 = bbox.abs()
-        img[y1:y2, x1:x2] = 0
-
-        all_xs.append(x1)
-        all_xs.append(x2)
-        all_ys.append(y1)
-        all_ys.append(y2)
-
-    # utils.show(img)
-
-    xmin, ymin = min(all_xs), min(all_ys)
-    xmax, ymax = max(all_xs), max(all_ys)
-    # remove everything outside those coords
-    roi = img[ymin:ymax, xmin:xmax]
-    img = np.zeros_like(img)
-    img[ymin:ymax, xmin:xmax] = roi
-    utils.show(img)
-
-
-    # ORB for hough
-    # orb = cv.ORB_create(nfeatures=1000, edgeThreshold=100)
-    # kp = orb.detect(img, None)
-
-    # orb_show = cv.drawKeypoints(show.copy(), kp, None, color=(0, 255, 0), flags=0)
-    # utils.show(orb_show)
-
-    # points = [p.pt for p in kp]
-
-    # generate only with the ORB points
-    # hough = np.zeros_like(img)
-    # for x, y in points:
-    #     x, y = int(x), int(y)
-    #     hough[y, x] = 255
-
-    # utils.show(hough)
-
-    hough = img
-    lines = cv.HoughLines(hough, 1, np.pi / 180, 150, None, 0, 0)
-    print("n_lines:", len(lines))
-
-    # show initial hough lines
-    stored_lines = []
-    line_img = show.copy()
-
-    for line in lines:
-        rho, theta = line[0]
-
-        a, b = math.cos(theta), math.sin(theta)
-        x0, y0 = a * rho, b * rho
-        p1 = (int(x0 + 5000 * (-b)), int(y0 + 5000 * (a)))
-        p2 = (int(x0 - 5000 * (-b)), int(y0 - 5000 * (a)))
-        stored_lines.append((p1, p2))
-        cv.line(line_img, p1, p2, (0, 0, 255), 1, cv.LINE_AA)
-
-    utils.show(line_img)
-
-    def histogram(data, bins):
-        bin_idxs = [[] for _ in range(len(bins))]
-
-        # for y in range(Y):
-        for x in range(len(data)):
-            val = data[x]
-
-            # enumerate
-            bin_counter = 0
-            for bin_low, bin_high in bins:
-                if bin_low <= val and val < bin_high:
-                    bin_idxs[bin_counter].append(x)
-                    break
-
-                bin_counter += 1
-
-        return bin_idxs
-
-    get_theta = lambda line: line[0][1]
-    thetas = [180 * get_theta(l) / np.pi for l in lines]
-    # print(thetas)
-
-    step = 0.5
-    bins = [
-        (low, high)
-        for low, high in zip(np.arange(0, 180, step), np.arange(step, 180 + step, step))
+arr = np.array([
+    [
+        [1, 1],
+        [0, 1],
+    ],
+    [
+        [0, 1],
+        [0, 1],
     ]
-
-    binned_idxs = histogram(thetas, bins)
-    # for i, bin_ in enumerate(binned_idxs):
-    #     if len(bin_) != 0:
-    #         print(i, bins[i], len(bin_))
-
-    binned_idxs = [(i, bin_) for i, bin_ in enumerate(binned_idxs)]
-    binned_idxs = sorted(binned_idxs, key=lambda idx_bin: len(idx_bin[1]), reverse=True)
-
-    best = binned_idxs[0]
-    bin_angle = bins[best[0]][0]
-    print(bin_angle)
-
-    pendant = None
-    if bin_angle < 90:
-        second_angle = bin_angle + 90
-        for i, bin_ in binned_idxs:
-            if bins[i][0] == second_angle:
-                pendant = (i, bin_)
-                break
-    elif bin_angle >= 90:
-        second_angle = bin_angle - 90
-        for i, bin_ in binned_idxs:
-            if bins[i][0] == second_angle:
-                pendant = (i, bin_)
-                break
+])
+print(arr.shape)
 
 
-    line_img = show.copy()
-    for idx in it.chain(best[1], pendant[1]):
-        line = lines[idx]
-        rho, theta = line[0]
+arr = t.Tensor(arr)
 
-        a, b = math.cos(theta), math.sin(theta)
-        x0, y0 = a * rho, b * rho
-        p1 = (int(x0 + 5000 * (-b)), int(y0 + 5000 * (a)))
-        p2 = (int(x0 - 5000 * (-b)), int(y0 - 5000 * (a)))
-        stored_lines.append((p1, p2))
-        cv.line(line_img, p1, p2, (0, 0, 255), 1, cv.LINE_AA)
+print(nn.Softmax(dim=0)(arr))
 
-    utils.show(line_img)
+
+
+# def nms(img):
+#     Y, X = img.shape[:2]
+
+#     img = img.copy()
+#     for y in range(1, Y):
+#         for x in range(1, X):
+#             val = img[y, x]
+#             ry2 = range(max(y - 1, 1), min(y + 1, Y))
+#             rx2 = range(max(x - 1, 1), min(x + 1, X))
+#             for y2, x2 in zip(ry2, rx2):
+#                 if img[y2, x2] > val:
+#                     img[y, x] = 0
+#                     break
+
+#     return img
+
+
+# def intersection(l1, l2):
+#     # l1, l2 in hough form = (rho, theta)
+#     rho1, theta1 = l1[0]
+#     rho2, theta2 = l2[0]
+
+#     # fmt: off
+#     A = np.array([
+#         [np.cos(theta1), np.sin(theta1)],
+#         [np.cos(theta2), np.sin(theta2)]
+#     ])
+#     b = np.array([
+#         [rho1],
+#         [rho2]
+#     ])
+#     # fmt: on
+
+#     try:
+#         x0, y0 = np.linalg.solve(A, b)
+#         x0, y0 = int(np.round(x0)), int(np.round(y0))
+#     except:
+#         return None, None
+
+#     return x0, y0
+
+
+# for img_name in [
+#     "00_19.jpg",
+#     "00_20.jpg",
+#     "07_05.png",
+#     "07_06.png",
+#     "07_07.png",
+#     "07_08.png",
+#     "08_07.png",
+#     "08_08.png",
+#     "08_09.png",
+#     "08_10.png",
+# ]:
+#     print(img_name)
+#     img_name = config.valid_dir / img_name
+#     img = cv.imread(str(img_name), cv.IMREAD_GRAYSCALE)
+#     img = utils.resize_max_axis(img, 1000)
+
+#     show = img.copy()
+#     show = cv.cvtColor(show, cv.COLOR_GRAY2BGR)
+
+#     # img = cv.GaussianBlur(img, (3, 3), 1) #, sigmaX=1.2, sigmaY=1.2)
+
+#     img = cv.adaptiveThreshold(
+#         img,
+#         maxValue=255,
+#         adaptiveMethod=cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+#         thresholdType=cv.THRESH_BINARY_INV,
+#         # TODO
+#         blockSize=11,
+#         # TODO
+#         C=2,
+#     )
+#     # utils.show(img)
+
+#     cross = cv.getStructuringElement(cv.MORPH_CROSS, (3, 3))
+#     square = np.ones((2, 2))
+
+#     kernel = square
+#     img = cv.morphologyEx(
+#         img,
+#         cv.MORPH_OPEN,
+#         kernel,
+#         iterations=1,
+#     )
+#     utils.show(img)
+
+#     ground_truth = utils.load_ground_truth(utils.label_file_from_img(img_name))
+#     bboxes = [YoloBBox(img.shape).from_ground_truth(gt) for gt in ground_truth]
+
+#     all_xs = []
+#     all_ys = []
+#     for bbox in bboxes:
+#         x1, y1, x2, y2 = bbox.abs()
+#         img[y1:y2, x1:x2] = 0
+
+#         all_xs.append(x1)
+#         all_xs.append(x2)
+#         all_ys.append(y1)
+#         all_ys.append(y2)
+
+#     # utils.show(img)
+
+#     xmin, ymin = min(all_xs), min(all_ys)
+#     xmax, ymax = max(all_xs), max(all_ys)
+#     # remove everything outside those coords
+#     roi = img[ymin:ymax, xmin:xmax]
+#     img = np.zeros_like(img)
+#     img[ymin:ymax, xmin:xmax] = roi
+#     utils.show(img)
+
+
+#     # ORB for hough
+#     # orb = cv.ORB_create(nfeatures=1000, edgeThreshold=100)
+#     # kp = orb.detect(img, None)
+
+#     # orb_show = cv.drawKeypoints(show.copy(), kp, None, color=(0, 255, 0), flags=0)
+#     # utils.show(orb_show)
+
+#     # points = [p.pt for p in kp]
+
+#     # generate only with the ORB points
+#     # hough = np.zeros_like(img)
+#     # for x, y in points:
+#     #     x, y = int(x), int(y)
+#     #     hough[y, x] = 255
+
+#     # utils.show(hough)
+
+#     hough = img
+#     lines = cv.HoughLines(hough, 1, np.pi / 180, 150, None, 0, 0)
+#     print("n_lines:", len(lines))
+
+#     # show initial hough lines
+#     stored_lines = []
+#     line_img = show.copy()
+
+#     for line in lines:
+#         rho, theta = line[0]
+
+#         a, b = math.cos(theta), math.sin(theta)
+#         x0, y0 = a * rho, b * rho
+#         p1 = (int(x0 + 5000 * (-b)), int(y0 + 5000 * (a)))
+#         p2 = (int(x0 - 5000 * (-b)), int(y0 - 5000 * (a)))
+#         stored_lines.append((p1, p2))
+#         cv.line(line_img, p1, p2, (0, 0, 255), 1, cv.LINE_AA)
+
+#     utils.show(line_img)
+
+#     def histogram(data, bins):
+#         bin_idxs = [[] for _ in range(len(bins))]
+
+#         # for y in range(Y):
+#         for x in range(len(data)):
+#             val = data[x]
+
+#             # enumerate
+#             bin_counter = 0
+#             for bin_low, bin_high in bins:
+#                 if bin_low <= val and val < bin_high:
+#                     bin_idxs[bin_counter].append(x)
+#                     break
+
+#                 bin_counter += 1
+
+#         return bin_idxs
+
+#     get_theta = lambda line: line[0][1]
+#     thetas = [180 * get_theta(l) / np.pi for l in lines]
+#     # print(thetas)
+
+#     step = 0.5
+#     bins = [
+#         (low, high)
+#         for low, high in zip(np.arange(0, 180, step), np.arange(step, 180 + step, step))
+#     ]
+
+#     binned_idxs = histogram(thetas, bins)
+#     # for i, bin_ in enumerate(binned_idxs):
+#     #     if len(bin_) != 0:
+#     #         print(i, bins[i], len(bin_))
+
+#     binned_idxs = [(i, bin_) for i, bin_ in enumerate(binned_idxs)]
+#     binned_idxs = sorted(binned_idxs, key=lambda idx_bin: len(idx_bin[1]), reverse=True)
+
+#     best = binned_idxs[0]
+#     bin_angle = bins[best[0]][0]
+#     print(bin_angle)
+
+#     pendant = None
+#     if bin_angle < 90:
+#         second_angle = bin_angle + 90
+#         for i, bin_ in binned_idxs:
+#             if bins[i][0] == second_angle:
+#                 pendant = (i, bin_)
+#                 break
+#     elif bin_angle >= 90:
+#         second_angle = bin_angle - 90
+#         for i, bin_ in binned_idxs:
+#             if bins[i][0] == second_angle:
+#                 pendant = (i, bin_)
+#                 break
+
+
+#     line_img = show.copy()
+#     for idx in it.chain(best[1], pendant[1]):
+#         line = lines[idx]
+#         rho, theta = line[0]
+
+#         a, b = math.cos(theta), math.sin(theta)
+#         x0, y0 = a * rho, b * rho
+#         p1 = (int(x0 + 5000 * (-b)), int(y0 + 5000 * (a)))
+#         p2 = (int(x0 - 5000 * (-b)), int(y0 - 5000 * (a)))
+#         stored_lines.append((p1, p2))
+#         cv.line(line_img, p1, p2, (0, 0, 255), 1, cv.LINE_AA)
+
+#     utils.show(line_img)
 
 
 

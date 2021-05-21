@@ -51,7 +51,7 @@ def show(*imgs, size=1000, max_axis=True):
     cv.destroyAllWindows()
 
 
-def show_bboxes(img, bboxes, orig=None, type_="gt"):
+def show_bboxes(img, bboxes, orig=None, type_="gt", classes=None, others=[]):
     # type = gt | class_to_front | pred
     if type_ == "class_to_front":
         bboxes = [list(bbox) for bbox in bboxes]
@@ -73,11 +73,22 @@ def show_bboxes(img, bboxes, orig=None, type_="gt"):
     for bbox in bboxes:
         x1, y1, x2, y2 = bbox.abs
         cv.rectangle(cimg, (x1, y1), (x2, y2), (0, 0, 255), 2)
+        if classes is not None:
+            cls_name = classes[bbox.label]
+            cv.putText(
+                cimg,
+                cls_name,
+                (x1 - 10, y1 - 10),
+                cv.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                (0, 0, 255),
+                2,
+            )
 
     if orig is None:
-        show(cimg)
+        show(cimg, *others)
     else:
-        show(cimg, orig)
+        show(cimg, orig, *others)
 
 
 def resize(img, width: int = None, height: int = None, interpolation=cv.INTER_CUBIC):
@@ -919,6 +930,21 @@ class EvalTopology:
         lines = [eval(line) for line in lines]
 
         return lines
+
+
+class EvalArrowAndTextMatching:
+    @staticmethod
+    def parse(path):
+        with open(path, "r") as f:
+            lines = f.readlines()
+        lines = [line.strip().split(",") for line in lines]
+
+        arrow_or_text_idx_to_ecc = [
+            (int(arrow_or_text_idx), int(ecc_idx))
+            for arrow_or_text_idx, ecc_idx in lines
+        ]
+
+        return arrow_or_text_idx_to_ecc
 
 
 class Topology:

@@ -263,6 +263,9 @@ class BBoxConnector:
                 classname = idx_to_classname[bbox.label]
                 orientation = classname.split("_")[-1]
 
+                # if classname == "text" or classname == "arrow":
+                #     continue
+
                 bbox_or = bbox_connection.orientation
                 if (
                     orientation == "hor"
@@ -282,6 +285,8 @@ class BBoxConnector:
                         or bbox_or == ORIENTATION.BOTTOM.value
                     ):
                         suppressed[label][bbox_idx] = bbox_connection
+                # elif orientation == "text":
+                #     suppressed[label][bbox_idx] = bbox_connection
                 # else nms
 
         removed_empty = {}

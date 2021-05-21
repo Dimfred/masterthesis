@@ -123,7 +123,7 @@ architecture_type = {
     ),
     "text": (
         str(config.train_out_dir / "classes.txt"),
-        str(config.weights_dir / "text.weights"),
+        str(config.weights_dir / "best.weights"),
     ),
 }
 
@@ -144,22 +144,21 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 608  # 448  # 448 #224 #608 #416  #288
-config.unet.channels = 1
-config.unet.weights = Path("mobile_unet/weights/best.pth")
+config.unet.input_size = 416 if utils.isme() else 448  # 448  # 448 #224 #608 #416  #288
+config.unet.channels = 3
 
 # training
-config.unet.lr = 0.00025
-config.unet.batch_size = 2 if utils.isme() else 64
-config.unet.valid_batch_size = 2 if utils.isme() else 23
-config.unet.subdivision = 2 if utils.isme() else 2
+config.unet.lr = 3e-4 #0.0025
+config.unet.batch_size = 32 if utils.isme() else 64
+config.unet.valid_batch_size = 4 if utils.isme() else 23
+config.unet.subdivision = 8 if utils.isme() else 2
 # minibatch_size = batch_size / subdivision
 config.unet.n_epochs = 1000
-config.unet.burn_in = 1000
+config.unet.burn_in = 500
 
 # optimizers
 config.unet.amsgrad = True
-config.unet.decay = 0.00005
+config.unet.decay = 0.000005
 config.unet.betas = (0.90, 0.999)
 config.unet.momentum = 0.95
 
@@ -169,17 +168,18 @@ config.unet.lr_decay_fixed = [300, 500]
 config.unet.lr_burn_in = 1000
 
 # loss functions
-config.unet.focal_alpha = 0.1
-config.unet.focal_gamma = 2
-config.unet.focal_reduction = "sum"
+config.unet.focal_alpha = 0.1 # 0.1 best
+config.unet.focal_gamma = 2   # 2 best
+config.unet.focal_reduction = "mean"
 
 
 # priority[pretrained] > priority[checkpoint]
 config.unet.pretrained_path = None
-# config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
+config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
 config.unet.checkpoint_path = None
 # config.unet.checkpoint_path = Path("weights/checkpoint.pth")
 # config.unet.output_dir = Path("outputs")
+config.unet.weights = Path("mobile_unet") / config.weights_dir / "text.pth"
 
 # utility
 config.unet.n_workers = 1 if utils.isme() else 32
@@ -199,9 +199,9 @@ config.unet.experiment_param = "test"
 # online aug
 config.unet.augment = EasyDict()
 
-config.unet.augment.random_scale = 0.3
+config.unet.augment.random_scale = 0.4
 config.unet.augment.rotate = 20
-config.unet.augment.crop_size = 0.3
+config.unet.augment.crop_size = 0.9
 config.unet.augment.color_jitter = 0.2
 config.unet.augment.blur = 3
 

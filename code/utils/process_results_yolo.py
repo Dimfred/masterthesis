@@ -8,6 +8,7 @@ import utils
 def parse_results(paths):
     all_pred_50, all_pred_75 = [], []
     for path in paths:
+        print(path)
         with open(path, "r") as f:
             lines = f.readlines()
             lines = [line.strip() for line in lines]
@@ -432,10 +433,10 @@ def dump_all_augs(param):
     )
 
 
-def dump_grid(param):
+def dump_grid():
     def build_paths(a, bs, lr, l, runs):
         return [
-            f"experiments_yolo/grid/grid_act{a}_bs_{bs}_lr{lr}_loss_{l}/run{run}/results_raw.txt"
+            f"experiments_yolo/grid/grid_act_{a}_bs_{bs}_lr_{lr}_loss_{l}/run{run}/results_raw.txt"
             for run in runs
         ]
 
@@ -537,8 +538,9 @@ def main():
     # dump_bbox_safe_crop_aug()
     # dump_gaussian_noise_aug()
     # dump_blur_aug()
-    dump_all_augs("with")
-    dump_all_augs("without")
+    # dump_all_augs("with")
+    # dump_all_augs("without")
+    dump_grid()
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@ import sys
 import enum
 import itertools as it
 from typing import List
+import math
 
 # import tensorflow as tf
 # tf.get_logger().setLevel("INFO")
@@ -66,12 +67,14 @@ def init_unet():
     return unet
 
 
-def run_prediction(img_path, iou_thresh=0.25, conf_thresh=0.3, debug=False):
+def run_prediction(img_paths, iou_thresh=0.25, conf_thresh=0.3, debug=False):
+    print("Run YOLO prediction...")
+
     import subprocess as sp
 
-    prediction_file = "prediction.npy"
+    prediction_dir = "predictions"
 
-    sp.run(
+    sp.check_call(
         [
             "python3.8",
             "-c",
@@ -79,6 +82,8 @@ def run_prediction(img_path, iou_thresh=0.25, conf_thresh=0.3, debug=False):
 import cv2 as cv
 import numpy as np
 import tensorflow as tf
+import os
+from pathlib import Path
 physical_devices = tf.config.experimental.list_physical_devices("GPU")
 if len(physical_devices) > 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], True)
@@ -87,6 +92,8 @@ from yolov4.tf import YOLOv4
 import utils
 from config import config
 
+
+prediction_dir = Path("{prediction_dir}")
 
 yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
 yolo.classes = config.yolo.classes
@@ -97,28 +104,46 @@ yolo.make_model()
 # yolo.load_weights(config.yolo.label_weights, weights_type=config.yolo.weights_type)
 yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
+for file in os.listdir(prediction_dir):
+    os.unlink(prediction_dir / file)
+
 def imread(path):
     img = cv.imread(str(path), cv.IMREAD_GRAYSCALE)
     img = np.expand_dims(img, axis=2)
     return img
 
-img = imread("{img_path}")
-img = utils.resize_max_axis(img, 1000)
+img_paths = {str(img_paths)}
+for img_path in img_paths:
+    img = imread(img_path)
+    img = utils.resize_max_axis(img, 1000)
 
-prediction = yolo.predict(
-    img, iou_threshold={iou_thresh}, score_threshold={conf_thresh}
-)
+    prediction = yolo.predict(
+        img, iou_threshold={iou_thresh}, score_threshold={conf_thresh}
+    )
 
-if {debug}:
-    utils.show_bboxes(img, prediction, type_="pred")
+    if {debug}:
+        utils.show_bboxes(img, prediction, type_="pred")
 
-np.save("{prediction_file}", prediction)
+    if np.any(prediction == 42):
+        print("WTF!!: ", prediction)
+
+    prediction_dir = "{prediction_dir}"
+    np.save(f"{{prediction_dir}}/{{Path(img_path).stem}}.npy", prediction)
 """,
         ],
         stdout=sp.DEVNULL,
         stderr=sp.DEVNULL,
     )
-    return np.load(prediction_file)
+    import os
+    import time
+
+    time.sleep(1)
+
+    prediction_files = sorted(os.listdir(prediction_dir))
+    predictions = [np.load(Path(prediction_dir) / pred) for pred in prediction_files]
+    print("DONE")
+
+    return predictions
 
 
 def imread(path):
@@ -167,6 +192,12 @@ class EvaluationItem:
         self.segmentation = None
         self.topology = None
         self.false_negative_gts = []
+        self.unmatched_gt = []
+
+        # [(ecc1, arrow1), ...]
+        self.matched_arrows = []
+        # [(ecc1, text1), ...]
+        self.matched_texts = []
 
     def from_predict(self, classes, img, gt_bboxes, pred_bboxes, segmentation):
         self.classes = classes
@@ -183,48 +214,75 @@ class EvaluationItem:
         return self
 
 
-def predict(img_path, iou_thresh, conf_thresh):
-    img = imread(str(img_path))
-    img = utils.resize_max_axis(img, 1000)
+def predict(img_paths, iou_thresh, conf_thresh):
     # DEBUG
     # utils.show(img)
 
-    yolo_prediction = run_prediction(
-        img_path, iou_thresh=iou_thresh, conf_thresh=conf_thresh, debug=True
+    yolo_predictions = run_prediction(
+        img_paths, iou_thresh=iou_thresh, conf_thresh=conf_thresh, debug=False
     )
-    pred_bboxes = [YoloBBox(img.shape).from_prediction(p) for p in yolo_prediction]
-
-    ground_truth = utils.Yolo.parse_labels(utils.Yolo.label_from_img(img_path))
-    gt_bboxes = [YoloBBox(img.shape).from_ground_truth(gt) for gt in ground_truth]
 
     # unet predictions
     unet = init_unet()
-    output = unet.predict(img)
+
+    eval_items = []
+    for img_path, yolo_pred in zip(img_paths, yolo_predictions):
+        img_path = Path(img_path)
+
+        img = imread(str(img_path))
+        img = utils.resize_max_axis(img, 1000)
+
+        pred_bboxes = [YoloBBox(img.shape).from_prediction(p) for p in yolo_pred]
+
+        ground_truth = utils.Yolo.parse_labels(utils.Yolo.label_from_img(img_path))
+        gt_bboxes = [YoloBBox(img.shape).from_ground_truth(gt) for gt in ground_truth]
+
+        output = unet.predict(img)
+
+        segmentation = cv.resize(output, img.shape[:2][::-1])
+        # DEBUG
+        # utils.show(segmentation[..., np.newaxis], img)
+
+        classes = utils.Yolo.parse_classes(config.yolo.classes)
+
+        eval_item = EvaluationItem().from_predict(
+            classes, img, gt_bboxes, pred_bboxes, segmentation
+        )
+        eval_items.append(eval_item)
+
     unet.unload()
 
-    segmentation = cv.resize(output, img.shape[:2][::-1])
-    # DEBUG
-    utils.show(segmentation[..., np.newaxis], img)
-
-    classes = utils.Yolo.parse_classes(config.yolo.classes)
-
-    return EvaluationItem().from_predict(
-        classes, img, gt_bboxes, pred_bboxes, segmentation
-    )
+    return eval_items
 
 
-def add_false_negatives(eval_item, threshold):
+def add_false_negatives_and_false_positive(eval_item, threshold):
     pred_bboxes = eval_item.pred_bboxes
     gt_bboxes = eval_item.gt_bboxes
 
     matches = {idx: [] for idx, _ in enumerate(gt_bboxes)}
 
+    # match every gt against a prediction
     for gt_idx, gt_bbox in enumerate(gt_bboxes):
         for pred_idx, pred_bbox in enumerate(pred_bboxes):
             if utils.calc_iou(gt_bbox.abs, pred_bbox.abs) < threshold:
                 continue
 
             matches[gt_idx].append(pred_idx)
+
+    # safe unmatched gts aka false positives
+    unmatched_gt = []
+    for pred_idx, pred_bbox in enumerate(pred_bboxes):
+        has_gt = False
+        for gt_idx, match in matches.items():
+            if pred_idx not in match:
+                continue
+            has_gt = True
+            break
+
+        if has_gt:
+            continue
+
+        unmatched_gt.append(pred_bbox)
 
     for gt_idx, match in matches.items():
         # unmatched gt
@@ -246,7 +304,9 @@ def add_false_negatives(eval_item, threshold):
                 # add the fn to the topology of the prediciton
 
         elif len(match) > 1:
-            raise ValueError("FALSE POSITIVE NOT YET HANDLED")
+            raise ValueError("FALSE POSITIVE WITH GROUND TRUTH NOT YET HANDLED")
+            # print("FALSE POSITIVE OCCURED CARE!!!! TRYING TO HANDLE")
+
         # else == 1 correct
 
     gt_to_pred = {gt_idx: pred_idxs[0] for gt_idx, pred_idxs in matches.items()}
@@ -260,6 +320,22 @@ def add_false_negatives(eval_item, threshold):
         new_pred_bboxes.append(new_pred_bbox)
 
     eval_item.pred_bboxes = new_pred_bboxes
+    eval_item.unmatched_gt = unmatched_gt
+    eval_item.pred_bboxes.extend(unmatched_gt)
+
+
+    # DEBUG
+    if unmatched_gt:
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print("Found FPs:")
+        for bbox in unmatched_gt:
+            cls_name = eval_item.classes[bbox.label]
+            print(cls_name)
+            cls_name = cls_name.split("_")[0]
+            if cls_name != "arrow" and cls_name != "text":
+                # raise RuntimeError("UNMATCHED GT WHAT TO DO!?!?!")
+                print("TODO NORMALLY RUNTIME ERROR IN add_false_negatives")
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
     return eval_item
 
@@ -294,6 +370,86 @@ def remove_false_negatives_from_edges(eval_item):
     eval_item.topology = new_topology
 
     return eval_item
+
+
+class ArrowAndTextMatcher:
+    def __init__(self, eval_item):
+        self.eval_item = eval_item
+        self.classes = eval_item.classes
+
+        self.left_arrow_idx = self.classes.index("arrow_left")
+        self.right_arrow_idx = self.classes.index("arrow_right")
+        self.top_arrow_idx = self.classes.index("arrow_top")
+        self.bot_arrow_idx = self.classes.index("arrow_bot")
+        self.text_idx = self.classes.index("text")
+
+        # first seperate them
+        self.arrows = {}
+        self.texts = {}
+        self.eccs = {}
+
+        # TODO ??? can I really do that
+        # self.eval_item.pred_bboxes.extend(self.eval_item.unmatched_gt)
+
+        for idx, bbox in enumerate(self.eval_item.pred_bboxes):
+            if self.is_arrow(bbox.label):
+                self.arrows[idx] = bbox
+            elif self.is_text(bbox.label):
+                self.texts[idx] = bbox
+            else:
+                self.eccs[idx] = bbox
+
+    def is_arrow(self, label_idx):
+        return (
+            label_idx == self.left_arrow_idx
+            or label_idx == self.right_arrow_idx
+            or label_idx == self.top_arrow_idx
+            or label_idx == self.bot_arrow_idx
+        )
+
+    def is_text(self, label_idx):
+        return label_idx == self.text_idx
+
+    def match(self, distance_algorithm="nearest_neighbor", threshold="TODO"):
+        if distance_algorithm == "nearest_neighbor":
+            distance_algorithm = self.calc_nearest_neighbor
+        else:
+            raise ValueError(
+                f"Distance Algorithm: '{distance_algorithm}' not supported"
+            )
+
+        arrow_distances = distance_algorithm(self.eccs, self.arrows)
+        text_distances = distance_algorithm(self.eccs, self.texts)
+
+        self.eval_item.matched_arrows = arrow_distances
+        self.eval_item.matched_texts = text_distances
+
+        return self.eval_item
+
+    def calc_nearest_neighbor(self, eccs, to_match):
+        def euclidean(p1, p2):
+            x1, y1 = p1
+            x2, y2 = p2
+            return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+
+        results = {}
+        for to_match_idx, to_match_bbox in to_match.items():
+            result_per_match_idx = []
+            for ecc_idx, ecc_bbox in eccs.items():
+                to_match_mid = to_match_bbox.abs_mid
+                ecc_mid = ecc_bbox.abs_mid
+
+                distance = euclidean(to_match_mid, ecc_mid)
+                result_per_match_idx.append((distance, ecc_idx))
+
+            shortest_distance_first = lambda x: x[0]
+            result_per_match_idx = sorted(
+                result_per_match_idx, key=shortest_distance_first
+            )
+
+            results[to_match_idx] = result_per_match_idx
+
+        return results
 
 
 def insert_missing_edges(eval_item):
@@ -338,7 +494,118 @@ def insert_missing_edges(eval_item):
     return eval_item
 
 
-def topology(eval_item, threshold):
+def fuse_textboxes(eval_item, fuse_textbox_iou):
+    text_label_idx = eval_item.classes.index("text")
+
+    pred_bboxes = eval_item.pred_bboxes
+
+    done = False
+    while not done:
+        changed = False
+
+        # print("ROUND")
+        for idx1 in range(0, len(pred_bboxes) - 1):
+            for idx2 in range(idx1 + 1, len(pred_bboxes)):
+                # DEBUG
+                # print(len(pred_bboxes), idx1, idx2)
+
+                bbox1 = pred_bboxes[idx1]
+                bbox2 = pred_bboxes[idx2]
+
+                # when both boxes are text
+                if bbox1.label != text_label_idx or bbox2.label != text_label_idx:
+                    continue
+
+                # when they have a certain iou then fuse them
+                if utils.calc_iou(bbox1.abs, bbox2.abs) < fuse_textbox_iou:
+                    continue
+
+                # DEBUG
+                # print("Fused Text Before")
+                # utils.show_bboxes(
+                #     eval_item.img, pred_bboxes, type_="utils", classes=eval_item.classes
+                # )
+
+                #
+                # first sort them so we can pop first the most right idx
+                idx1, idx2 = sorted((idx1, idx2))
+                pred_bboxes.pop(idx2)
+                pred_bboxes.pop(idx1)
+
+                # now fuse them like in giou, biggest convex box around both
+
+                bbox1_x1, bbox1_y1, bbox1_x2, bbox1_y2 = bbox1.abs
+                bbox2_x1, bbox2_y1, bbox2_x2, bbox2_y2 = bbox2.abs
+
+                new_x1, new_y1 = min(bbox1_x1, bbox2_x1), min(bbox1_y1, bbox2_y1)
+                new_x2, new_y2 = max(bbox1_x2, bbox2_x2), max(bbox1_y2, bbox2_y2)
+
+                new_bbox = YoloBBox(bbox1.img_dim).from_abs(
+                    new_x1, new_y1, new_x2, new_y2, text_label_idx
+                )
+                new_bbox.confidence = max(bbox1.confidence, bbox2.confidence)
+
+                pred_bboxes.append(new_bbox)
+
+                # DEBUG
+                # print("Fused Text After")
+                # utils.show_bboxes(
+                #     eval_item.img, pred_bboxes, type_="utils", classes=eval_item.classes
+                # )
+
+                changed = True
+                break
+
+            if changed:
+                break
+
+        if not changed:
+            done = True
+
+    eval_item.pred_bboxes = pred_bboxes
+    return eval_item
+
+
+def apply_occlusion_nms(eval_item, occlusion_iou):
+    pred_bboxes = eval_item.pred_bboxes
+    bboxes_to_remove = []
+
+    for idx1 in range(len(pred_bboxes) - 1):
+        for idx2 in range(idx1 + 1, len(pred_bboxes)):
+            bbox1 = pred_bboxes[idx1]
+            bbox2 = pred_bboxes[idx2]
+
+            # when a certain thresh is reached between both
+            if utils.calc_iou(bbox1.abs, bbox2.abs) < occlusion_iou:
+                continue
+
+            # remove the one with the lower confidence
+            if bbox1.confidence < bbox2.confidence:
+                bboxes_to_remove.append(idx1)
+            else:
+                bboxes_to_remove.append(idx2)
+
+    bboxes_to_remove = sorted(bboxes_to_remove, reverse=True)
+    for idx in bboxes_to_remove:
+        # DEBUG
+        # print("Occlusion NMS Before")
+        # utils.show_bboxes(
+        #     eval_item.img, pred_bboxes, type_="utils", classes=eval_item.classes
+        # )
+
+        pred_bboxes.pop(idx)
+
+        # DEBUG
+        # print("Occlusion NMS After")
+        # utils.show_bboxes(
+        #     eval_item.img, pred_bboxes, type_="utils", classes=eval_item.classes
+        # )
+
+    eval_item.pred_bboxes = pred_bboxes
+    return eval_item
+
+
+def topology(eval_item, fn_threshold, fuse_textbox_iou, occlusion_iou, debug=False):
     img = eval_item.img
     segmentation = eval_item.segmentation
     pred_bboxes = eval_item.pred_bboxes
@@ -361,8 +628,13 @@ def topology(eval_item, threshold):
     # DEBUG
     # utils.show(segmentation)
 
+    # first fuse text then remove occlusions, because text could also be occulusions
+    # but are a special case
+    eval_item = fuse_textboxes(eval_item, fuse_textbox_iou)
+    eval_item = apply_occlusion_nms(eval_item, occlusion_iou)
+
     # fill FNs from yolo with ground truth dummys
-    eval_item = add_false_negatives(eval_item, threshold)
+    eval_item = add_false_negatives_and_false_positive(eval_item, fn_threshold)
     # build topology
     postprocessor = Postprocessor(eval_item.pred_bboxes, segmentation)
     topology = postprocessor.make_topology()
@@ -376,7 +648,8 @@ def topology(eval_item, threshold):
     # wire with the bbox, we just fake it to perform the evaluation correctly
     eval_item = insert_missing_edges(eval_item)
 
-    utils.Topology.print_dict(eval_item.topology)
+    if debug:
+        utils.Topology.print_dict(eval_item.topology)
 
     return eval_item
 
