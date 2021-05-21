@@ -33,6 +33,7 @@ class Trainer:
         batch_size=32,
         valid_batch_size=32,
         subdivision=1,
+        valid_subdivision=1,
         lr_scheduler=None,
         experiment=None,
     ):
@@ -47,6 +48,7 @@ class Trainer:
         self.subdivision = subdivision
         assert subdivision > 0
         self.valid_batch_size = valid_batch_size
+        self.valid_subdivision = valid_subdivision
 
         self.lr_scheduler = lr_scheduler
 
@@ -94,16 +96,18 @@ class Trainer:
                 # if tloss < 1e-5:
                 #     self.on_nan_or_zero(inputs, labels)
 
-                if self.step_counter % 5 == 0:
+                if self.step_counter % 1 == 0:
                     vinputs, vlabels = next(iter(self.valid_ds))
 
-                    vloss, pred = self.valid_step(vinputs, vlabels)
-                    pred = nn.Softmax(dim=1)(pred)
+                    vloss, preds = self.valid_step(vinputs, vlabels)
+                    vlabels = vlabels.cpu().numpy()
 
-                    pred, vlabels = pred.cpu().numpy(), vlabels.cpu().numpy()
+                    preds = [nn.Softmax(dim=1)(pred) for pred in preds]
+                    preds = [pred.cpu().numpy() for pred in preds]
+                    preds = np.concatenate(preds, axis=0)
 
-                    pred = self.combine_prediction(pred)
-                    iou = self.miou(vlabels, pred)
+                    preds = self.combine_prediction(preds)
+                    iou = self.miou(vlabels, preds)
 
                     self.print_valid(vloss, iou)
 
@@ -184,7 +188,12 @@ class Trainer:
 
         pretty = [["Step", "Took", "Loss", "Overall"]]
         pretty += [
-            [self.step_counter, f"{took}s", ffloat(loss * 1000), self.overall_train_time]
+            [
+                self.step_counter,
+                f"{took}s",
+                ffloat(loss * 1000),
+                self.overall_train_time,
+            ]
         ]
         pretty += [["Experiment", self.experiment.run]]
         pretty += [["BesIoU", f"{ffloat(self.best_iou*100)}%"]]
@@ -202,23 +211,37 @@ class Trainer:
 
     def valid_step(self, inputs, labels):
         self.model.eval()
-
         self.optimizer.zero_grad()
+
+        subbatch_size = int(self.valid_batch_size / self.valid_subdivision)
+        total_loss = 0
+
+        preds = []
         with torch.no_grad():
-            inputs = inputs.cuda()
-            labels = labels.cuda()
+            for subdiv in range(self.valid_subdivision):
+                start, end = subdiv * subbatch_size, (subdiv + 1) * subbatch_size
+                sub_inputs, sub_labels = inputs[start:end], labels[start:end]
 
-            pred = self.model(inputs)
-            loss = self.loss(pred, labels)
+                sub_inputs = sub_inputs.to(self.device)
+                sub_labels = sub_labels.to(self.device)
 
-        return loss.item(), pred
+                pred = self.model(sub_inputs)
+
+                loss = self.loss(pred, sub_labels) / self.valid_subdivision
+                total_loss += loss.item()
+
+                preds.append(pred)
+
+        return total_loss, preds
 
     def print_valid(self, loss, iou):
         self.valid_summary_writer.add_scalar("Loss", loss, self.step_counter)
         self.valid_summary_writer.add_scalar("mIoU", iou, self.step_counter)
 
         pretty = [["Loss", "mIoU"]]
-        pretty += [[utils.green(ffloat(loss * 1000)), f"{utils.green(ffloat(iou * 100))}%"]]
+        pretty += [
+            [utils.green(ffloat(loss * 1000)), f"{utils.green(ffloat(iou * 100))}%"]
+        ]
         print(tabulate(pretty))
 
     def combine_prediction(self, prediction):

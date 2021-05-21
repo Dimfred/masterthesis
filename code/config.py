@@ -144,28 +144,27 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 416 if utils.isme() else 448  # 448  # 448 #224 #608 #416  #288
+config.unet.input_size = 320 if utils.isme() else 448  # 448  # 448 #224 #608 #416  #288
 config.unet.channels = 3
 
 # training
-config.unet.lr = 3e-4 #0.0025
-config.unet.batch_size = 32 if utils.isme() else 64
-config.unet.valid_batch_size = 4 if utils.isme() else 8
-config.unet.subdivision = 8 if utils.isme() else 8
+config.unet.lr = 3e-3 #3e-4 #0.0025
+config.unet.batch_size = 64 if utils.isme() else 64
+config.unet.subdivision = 4 if utils.isme() else 8
+config.unet.valid_batch_size = 24 if utils.isme() else 24
+config.unet.valid_subdivision = 6 if utils.isme() else 3
 # minibatch_size = batch_size / subdivision
 config.unet.n_epochs = 1000
-config.unet.burn_in = 500
+config.unet.burn_in = 100
+# deprecated
+config.unet.lr_decay = "fixed"  # "cos" # "linear", "schedule", step
+config.unet.lr_decay_fixed = [300, 500]
 
 # optimizers
 config.unet.amsgrad = True
 config.unet.decay = 0.000005
 config.unet.betas = (0.90, 0.999)
 config.unet.momentum = 0.95
-
-# lr scheduler
-config.unet.lr_decay = "fixed"  # "cos" # "linear", "schedule", step
-config.unet.lr_decay_fixed = [300, 500]
-config.unet.lr_burn_in = 1000
 
 # loss functions
 config.unet.focal_alpha = 0.1 # 0.1 best

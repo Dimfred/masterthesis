@@ -234,12 +234,13 @@ def main():
         # def lr_scheduler(optimizer, step):
         #     lr = config.unet.lr
 
-        #     if step < config.unet.burn_in:
-        #         multiplier = (step / config.unet.burn_in) ** 4
-        #         lr = lr * multiplier
+        #     # if step < config.unet.burn_in:
+        #     #     multiplier = (step / config.unet.burn_in) ** 4
+        #     #     lr = lr * multiplier
 
-        #     for param_group in optimizer.param_groups:
-        #         param_group["lr"] = lr
+        #     # for param_group in optimizer.param_groups:
+        #     #     param_group["lr"] = lr
+        #     # print(lr)
 
         #     return lr
 
@@ -270,8 +271,9 @@ def main():
             data_loaders=data_loaders,
             loss=loss,
             batch_size=config.unet.batch_size,
-            valid_batch_size=config.unet.valid_batch_size,
             subdivision=config.unet.subdivision,
+            valid_batch_size=config.unet.valid_batch_size,
+            valid_subdivision=config.unet.valid_subdivision,
             lr_scheduler=lr_scheduler,
             device=device,
             experiment=experiment,
