@@ -247,19 +247,19 @@ def main():
             ):
                 print("Preloaded checkpoing path.")
                 model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
-            model.to(device)
 
         ##########
         ### V3 ###
         ##########
         if config.unet.architecture == "v3":
             model = fastseg.MobileV3Large(num_classes=2)
-            model.to(device)
 
         if config.unet.architecture == "unet":
             model = tv.models.segmentation.deeplabv3_resnet50(
-                pretrained=True, num_classes=config.unet.n_classes
+                pretrained=False, num_classes=config.unet.n_classes
             )
+
+        model.to(device)
 
         ###############
         ## OPTIMIZER ##
