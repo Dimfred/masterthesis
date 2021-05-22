@@ -87,6 +87,7 @@ def get_data_loaders(train_files, val_files, img_size=224):
     # print(pad_size, img_size)
     # fmt:off
     train_transform = A.Compose([
+        # SafeRotate!
         # rotation
         # A.PadIfNeeded(
         #     min_width=800,
@@ -229,20 +230,21 @@ def main():
         ### V2 ###
         ##########
 
-        model = MobileNetV2_unet(
-            n_classes=config.unet.n_classes if loss_type == "focal" else 1,
-            input_size=config.unet.input_size,
-            channels=config.unet.channels,
-            pretrained=config.unet.pretrained_path,
-            width_multiplier=config.unet.width_multiplier,
-        )
-        if (
-            config.unet.checkpoint_path is not None
-            and config.unet.pretrained_path is None
-        ):
-            print("Preloaded checkpoing path.")
-            model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
-        model.to(device)
+        if config.unet.architecture == "v2":
+            model = MobileNetV2_unet(
+                n_classes=config.unet.n_classes if loss_type == "focal" else 1,
+                input_size=config.unet.input_size,
+                channels=config.unet.channels,
+                pretrained=config.unet.pretrained_path,
+                width_multiplier=config.unet.width_multiplier,
+            )
+            if (
+                config.unet.checkpoint_path is not None
+                and config.unet.pretrained_path is None
+            ):
+                print("Preloaded checkpoing path.")
+                model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
+            model.to(device)
 
         ##########
         ### V3 ###
@@ -253,8 +255,9 @@ def main():
         # model.to(device)
         # print(str(model))
 
-        model = fastseg.MobileV3Large(num_classes=2)
-        model.to(device)
+        if config.unet.architecture == "v3":
+            model = fastseg.MobileV3Large(num_classes=2)
+            model.to(device)
 
         ###############
         ## OPTIMIZER ##
