@@ -165,6 +165,7 @@ config.unet.amsgrad = True
 config.unet.decay = 0.000005
 config.unet.betas = (0.95, 0.999)
 config.unet.momentum = 0.95
+config.unet.nesterov = False
 
 # loss functions
 config.unet.focal_alpha = 0.1 # 0.1 best
@@ -174,7 +175,7 @@ config.unet.focal_reduction = "mean"
 
 # priority[pretrained] > priority[checkpoint]
 config.unet.pretrained_path = None
-# config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
+config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
 config.unet.checkpoint_path = None
 # config.unet.checkpoint_path = Path("weights/checkpoint.pth")
 # config.unet.output_dir = Path("outputs")

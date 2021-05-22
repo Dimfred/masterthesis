@@ -271,6 +271,7 @@ def main():
             betas=config.unet.betas,
             weight_decay=config.unet.decay,
             amsgrad=config.unet.amsgrad,
+            nesterov=config.unet.nesterov,
         )
         def lr_scheduler(optimizer, step):
             lr = config.unet.lr
