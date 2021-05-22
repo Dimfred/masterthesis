@@ -142,13 +142,13 @@ def get_data_loaders(train_files, val_files, img_size=224):
         # A.CLAHE(
         #     p=0.5
         # ),
-        A.Sharpen(
-            p=0.5
-        ),
-        A.Blur(
-            blur_limit=config.unet.augment.blur,
-            p=0.5
-        ),
+        # A.Sharpen(
+        #     p=0.5
+        # ),
+        # A.Blur(
+        #     blur_limit=config.unet.augment.blur,
+        #     p=0.5
+        # ),
         A.Resize(
             width=img_size,
             height=img_size,
