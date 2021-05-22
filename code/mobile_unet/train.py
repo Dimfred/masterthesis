@@ -252,7 +252,8 @@ def main():
         ### V3 ###
         ##########
         if config.unet.architecture == "v3":
-            model = fastseg.MobileV3Large(num_classes=2)
+            # model = fastseg.MobileV3Large(num_classes=2)
+            model = fastseg.MobileV3Large(num_classes=2).from_pretrained()
 
         if config.unet.architecture == "unet":
 
