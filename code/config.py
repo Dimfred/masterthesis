@@ -153,7 +153,7 @@ config.unet.architecture = "v3" # v2, v3, unet
 # training
 config.unet.lr = 3e-4 #3e-4 #0.0025
 config.unet.batch_size = 64 if utils.isme() else 64
-config.unet.subdivision = 16 if utils.isme() else 16
+config.unet.subdivision = 16 if utils.isme() else 8
 config.unet.valid_batch_size = 24 if utils.isme() else 24
 config.unet.valid_subdivision = 1 if utils.isme() else 3
 # minibatch_size = batch_size / subdivision
