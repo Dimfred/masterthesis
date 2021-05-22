@@ -31,7 +31,7 @@ from dataset import MaskDataset
 
 from nets.MobileNetV2_unet import MobileNetV2_unet
 
-# from fastseg import MobileNetV3Small
+import fastseg
 from trainer import Trainer
 from adapted_mobilenetv3 import AdaptedMobileNetV3
 
@@ -252,6 +252,9 @@ def main():
         # # model = tv.models.segmentation.deeplabv3_mobilenet_v3_large(pretrained=True)
         # model.to(device)
         # print(str(model))
+
+        model = fastseg.MobileV3Large(num_classes=2)
+        model.to(device)
 
         ###############
         ## OPTIMIZER ##

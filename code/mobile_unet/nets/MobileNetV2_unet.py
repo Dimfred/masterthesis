@@ -54,6 +54,7 @@ class MobileNetV2_unet(nn.Module):
             self.invres4 = InvertedResidual(32, 16, 1, 6)
 
             self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
+
         elif width_multiplier == 1.4:
             self.dconv1 = nn.ConvTranspose2d(1792, 136, 4, padding=1, stride=2)
             self.invres1 = InvertedResidual(272, 136, 1, 6)
