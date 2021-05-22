@@ -3,7 +3,7 @@
 import logging
 import os
 
-import cv2
+import cv2 as cv
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -35,13 +35,26 @@ from config import config
 
 # %%
 def get_data_loaders(val_files):
+    # fmt: off
     val_transform = A.Compose(
         [
-            A.Resize(config.unet.input_size, config.unet.input_size),
-            # A.LongestMaxSize(config.unet.input_size, always_apply=True)
-            # A.GaussianBlur((5, 5), sigma_limit=1.2, always_apply=True),
+            # A.Blur(always_apply=True),
+            A.PadIfNeeded(
+                min_width=config.augment.unet.img_params.resize,
+                min_height=config.augment.unet.img_params.resize,
+                border_mode=cv.BORDER_CONSTANT,
+                value=0,
+                mask_value=0,
+                always_apply=True
+            ),
+            A.Resize(
+                width=config.unet.test_input_size,
+                height=config.unet.test_input_size,
+                always_apply=True
+            ),
         ]
     )
+    # fmt: on
 
     val_loader = DataLoader(
         MaskDataset(val_files, val_transform),
@@ -77,7 +90,7 @@ def evaluate():
     model = MobileNetV2_unet(
         mode="eval",
         n_classes=config.unet.n_classes,
-        input_size=config.unet.input_size,
+        input_size=config.unet.test_input_size,
         channels=config.unet.channels,
         pretrained=None
     )
@@ -86,12 +99,14 @@ def evaluate():
     # GPU version
     # unable to load it anymore
     # loaded = torch.load("weights/non_transfer_best.pth")
-    loaded = torch.load("weights/best.pth")
-    # loaded = torch.load("experiments_unet/test/test/run0/best.pth")
+    # loaded = torch.load("weights/best.pth")
+    loaded = torch.load("experiments_unet/test/test/run0/best.pth")
     model.load_state_dict(loaded)
     model.to(device)
     model.eval()
 
+    import sys
+    show = len(sys.argv) > 1
 
     n_shown = 0
     ious = []
@@ -107,45 +122,33 @@ def evaluate():
                 i = i.cpu().numpy().transpose((1, 2, 0)) * 255
                 # l = l.cpu().numpy().reshape(*img_size)
                 l = l.cpu().numpy() * 255
-                o = o.cpu().numpy() * 255
-                print(o.shape)
-                # o = o.cpu().numpy().reshape(int(IMG_SIZE / 2), int(IMG_SIZE / 2)) * 255
-                # o = o.cpu().numpy().reshape(int(IMG_SIZE), int(IMG_SIZE)) #* 255
+                o = o.cpu().numpy()
+                # o = o.cpu().numpy() * 255
+                # print(o.shape)
 
-                # i = cv2.resize(i.astype(np.uint8), img_size)
-                # l = cv2.resize(l.astype(np.uint8), img_size)
-                # o = cv2.resize(o.astype(np.uint8), img_size)
+                bg, fg = o[0], o[1]
+                o = (fg + 1 - bg) / 2
+                o[o >= 0.5] = 1
+                o[o < 0.5] = 0
+
+                o = o * 255
 
                 i = np.uint8(i)
                 l = np.uint8(l)
                 o = np.uint8(o)
 
-                utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
+                if show:
+                    utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
 
-                print(l.shape)
-                print(o.shape)
-                # iou = np.logical_and(l, o)
-                # iou = (iou.sum()) / (l > 0).sum()
                 iou = calc_iou(l, o)
                 ious.append(iou)
-
-
-                # plt.subplot(131)
-                # plt.imshow(i)
-                # plt.subplot(132)
-                # plt.imshow(l)
-                # plt.subplot(133)
-                # plt.imshow(o)
-                # plt.show()
                 n_shown += 1
-                # if n_shown > 10:
-                #     return
 
     print("All:", ious)
-    print("Mean:", np.array(ious).sum() / len(ious))
+    print("Mean:", np.array(ious).mean())
 
 def calc_iou(target, prediction):
-    print(target.shape)
+    # print(target.shape)
     intersection = np.logical_and(target, prediction)
     union = np.logical_or(target, prediction)
     iou_score = np.sum(intersection, axis=(0, 1)) / np.sum(union, axis=(0, 1))

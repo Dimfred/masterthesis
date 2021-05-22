@@ -252,15 +252,14 @@ def main():
         ##########
         ### V3 ###
         ##########
-        # model = AdaptedMobileNetV3(num_classes=config.unet.n_classes, pretrained=True)
-        # model = AdaptedMobileNetV3(pretrained=True)
-        # # model = tv.models.segmentation.deeplabv3_mobilenet_v3_large(pretrained=True)
-        # model.to(device)
-        # print(str(model))
-
         if config.unet.architecture == "v3":
             model = fastseg.MobileV3Large(num_classes=2)
             model.to(device)
+
+        if config.unet.architecture == "unet":
+            model = tv.models.segmentation.deeplabv3_resnet50(
+                pretrained=True, num_classes=config.unet.n_classes
+            )
 
         ###############
         ## OPTIMIZER ##
@@ -273,6 +272,7 @@ def main():
             amsgrad=config.unet.amsgrad,
             # nesterov=config.unet.nesterov,
         )
+
         def lr_scheduler(optimizer, step):
             lr = config.unet.lr
 
@@ -300,7 +300,6 @@ def main():
 
         #     return lr
 
-
         experiment = utils.UnetExperiment(
             config.unet.experiment_dir,
             config.unet.experiment_name,
@@ -318,7 +317,7 @@ def main():
             lr_scheduler=lr_scheduler,
             device=device,
             experiment=experiment,
-            loss_type=loss_type
+            loss_type=loss_type,
         )
         trainer.train(model, optimizer)
 
