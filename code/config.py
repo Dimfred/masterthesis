@@ -151,7 +151,7 @@ config.unet.width_multiplier = 1.0
 config.unet.architecture = "unet" # v2, v3, unet
 
 # training
-config.unet.lr = 3e-3 #3e-4 #0.0025
+config.unet.lr = 3e-4 #3e-4 #0.0025
 config.unet.batch_size = 64 if utils.isme() else 64
 config.unet.subdivision = 16 if utils.isme() else 16
 config.unet.valid_batch_size = 24 if utils.isme() else 24

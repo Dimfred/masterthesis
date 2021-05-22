@@ -265,8 +265,7 @@ def main():
 
                 def forward(self, x):
                     x = self.model(x)["out"]
-                    print(torch.where(x > 1.))
-                    return
+                    return x
 
             model = DeeplabV3Resnet50(num_classes=2)
 
