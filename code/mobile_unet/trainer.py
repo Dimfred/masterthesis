@@ -171,6 +171,9 @@ class Trainer:
                 start, end = subdiv * subbatch_size, (subdiv + 1) * subbatch_size
                 sub_inputs, sub_labels = inputs[start:end], labels[start:end]
 
+                if sub_inputs.shape[0] == 0:
+                    break
+
                 sub_inputs = sub_inputs.to(self.device)
                 sub_labels = sub_labels.to(self.device)
 
