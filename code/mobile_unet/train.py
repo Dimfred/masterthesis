@@ -255,9 +255,18 @@ def main():
             model = fastseg.MobileV3Large(num_classes=2)
 
         if config.unet.architecture == "unet":
-            model = tv.models.segmentation.deeplabv3_resnet50(
-                pretrained=False, num_classes=config.unet.n_classes
-            )
+
+            class DeeplabV3Resnet50(nn.Module):
+                def __init__(self, *args, **kwargs):
+                    super(DeeplabV3Resnet50, self).__init__()
+                    self.model = tv.models.segmentation.deeplabv3_resnet50(
+                        *args, **kwargs
+                    )
+
+                def forward(self, x):
+                    return self.model(x)["out"]
+
+            model = DeeplabV3Resnet50(num_classes=2)
 
         model.to(device)
 
