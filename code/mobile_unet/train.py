@@ -117,21 +117,21 @@ def get_data_loaders(train_files, val_files, img_size=224):
             height=crop_size,
             p=0.5,
         ),
-        A.OneOf(
-            [
-                A.ColorJitter(
-                    brightness=config.unet.augment.color_jitter,
-                    contrast=config.unet.augment.color_jitter,
-                    saturation=config.unet.augment.color_jitter,
-                    hue=config.unet.augment.color_jitter,
-                    # p=0.5
-                ),
-                A.CLAHE(
-                    # p=0.5
-                ),
-            ],
-            p=0.5
-        ),
+        # A.OneOf(
+        #     [
+        #         A.ColorJitter(
+        #             brightness=config.unet.augment.color_jitter,
+        #             contrast=config.unet.augment.color_jitter,
+        #             saturation=config.unet.augment.color_jitter,
+        #             hue=config.unet.augment.color_jitter,
+        #             # p=0.5
+        #         ),
+        #         A.CLAHE(
+        #             # p=0.5
+        #         ),
+        #     ],
+        #     p=0.5
+        # ),
         # A.ColorJitter(
         #     brightness=config.unet.augment.color_jitter,
         #     contrast=config.unet.augment.color_jitter,
@@ -142,6 +142,9 @@ def get_data_loaders(train_files, val_files, img_size=224):
         # A.CLAHE(
         #     p=0.5
         # ),
+        A.Sharpen(
+            p=0.5
+        ),
         A.Blur(
             blur_limit=config.unet.augment.blur,
             p=0.5
