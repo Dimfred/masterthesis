@@ -40,11 +40,11 @@ def mask_generator(img):
 
 
 if __name__ == "__main__":
-    src_dir = config.train_dir 
+    src_dir = config.train_dir
     has_mask = lambda file_: utils.is_img(file_) and not utils.has_mask(config.foregrounds_dir, file_)
     dst_dir = config.foregrounds_dir
 
-    # src_dir = config.arrows_dir 
+    # src_dir = config.arrows_dir
     # has_mask = lambda file_: utils.is_img(file_) and not utils.has_mask(config.arrows_dir, file_):
     # dst_dir = config.arrows_dir
 

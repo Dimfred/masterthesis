@@ -24,6 +24,7 @@ class MobileNetV2_unet(nn.Module):
         width_multiplier=1.0,
         mode="train",
         scale=False,
+        upsampling="transpose",
     ):
         super(MobileNetV2_unet, self).__init__()
 
@@ -41,42 +42,79 @@ class MobileNetV2_unet(nn.Module):
         # input_channel, last_channel
         # self.dense0 = conv_1x1_bn(320, 1280)
 
-        if width_multiplier == 1.0:
-            self.dconv1 = nn.ConvTranspose2d(1280, 96, 4, padding=1, stride=2)
-            # self.dconv1 = nn.UpsamplingBilinear2d(scale_factor=2)
-            self.invres1 = InvertedResidual(192, 96, 1, 6)
+        if upsampling == "transpose":
+            if width_multiplier == 1.0:
+                self.dconv1 = nn.ConvTranspose2d(1280, 96, 4, padding=1, stride=2)
+                self.invres1 = InvertedResidual(192, 96, 1, 6)
 
-            self.dconv2 = nn.ConvTranspose2d(96, 32, 4, padding=1, stride=2)
-            self.invres2 = InvertedResidual(64, 32, 1, 6)
+                self.dconv2 = nn.ConvTranspose2d(96, 32, 4, padding=1, stride=2)
+                self.invres2 = InvertedResidual(64, 32, 1, 6)
 
-            self.dconv3 = nn.ConvTranspose2d(32, 24, 4, padding=1, stride=2)
-            self.invres3 = InvertedResidual(48, 24, 1, 6)
+                self.dconv3 = nn.ConvTranspose2d(32, 24, 4, padding=1, stride=2)
+                self.invres3 = InvertedResidual(48, 24, 1, 6)
 
-            self.dconv4 = nn.ConvTranspose2d(24, 16, 4, padding=1, stride=2)
+                self.dconv4 = nn.ConvTranspose2d(24, 16, 4, padding=1, stride=2)
 
-            if not scale:
-                self.invres4 = InvertedResidual(32, 16, 1, 6)
-                self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
-            else:
+                if not scale:
+                    self.invres4 = InvertedResidual(32, 16, 1, 6)
+                    self.dconv5 = nn.ConvTranspose2d(
+                        16, n_classes, 4, padding=1, stride=2
+                    )
+                else:
+                    self.invres4 = InvertedResidual(32, n_classes, 1, 6)
+                    self.dconv5 = nn.Upsample(
+                        scale_factor=2, mode="bilinear", align_corners=False
+                    )
+
+            elif width_multiplier == 1.4:
+                self.dconv1 = nn.ConvTranspose2d(1792, 136, 4, padding=1, stride=2)
+                self.invres1 = InvertedResidual(272, 136, 1, 6)
+
+                self.dconv2 = nn.ConvTranspose2d(136, 48, 4, padding=1, stride=2)
+                self.invres2 = InvertedResidual(96, 48, 1, 6)
+
+                self.dconv3 = nn.ConvTranspose2d(48, 32, 4, padding=1, stride=2)
+                self.invres3 = InvertedResidual(64, 32, 1, 6)
+
+                self.dconv4 = nn.ConvTranspose2d(32, 24, 4, padding=1, stride=2)
+                self.invres4 = InvertedResidual(48, 24, 1, 6)
+
+                self.dconv5 = nn.ConvTranspose2d(24, n_classes, 4, padding=1, stride=2)
+
+        elif upsampling == "bilinear":
+            if width_multiplier == 1.0:
+
+                def Upsample():
+                    return nn.Upsample(
+                        scale_factor=2, mode="bilinear", align_corners=False
+                    )
+
+                # def Upsample(inp, outp):
+                #     return nn.Sequential(
+                #         InvertedResidual(inp, outp, 1, 6),
+                #     )
+
+                self.dconv1 = nn.Sequential(
+                    # TODO test order
+                    nn.Upsample(
+                        scale_factor=2, mode="bilinear", align_corners=False
+                    ),
+                    InvertedResidual(1280, 96, 1, 6),
+                )
+                self.invres1 = InvertedResidual(192, 32, 1, 6)
+
+                self.dconv2 =  Upsample()
+                self.invres2 = InvertedResidual(64, 24, 1, 6)
+
+                self.dconv3 = Upsample()
+                self.invres3 = InvertedResidual(48, 16, 1, 6)
+
+                self.dconv4 = Upsample()
                 self.invres4 = InvertedResidual(32, n_classes, 1, 6)
+
                 self.dconv5 = nn.Upsample(
                     scale_factor=2, mode="bilinear", align_corners=False
                 )
-
-        elif width_multiplier == 1.4:
-            self.dconv1 = nn.ConvTranspose2d(1792, 136, 4, padding=1, stride=2)
-            self.invres1 = InvertedResidual(272, 136, 1, 6)
-
-            self.dconv2 = nn.ConvTranspose2d(136, 48, 4, padding=1, stride=2)
-            self.invres2 = InvertedResidual(96, 48, 1, 6)
-
-            self.dconv3 = nn.ConvTranspose2d(48, 32, 4, padding=1, stride=2)
-            self.invres3 = InvertedResidual(64, 32, 1, 6)
-
-            self.dconv4 = nn.ConvTranspose2d(32, 24, 4, padding=1, stride=2)
-            self.invres4 = InvertedResidual(48, 24, 1, 6)
-
-            self.dconv5 = nn.ConvTranspose2d(24, n_classes, 4, padding=1, stride=2)
 
         # self.invres5 = None
 

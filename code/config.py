@@ -144,17 +144,18 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 224 if utils.isme() else 448  # 448  # 448 #224 #608 #416  #288
-config.unet.test_input_size = 480 # 448, 480, 512, 544, 576, 608
+config.unet.input_size = 224 if utils.isme() else 608  # 448  # 448 #224 #608 #416 #288
+config.unet.test_input_size = 608 # 448, 480, 512, 544, 576, 608
 config.unet.channels = 3
 config.unet.width_multiplier = 1.0
 config.unet.architecture = "v2" # v2, v3, unet
+config.unet.upsampling = "transpose" # transpose, bilinear
 config.unet.scale = True # use Upsample instead of last deconv
 
 # training
-config.unet.lr = 3e-4 #3e-4 #0.0025
+config.unet.lr = 3e-3 #3e-4 #0.0025
 config.unet.batch_size = 64 if utils.isme() else 64
-config.unet.subdivision = 16 if utils.isme() else 8
+config.unet.subdivision = 4 if utils.isme() else 8
 config.unet.valid_batch_size = 24 if utils.isme() else 24
 config.unet.valid_subdivision = 1 if utils.isme() else 3
 # minibatch_size = batch_size / subdivision
@@ -184,7 +185,7 @@ config.unet.checkpoint_path = None
 config.unet.weights = Path("mobile_unet") / config.weights_dir / "text.pth"
 
 # utility
-config.unet.n_workers = 1 if utils.isme() else 12
+config.unet.n_workers = 10 if utils.isme() else 12
 
 # experiments
 config.unet.experiment_dir = Path("experiments_unet")

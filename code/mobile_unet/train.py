@@ -114,17 +114,17 @@ def get_data_loaders(train_files, val_files, img_size=224):
             height=crop_size,
             p=0.5,
         ),
-        A.ElasticTransform(
-            # alpha=1,
-            # alpha_affine=50,
-            # sigma=50,
-            border_mode=cv.BORDER_CONSTANT,
-            value=pad_value,
-            mask_value=mask_value,
-            interpolation=cv.INTER_CUBIC,
-            # always_apply=True
-            p=0.5,
-        ),
+        # A.ElasticTransform(
+        #     # alpha=1,
+        #     # alpha_affine=50,
+        #     # sigma=50,
+        #     border_mode=cv.BORDER_CONSTANT,
+        #     value=pad_value,
+        #     mask_value=mask_value,
+        #     interpolation=cv.INTER_CUBIC,
+        #     # always_apply=True
+        #     p=0.5,
+        # ),
         # A.OneOf(
         #     [
         #         A.ColorJitter(
@@ -252,10 +252,12 @@ def main():
                 pretrained=config.unet.pretrained_path,
                 width_multiplier=config.unet.width_multiplier,
                 scale=config.unet.scale,
+                upsampling=config.unet.upsampling
             )
             if (
                 config.unet.checkpoint_path is not None
                 and config.unet.pretrained_path is None
+                # and config.unet.upsampling != "bilinear"
             ):
                 print("Preloaded checkpoing path.")
                 model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))

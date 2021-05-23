@@ -293,13 +293,22 @@ class Trainer:
         return iou_score.mean()
 
     def recall(self, tp, fn):
-        return tp / (tp + fn)
+        denom = (tp + fn)
+        if denom == 0:
+            denom = 1
+        return tp / denom
 
     def precision(self, tp, fp):
-        return tp / (tp + fp)
+        denom = (tp + fp)
+        if denom == 0:
+            denom = 1
+        return tp / denom
 
     def f1(self, precision, recall):
-        return 2 * precision * recall / (precision + recall)
+        denom = (precision + recall)
+        if denom == 0:
+            denom = 1
+        return 2 * precision * recall / denom
 
 @nb.njit
 def tps_fps_fns(target, prediction):
