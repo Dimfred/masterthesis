@@ -12,6 +12,7 @@ import math
 import torch
 from torch import optim as optimizers
 from torchgeometry import losses
+from loss import dice_loss
 import torchvision as tv
 
 from sklearn.model_selection import KFold
@@ -227,7 +228,10 @@ def main():
         )
 
         # loss_type = "dice"
+        # loss = dice_loss()
         # loss = losses.dice.DiceLoss()
+
+
 
         # loss_type = "binfocal"
         # loss = BinaryFocalLoss(

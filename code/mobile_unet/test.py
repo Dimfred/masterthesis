@@ -14,6 +14,8 @@ from torchvision.transforms import Compose, Resize, ToTensor
 from dataset import MaskDataset #get_img_files, get_img_files_eval
 from nets.MobileNetV2_unet import MobileNetV2_unet
 import albumentations as A
+import numba as nb
+from tabulate import tabulate
 
 np.random.seed(1)
 torch.backends.cudnn.deterministic = True
@@ -66,6 +68,35 @@ def get_data_loaders(val_files):
 
     return val_loader
 
+
+def calc_recall(tp, fn):
+    return tp / (tp + fn)
+
+def calc_precision(tp, fp):
+    return tp / (tp + fp)
+
+def calc_f1(precision, recall):
+    return 2 * precision * recall / (precision + recall)
+
+@nb.njit
+def tps_fps_fns(target, prediction):
+    tps, fps, fns = 0, 0, 0
+    # for target_, prediction_ in zip(target, prediction):
+    for target_row, prediction_row in zip(target, prediction):
+        for target_val, prediction_val in zip(target_row, prediction_row):
+            if target_val == 1:
+                if prediction_val == 1:
+                    tps += 1
+                else:
+                    fns += 1
+            else:
+                if prediction_val == 1:
+                    fps += 1
+
+    return tps, fps, fns
+
+def ffloat(f):
+    return "{:.5f}".format(f * 100)
 
 def evaluate():
     n_shown = 0
@@ -122,8 +153,9 @@ def evaluate():
     n_shown = 0
     ious = []
 
-    conf_thresh = 0.4
+    conf_thresh = 0.6
 
+    tps, fps, fns = 0, 0, 0
     with torch.no_grad():
 
         for idx, (inputs, labels) in enumerate(data_loader):
@@ -135,34 +167,54 @@ def evaluate():
                 # move channels back
                 i = i.cpu().numpy().transpose((1, 2, 0)) * 255
                 # l = l.cpu().numpy().reshape(*img_size)
-                l = l.cpu().numpy() * 255
                 o = o.cpu().numpy()
+                l = l.cpu().numpy()
                 # o = o.cpu().numpy() * 255
                 # print(o.shape)
 
+                # prepare pred
                 bg, fg = o[0], o[1]
                 o = (fg + 1 - bg) / 2
                 o[o >= conf_thresh] = 1
                 o[o < conf_thresh] = 0
 
-                o = o * 255
+                o = np.uint8(o)
+                l = np.uint8(l)
 
+                # metrics
+                iou = calc_iou(l, o)
+                ious.append(iou)
+                print(iou)
+
+
+                tps_, fps_, fns_ = tps_fps_fns(l, o)
+                tps += tps_
+                fps += fps_
+                fns += fns_
+
+                # DEBUG
+                o = o * 255
+                l = l * 255
                 i = np.uint8(i)
                 l = np.uint8(l)
                 o = np.uint8(o)
 
-
-                iou = calc_iou(l, o)
-                print(iou)
-
                 if show and iou < 0.8:
                     utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
 
-                ious.append(iou)
-                n_shown += 1
+
+
 
     print("All:", ious)
-    print("Mean:", np.array(ious).mean())
+
+    miou = np.array(ious).mean()
+    recall = calc_recall(tps, fns)
+    precision = calc_precision(tps, fps)
+    f1 = calc_f1(precision, recall)
+
+    pretty = [["mIoU", "Precision", "Recall", "F1"]]
+    pretty += [[ffloat(miou), ffloat(precision), ffloat(recall), ffloat(f1)]]
+    print(tabulate(pretty))
 
 def calc_iou(target, prediction):
     # print(target.shape)

@@ -3,6 +3,7 @@ import numpy as np
 import torch
 import time
 from tabulate import tabulate
+import numba as nb
 
 import utils
 
@@ -113,9 +114,9 @@ class Trainer:
                     preds = np.concatenate(preds, axis=0)
 
                     preds = self.combine_prediction(preds)
-                    iou = self.miou(vlabels, preds)
+                    iou, recall, precision, f1 = self.metrics(vlabels, preds)
 
-                    self.print_valid(vloss, iou)
+                    self.print_valid(vloss, iou, recall, precision, f1)
 
                     vinputs = vinputs.cpu().numpy()
 
@@ -242,13 +243,22 @@ class Trainer:
 
         return total_loss, preds
 
-    def print_valid(self, loss, iou):
+    def print_valid(self, loss, iou, recall, precision, f1):
         self.valid_summary_writer.add_scalar("Loss", loss, self.step_counter)
         self.valid_summary_writer.add_scalar("mIoU", iou, self.step_counter)
+        self.valid_summary_writer.add_scalar("Recall", recall, self.step_counter)
+        self.valid_summary_writer.add_scalar("Precision", precision, self.step_counter)
+        self.valid_summary_writer.add_scalar("F1", f1, self.step_counter)
 
-        pretty = [["Loss", "mIoU"]]
+        pretty = [["Loss", "mIoU", "Recall", "Precision", "F1"]]
         pretty += [
-            [utils.green(ffloat(loss * 1000)), f"{utils.green(ffloat(iou * 100))}%"]
+            [
+                utils.green(ffloat(loss * 1000)),
+                f"{utils.green(ffloat(iou * 100))}%",
+                f"{utils.green(ffloat(recall * 100))}%",
+                f"{utils.green(ffloat(precision * 100))}%",
+                f"{utils.green(ffloat(f1 * 100))}%",
+            ]
         ]
         print(tabulate(pretty))
 
@@ -265,9 +275,45 @@ class Trainer:
 
         return prediction
 
+    def metrics(self, target, prediction):
+        iou = self.miou(target, prediction)
+
+        tps, fps, fns = tps_fps_fns(target, prediction)
+        recall = self.recall(tps, fns)
+        precision = self.precision(tps, fps)
+        f1 = self.f1(precision, recall)
+
+        return iou, recall, precision, f1
+
     def miou(self, target, prediction):
         intersection = np.logical_and(target, prediction)
         union = np.logical_or(target, prediction)
         iou_score = np.sum(intersection, axis=(1, 2)) / np.sum(union, axis=(1, 2))
 
         return iou_score.mean()
+
+    def recall(self, tp, fn):
+        return tp / (tp + fn)
+
+    def precision(self, tp, fp):
+        return tp / (tp + fp)
+
+    def f1(self, precision, recall):
+        return 2 * precision * recall / (precision + recall)
+
+@nb.njit
+def tps_fps_fns(target, prediction):
+    tps, fps, fns = 0, 0, 0
+    for target_, prediction_ in zip(target, prediction):
+        for target_row, prediction_row in zip(target_, prediction_):
+            for target_val, prediction_val in zip(target_row, prediction_row):
+                if target_val == 1:
+                    if prediction_val == 1:
+                        tps += 1
+                    else:
+                        fns += 1
+                else:
+                    if prediction_val == 1:
+                        fps += 1
+
+    return tps, fps, fns
