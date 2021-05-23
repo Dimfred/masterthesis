@@ -240,6 +240,7 @@ def main():
                 channels=config.unet.channels,
                 pretrained=config.unet.pretrained_path,
                 width_multiplier=config.unet.width_multiplier,
+                scale=config.unet.scale,
             )
             if (
                 config.unet.checkpoint_path is not None

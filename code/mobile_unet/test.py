@@ -98,9 +98,12 @@ def evaluate():
     # model.load_state_dict(torch.load('{}/{}-best.pth'.format(OUT_DIR, n), map_location="cpu"))
     # GPU version
     # unable to load it anymore
+
     # loaded = torch.load("weights/non_transfer_best.pth")
-    # loaded = torch.load("weights/best.pth")
-    loaded = torch.load("experiments_unet/test/test/run0/best.pth")
+    loaded = torch.load("weights/best.pth")
+    # loaded = torch.load("experiments_unet/test/test/run0/best.pth")
+    # loaded = torch.load("weights/best_safe_FUCKING_KEEP_IT.pth")
+
     model.load_state_dict(loaded)
     model.to(device)
     model.eval()
@@ -110,6 +113,9 @@ def evaluate():
 
     n_shown = 0
     ious = []
+
+    conf_thresh = 0.6
+
     with torch.no_grad():
 
         for inputs, labels in data_loader:
@@ -128,8 +134,8 @@ def evaluate():
 
                 bg, fg = o[0], o[1]
                 o = (fg + 1 - bg) / 2
-                o[o >= 0.5] = 1
-                o[o < 0.5] = 0
+                o[o >= conf_thresh] = 1
+                o[o < conf_thresh] = 0
 
                 o = o * 255
 
@@ -137,10 +143,13 @@ def evaluate():
                 l = np.uint8(l)
                 o = np.uint8(o)
 
-                if show:
-                    utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
 
                 iou = calc_iou(l, o)
+                print(iou)
+
+                if show and iou < 0.7:
+                    utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
+
                 ious.append(iou)
                 n_shown += 1
 

@@ -23,11 +23,13 @@ class MobileNetV2_unet(nn.Module):
         pretrained="weights/mobilenet_v2.pth.tar",
         width_multiplier=1.0,
         mode="train",
+        scale=False,
     ):
         super(MobileNetV2_unet, self).__init__()
 
         self.mode = mode
         self.input_size = input_size
+        self.scale = scale
 
         self.backbone = MobileNetV2(
             n_classes=1000,
@@ -51,9 +53,15 @@ class MobileNetV2_unet(nn.Module):
             self.invres3 = InvertedResidual(48, 24, 1, 6)
 
             self.dconv4 = nn.ConvTranspose2d(24, 16, 4, padding=1, stride=2)
-            self.invres4 = InvertedResidual(32, 16, 1, 6)
 
-            self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
+            if not scale:
+                self.invres4 = InvertedResidual(32, 16, 1, 6)
+                self.dconv5 = nn.ConvTranspose2d(16, n_classes, 4, padding=1, stride=2)
+            else:
+                self.invres4 = InvertedResidual(32, n_classes, 1, 6)
+                self.dconv5 = nn.Upsample(
+                    scale_factor=2, mode="bilinear", align_corners=False
+                )
 
         elif width_multiplier == 1.4:
             self.dconv1 = nn.ConvTranspose2d(1792, 136, 4, padding=1, stride=2)
