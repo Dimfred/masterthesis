@@ -84,15 +84,14 @@ def evaluate():
     # val_files = utils.list_imgs(config.valid_out_dir)
     # data_loader = get_data_loaders(val_files)
 
-    test_files = utils.list_imgs(config.test_out_dir)
-    data_loader = get_data_loaders(test_files)
 
     model = MobileNetV2_unet(
         mode="eval",
         n_classes=config.unet.n_classes,
         input_size=config.unet.test_input_size,
         channels=config.unet.channels,
-        pretrained=None
+        pretrained=None,
+        scale=config.unet.scale,
     )
     # CPU version
     # model.load_state_dict(torch.load('{}/{}-best.pth'.format(OUT_DIR, n), map_location="cpu"))
@@ -100,8 +99,8 @@ def evaluate():
     # unable to load it anymore
 
     # loaded = torch.load("weights/non_transfer_best.pth")
-    loaded = torch.load("weights/best.pth")
-    # loaded = torch.load("experiments_unet/test/test/run0/best.pth")
+    # loaded = torch.load("weights/best.pth")
+    loaded = torch.load("experiments_unet/test/test/run0/best.pth")
     # loaded = torch.load("weights/best_safe_FUCKING_KEEP_IT.pth")
 
     model.load_state_dict(loaded)
@@ -109,16 +108,25 @@ def evaluate():
     model.eval()
 
     import sys
-    show = len(sys.argv) > 1
+    dir_ = sys.argv[1]
+    show = len(sys.argv) > 2
+
+    if dir_ == "test":
+        test_files = utils.list_imgs(config.test_out_dir)
+    elif dir_ == "valid":
+        test_files = utils.list_imgs(config.valid_out_dir)
+    elif dir_ == "train":
+        test_files = utils.list_imgs(config.train_out_dir)
+    data_loader = get_data_loaders(test_files)
 
     n_shown = 0
     ious = []
 
-    conf_thresh = 0.6
+    conf_thresh = 0.4
 
     with torch.no_grad():
 
-        for inputs, labels in data_loader:
+        for idx, (inputs, labels) in enumerate(data_loader):
             inputs = inputs.to(device)
             labels = labels.to(device)
             outputs = model(inputs)
@@ -147,7 +155,7 @@ def evaluate():
                 iou = calc_iou(l, o)
                 print(iou)
 
-                if show and iou < 0.7:
+                if show and iou < 0.8:
                     utils.show(i, l, o[..., np.newaxis]) #, i * np.logical_not(o[..., np.newaxis]))
 
                 ious.append(iou)

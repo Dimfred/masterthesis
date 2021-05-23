@@ -69,13 +69,11 @@ class MaskDataset(Dataset):
         mask = np.array(augmented["mask"]).astype(np.int64)
 
         if utils.isme():
-            # simg = np.uint8(img)
-            # smask = np.expand_dims(np.uint8(mask * 255), axis=2)
-            # simg_mask = np.uint8(mask * img)
-            # utils.show(orig, simg, smask, simg_mask)
+            simg = np.uint8(img)
+            smask = np.expand_dims(np.uint8(mask * 255), axis=2)
+            simg_mask = np.uint8(mask * img)
+            utils.show(orig, simg, smask, simg_mask)
             pass
-
-        # utils.show(img)
 
         # grayscale and rgb pretrained
         if self.channels == 3:

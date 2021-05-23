@@ -3,7 +3,6 @@
 import argparse
 import logging
 import os
-from albumentations.augmentations.transforms import CLAHE
 from albumentations.core.composition import OneOf
 
 import numpy as np
@@ -117,6 +116,17 @@ def get_data_loaders(train_files, val_files, img_size=224):
             height=crop_size,
             p=0.5,
         ),
+        A.ElasticTransform(
+            alpha=1,
+            alpha_affine=50,
+            sigma=50,
+            p=0.5,
+            border_mode=cv.BORDER_CONSTANT,
+            value=pad_value,
+            mask_value=mask_value,
+            interpolation=cv.INTER_CUBIC,
+            # always_apply=True
+        ),
         # A.OneOf(
         #     [
         #         A.ColorJitter(
@@ -132,16 +142,16 @@ def get_data_loaders(train_files, val_files, img_size=224):
         #     ],
         #     p=0.5
         # ),
-        # A.ColorJitter(
-        #     brightness=config.unet.augment.color_jitter,
-        #     contrast=config.unet.augment.color_jitter,
-        #     saturation=config.unet.augment.color_jitter,
-        #     hue=config.unet.augment.color_jitter,
-        #     p=0.5
-        # ),
-        # A.CLAHE(
-        #     p=0.5
-        # ),
+        A.ColorJitter(
+            brightness=config.unet.augment.color_jitter,
+            contrast=config.unet.augment.color_jitter,
+            saturation=config.unet.augment.color_jitter,
+            hue=config.unet.augment.color_jitter,
+            p=0.5
+        ),
+        A.CLAHE(
+            p=0.5
+        ),
         # A.Sharpen(
         #     p=0.5
         # ),
@@ -219,8 +229,8 @@ def main():
             config.unet.focal_reduction,
         )
 
-        # loss_type = "dice"
-        # loss = losses.dice.DiceLoss()
+        loss_type = "dice"
+        loss = losses.dice.DiceLoss()
 
         # loss_type = "binfocal"
         # loss = BinaryFocalLoss(
@@ -285,14 +295,24 @@ def main():
             # nesterov=config.unet.nesterov,
         )
 
-        def lr_scheduler(optimizer, step):
-            lr = config.unet.lr
+        def get_lr(optimizer):
+            for pg in optimizer.param_groups:
+                lr = pg["lr"]
+                break
 
+            return lr
+
+        def set_lr(optimizer, lr):
+            for param_group in optimizer.param_groups:
+                param_group["lr"] = lr
+
+            return optimizer
+
+        def lr_scheduler(optimizer, step):
             if step in config.unet.lr_decay_fixed:
-                lr = lr / 2
-                print("Halfing LR:", lr)
-                for param_group in optimizer.param_groups:
-                    param_group["lr"] = lr
+                lr = get_lr(optimizer)
+                lr = lr / 5
+                optimizer = set_lr(optimizer, lr)
 
             return lr
 

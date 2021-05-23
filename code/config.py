@@ -160,7 +160,7 @@ config.unet.valid_subdivision = 1 if utils.isme() else 3
 # minibatch_size = batch_size / subdivision
 config.unet.n_epochs = 1000
 config.unet.burn_in = 100
-config.unet.lr_decay_fixed = [300, 400]
+config.unet.lr_decay_fixed = [1500, 2000]
 
 # optimizers
 config.unet.amsgrad = True
@@ -184,7 +184,7 @@ config.unet.checkpoint_path = None
 config.unet.weights = Path("mobile_unet") / config.weights_dir / "text.pth"
 
 # utility
-config.unet.n_workers = 10 if utils.isme() else 12
+config.unet.n_workers = 1 if utils.isme() else 12
 
 # experiments
 config.unet.experiment_dir = Path("experiments_unet")
