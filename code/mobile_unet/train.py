@@ -314,7 +314,9 @@ def main():
                 lr = lr / 5
                 optimizer = set_lr(optimizer, lr)
 
-            return lr
+                return lr
+
+            return None
 
         # optimizer = optimizers.SGD(
         #     model.parameters(), lr=config.unet.lr, momentum=config.unet.momentum
