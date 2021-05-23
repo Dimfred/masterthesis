@@ -81,30 +81,27 @@ class BinaryFocalLoss(nn.Module):
 # %%
 def get_data_loaders(train_files, val_files, img_size=224):
     pad_size = int(1.1 * config.augment.unet.img_params.resize)
-    crop_size = int(config.unet.augment.crop_size * pad_size)
+    # crop_size = int(config.unet.augment.crop_size * pad_size)
+    crop_size = int(
+        config.unet.augment.crop_size * config.augment.unet.img_params.resize
+    )
 
     # print(pad_size, img_size)
     # fmt:off
     train_transform = A.Compose([
         # SafeRotate!
         # rotation
-        # A.PadIfNeeded(
-        #     min_width=800,
-        #     min_height=800,
-        #     border_mode=cv.BORDER_CONSTANT,
-        #     value=pad_value,
-        #     mask_value=mask_value,
-        #     always_apply=True
-        # ),
         A.PadIfNeeded(
-            min_width=pad_size,
-            min_height=pad_size,
+            # min_width=800,
+            # min_height=800,
+            min_width=config.augment.unet.img_params.resize,
+            min_height=config.augment.unet.img_params.resize,
             border_mode=cv.BORDER_CONSTANT,
             value=pad_value,
             mask_value=mask_value,
             always_apply=True
         ),
-        A.Rotate(
+        A.SafeRotate(
             limit=config.unet.augment.rotate,
             border_mode=cv.BORDER_CONSTANT,
             value=pad_value,
@@ -117,15 +114,15 @@ def get_data_loaders(train_files, val_files, img_size=224):
             p=0.5,
         ),
         A.ElasticTransform(
-            alpha=1,
-            alpha_affine=50,
-            sigma=50,
-            p=0.5,
+            # alpha=1,
+            # alpha_affine=50,
+            # sigma=50,
             border_mode=cv.BORDER_CONSTANT,
             value=pad_value,
             mask_value=mask_value,
             interpolation=cv.INTER_CUBIC,
             # always_apply=True
+            p=0.5,
         ),
         # A.OneOf(
         #     [
@@ -229,8 +226,8 @@ def main():
             config.unet.focal_reduction,
         )
 
-        loss_type = "dice"
-        loss = losses.dice.DiceLoss()
+        # loss_type = "dice"
+        # loss = losses.dice.DiceLoss()
 
         # loss_type = "binfocal"
         # loss = BinaryFocalLoss(
@@ -309,14 +306,16 @@ def main():
             return optimizer
 
         def lr_scheduler(optimizer, step):
+            lr = config.unet.lr
             if step in config.unet.lr_decay_fixed:
                 lr = get_lr(optimizer)
                 lr = lr / 5
+                config.unet.lr = lr
                 optimizer = set_lr(optimizer, lr)
 
-                return lr
+            return lr
 
-            return None
+        # lr_scheduler = None
 
         # optimizer = optimizers.SGD(
         #     model.parameters(), lr=config.unet.lr, momentum=config.unet.momentum
