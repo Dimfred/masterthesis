@@ -256,16 +256,16 @@ def main():
                 burn_in=config.yolo.burn_in,
                 checkpoint_dir=config.yolo.checkpoint_dir,
             )
-            # try:
-            print_parameters()
-            trainer.train(train_dataset, valid_dataset)
-            break
-            # except Exception as e:
-            #     print("---------------------------------------------")
-            #     print("---------------------------------------------")
-            #     print(e)
-            #     print("---------------------------------------------")
-            #     print("---------------------------------------------")
+            try:
+                print_parameters()
+                trainer.train(train_dataset, valid_dataset)
+                break
+            except Exception as e:
+                print("---------------------------------------------")
+                print("---------------------------------------------")
+                print(e)
+                print("---------------------------------------------")
+                print("---------------------------------------------")
 
 
 if __name__ == "__main__":

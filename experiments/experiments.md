@@ -72,7 +72,7 @@ BurnIn    1000 batches (2000 epochs)
     Batch      64
     MaxBatches 4000
 
-    mAP@0.5, mAP@0.75
+    mAP@50:75
     BurnIn    1000 batches (2000 epochs)
 
 O okay
