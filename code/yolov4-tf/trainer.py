@@ -161,17 +161,17 @@ class Trainer:
                     self.mAP.add(pred_batch, label_batch, inverted_gt=True)
 
                     # DEBUG
-                    # original_batch = valid_ds.get_original_img(idxs)
-                    # with tf.device("CPU:0"):
-                    #     for oimg, label, pred in zip(
-                    #         original_batch, label_batch, pred_batch
-                    #     ):
-                    #         utils.show_bboxes(
-                    #             oimg,
-                    #             pred,
-                    #             type_="pred",
-                    #             gt=utils.A.class_to_front(label),
-                    #         )
+                    original_batch = valid_ds.get_original_img(idxs)
+                    with tf.device("CPU:0"):
+                        for oimg, label, pred in zip(
+                            original_batch, label_batch, pred_batch
+                        ):
+                            utils.show_bboxes(
+                                oimg,
+                                pred,
+                                type_="pred",
+                                gt=utils.A.class_to_front(label),
+                            )
 
             if self.is_map_time():
                 results = self.mAP.compute(show=False)

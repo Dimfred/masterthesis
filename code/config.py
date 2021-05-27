@@ -89,7 +89,7 @@ config.yolo.max_steps = 4000
 config.yolo.map_after_steps = 500
 # config.yolo.map_after_steps = 10
 # step % this == 0 => perform mAP
-config.yolo.map_on_step_mod = 10
+config.yolo.map_on_step_mod = 50
 config.yolo.validation_freq = 10 if utils.isme() else 10
 config.yolo.n_workers = 12 if utils.isme() else 32
 config.yolo.validation_steps = -1 if utils.isme() else 2
@@ -124,7 +124,8 @@ architecture_type = {
     ),
     "text": (
         str(config.train_out_dir / "classes.txt"),
-        str(config.weights_dir / "best_grid.weights"),
+        # str(config.weights_dir / "best_grid.weights"),
+        str(config.weights_dir / "best_test.weights"),
     ),
 }
 
@@ -190,7 +191,7 @@ config.unet.weights = (
 )
 
 # utility
-config.unet.n_workers = 10 if utils.isme() else 12
+config.unet.n_workers = 8 if utils.isme() else 8
 
 # experiments
 config.unet.experiment_dir = Path("experiments_unet")
@@ -456,10 +457,6 @@ config.yolo.augment.bbox_safe_crop = 0.9 #
 # config.yolo.experiment_name = "bbox_safe_crop"
 # config.yolo.experiment_param = f"bbox_safe_crop_{config.yolo.augment.bbox_safe_crop}"
 
-# config.yolo.augment.gaussian_noise = True
-# config.yolo.experiment_name = "gaussian_noise"
-# config.yolo.experiment_param = f"gaussian_noise_{int(config.yolo.augment.gaussian_noise)}"
-
 # all augs
 # config.yolo.experiment_name = "all_augs_with_jitter_noise_blur"
 # config.yolo.experiment_param = "all_augs"
@@ -478,7 +475,7 @@ config.yolo.activation = "leaky"  # leaky, hswish
 
 # batch
 config.yolo.batch_size = 2 if utils.isme() else 16
-config.yolo.accumulation_steps = 16 if utils.isme() else 4
+config.yolo.accumulation_steps = 32 if utils.isme() else 4
 config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_steps
 
 # lr

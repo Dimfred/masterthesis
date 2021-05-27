@@ -307,8 +307,6 @@ class TFDataset:
         _dataset = self.dataset[idx]
         self.count += 1
 
-        # TODO old behaviour
-        # inputs, labels = self.load_img_and_labels(_dataset)
         inputs, labels = _dataset
 
         return inputs, labels, idx

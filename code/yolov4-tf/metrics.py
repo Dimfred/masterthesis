@@ -171,39 +171,28 @@ def main(
                     transform = resize(image=img, bboxes=bboxes)
                     img, bboxes = transform["image"], transform["bboxes"]
 
+                    # DEBUG
+                    # print("After resize")
                     # bboxes = utils.A.class_to_front(bboxes)
                     # utils.show_bboxes(img, bboxes, type_="gt", gt=gt)
                     # bboxes = utils.A.class_to_back(bboxes)
 
                     resized = img.copy()
-
                     transform = pad(image=img, bboxes=bboxes)
                     img, bboxes = transform["image"], transform["bboxes"]
 
+                    # DEBUG
+                    # print("After pad")
                     # gt = utils.A.class_to_back(gt)
                     # _, gt = yolo.resize_image(resized, gt)
                     # gt = utils.A.class_to_front(gt)
-
                     # bboxes = utils.A.class_to_front(bboxes)
                     # utils.show_bboxes(img, bboxes, type_="gt", gt=gt)
                     # bboxes = utils.A.class_to_back(bboxes)
 
-                    # print(gt[0])
-                    # print(bboxes[0])
-
                     bboxes = utils.A.class_to_front(bboxes)
 
                     return img, bboxes, resized
-
-                # def test_augmentations(img, gt):
-                #     img = utils.resize_max_axis(img, input_size)
-                #     resized = img.copy()
-
-                #     gt = utils.A.class_to_back(gt)
-                #     img, gt = yolo.resize_image(img, gt)
-                #     gt = utils.A.class_to_front(gt)
-
-                #     return img, gt, resized
 
                 img = np.expand_dims(
                     cv.imread(str(img_path), cv.IMREAD_GRAYSCALE), axis=2
@@ -416,32 +405,6 @@ def main(
             iou_threshs = (0.5, 0.76, 0.05)
             # iou_threshs = (0.5, 1.0, 0.05)
             absolute = True
-            ################################
-            ### CONSTANT SIZE ##############
-            ################################
-
-            shape = (input_size, input_size)
-            mAP = utils.MeanAveragePrecision(
-                yolo.classes,
-                shape,
-                iou_threshs=(0.5, iou_threshs),
-                # policy="soft",
-                policy="greedy",
-            )
-            mAP.add(preds, gts, absolute=absolute)
-            results = mAP.compute()
-            pretty = mAP.prettify(results)
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!! MAP PADDED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print(pretty)
-
-            mAPs = mAP.get_maps(results)
-            relevant_mAP = mAPs[-1]
-            if threshold_tuning:
-                mAPs_for_thresholds.append((iou_thresh, score_thresh, relevant_mAP))
 
             ################################
             ### ORIGINAL SIZE ##############
@@ -456,7 +419,10 @@ def main(
             for pred in original_preds:
                 for fitted_box in pred:
                     bbox = fitted_box[:4]
-                    assert np.logical_and(np.all(bbox < 1), np.all(bbox > 0))
+
+                    if not np.all(np.logical_and(0 < bbox,  bbox < 1)):
+                        assert False, "0 < bbox < 1"
+
 
             mAP = utils.MeanAveragePrecision(
                 yolo.classes,
@@ -470,9 +436,7 @@ def main(
             results = mAP.compute()
             pretty = mAP.prettify(results)
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!! MAP ORIGINAL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!! MAP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             print(pretty)
 
@@ -485,33 +449,6 @@ def main(
             ######################## MY ################################################
             ############################################################################
 
-            ###################################
-            ####### PADDED SIZE #############
-            ###################################
-            metric_result = []
-            metrics = ["f1", "recall", "precision"]
-            for iou in np.arange(*iou_threshs):
-                # my metrics
-                calculator = utils.Metrics(yolo.classes, dir_, iou_thresh=iou)
-                for gt, pred in zip(gts, preds):
-                    calculator.calculate(gt, pred, (input_size, input_size))
-
-                res = calculator.perform(metrics)
-                metric_result.append(res)
-
-                # calculator.prettify(metrics, res, iou=iou)
-
-            metric_result = np.array(metric_result).mean(axis=0)
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!! MY PADDED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            calculator.prettify(metrics, metric_result, iou="0.5:0.75")
-
-            ###################################
-            ####### ORIGINAL SIZE #############
-            ###################################
             metric_result = []
             metrics = ["f1", "recall", "precision"]
             for iou in np.arange(*iou_threshs):
@@ -529,9 +466,7 @@ def main(
 
             metric_result = np.array(metric_result).mean(axis=0)
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!! MY ORIGINAL SIZE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("!!!!!!!!!!!!!!!!!!!!!!!! ME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             calculator.prettify(metrics, metric_result, iou="0.5:0.75")
 
@@ -616,5 +551,59 @@ def main(
             #             utils.show(tmp)
 
 
+#########################################
+############### OLD #####################
+#########################################
+
+# ################################
+# ### CONSTANT SIZE ##############
+# ################################
+
+# shape = (input_size, input_size)
+# mAP = utils.MeanAveragePrecision(
+#     yolo.classes,
+#     shape,
+#     iou_threshs=(0.5, iou_threshs),
+#     # policy="soft",
+#     policy="greedy",
+# )
+# mAP.add(preds, gts, absolute=absolute)
+# results = mAP.compute()
+# pretty = mAP.prettify(results)
+# print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# print("!!!!!!!!!!!!!!!! MAP PADDED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# print(pretty)
+
+# mAPs = mAP.get_maps(results)
+# relevant_mAP = mAPs[-1]
+# if threshold_tuning:
+#     mAPs_for_thresholds.append((iou_thresh, score_thresh, relevant_mAP))
+
+# ###################################
+# ####### PADDED SIZE #############
+# ###################################
+# metric_result = []
+# metrics = ["f1", "recall", "precision"]
+# for iou in np.arange(*iou_threshs):
+#     # my metrics
+#     calculator = utils.Metrics(yolo.classes, dir_, iou_thresh=iou)
+#     for gt, pred in zip(gts, preds):
+#         calculator.calculate(gt, pred, (input_size, input_size))
+
+#     res = calculator.perform(metrics)
+#     metric_result.append(res)
+
+#     # calculator.prettify(metrics, res, iou=iou)
+
+# metric_result = np.array(metric_result).mean(axis=0)
+# print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# print("!!!!!!!!!!!!!!!! MY PADDED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+# calculator.prettify(metrics, metric_result, iou="0.5:0.75")
 if __name__ == "__main__":
     main()
