@@ -1,0 +1,67 @@
+\begin{thebibliography}{10}
+
+\bibitem{iec60617}
+{IEC}-60617.
+\newblock \textit{https://webstore.iec.ch/publication/2723}.
+\newblock Accessed: 21-12-2020.
+
+\bibitem{ctxindependentsvm}
+K.~{Refaat}, W.~{Helmy}, A.~{Ali}, M.~{AbdelGhany}, and A.~{Atiya}.
+\newblock A new approach for context-independent handwritten offline diagram
+  recognition using support vector machines.
+\newblock In {\em 2008 IEEE International Joint Conference on Neural Networks
+  (IEEE World Congress on Computational Intelligence)}, pages 177--182, 2008.
+
+\bibitem{anngeo}
+M.~Rabbani, R.~Khoshkangini, H.S. Nagendraswamy, and M.~Conti.
+\newblock Hand drawn optical circuit recognition.
+\newblock {\em Procedia Computer Science}, 84:41 -- 48, 2016.
+\newblock Proceeding of the Seventh International Conference on Intelligent
+  Human Computer Interaction (IHCI 2015).
+
+\bibitem{basecnn}
+M.~{Günay}, M.~{Köseoğlu}, and Ö. {Yıldırım}.
+\newblock Classification of hand-drawn basic circuit components using
+  convolutional neural networks.
+\newblock In {\em 2020 International Congress on Human-Computer Interaction,
+  Optimization and Robotic Applications (HORA)}, pages 1--5, 2020.
+
+\bibitem{texturesmo}
+S.~Roy, A.~Bhattacharya, and N.~Sarkar et~al.
+\newblock Offline hand-drawn circuit component recognition using texture and
+  shape-based features.
+\newblock {\em Springer Science+Business Media}, August 2020.
+
+\bibitem{seghogsvm}
+M.~Moetesum, S.~Waqar Younus, M.~Ali Warsi, and I.~Siddiqi.
+\newblock Segmentation and recognition of electronic components in hand-drawn
+  circuit diagrams.
+\newblock {\em EAI Endorsed Transactions on Scalable Information Systems},
+  5(16), 4 2018.
+
+\bibitem{fouriersvm}
+M.~D. Patare and M.~Joshi.
+\newblock Hand-drawn digital logic circuit component recognition using svm.
+\newblock {\em International Journal of Computer Applications}, 143:24--28,
+  2016.
+
+\bibitem{knnfull}
+B.~{Edwards} and V.~{Chandran}.
+\newblock Machine recognition of hand-drawn circuit diagrams.
+\newblock In {\em 2000 IEEE International Conference on Acoustics, Speech, and
+  Signal Processing. Proceedings (Cat. No.00CH37100)}, volume~6, pages
+  3618--3621 vol.6, 2000.
+
+\bibitem{yolobool}
+T.~{Dhanushika} and L.~{Ranathunga}.
+\newblock Fine-tuned line connection accompanied boolean expression generation
+  for hand-drawn logic circuits.
+\newblock In {\em 2019 14th Conference on Industrial and Information Systems
+  (ICIIS)}, pages 436--441, 2019.
+
+\bibitem{yolov1}
+J.~Redmon, S.~K. Divvala, R.~B. Girshick, and A.~Farhadi.
+\newblock You only look once: Unified, real-time object detection.
+\newblock {\em CoRR}, abs/1506.02640, 2015.
+
+\end{thebibliography}
