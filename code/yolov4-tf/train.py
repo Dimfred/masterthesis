@@ -1,19 +1,6 @@
 # augmentation
 import albumentations as A
-
-# SLOW AF and not a real bonus, but could be just wrong
-# utils.TextProjection(
-#     text_idx=classes.index("text"),
-#     ground_idxs=[
-#         classes.index("gr_left"),
-#         classes.index("gr_right"),
-#         classes.index("gr_bot"),
-#         classes.index("gr_top")
-#     ],
-#     texts=utils.load_imgs(config.texts_dir, cv.IMREAD_GRAYSCALE),
-#     classes=utils.Yolo.parse_classes(config.train_out_dir / "classes.txt"),
-#     always_apply=True
-# ),
+import click
 
 
 def main():
@@ -51,21 +38,18 @@ def main():
     def print_parameters():
         from tabulate import tabulate
 
+        # fmt: off
         pretty = [["LR", config.yolo.lr]]
         pretty += [["BS", config.yolo.real_batch_size]]
         pretty += [["Activation", config.yolo.activation]]
         pretty += [["Loss", config.yolo.loss]]
-        pretty += [
-            [
-                "Offline",
-                f"P {config.augment.include_merged}, F {config.augment.perform_flip}, R {config.augment.perform_rotation}",
-            ]
-        ]
+        pretty += [["Offline", f"P {config.augment.include_merged}, F {config.augment.perform_flip}, R {config.augment.perform_rotation}"]]
         pretty += [["Rotate", config.yolo.augment.rotate]]
         pretty += [["RandomScale", config.yolo.augment.random_scale]]
         pretty += [["ColorJitter", config.yolo.augment.color_jitter]]
         pretty += [["Crop", config.yolo.augment.bbox_safe_crop]]
         print(tabulate(pretty))
+        # fmt: on
 
     def create_model():
         yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
@@ -78,47 +62,46 @@ def main():
         )
         yolo.model.summary()
 
-        # yolo.load_weights(config.yolo.pretrained_weights, weights_type=config.yolo.weights_type)
-        # yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
-
         return yolo
 
     # fmt:off
     classes = utils.Yolo.parse_classes(config.train_out_dir / "classes.txt")
-    pad_size = 1.2 * 1000
-    crop_width=pad_size * config.yolo.augment.bbox_safe_crop
-    crop_height=pad_size * config.yolo.augment.bbox_safe_crop
+    # pad_size = 1.2 * 1000
+    # crop_width=pad_size * config.yolo.augment.bbox_safe_crop
+    # crop_height=pad_size * config.yolo.augment.bbox_safe_crop
 
     _train_augmentations = A.Compose([
         A.PadIfNeeded(
-            min_height=int(pad_size),
-            min_width=int(pad_size),
+            # min_height=int(pad_size),
+            # min_width=int(pad_size),
+            min_height=1000,
+            min_width=1000,
             border_mode=cv.BORDER_CONSTANT,
             value=0,
             always_apply=True
         ),
-        A.Rotate(
-            limit=config.yolo.augment.rotate,
-            border_mode=cv.BORDER_CONSTANT,
-            p=0.5,
-        ),
-        A.RandomScale(
-            scale_limit=config.yolo.augment.random_scale,
-            p=0.5
-        ),
-        # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
-        A.RandomSizedBBoxSafeCrop(
-            width=crop_width,
-            height=crop_height,
-            p=0.5,
-        ),
-        A.ColorJitter(
-            brightness=config.yolo.augment.color_jitter,
-            contrast=config.yolo.augment.color_jitter,
-            saturation=config.yolo.augment.color_jitter,
-            hue=config.yolo.augment.color_jitter,
-            p=0.5
-        ),
+        # A.Rotate(
+        #     limit=config.yolo.augment.rotate,
+        #     border_mode=cv.BORDER_CONSTANT,
+        #     p=0.5,
+        # ),
+        # A.RandomScale(
+        #     scale_limit=config.yolo.augment.random_scale,
+        #     p=0.5
+        # ),
+        # # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
+        # A.RandomSizedBBoxSafeCrop(
+        #     width=crop_width,
+        #     height=crop_height,
+        #     p=0.5,
+        # ),
+        # A.ColorJitter(
+        #     brightness=config.yolo.augment.color_jitter,
+        #     contrast=config.yolo.augment.color_jitter,
+        #     saturation=config.yolo.augment.color_jitter,
+        #     hue=config.yolo.augment.color_jitter,
+        #     p=0.5
+        # ),
         A.Resize(
             width=config.yolo.input_size,
             height=config.yolo.input_size,
@@ -173,14 +156,17 @@ def main():
     #    config.yolo.loss,
     # )
 
-    # load run and seed
-    runs_ = sys.argv[1:]
-    runs = (int(r) for r in runs_)
 
-    # if sys.argv[5:]:
-    #    runs = (int(i) for i in sys.argv[5:])
-    # else:
-    #    runs = (0, 1, 2)
+
+    ####################################################################################
+    ##### LR ###########################################################################
+    ####################################################################################
+    lr, *runs = sys.argv[1:]
+    lr = float(lr)
+    runs = (int(r) for r in runs)
+
+    config.yolo.lr = lr
+    config.yolo.experiment_param = config.yolo.experiment_param(lr)
 
     for run in runs:
         while True:

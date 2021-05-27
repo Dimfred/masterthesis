@@ -86,11 +86,11 @@ config.yolo.label_smoothing = 0.1
 
 config.yolo.max_steps = 4000
 # step > this == 0 => perform mAP
-config.yolo.map_after_steps = 500
+config.yolo.map_after_steps = 1000
 # config.yolo.map_after_steps = 10
 # step % this == 0 => perform mAP
-config.yolo.map_on_step_mod = 50
-config.yolo.validation_freq = 10 if utils.isme() else 10
+config.yolo.map_on_step_mod = 2
+config.yolo.validation_freq = 2 if utils.isme() else 10
 config.yolo.n_workers = 12 if utils.isme() else 32
 config.yolo.validation_steps = -1 if utils.isme() else 2
 
@@ -419,16 +419,15 @@ config.labels_and_files_to_remove = [
     "ind_us_ver",
 ]
 
+# whether to perform flip and rotation on the dataset
+config.augment.perform_rotation = False
+config.augment.perform_flip = False
+config.augment.include_merged = False
+
 ## experiment
 config.yolo.experiment_dir = Path("experiments_yolo")
-
-# config.yolo.experiment_name = "lr_init"
-# config.yolo.experiment_param = f"LR_{config.yolo.lr}"
-
-# whether to perform flip and rotation on the dataset
-config.augment.perform_rotation = True
-config.augment.perform_flip = True
-config.augment.include_merged = True
+config.yolo.experiment_name = "lr_init"
+config.yolo.experiment_param = lambda lr : f"LR_{lr}"
 
 # config.yolo.experiment_name = "offline_aug"
 # config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
@@ -437,23 +436,23 @@ config.augment.include_merged = True
 # config.yolo.experiment_param = f"offline_baseline_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
 config.yolo.augment.rotate = None
-config.yolo.augment.rotate = 20  # 10, 20, 30
+# config.yolo.augment.rotate = 20  # 10, 20, 30
 # config.yolo.experiment_name = "rotate"
 # config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
 
 
 config.yolo.augment.random_scale = None
-config.yolo.augment.random_scale = 0.3  # 0.1, 0.2, 0.3, 0.4, 0.5
+# config.yolo.augment.random_scale = 0.3  # 0.1, 0.2, 0.3, 0.4, 0.5
 # config.yolo.experiment_name = "random_scale"
 # config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
 
 config.yolo.augment.color_jitter = None
-config.yolo.augment.color_jitter = 0.2  # 0.1, 0.2, 0.3
+# config.yolo.augment.color_jitter = 0.2  # 0.1, 0.2, 0.3
 # config.yolo.experiment_name = "color_jitter"
 # config.yolo.experiment_param = f"color_jitter_{config.yolo.augment.color_jitter}"
 
 config.yolo.augment.bbox_safe_crop = None #
-config.yolo.augment.bbox_safe_crop = 0.9 #
+# config.yolo.augment.bbox_safe_crop = 0.9 #
 # config.yolo.experiment_name = "bbox_safe_crop"
 # config.yolo.experiment_param = f"bbox_safe_crop_{config.yolo.augment.bbox_safe_crop}"
 
@@ -461,8 +460,8 @@ config.yolo.augment.bbox_safe_crop = 0.9 #
 # config.yolo.experiment_name = "all_augs_with_jitter_noise_blur"
 # config.yolo.experiment_param = "all_augs"
 
-config.yolo.experiment_name = "all_augs_without_jitter_noise_blur"
-config.yolo.experiment_param = "all_augs"
+# config.yolo.experiment_name = "all_augs_without_jitter_noise_blur"
+# config.yolo.experiment_param = "all_augs"
 
 
 ################
@@ -499,5 +498,5 @@ config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
 # fmt: on
 
 
-config.yolo.experiment_name = "test"
-config.yolo.experiment_param = "test"
+# config.yolo.experiment_name = "test"
+# config.yolo.experiment_param = "test"
