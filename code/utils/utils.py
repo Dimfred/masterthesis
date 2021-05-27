@@ -374,8 +374,13 @@ class YoloBBox:
         y_abs, x_abs = self.y * ih, self.x * iw
         h_abs, w_abs = self.h * ih, self.w * iw
 
-        y1, x1 = int(y_abs - 0.5 * h_abs), int(x_abs - 0.5 * w_abs)
-        y2, x2 = int(y_abs + 0.5 * h_abs), int(x_abs + 0.5 * w_abs)
+        x1 = int(x_abs - 0.5 * w_abs + 1)
+        x2 = int(x1 + w_abs)
+        y1 = int(y_abs - 0.5 * h_abs + 1)
+        y2 = int(y1 + h_abs)
+
+        # y1, x1 = int(y_abs - 0.5 * h_abs), int(x_abs - 0.5 * w_abs)
+        # y2, x2 = int(y_abs + 0.5 * h_abs), int(x_abs + 0.5 * w_abs)
 
         return x1, y1, x2, y2
 

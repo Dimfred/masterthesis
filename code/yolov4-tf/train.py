@@ -48,6 +48,25 @@ def main():
     import utils
     from config import config
 
+    def print_parameters():
+        from tabulate import tabulate
+
+        pretty = [["LR", config.yolo.lr]]
+        pretty += [["BS", config.yolo.real_batch_size]]
+        pretty += [["Activation", config.yolo.activation]]
+        pretty += [["Loss", config.yolo.loss]]
+        pretty += [
+            [
+                "Offline",
+                f"P {config.augment.include_merged}, F {config.augment.perform_flip}, R {config.augment.perform_rotation}",
+            ]
+        ]
+        pretty += [["Rotate", config.yolo.augment.rotate]]
+        pretty += [["RandomScale", config.yolo.augment.random_scale]]
+        pretty += [["ColorJitter", config.yolo.augment.color_jitter]]
+        pretty += [["Crop", config.yolo.augment.bbox_safe_crop]]
+        print(tabulate(pretty))
+
     def create_model():
         yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
         yolo.classes = config.yolo.classes
@@ -133,26 +152,26 @@ def main():
     # fmt:on
 
     # grid
-    #activation, bs, lr, loss = sys.argv[1:5]
+    # activation, bs, lr, loss = sys.argv[1:5]
 
-    #config.yolo.activation = activation
+    # config.yolo.activation = activation
 
-    #batch_size = int(bs)
-    #config.yolo.batch_size = 16
-    #config.yolo.accumulation_steps = batch_size // config.yolo.batch_size
-    #config.yolo.real_batch_size = (
+    # batch_size = int(bs)
+    # config.yolo.batch_size = 16
+    # config.yolo.accumulation_steps = batch_size // config.yolo.batch_size
+    # config.yolo.real_batch_size = (
     #    config.yolo.batch_size * config.yolo.accumulation_steps
-    #)
+    # )
 
-    #config.yolo.lr = float(lr)
-    #config.yolo.loss = loss
+    # config.yolo.lr = float(lr)
+    # config.yolo.loss = loss
 
-    #config.yolo.experiment_param = config.yolo.experiment_param(
+    # config.yolo.experiment_param = config.yolo.experiment_param(
     #    config.yolo.activation,
     #    config.yolo.real_batch_size,
     #    config.yolo.lr,
     #    config.yolo.loss,
-    #)
+    # )
 
     # load run and seed
     runs_ = sys.argv[1:]
@@ -252,6 +271,7 @@ def main():
                 checkpoint_dir=config.yolo.checkpoint_dir,
             )
             # try:
+            print_parameters()
             trainer.train(train_dataset, valid_dataset)
             break
             # except Exception as e:

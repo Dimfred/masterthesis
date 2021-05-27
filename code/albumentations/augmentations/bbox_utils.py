@@ -245,30 +245,30 @@ def convert_bbox_to_albumentations(bbox, source_format, rows, cols, check_validi
             raise ValueError("In YOLO format all labels must be float and in range (0, 1]")
 
         #dimfred
-        xme, yme, wme, hme = bbox
-        w_half = wme / 2
-        h_half = hme / 2
-        x_min, x_max = xme - w_half, xme + w_half
-        y_min, y_max = yme - h_half, yme + h_half
+        # xme, yme, wme, hme = bbox
+        # w_half = wme / 2
+        # h_half = hme / 2
+        # x_min, x_max = xme - w_half, xme + w_half
+        # y_min, y_max = yme - h_half, yme + h_half
         # print("to me", (x1, y1, x2, y2))
 
-        if x_min < 0.0:
-            x_min = 0.0
-        if y_min < 0.0:
-            y_min = 0.0
-        if x_max > 1.0:
-            x_max = 1.0
-        if y_max > 1.0:
-            y_max = 1.0
+        # if x_min < 0.0:
+        #     x_min = 0.0
+        # if y_min < 0.0:
+        #     y_min = 0.0
+        # if x_max > 1.0:
+        #     x_max = 1.0
+        # if y_max > 1.0:
+        #     y_max = 1.0
 
 
 
-        # x, y, width, height = denormalize_bbox(bbox, rows, cols)
+        x, y, width, height = denormalize_bbox(bbox, rows, cols)
 
-        # x_min = int(x - width / 2 + 1)
-        # x_max = int(x_min + width)
-        # y_min = int(y - height / 2 + 1)
-        # y_max = int(y_min + height)
+        x_min = int(x - width / 2 + 1)
+        x_max = int(x_min + width)
+        y_min = int(y - height / 2 + 1)
+        y_max = int(y_min + height)
 
 
 
@@ -276,7 +276,7 @@ def convert_bbox_to_albumentations(bbox, source_format, rows, cols, check_validi
         (x_min, y_min, x_max, y_max), tail = bbox[:4], tuple(bbox[4:])
 
     bbox = (x_min, y_min, x_max, y_max) + tail
-    # bbox = normalize_bbox(bbox, rows, cols)
+    bbox = normalize_bbox(bbox, rows, cols)
     # print("to albumentations", bbox[:4])
     if check_validity:
         check_bbox(bbox)
@@ -313,7 +313,7 @@ def convert_bbox_from_albumentations(bbox, target_format, rows, cols, check_vali
         check_bbox(bbox)
 
     # albumentations
-    # bbox = denormalize_bbox(bbox, rows, cols)
+    bbox = denormalize_bbox(bbox, rows, cols)
     if target_format == "coco":
         (x_min, y_min, x_max, y_max), tail = bbox[:4], tuple(bbox[4:])
         width = x_max - x_min
@@ -323,36 +323,24 @@ def convert_bbox_from_albumentations(bbox, target_format, rows, cols, check_vali
         # https://github.com/pjreddie/darknet/blob/f6d861736038da22c9eb0739dca84003c5a5e275/scripts/voc_label.py#L12
         # albumentations
         (x_min, y_min, x_max, y_max), tail = bbox[:4], bbox[4:]
-        # x = int((x_min + x_max) / 2 - 1)
-        # y = int((y_min + y_max) / 2 - 1)
-        # width = x_max - x_min
-        # height = y_max - y_min
+        x = int((x_min + x_max) / 2 - 1)
+        y = int((y_min + y_max) / 2 - 1)
+        width = x_max - x_min
+        height = y_max - y_min
+        bbox = normalize_bbox((x, y, width, height) + tail, rows, cols)
 
-
-        # bbox = normalize_bbox((x, y, width, height) + tail, rows, cols)
         # print("from albumentations", bbox[:4])
 
-
-        # x1me, y1me, x2me, y2me = album_bbox
-        # wme = x2me - x1me
-        # hme = y2me - y1me
-
-        # w_half = wme / 2
-        # h_half = hme / 2
-
-        # xme, yme = x1me + w_half, y1me + h_half
-        # print("from me", (xme, yme, wme, hme))
-
         # dimfred
-        w = x_max - x_min
-        h = y_max - y_min
-        w_half = w / 2
-        h_half = h / 2
+        # w = x_max - x_min
+        # h = y_max - y_min
+        # w_half = w / 2
+        # h_half = h / 2
 
-        x = x_min + w_half
-        y = y_min + h_half
+        # x = x_min + w_half
+        # y = y_min + h_half
 
-        bbox = (x, y, w, h) + tail
+        # bbox = (x, y, w, h) + tail
 
 
     return bbox

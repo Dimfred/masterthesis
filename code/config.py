@@ -435,19 +435,23 @@ config.augment.include_merged = True
 # config.yolo.experiment_name = "offline_baseline"
 # config.yolo.experiment_param = f"offline_baseline_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
+config.yolo.augment.rotate = None
 config.yolo.augment.rotate = 20  # 10, 20, 30
 # config.yolo.experiment_name = "rotate"
 # config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
 
 
+config.yolo.augment.random_scale = None
 config.yolo.augment.random_scale = 0.3  # 0.1, 0.2, 0.3, 0.4, 0.5
 # config.yolo.experiment_name = "random_scale"
 # config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
 
+config.yolo.augment.color_jitter = None
 config.yolo.augment.color_jitter = 0.2  # 0.1, 0.2, 0.3
 # config.yolo.experiment_name = "color_jitter"
 # config.yolo.experiment_param = f"color_jitter_{config.yolo.augment.color_jitter}"
 
+config.yolo.augment.bbox_safe_crop = None #
 config.yolo.augment.bbox_safe_crop = 0.9 #
 # config.yolo.experiment_name = "bbox_safe_crop"
 # config.yolo.experiment_param = f"bbox_safe_crop_{config.yolo.augment.bbox_safe_crop}"
@@ -455,10 +459,6 @@ config.yolo.augment.bbox_safe_crop = 0.9 #
 # config.yolo.augment.gaussian_noise = True
 # config.yolo.experiment_name = "gaussian_noise"
 # config.yolo.experiment_param = f"gaussian_noise_{int(config.yolo.augment.gaussian_noise)}"
-
-config.yolo.augment.blur = 3  # 5
-# config.yolo.experiment_name = "blur"
-# config.yolo.experiment_param = f"blur_{config.yolo.augment.blur}"
 
 # all augs
 # config.yolo.experiment_name = "all_augs_with_jitter_noise_blur"
@@ -474,7 +474,7 @@ config.yolo.experiment_param = "all_augs"
 
 
 # activation
-config.yolo.activation = None  # leaky, hswish
+config.yolo.activation = "leaky"  # leaky, hswish
 
 # batch
 config.yolo.batch_size = 2 if utils.isme() else 16
