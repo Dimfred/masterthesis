@@ -90,7 +90,7 @@ config.yolo.map_after_steps = 1000
 # config.yolo.map_after_steps = 10
 # step % this == 0 => perform mAP
 config.yolo.map_on_step_mod = 2
-config.yolo.validation_freq = 2 if utils.isme() else 10
+config.yolo.validation_freq = 2
 config.yolo.n_workers = 12 if utils.isme() else 32
 config.yolo.validation_steps = -1 if utils.isme() else 2
 
