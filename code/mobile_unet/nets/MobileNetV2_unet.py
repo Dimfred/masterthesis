@@ -11,6 +11,11 @@ import numpy as np
 from .MobileNetV2 import MobileNetV2, InvertedResidual
 from .MobileNetV2 import conv_1x1_bn
 
+from config import config
+import utils
+
+import albumentations as A
+
 # logging.basicConfig(level=logging.DEBUG)
 
 # paper implementation
@@ -96,14 +101,12 @@ class MobileNetV2_unet(nn.Module):
 
                 self.dconv1 = nn.Sequential(
                     # TODO test order
-                    nn.Upsample(
-                        scale_factor=2, mode="bilinear", align_corners=False
-                    ),
+                    nn.Upsample(scale_factor=2, mode="bilinear", align_corners=False),
                     InvertedResidual(1280, 96, 1, 6),
                 )
                 self.invres1 = InvertedResidual(192, 32, 1, 6)
 
-                self.dconv2 =  Upsample()
+                self.dconv2 = Upsample()
                 self.invres2 = InvertedResidual(64, 24, 1, 6)
 
                 self.dconv3 = Upsample()
@@ -236,8 +239,14 @@ class MobileNetV2_unet(nn.Module):
                 m.weight.data.normal_(0, 0.01)
                 m.bias.data.zero_()
 
-    def predict(self, img):
-        img = cv.resize(img, (self.input_size, self.input_size))
+    def predict(self, img, score_thresh=0.5, tta=False, debug=False, label=None):
+        # pad equally left or right, and top or bottom
+        img = utils.resize_max_axis(img, config.unet.test_input_size)
+        img, y_slice, x_slice = utils.pad_equal(img, config.unet.test_input_size)
+
+        if label is not None:
+            label = utils.resize_max_axis(label, config.unet.test_input_size)
+            label, _, _ = utils.pad_equal(label, config.unet.test_input_size)
 
         is_gray = lambda img: len(img.shape) == 2
         if is_gray(img):
@@ -246,21 +255,75 @@ class MobileNetV2_unet(nn.Module):
             # TODO
             pass
 
-        inputs = img
-        # normalize
-        inputs = inputs.astype(np.float32) / 255.0
-        # transpose spatial and color
-        inputs = inputs.transpose((2, 0, 1))
-        # add batch
-        inputs = np.expand_dims(inputs, axis=0)
-        inputs = torch.tensor(inputs)
+        def predict_raw(inputs):
+            # normalize
+            inputs = inputs.astype(np.float32) / 255.0
+            # transpose spatial and color
+            inputs = inputs.transpose((2, 0, 1))
+            # add batch
+            inputs = np.expand_dims(inputs, axis=0)
 
-        with torch.no_grad():
-            inputs = inputs.to("cuda")
-            pred = self.forward(inputs)[0]
-            pred = np.uint8(pred.cpu().numpy() * 255)
+            inputs = torch.tensor(inputs)
+            with torch.no_grad():
+                inputs = inputs.to("cuda")
+                pred = self.forward(inputs)[0]
+                pred = nn.Softmax(dim=0)(pred)
+                pred = pred.cpu().numpy()
 
-        return pred
+                bg_pred = pred[0]
+                fg_pred = pred[1]
+
+                pred = (fg_pred + 1 - bg_pred) / 2
+
+            return pred
+
+        def threshold_and_multiply(pred):
+            pred[pred >= score_thresh] = 1
+            pred[pred < score_thresh] = 0
+
+            pred = np.uint8(pred) * 255
+            return pred
+
+        if not tta:
+            pred = predict_raw(img)
+            pred = threshold_and_multiply(pred)
+        else:
+            orig = img.copy()
+            augmented_imgs = [img.copy()]
+            for rot in (90, 180, 270):
+                img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
+                augmented_imgs.append(img.copy())
+
+            img = cv.flip(orig.copy(), +1)
+            augmented_imgs.append(img.copy())
+            for rot in (90, 180, 270):
+                img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
+                augmented_imgs.append(img.copy())
+
+            preds = [predict_raw(img) for img in augmented_imgs]
+            # de-augment
+            preds = np.array(
+                [
+                    preds[0],
+                    cv.rotate(preds[1], cv.ROTATE_90_COUNTERCLOCKWISE),
+                    cv.rotate(preds[2], cv.ROTATE_180),
+                    cv.rotate(preds[3], cv.ROTATE_90_CLOCKWISE),
+                    cv.flip(preds[4], +1),
+                    cv.flip(cv.rotate(preds[5], cv.ROTATE_90_COUNTERCLOCKWISE), +1),
+                    cv.flip(cv.rotate(preds[6], cv.ROTATE_180), +1),
+                    cv.flip(cv.rotate(preds[7], cv.ROTATE_90_CLOCKWISE), +1),
+                ]
+            )
+            pred = preds.mean(axis=0)
+            pred = threshold_and_multiply(pred)
+
+        # if debug:
+        #     utils.show(pred, pred[y_slice, x_slice])
+
+        if label is not None:
+            return pred[y_slice, x_slice], label[y_slice, x_slice] * 255
+        else:
+            return pred[y_slice, x_slice]
 
     def unload(self):
         self.cpu()

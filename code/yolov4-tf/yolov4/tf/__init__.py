@@ -64,6 +64,7 @@ class YOLOv4(BaseClass):
         activation1: str = "leaky",
         kernel_regularizer=tf.keras.regularizers.l2(0.0005),
         backbone: str = "yolo",
+        summary: bool = False,
     ):
         # pylint: disable=missing-function-docstring
         self._has_weights = False
@@ -92,9 +93,10 @@ class YOLOv4(BaseClass):
             )
         self.model(inputs)
 
-        self.model.backbone.summary()
-        self.model.panet_tiny.summary()
-        self.model.yolov3_head_tiny.summary()
+        if summary:
+            self.model.backbone.summary()
+            self.model.panet_tiny.summary()
+            self.model.yolov3_head_tiny.summary()
 
     @cached_property
     def minibatch_idxs(self):
@@ -235,6 +237,7 @@ class YOLOv4(BaseClass):
         frame: np.ndarray,
         iou_threshold: float = 0.3,
         score_threshold: float = 0.25,
+        raw: bool = False,
     ):
         """
         Predict one frame
@@ -246,6 +249,8 @@ class YOLOv4(BaseClass):
         # image_data == Dim(1, input_size[1], input_size[0], channels)
         # TODO do resizing here
         image_data = self.resize_image(frame)
+        # image_data = frame.copy()
+        # utils.show(image_data)
         image_data = image_data / 255.0
         image_data = image_data[np.newaxis, ...].astype(np.float32)
 
@@ -256,8 +261,14 @@ class YOLOv4(BaseClass):
             candidates[0].numpy(),
             iou_threshold=iou_threshold,
             score_threshold=score_threshold,
+            raw=raw,
         )
-        pred_bboxes = self.fit_pred_bboxes_to_original(pred_bboxes, frame.shape)
+
+        # when raw is set we want to use TTA hence no DIoU in the above method
+        # and we will fit the boxes manually outside after we de-ttad the prediction
+        if not raw:
+            pred_bboxes = self.fit_pred_bboxes_to_original(pred_bboxes, frame.shape)
+
         return pred_bboxes
 
     ############

@@ -35,6 +35,7 @@ class CircuitAugmentator:
         # receives path to labels, returns List[(abs_img_path, abs_label_path)]
         clean: bool = True,
         include_merged: bool = True,
+        test_only: bool =False,
     ):
         self.train_dir = train_dir
         self.train_out_dir = train_out_dir
@@ -49,7 +50,11 @@ class CircuitAugmentator:
 
         self.img_params = img_params
 
-        self.train_files = fileloader(self.train_dir)
+        if not test_only:
+            self.train_files = fileloader(self.train_dir)
+        else:
+            self.train_files = []
+
         self.valid_files = fileloader(self.valid_dir)
         if self.merged_dir is not None and include_merged:
             merged_files = fileloader(self.merged_dir)
@@ -114,6 +119,7 @@ class UNetAugmentator(CircuitAugmentator):
         perform_flip: bool = False,
         perform_rotation: bool = False,
         include_merged: bool = False,
+        test_only: bool = False,
     ):
         super().__init__(
             train_dir,
@@ -127,6 +133,7 @@ class UNetAugmentator(CircuitAugmentator):
             UNetAugmentator.fileloader,
             clean,
             include_merged,
+            test_only
         )
 
         self.perform_flip = perform_flip
@@ -290,6 +297,7 @@ class YoloAugmentator(CircuitAugmentator):
         flip=False,
         include_merged=False,
         augment_valid=False,
+        test_only=False
     ):
         super().__init__(
             train_dir,
@@ -303,6 +311,7 @@ class YoloAugmentator(CircuitAugmentator):
             YoloAugmentator.fileloader,
             clean,
             include_merged,
+            test_only
         )
 
         self.rot_transition = rot_transition
@@ -667,7 +676,10 @@ files_to_ignore = [
 
 @click.command()
 @click.argument("target")
-def augment(target):
+@click.option("--test_only", is_flag=True, type=click.types.BOOL, default=False)
+def augment(target, test_only):
+    test_only = True if test_only else False
+
     import time
 
     start = time.perf_counter()
@@ -687,6 +699,7 @@ def augment(target):
             flip=config.augment.perform_flip,
             include_merged=config.augment.include_merged,
             clean=True,
+            test_only=test_only
         )
         augmentator.run()
 
@@ -736,6 +749,7 @@ def augment(target):
             perform_rotation=config.augment.perform_rotation,
             perform_flip=config.augment.perform_flip,
             clean=True,
+            test_only=test_only
         )
         augmentator.run()
 

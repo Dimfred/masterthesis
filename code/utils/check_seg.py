@@ -19,7 +19,11 @@ def look(img_paths):
         labels = np.load(label_path)
         img = cv.imread(str(path))
 
-        if np.any(labels[labels > 1]):
+        where_one = labels == 1
+        where_zero = labels == 0
+
+        where_both = np.logical_or(where_one, where_zero)
+        if not np.all(where_both):
             print(str(path))
             utils.show(img, labels)
 

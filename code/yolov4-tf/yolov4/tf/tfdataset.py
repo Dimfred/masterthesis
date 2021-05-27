@@ -207,6 +207,7 @@ class TFDataset:
             np.random.shuffle(self.idxs)
         else:
             self.ground_truth = list(range(len(self.dataset)))
+            self.original_shape = list(range(len(self.dataset)))
 
     def load_dataset(self):
         """
@@ -323,14 +324,16 @@ class TFDataset:
 
         for batch_idx in range(self.batch_size):
             x, y, idx = next_data()
+
+            if not self.data_augmentation:
+                self.ground_truth[idx] = y
+                self.original_shape[idx] = x.shape
+
             if augmentations is not None:
                 x, y = augmentations(x, y)
                 # DEBUG
                 # utils.show_bboxes(x, y, type_="class_to_front")
 
-            # TODO bad
-            if not self.data_augmentation:
-                self.ground_truth[idx] = y
 
             x = np.expand_dims(x / 255.0, axis=0)
 
@@ -379,7 +382,7 @@ class TFDataset:
         return iter(dataset)
 
         # DEBUG if i want to remove the tf part to see smth
-        return iter(self._generator())
+        # return iter(self._generator())
 
         # can be used to parallelize
         # dataset = dataset.interleave(
@@ -413,3 +416,10 @@ class TFDataset:
     def get_ground_truth(self, idxs):
         gt = self.ground_truth
         return [gt[idx] for idx in idxs]
+
+    def get_original_shape(self, idxs):
+        shapes = self.original_shape
+        return [shapes[idx] for idx in idxs]
+
+    def get_original_img(self, idxs):
+        return (self.dataset[idx][0] for idx in idxs)

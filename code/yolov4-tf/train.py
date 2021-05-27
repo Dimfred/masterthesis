@@ -65,82 +65,72 @@ def main():
         return yolo
 
     # fmt:off
-    base_augmentations = A.Compose([
-        # A.Normalize(mean=config.train.mean, std=config.train.std, max_pixel_value=255),
-    ])
-
     classes = utils.Yolo.parse_classes(config.train_out_dir / "classes.txt")
+    pad_size = 1.2 * 1000
+    crop_width=pad_size * config.yolo.augment.bbox_safe_crop
+    crop_height=pad_size * config.yolo.augment.bbox_safe_crop
+
+    _train_augmentations = A.Compose([
+        A.PadIfNeeded(
+            min_height=int(pad_size),
+            min_width=int(pad_size),
+            border_mode=cv.BORDER_CONSTANT,
+            value=0,
+            always_apply=True
+        ),
+        A.Rotate(
+            limit=config.yolo.augment.rotate,
+            border_mode=cv.BORDER_CONSTANT,
+            p=0.5,
+        ),
+        A.RandomScale(
+            scale_limit=config.yolo.augment.random_scale,
+            p=0.5
+        ),
+        # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
+        A.RandomSizedBBoxSafeCrop(
+            width=crop_width,
+            height=crop_height,
+            p=0.5,
+        ),
+        A.ColorJitter(
+            brightness=config.yolo.augment.color_jitter,
+            contrast=config.yolo.augment.color_jitter,
+            saturation=config.yolo.augment.color_jitter,
+            hue=config.yolo.augment.color_jitter,
+            p=0.5
+        ),
+        A.Resize(
+            width=config.yolo.input_size,
+            height=config.yolo.input_size,
+            always_apply=True
+        ),
+    ], bbox_params=A.BboxParams("yolo"))
 
     def train_augmentations(image, bboxes):
-        _train_augmentations = A.Compose([
-            A.PadIfNeeded(
-                min_height=1200,
-                min_width=1200,
-                border_mode=cv.BORDER_CONSTANT,
-                value=0,
-                always_apply=True
-            ),
-            A.RandomScale(
-                scale_limit=config.yolo.augment.random_scale,
-                p=0.5
-            ),
-            A.Rotate(
-                limit=config.yolo.augment.rotate,
-                border_mode=cv.BORDER_CONSTANT,
-                p=0.5,
-            ),
-            # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
-            A.RandomSizedBBoxSafeCrop(
-                width=None, # unused
-                height=None, # unused
-                p=0.5,
-            ),
-
-            A.ColorJitter(
-                brightness=config.yolo.augment.color_jitter,
-                contrast=config.yolo.augment.color_jitter,
-                saturation=config.yolo.augment.color_jitter,
-                hue=config.yolo.augment.color_jitter,
-                p=0.5
-            ),
-            A.Blur(
-                blur_limit=config.yolo.augment.blur,
-                p=0.5
-            ),
-
-            A.Resize(
-                width=config.yolo.input_size,
-                height=config.yolo.input_size,
-                always_apply=True
-            ),
-
-            base_augmentations
-        ], bbox_params=A.BboxParams("yolo"))
-
         augmented = _train_augmentations(image=image, bboxes=bboxes)
         return augmented["image"], augmented["bboxes"]
 
-    def valid_augmentations(image, bboxes):
-        _valid_augmentations = A.Compose([
-            A.PadIfNeeded(
-                min_height=1000,
-                min_width=1000,
-                border_mode=cv.BORDER_CONSTANT,
-                value=0,
-                always_apply=True
-            ),
-            A.Resize(
-                width=config.yolo.input_size,
-                height=config.yolo.input_size,
-                always_apply=True
-            ),
-        ], bbox_params=A.BboxParams("yolo"))
+    _valid_augmentations = A.Compose([
+        A.PadIfNeeded(
+            min_height=1000,
+            min_width=1000,
+            border_mode=cv.BORDER_CONSTANT,
+            value=0,
+            always_apply=True
+        ),
+        A.Resize(
+            width=config.yolo.input_size,
+            height=config.yolo.input_size,
+            always_apply=True
+        ),
+    ], bbox_params=A.BboxParams("yolo"))
 
+    def valid_augmentations(image, bboxes):
         augmented = _valid_augmentations(image=image, bboxes=bboxes)
         return augmented["image"], augmented["bboxes"]
+
     # fmt:on
-
-
 
     # grid
     #activation, bs, lr, loss = sys.argv[1:5]
@@ -165,18 +155,17 @@ def main():
     #)
 
     # load run and seed
-    run_ = sys.argv[1]
-    runs = (run_,)
+    runs_ = sys.argv[1:]
+    runs = (int(r) for r in runs_)
 
-    #if sys.argv[5:]:
+    # if sys.argv[5:]:
     #    runs = (int(i) for i in sys.argv[5:])
-    #else:
+    # else:
     #    runs = (0, 1, 2)
 
     for run in runs:
-        done = False
-        while not done:
-            seed = config.train.seeds[int(run)]
+        while True:
+            seed = config.train.seeds[run]
             utils.seed_all(seed)
 
             # model creation
@@ -262,15 +251,15 @@ def main():
                 burn_in=config.yolo.burn_in,
                 checkpoint_dir=config.yolo.checkpoint_dir,
             )
-            try:
-                trainer.train(train_dataset, valid_dataset)
-                done = True
-            except Exception as e:
-                print("---------------------------------------------")
-                print("---------------------------------------------")
-                print(e)
-                print("---------------------------------------------")
-                print("---------------------------------------------")
+            # try:
+            trainer.train(train_dataset, valid_dataset)
+            break
+            # except Exception as e:
+            #     print("---------------------------------------------")
+            #     print("---------------------------------------------")
+            #     print(e)
+            #     print("---------------------------------------------")
+            #     print("---------------------------------------------")
 
 
 if __name__ == "__main__":

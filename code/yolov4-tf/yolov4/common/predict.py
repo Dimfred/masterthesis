@@ -23,6 +23,7 @@ SOFTWARE.
 """
 import numpy as np
 from numba import njit, jit
+
 # from numba.typed import List
 
 
@@ -124,17 +125,12 @@ def DIoU_NMS(candidates: np.array, threshold: int):
             ) + (enclose_bottom - enclose_top) * (enclose_bottom - enclose_top)
             d_squared = (class_bboxes[:, 0] - max_bbox[0]) * (
                 class_bboxes[:, 0] - max_bbox[0]
-            ) + (class_bboxes[:, 1] - max_bbox[1]) * (
-                class_bboxes[:, 1] - max_bbox[1]
-            )
+            ) + (class_bboxes[:, 1] - max_bbox[1]) * (class_bboxes[:, 1] - max_bbox[1])
 
             # DIoU = IoU - d^2 / c^2
             little_overlap_mask = iou - d_squared / c_squared < threshold
             little_overlap_bboxes = class_bboxes[little_overlap_mask]
-            if (
-                no_overlap_bboxes.shape[0] > 0
-                and little_overlap_bboxes.shape[0] > 0
-            ):
+            if no_overlap_bboxes.shape[0] > 0 and little_overlap_bboxes.shape[0] > 0:
                 class_bboxes = np.concatenate(
                     [no_overlap_bboxes, little_overlap_bboxes], axis=0
                 )
@@ -169,6 +165,7 @@ def candidates_to_pred_bboxes(
     input_size,
     iou_threshold: float = 0.3,
     score_threshold: float = 0.25,
+    raw: bool = False,
 ):
     """
     @param candidates: Dim(-1, (x, y, w, h, obj_score, probabilities))
@@ -182,6 +179,8 @@ def candidates_to_pred_bboxes(
     class_prob = (
         candidates[:, 4] * candidates[np.arange(len(candidates)), class_ids + 5]
     )
+
+    # if not raw:
     candidates = candidates[class_prob > score_threshold, :]
 
     # Remove out of range candidates
@@ -221,6 +220,9 @@ def candidates_to_pred_bboxes(
         ],
         axis=-1,
     )
+
+    if raw:
+        return candidates
 
     return DIoU_NMS(candidates, iou_threshold)
 

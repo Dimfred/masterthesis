@@ -86,7 +86,8 @@ config.yolo.label_smoothing = 0.1
 
 config.yolo.max_steps = 4000
 # step > this == 0 => perform mAP
-config.yolo.map_after_steps = 500
+config.yolo.map_after_steps = 1500
+# config.yolo.map_after_steps = 10
 # step % this == 0 => perform mAP
 config.yolo.map_on_step_mod = 10
 config.yolo.validation_freq = 10 if utils.isme() else 10
@@ -123,7 +124,7 @@ architecture_type = {
     ),
     "text": (
         str(config.train_out_dir / "classes.txt"),
-        str(config.weights_dir / "best.weights"),
+        str(config.weights_dir / "best_grid.weights"),
     ),
 }
 
@@ -145,17 +146,17 @@ config.unet = EasyDict()
 # net
 config.unet.n_classes = 2
 config.unet.input_size = 224 if utils.isme() else 608  # 448  # 448 #224 #608 #416 #288
-config.unet.test_input_size = 608 # 448, 480, 512, 544, 576, 608
+config.unet.test_input_size = 448  # 448, 480, 512, 544, 576, 608, 640, 672, 704
 config.unet.channels = 3
 config.unet.width_multiplier = 1.0
-config.unet.architecture = "v2" # v2, v3, unet
-config.unet.upsampling = "transpose" # transpose, bilinear
-config.unet.scale = True # use Upsample instead of last deconv
+config.unet.architecture = "v2"  # v2, v3, unet
+config.unet.upsampling = "transpose"  # transpose, bilinear
+config.unet.scale = True  # use Upsample instead of last deconv
 
 # training
-config.unet.lr = 3e-3 #3e-4 #0.0025
+config.unet.lr = 3e-3  # 3e-4 #0.0025
 config.unet.batch_size = 64 if utils.isme() else 64
-config.unet.subdivision = 4 if utils.isme() else 8
+config.unet.subdivision = 4 if utils.isme() else 16
 config.unet.valid_batch_size = 24 if utils.isme() else 24
 config.unet.valid_subdivision = 1 if utils.isme() else 3
 # minibatch_size = batch_size / subdivision
@@ -171,8 +172,8 @@ config.unet.momentum = 0.95
 config.unet.nesterov = False
 
 # loss functions
-config.unet.focal_alpha = 0.1 # 0.1 best
-config.unet.focal_gamma = 2   # 2 best
+config.unet.focal_alpha = 0.1  # 0.1 best
+config.unet.focal_gamma = 2  # 2 best
 config.unet.focal_reduction = "mean"
 
 
@@ -182,7 +183,11 @@ config.unet.pretrained_path = Path("weights/mobilenet_v2_rgb.pth")
 config.unet.checkpoint_path = None
 # config.unet.checkpoint_path = Path("weights/checkpoint.pth")
 # config.unet.output_dir = Path("outputs")
-config.unet.weights = Path("mobile_unet") / config.weights_dir / "text.pth"
+
+# config.unet.weights = Path("mobile_unet") / config.weights_dir / "text.pth"
+config.unet.weights = (
+    Path("mobile_unet") / config.weights_dir / "best_78miou@608_trained_with_448.pth"
+)
 
 # utility
 config.unet.n_workers = 10 if utils.isme() else 12
@@ -228,7 +233,7 @@ config.augment.unet = EasyDict()
 config.augment.unet.img_params = EasyDict()
 config.augment.unet.img_params.channels = 1  # config.unet.channels
 config.augment.unet.img_params.keep_ar = True
-config.augment.unet.img_params.resize = 640  # resizes longest image axis to that size
+config.augment.unet.img_params.resize = 704  # resizes longest image axis to that size
 
 config.augment.augment_valid = False
 
@@ -434,23 +439,24 @@ config.yolo.augment.rotate = 20  # 10, 20, 30
 # config.yolo.experiment_name = "rotate"
 # config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
 
+
 config.yolo.augment.random_scale = 0.3  # 0.1, 0.2, 0.3, 0.4, 0.5
 # config.yolo.experiment_name = "random_scale"
 # config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
 
-config.yolo.augment.color_jitter = 0.2 # 0.1, 0.2, 0.3
+config.yolo.augment.color_jitter = 0.2  # 0.1, 0.2, 0.3
 # config.yolo.experiment_name = "color_jitter"
 # config.yolo.experiment_param = f"color_jitter_{config.yolo.augment.color_jitter}"
 
-config.yolo.augment.bbox_safe_crop = True
+config.yolo.augment.bbox_safe_crop = 0.9 #
 # config.yolo.experiment_name = "bbox_safe_crop"
-# config.yolo.experiment_param = f"bbox_safe_crop_{int(config.yolo.augment.bbox_safe_crop)}"
+# config.yolo.experiment_param = f"bbox_safe_crop_{config.yolo.augment.bbox_safe_crop}"
 
 # config.yolo.augment.gaussian_noise = True
 # config.yolo.experiment_name = "gaussian_noise"
 # config.yolo.experiment_param = f"gaussian_noise_{int(config.yolo.augment.gaussian_noise)}"
 
-config.yolo.augment.blur = 3 # 5
+config.yolo.augment.blur = 3  # 5
 # config.yolo.experiment_name = "blur"
 # config.yolo.experiment_param = f"blur_{config.yolo.augment.blur}"
 
@@ -472,23 +478,19 @@ config.yolo.activation = None  # leaky, hswish
 
 # batch
 config.yolo.batch_size = 2 if utils.isme() else 16
-config.yolo.accumulation_steps = (
-    8 if utils.isme() else 2
-)
-config.yolo.real_batch_size = (
-    config.yolo.batch_size * config.yolo.accumulation_steps
-)
+config.yolo.accumulation_steps = 16 if utils.isme() else 4
+config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_steps
 
 # lr
-config.yolo.lr = None  # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
+config.yolo.lr = 0.001  # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
 
 # loss
-config.yolo.loss = None  # "ciou", "eiou", "diou"
+config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
 
-#config.yolo.experiment_name = "grid"
-#config.yolo.experiment_param = (
+# config.yolo.experiment_name = "grid"
+# config.yolo.experiment_param = (
 #    lambda a, bs, lr, l: f"grid_act_{a}_bs_{bs}_lr_{lr}_loss_{l}"
-#)
+# )
 
 # fmt: off
 # params = [
@@ -498,7 +500,6 @@ config.yolo.loss = None  # "ciou", "eiou", "diou"
 #     ["Loss", config.yolo.loss],
 # ]
 # fmt: on
-
 
 
 config.yolo.experiment_name = "test"

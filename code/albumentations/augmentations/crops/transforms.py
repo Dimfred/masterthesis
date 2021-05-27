@@ -466,7 +466,8 @@ class RandomSizedBBoxSafeCrop(DualTransform):
 
     def apply(self, img, crop_height=0, crop_width=0, h_start=0, w_start=0, interpolation=cv2.INTER_LINEAR, **params):
         crop = F.random_crop(img, crop_height, crop_width, h_start, w_start)
-        return FGeometric.resize(crop, self.height, self.width, interpolation)
+        # return FGeometric.resize(crop, self.height, self.width, interpolation)
+        return crop
 
     def get_params_dependent_on_targets(self, params):
         img_h, img_w = params["image"].shape[:2]

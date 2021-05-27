@@ -9,7 +9,11 @@ import albumentations as AA
 import random
 from concurrent.futures import ThreadPoolExecutor
 
+from ensemble_boxes import weighted_boxes_fusion
+
 import numba as nb
+import numba.typed as nt
+import numba.core.types as nct
 
 from pathlib import Path
 from cached_property import cached_property
@@ -51,7 +55,7 @@ def show(*imgs, size=1000, max_axis=True):
     cv.destroyAllWindows()
 
 
-def show_bboxes(img, bboxes, orig=None, type_="gt", classes=None, others=[]):
+def show_bboxes(img, bboxes, orig=None, type_="gt", classes=None, others=[], gt=None):
     # type = gt | class_to_front | pred
     if type_ == "class_to_front":
         bboxes = [list(bbox) for bbox in bboxes]
@@ -72,18 +76,24 @@ def show_bboxes(img, bboxes, orig=None, type_="gt", classes=None, others=[]):
 
     for bbox in bboxes:
         x1, y1, x2, y2 = bbox.abs
-        cv.rectangle(cimg, (x1, y1), (x2, y2), (0, 0, 255), 2)
+        cv.rectangle(cimg, (x1, y1), (x2, y2), (0, 0, 255), 1)
         if classes is not None:
             cls_name = classes[bbox.label]
             cv.putText(
                 cimg,
                 cls_name,
-                (x1 - 10, y1 - 10),
+                (x1 - 5, y1 - 5),
                 cv.FONT_HERSHEY_SIMPLEX,
                 0.5,
                 (0, 0, 255),
-                2,
+                1,
             )
+
+    if gt is not None:
+        gt = [YoloBBox(img.shape).from_ground_truth(bbox) for bbox in gt]
+        for bbox in gt:
+            x1, y1, x2, y2 = bbox.abs
+            cv.rectangle(cimg, (x1, y1), (x2, y2), (0, 255, 0), 1)
 
     if orig is None:
         show(cimg, *others)
@@ -111,6 +121,41 @@ def resize(img, width: int = None, height: int = None, interpolation=cv.INTER_CU
         img = np.expand_dims(img, axis=2)
 
     return img
+
+
+def pad_equal(img, size):
+    img = np.squeeze(img)
+    img_h, img_w = img.shape[:2]
+    assert img_h == size or img_w == size
+
+    if img_h < img_w:
+        pad_size = size - img_h
+        top = pad_size // 2
+        bot = pad_size - top
+
+        y_slice = slice(top, img_h + top)
+        x_slice = slice(0, img_w)
+
+        pad_top = np.zeros((top, img_w))
+        pad_bot = np.zeros((bot, img_w))
+
+        img = np.append(pad_top, img, axis=0)
+        img = np.append(img, pad_bot, axis=0)
+    else:
+        pad_size = size - img_w
+        left = pad_size // 2
+        right = pad_size - left
+
+        y_slice = slice(0, img_h)
+        x_slice = slice(left, img_w + left)
+
+        pad_left = np.zeros((img_h, left))
+        pad_right = np.zeros((img_h, right))
+
+        img = np.append(pad_left, img, axis=1)
+        img = np.append(img, pad_right, axis=1)
+
+    return img, y_slice, x_slice
 
 
 def resize_max_axis(img, size):
@@ -430,23 +475,64 @@ class AlbumentationsBBox:
 
 
 class MeanAveragePrecision:
-    def __init__(self, class_names, img_shape, iou_threshs=[0.5, 0.7]):
+    def __init__(
+        self,
+        class_names,
+        img_shape,
+        iou_threshs=[0.5, 0.7],
+        policy="greedy",
+        same_img_shape=True,
+    ):
+        self.same_img_shape = same_img_shape
         self.img_shape = img_shape
+
         self.iou_threshs = iou_threshs
         self.class_names = class_names
         self.n_classes = len(class_names)
+        self.policy = policy
 
-        self._map = mean_average_precision.MeanAveragePrecision(self.n_classes)
+        self._map = mean_average_precision.MetricBuilder.build_evaluation_metric(
+            "map_2d", async_mode=True, num_classes=self.n_classes
+        )
 
-    def add(self, pred_batch, gt_batch, inverted_gt=False):
-        for pred, gt in zip(pred_batch, gt_batch):
-            pred = self._convert_prediction(pred)
-            if inverted_gt:
-                gt = self._convert_inverted_ground_truth(gt)
-            else:
-                gt = self._convert_ground_truth(gt)
+    def add(self, pred_batch, gt_batch, inverted_gt=False, absolute=True):
+        if absolute:
+            for batch_idx, (pred, gt) in enumerate(zip(pred_batch, gt_batch)):
+                batch_idx = -1 if self.same_img_shape else batch_idx
 
-            self._map.add(pred, gt)
+                pred = self._convert_prediction(pred, batch_idx)
+                if inverted_gt:
+                    gt = self._convert_inverted_ground_truth(gt, batch_idx)
+                else:
+                    gt = self._convert_ground_truth(gt, batch_idx)
+
+                self._map.add(pred, gt)
+
+        else:
+            for pred, gt in zip(pred_batch, gt_batch):
+                pred = np.array([self.pred_to_rel(p) for p in pred])
+                gt = np.array([self.gt_to_rel(g) for g in gt])
+
+                self._map.add(pred, gt)
+
+    def pred_to_rel(self, pred):
+        x, y, w, h, label, conf = pred
+
+        w_half, h_half = w / 2, h / 2
+        x1, x2 = x - w_half, x + w_half
+        y1, y2 = y - h_half, y + h_half
+
+        return (x1, y1, x2, y2, label, conf)
+
+    def gt_to_rel(self, gt):
+        label, x, y, w, h = gt
+
+        w_half, h_half = w / 2, h / 2
+        x1, x2 = x - w_half, x + w_half
+        y1, y2 = y - h_half, y + h_half
+
+        # ..., difficult, crowd
+        return (x1, y1, x2, y2, label, 0, 0)
 
     def compute(self, show=True):
         if show:
@@ -456,9 +542,10 @@ class MeanAveragePrecision:
         for idx, iou_thresh in enumerate(self.iou_threshs):
             if isinstance(iou_thresh, list) or isinstance(iou_thresh, tuple):
                 threshs = np.arange(*iou_thresh)
-                print(threshs)
+                # print(threshs)
+
                 results_ = [
-                    self._map.value(iou_thresholds=iou_thresh_)
+                    self._map.value(iou_thresholds=iou_thresh_, mpolicy=self.policy)
                     for iou_thresh_ in threshs
                 ]
 
@@ -484,7 +571,9 @@ class MeanAveragePrecision:
                 combined_results["mAP"] = mAP
                 results.append(combined_results)
             else:
-                results.append(self._map.value(iou_thresholds=iou_thresh))
+                results.append(
+                    self._map.value(iou_thresholds=iou_thresh, mpolicy=self.policy)
+                )
 
         if show:
             end = time.perf_counter()
@@ -494,6 +583,7 @@ class MeanAveragePrecision:
 
     def reset(self):
         self._map.reset()
+        self.img_shape = []
 
     def get_maps(self, results):
         return [
@@ -536,35 +626,48 @@ class MeanAveragePrecision:
 
         return tabulate(pretty)
 
-    def _convert_prediction(self, pred):
-        pred = [YoloBBox(self.img_shape).from_prediction(pred) for pred in pred]
+    def _convert_prediction(self, pred, batch_idx=-1):
+        if batch_idx == -1:
+            pred = [YoloBBox(self.img_shape).from_prediction(pred) for pred in pred]
+        else:
+            pred = [
+                YoloBBox(self.img_shape[batch_idx]).from_prediction(pred)
+                for pred in pred
+            ]
+
         pred = np.vstack([[*bbox.abs, bbox.label, bbox.confidence] for bbox in pred])
         return pred
 
-    def _convert_ground_truth(self, gt):
+    def _convert_ground_truth(self, gt, batch_idx=-1):
         difficult, crowd = 0, 0
 
-        gt = [YoloBBox(self.img_shape).from_ground_truth(gt) for gt in gt]
+        if batch_idx == -1:
+            gt = [YoloBBox(self.img_shape).from_ground_truth(gt) for gt in gt]
+        else:
+            gt = [
+                YoloBBox(self.img_shape[batch_idx]).from_ground_truth(gt) for gt in gt
+            ]
         gt = np.vstack([[*bbox.abs, bbox.label, difficult, crowd] for bbox in gt])
         return gt
 
-    def _convert_inverted_ground_truth(self, gt):
+    def _convert_inverted_ground_truth(self, gt, batch_idx=-1):
         gt = A.class_to_front(gt)
-        return self._convert_ground_truth(gt)
+        return self._convert_ground_truth(gt, batch_idx=batch_idx)
 
 
 class Metrics:
     def __init__(self, classes, label_dir, iou_thresh=0.5):
         self.classes = classes
-        self.iou_thresh = iou_thresh
         self.label_dir = label_dir
+        self.iou_thresh = iou_thresh
 
         self._labels = [self.classes[cls_idx] for cls_idx in range(len(self.classes))]
 
         # ground truth on y axis, prediction on x axis
         self._confusion = np.zeros((len(classes), len(classes)))
-        self._false_positives = np.zeros(len(classes))
-        self._false_negatives = np.zeros(len(classes))
+        self._tps = np.zeros(len(classes))
+        self._fns = np.zeros(len(classes))
+        self._fps = np.zeros(len(classes))
 
         self._metric_mapping = {
             "f1": self.f1,
@@ -576,34 +679,95 @@ class Metrics:
         gt_bboxes = [YoloBBox(img_dim).from_ground_truth(gt) for gt in ground_truth]
         pred_bboxes = [YoloBBox(img_dim).from_prediction(pred) for pred in predictions]
 
-        used_gt = set()
-        used_pred = set()
+        gt_to_preds = {gt_idx: [] for gt_idx, _ in enumerate(gt_bboxes)}
 
-        error_wrong_label = []
-
-        # first find pairs of matching iou
-        for gt in gt_bboxes:
-            for pred in pred_bboxes:
+        # initial matching round
+        for gt_idx, gt in enumerate(gt_bboxes):
+            for pred_idx, pred in enumerate(pred_bboxes):
                 iou = calc_iou(gt.abs, pred.abs)
                 if iou > self.iou_thresh:
-                    self._confusion[gt.label][pred.label] += 1
-                    used_gt.add(gt)
-                    used_pred.add(pred)
+                    gt_to_preds[gt_idx].append((pred_idx, iou))
 
-                    if gt.label != pred.label:
-                        error_wrong_label.append(pred)
+        # check that every prediction was matched only once to a gt
+        all_matched_preds = []
+        for matched_preds in gt_to_preds.values():
+            all_matched_preds.extend((pred_idx for pred_idx, _ in matched_preds))
 
-        # left bboxes are those, either not appearing in pred, or not appearing in the
-        # ground truth
-        unmatched_gt = set(gt_bboxes) ^ used_gt
-        for um in unmatched_gt:
-            self._false_negatives[um.label] += 1
+        # check that no prediction was matched twice to different gts
+        if len(set(all_matched_preds)) != len(all_matched_preds):
+            raise ValueError("You fucked!")
 
-        unmatched_pred = set(pred_bboxes) ^ used_pred
-        for um in unmatched_pred:
-            self._false_positives[um.label] += 1
+        # some predictions can't be matched to a gt hence they are false positives
+        all_pred_idxs = set(range(len(pred_bboxes)))
+        unmatched_preds = set(all_matched_preds) ^ all_pred_idxs
+        if unmatched_preds:
+            for unmatched_pred_idx in unmatched_preds:
+                pred_bbox = pred_bboxes[unmatched_pred_idx]
+                self._fps[pred_bbox.label] += 1
 
-        return error_wrong_label, unmatched_gt, unmatched_pred
+        # get all errors n stuff
+        for gt_idx, matched_preds in gt_to_preds.items():
+            gt_bbox = gt_bboxes[gt_idx]
+
+            if len(matched_preds) == 0:
+                self._fns[gt_bbox.label] += 1
+
+            elif len(matched_preds) == 1:
+                pred_idx, _ = matched_preds[0]
+                pred_bbox = pred_bboxes[pred_idx]
+
+                if gt_bbox.label == pred_bbox.label:
+                    self._tps[gt_bbox.label] += 1
+                else:
+                    self._fns[gt_bbox.label] += 1
+                    self._fps[pred_bbox.label] += 1
+
+            elif len(matched_preds) > 1:
+                tp_found = False
+                for pred_idx, _ in matched_preds:
+                    pred_bbox = pred_bboxes[pred_idx]
+
+                    if pred_bbox.label == gt_bbox.label:
+                        if not tp_found:
+                            self._tps[gt_bbox.label] += 1
+                            tp_found = True
+                        else:
+                            self._fps[gt_bbox.label] += 1
+
+                    else:
+                        self._fps[pred_bbox.label] += 1
+
+            else:
+                raise ValueError("LoL WTF!")
+
+        # used_gt = set()
+        # used_pred = set()
+
+        # error_wrong_label = []
+
+        # # first find pairs of matching iou
+        # for gt in gt_bboxes:
+        #     for pred in pred_bboxes:
+        #         iou = calc_iou(gt.abs, pred.abs)
+        #         if iou > self.iou_thresh:
+        #             self._confusion[gt.label][pred.label] += 1
+        #             used_gt.add(gt)
+        #             used_pred.add(pred)
+
+        #             if gt.label != pred.label:
+        #                 error_wrong_label.append(pred)
+
+        # # left bboxes are those, either not appearing in pred, or not appearing in the
+        # # ground truth
+        # unmatched_gt = set(gt_bboxes) ^ used_gt
+        # for um in unmatched_gt:
+        #     self._false_negatives[um.label] += 1
+
+        # unmatched_pred = set(pred_bboxes) ^ used_pred
+        # for um in unmatched_pred:
+        #     self._false_positives[um.label] += 1
+
+        # return error_wrong_label, unmatched_gt, unmatched_pred
 
     def confusion(self):
         pretty = [["GT/PR"] + list(range(len(self._labels)))]
@@ -628,58 +792,22 @@ class Metrics:
         print("Unmatched FP & FN")
         print(tabulate(pretty))
 
-    def recall(self, show=True):
-        # TP / (TP + FN + unmatched_FN)
+    def recall(self):
+        r = self._tps / (self._tps + self._fns)
+        overall = r.mean()
+        return np.concatenate((r, [overall]))
 
-        tp = np.diagonal(self._confusion)
-        tpfn = self._confusion.sum(axis=1) + self._false_negatives
+    def precision(self):
+        p = self._tps / (self._tps + self._fps)
+        overall = p.mean()
+        return np.concatenate((p, [overall]))
 
-        recall = tp / tpfn
-
-        pretty = [(label, rc) for label, rc in zip(self._labels, recall)]
-        pretty += [("Overall", recall.sum() / len(self._labels))]
-
-        if show:
-            print("------------------------------------------------")
-            print("RECALL")
-            print(tabulate(pretty))
-
-        return np.array([val for _, val in pretty])
-
-    def precision(self, show=True):
-        # TP / (TP + FP + unmatched_FP)
-
-        tp = np.diagonal(self._confusion)
-        tpfp = self._confusion.sum(axis=0) + self._false_positives
-
-        precision = tp / tpfp
-
-        pretty = [(label, pr) for label, pr in zip(self._labels, precision)]
-        pretty += [("Overall", precision.sum() / len(self._labels))]
-
-        if show:
-            print("------------------------------------------------")
-            print("PRECISION")
-            print(tabulate(pretty))
-
-        return np.array([val for _, val in pretty])
-
-    def f1(self, show=True):
+    def f1(self):
         # 2 * precision * recall / (precision + recall)
+        p = self.precision()
+        r = self.recall()
 
-        precision = self.precision(show=False)
-        recall = self.recall(show=False)
-
-        f1 = 2 * precision * recall / (precision + recall)
-
-        pretty = [(label, f1c) for label, f1c in zip(self._labels + ["Overall"], f1)]
-
-        if show:
-            print("------------------------------------------------")
-            print("F1")
-            print(tabulate(pretty))
-
-        return np.array([val for _, val in pretty])
+        return 2 * p * r / (p + r)
 
     def label_stats(self):
         from .augment import YoloAugmentator
@@ -696,35 +824,37 @@ class Metrics:
 
         return np.array(label_counter)
 
-    def perform(self, metrics, show=True, precision=5):
-        pretty = [["Label", "NLabels"] + metrics]
+    def perform(self, metrics):
+        pretty = [["Label", "NLabels"] + list(metrics)]
 
         # combine all metrics, each col is one metric
         overall = None
         for metric in metrics:
-            calced = self._metric_mapping[metric](show=False)
+            calced = self._metric_mapping[metric]()
             calced = calced.reshape((len(calced), 1))
             if overall is None:
                 overall = calced
             else:
                 overall = np.append(overall, calced, axis=1)
 
-        float_format = "{{:.{}f}}".format(precision)
+        return overall
+
+    def prettify(self, metrics, results, iou=None):
+        ffloat = lambda x: f"{x:.5f}"
 
         label_stats = self.label_stats()
         label_stats = list(label_stats) + [label_stats.sum()]
 
+        pretty = [["Label", "Num", *metrics]]
+        if iou is not None:
+            pretty += [[f"@{iou}"]]
         for label, n_labels, row in zip(
-            self._labels + ["Overall"], label_stats, overall
+            self._labels + ["Overall"], label_stats, results
         ):
-            formatted_nums = [float_format.format(val) for val in row]
-            pretty_row = [label, n_labels] + formatted_nums
-            pretty.append(pretty_row)
+            pretty_vals = [ffloat(val) for val in row]
+            pretty += [[label, n_labels, *pretty_vals]]
 
-        if show:
-            print(tabulate(pretty))
-
-        return pretty
+        print(tabulate(pretty))
 
 
 class BFS:
@@ -1287,3 +1417,308 @@ class UnetExperiment:
                 self.clean_path(child)
 
         path.rmdir()
+
+
+@nb.njit
+def nb_tta_perform(
+    prediction, flip_rotation, classes, flip_table, rotation_table, index_by_name
+):
+    flip, rotation = flip_rotation
+    if rotation:
+        n_its = int(rotation / 90)
+        n_its = 4 - n_its
+
+        for it in range(n_its):
+            prediction = [
+                nb_tta_calc_rotation(p, classes, rotation_table, index_by_name)
+                for p in prediction
+            ]
+
+    if flip:
+        prediction = [
+            nb_tta_calc_flip(p, classes, flip_table, index_by_name) for p in prediction
+        ]
+
+    return np.vstack(tuple(prediction))
+
+
+@nb.njit
+def nb_tta_calc_rotation(prediction, classes, rotation_table, index_by_name):
+    # calculates +90deg
+    x, y, w, h, l, conf = prediction
+
+    cur_cls_name = classes[l]
+    new_cls_name = rotation_table[cur_cls_name]
+
+    new_l = index_by_name(new_cls_name, classes)
+    new_x = 1 - y
+    new_y = x
+    new_w = h
+    new_h = w
+
+    return (new_x, new_y, new_w, new_h, new_l, conf)
+
+
+@nb.njit
+def nb_tta_calc_flip(prediction, classes, flip_table, index_by_name):
+    # flip over y (ab => ba)
+    x, y, w, h, l, conf = prediction
+    cur_cls_name = classes[l]
+    new_cls_name = flip_table[cur_cls_name]
+
+    new_l = index_by_name(new_cls_name)
+    new_x = 1 - x
+    return (new_x, y, w, h, new_l, conf)
+
+
+@nb.njit
+def nb_tta_index_by_name(name, classes):
+    for idx, cls_name in classes.items():
+        if cls_name == name:
+            return idx
+
+    # raise ValueError("Unknown cls_name:", name)
+
+
+class YoloTTA:
+    def __init__(self, classes, flip_table, rotation_table):
+        self.classes = classes
+        self.flip_table = flip_table
+        self.rotation_table = rotation_table
+
+        # self.classes = nt.Dict.empty(key_type=nct.int64, value_type=nct.string)
+        # for label_idx, cls_name in classes.items():
+        #     self.classes[label_idx] = cls_name
+
+        # self.flip_table = nt.Dict.empty(key_type=nct.string, value_type=nct.string)
+        # for from_, to_ in flip_table.items():
+        #     self.flip_table[from_] = to_
+
+        # self.rotation_table = nt.Dict.empty(key_type=nct.string, value_type=nct.string)
+        # for from_, to_ in rotation_table.items():
+        #     self.rotation_table[from_] = to_
+
+    def perform(self, prediction, flip_rotation):
+        # NUMBA
+        # return nb_tta_perform(
+        #     prediction,
+        #     flip_rotation,
+        #     self.classes,
+        #     self.flip_table,
+        #     self.rotation_table,
+        #     nb_tta_index_by_name,
+        # )
+
+        flip, rotation = flip_rotation
+        if rotation:
+            n_its = rotation // 90
+            n_its = 4 - n_its
+
+            for idx in range(len(prediction)):
+                for it in range(n_its):
+                    prediction[idx] = self.calc_rotation(prediction[idx])
+
+        if flip:
+            for idx in range(len(prediction)):
+                prediction[idx] = self.calc_flip(prediction[idx])
+
+        return np.vstack(tuple(prediction))
+
+    def calc_rotation(self, prediction):
+        # calculates +90deg
+        x, y, w, h, l, conf = prediction
+
+        cur_cls_name = self.classes[l]
+        new_cls_name = self.rotation_table[cur_cls_name]
+
+        new_l = self.index_by_name(new_cls_name)
+        new_x = 1.0 - y
+        new_y = x
+        new_w = h
+        new_h = w
+
+        return np.array([new_x, new_y, new_w, new_h, new_l, conf])
+
+    def calc_flip(self, prediction):
+        # flip over y (ab => ba)
+        x, y, w, h, l, conf = prediction
+        cur_cls_name = self.classes[l]
+        new_cls_name = self.flip_table[cur_cls_name]
+
+        new_l = self.index_by_name(new_cls_name)
+        new_x = 1.0 - x
+        return np.array([new_x, y, w, h, new_l, conf])
+
+    def augment(self, img, times=8):
+        img = img.copy()
+        oimg = img.copy()
+
+        img_combs = [(img, (False, 0))]
+        if times == 8:
+            for rot in (90, 180, 270):
+                img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
+                img_combs.append((np.expand_dims(img, axis=2), (False, rot)))
+
+            img = cv.flip(oimg, +1)
+            img_combs.append((np.expand_dims(img, axis=2), (True, 0)))
+
+            for rot in (90, 180, 270):
+                img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
+                img_combs.append((np.expand_dims(img, axis=2), (True, rot)))
+        else:
+            img = cv.rotate(img, cv.ROTATE_180)
+            img_combs.append((np.expand_dims(img, axis=2), (False, 180)))
+
+            img = cv.flip(oimg, +1)
+            img_combs.append((np.expand_dims(img, axis=2), (True, 0)))
+
+            img = cv.rotate(img, cv.ROTATE_180)
+            img_combs.append((np.expand_dims(img, axis=2), (True, 180)))
+
+        return img_combs
+
+
+    def index_by_name(self, name):
+        for idx, cls_name in self.classes.items():
+            if cls_name == name:
+                return idx
+
+        raise ValueError("Unknown cls_name:", name)
+
+    # def combinations(self):
+    #     combinations = []
+    #     for flip in (False, True):
+    #         for rot in (0, 90, 180, 270):
+    #             combinations.append((flip, rot))
+
+    #     return combinations
+
+
+class WBF:
+    def __init__(
+        self, iou_thresh=0.5, score_thresh=0.25, conf_type="avg", vote_thresh=1
+    ):
+        self.iou_thresh = iou_thresh
+        self.score_thresh = score_thresh
+        self.conf_type = conf_type
+        self.vote_thresh = vote_thresh
+
+    def perform(self, predictions):
+        bboxes, scores, labels = self.adapt(predictions)
+        bboxes, scores, labels = weighted_boxes_fusion(
+            bboxes,
+            scores,
+            labels,
+            iou_thr=self.iou_thresh,
+            skip_box_thr=self.score_thresh,
+            conf_type=self.conf_type,
+            vote_thr=self.vote_thresh,
+        )
+        unadapted = self.unadapt(bboxes, scores, labels)
+
+        return unadapted
+
+    def adapt(self, predictions):
+        # x, y, w, h, l, score => [x1, y1, x2, y2], [labels], [scores]
+        bboxes, scores, labels = [], [], []
+
+        for model_prediction in predictions:
+            model_bboxes, model_scores, model_labels = [], [], []
+            for x, y, w, h, l, score in model_prediction:
+                half_w = w / 2
+                half_h = h / 2
+
+                x1, x2 = x - half_w, x + half_w
+                if x1 < 0.0:
+                    x1 = 0.0
+                if x2 > 1.0:
+                    x2 = 1.0
+
+                y1, y2 = y - half_h, y + half_h
+                if y1 < 0.0:
+                    y1 = 0.0
+                if y2 > 1.0:
+                    y2 = 1.0
+
+                model_bboxes.append((x1, y1, x2, y2))
+                model_labels.append(l)
+                model_scores.append(score)
+
+            bboxes.append(model_bboxes)
+            scores.append(model_scores)
+            labels.append(model_labels)
+
+        return bboxes, scores, labels
+
+    def unadapt(self, bboxes, scores, labels):
+        predictions = []
+        for (x1, y1, x2, y2), score, label in zip(bboxes, scores, labels):
+            w, h = x2 - x1, y2 - y1
+            half_w, half_h = w / 2, h / 2
+
+            x, y = x1 + half_w, y1 + half_h
+            pred = np.array([x, y, w, h, label, score])
+            predictions.append(pred)
+
+        return predictions
+
+
+@nb.njit
+def nb_calc_iou_yolo(b1, b2):
+    # b1: x1, y1, x2, y2
+    # b2: x1, y1, x2, y2
+    b1 = nb_convert_from_yolo_bbox(b1)
+    b2 = nb_convert_from_yolo_bbox(b2)
+
+    # determine the (x, y)-coordinates of the intersection rectangle
+    xA = max(b1[0], b2[0])
+    yA = max(b1[1], b2[1])
+    xB = min(b1[2], b2[2])
+    yB = min(b1[3], b2[3])
+
+    # compute the area of intersection rectangle
+    interArea = abs(max((xB - xA, 0)) * max((yB - yA), 0))
+    if interArea == 0:
+        return 0
+
+    # compute the area of both the prediction and ground-truth
+    # rectangles
+    b1Area = abs((b1[2] - b1[0]) * (b1[3] - b1[1]))
+    b2Area = abs((b2[2] - b2[0]) * (b2[3] - b2[1]))
+
+    # compute the intersection over union by taking the intersection
+    # area and dividing it by the sum of prediction + ground-truth
+    # areas - the interesection area
+    iou = interArea / float(b1Area + b2Area - interArea)
+
+    # return the intersection over union value
+    return iou
+
+
+@nb.njit
+def nb_convert_from_yolo_bbox(bbox):
+    x, y, w, h, l, c = bbox
+
+    w_half = w / 2
+    h_half = h / 2
+
+    x1, x2 = x - w_half, x + w_half
+    y1, y2 = y - h_half, y + h_half
+
+    return x1, y1, x2, y2, l, c
+
+
+@nb.njit
+def nb_convert_to_yolo_bbox(bbox):
+    x1, y1, x2, y2, l, c = bbox
+
+    w = x2 - x1
+    h = y2 - y1
+
+    w_half = w / 2
+    h_half = h / 2
+
+    x = x1 + w_half
+    y = y1 + h_half
+
+    return x, y, w, h, l, c

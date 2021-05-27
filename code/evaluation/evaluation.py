@@ -5,6 +5,8 @@ from pipeline.postprocessing import ORIENTATION, BBoxConnection
 from config import config
 import utils
 
+import numba as nb
+
 classes = {
     0: "diode_left",
     1: "diode_top",
@@ -210,37 +212,6 @@ class TopologyEvaluator:
             print(f"Found FPs: '{(n_eccs_pred - n_eccs_gt) // 2}'")
             self.pred = self.pred[:, :n_eccs_gt]
 
-            # fp_edge_idxs = []
-            # fp_set_to_zero = []
-            # where_ecc = np.argwhere(self.pred > 0)
-            # for y, x in where_ecc:
-            #     # fps are left so if the idx of any component is greater than the
-            #     # max_gt idx (which is the size of the gts) then this is a fp
-            #     if x >= n_eccs_gt:
-            #         print(f"Found FP at position: {x}")
-            #         if self.pred[y].sum() > 1:
-            #             print("\tFP WHICH INFLUENCES TOPOLOGY!")
-            #             # raise RuntimeError("FP which influences topology")
-            #             # we have to set it to 0 or else no combination will be found
-            #             self.pred[:, x] = 0
-            #         else:
-            #             print("\tDoes not influence Topology.")
-            #             fp_edge_idxs.append(y)
-
-            # # # set all fps to zero which would influence the topology
-            # # for edge_idx, component_idx in fp_set_to_zero:
-            # #     self.pred[edge_idx, component_idx] = 0
-
-            # # remove the fp edges such that the calculation is cheaper
-            # if fp_edge_idxs:
-            #     new_pred = []
-            #     for idx, edge in enumerate(self.pred):
-            #         if idx in fp_edge_idxs:
-            #             continue
-
-            #         new_pred.append(edge)
-            #     self.pred = np.vstack(new_pred)
-
         # remove non-unique edges
         # print("Size before:", len(self.pred))
         new_pred = {tuple(edge) for edge in self.pred}
@@ -257,14 +228,25 @@ class TopologyEvaluator:
         if not unmatched_gt_idxs:
             return res
 
+        depth_exceeded_counter = 0
         while unmatched_gt_idxs:
-            perm_res, matched_idxs = self.count_permutation_matches(matched_idxs)
+            perm_res, matched_idxs, depth_exceeded = self.count_permutation_matches(
+                matched_idxs
+            )
             res += perm_res
+
+            depth_exceeded_counter += depth_exceeded
 
             split_res, matched_idxs = self.count_split_matches(matched_idxs)
             res += split_res
 
             unmatched_gt_idxs, unmatched_pred_idxs = self._get_unmatched(matched_idxs)
+
+            if depth_exceeded_counter > 100:
+                print(utils.red("DEPTH EXCEEDED FINISH."))
+                raise RuntimeError(
+                    "Something went insanely wrong check the labels at this file."
+                )
 
         # TODO probably due to some FPs in detection which won't be able to be matched
         # against
@@ -283,45 +265,52 @@ class TopologyEvaluator:
                 if matched_idxs.has_pred_idx(pred_edge_idx):
                     continue
 
-                if self._is_perfect_match(gt_edge, pred_edge):
+                if nb_is_perfect_match(gt_edge, pred_edge):
                     matched_idxs.append(Match(gt_edge_idx, pred_edge_idx))
                     break
 
         return matched_idxs
 
     def count_perfect_matches(self, matched_idxs):
-        TPS, TNS = 0, 0
+        res = Result()
 
         # count TPS, TNS in the perfect match edges
         for match in matched_idxs:
-            TPS += (self.gt[match.gt_idx] == 1).sum() - 1
-            TNS += (self.gt[match.gt_idx] == 0).sum() - 1
+            edge = self.gt[match.gt_idx]
+            res.TPS += nb_get_tps(edge)
 
-        return Result(TPS=TPS, TNS=TNS)
+        return res
 
     def count_permutation_matches(self, matched_idxs):
         res = Result()
         unmatched_gt_idxs, unmatched_pred_idxs = self._get_unmatched(matched_idxs)
 
+        depth_exceeded = False
+
+        upper_depth_limit = max(self.gt[idx].sum() for idx in unmatched_gt_idxs)
+        # DEBUG
+        # print("UpperCombinationDepthLimit:", upper_depth_limit)
+
         # create all permutations of length 2 : len(unmatched_preds)
         found = False
         for r in range(2, len(unmatched_pred_idxs) + 1):
-            if r == 7:
-                raise ValueError(
-                    "The length of the combinations exceeded 6. This should not happen."
-                )
+            # DEBUG
+            # print("CurrentComb:", r)
+            if r == upper_depth_limit + 1:
+                print("Depth exceeded.")
+                depth_exceeded = True
+                break
 
             idxs = it.combinations(unmatched_pred_idxs, r=r)
             for idx_comb in idxs:
-                combination = np.vstack([self.pred[idx] for idx in idx_comb])
-                combination = combination.sum(axis=0)
-                combination[combination > 1] = 1
+                # NUMBA
+                combination = nb_combine_edge(np.array(idx_comb), self.pred)
 
                 for unmatched_gt_idx in unmatched_gt_idxs:
                     unmatched_gt = self.gt[unmatched_gt_idx]
-                    if self._is_perfect_match(unmatched_gt, combination):
-                        res.TPS += (unmatched_gt == 1).sum()
-                        res.TNS += (unmatched_gt == 0).sum()
+                    # NUMBA
+                    if nb_is_perfect_match(unmatched_gt, combination):
+                        res.TPS += nb_get_tps(unmatched_gt)
 
                         n_components_needed = len(idx_comb)
                         penalty = n_components_needed - 1
@@ -334,7 +323,6 @@ class TopologyEvaluator:
                             matched_idxs.append(Match(unmatched_gt_idx, idx))
 
                         found = True
-                        # TODO also break the above
                         break
 
                 if found:
@@ -343,7 +331,7 @@ class TopologyEvaluator:
             if found:
                 break
 
-        return res, matched_idxs
+        return res, matched_idxs, depth_exceeded
 
     def count_split_matches(self, matched_idxs):
         res = Result()
@@ -354,17 +342,17 @@ class TopologyEvaluator:
             for unmatched_pred_idx in unmatched_pred_idxs:
                 pred_edge = self.pred[unmatched_pred_idx]
                 # check if the gt_edge is a sub graph of the prediction
-                if self._is_sub_edge(gt_edge, pred_edge):
+                # NUMBA
+                if nb_is_sub_edge(gt_edge, pred_edge):
                     # we have a perfect submatch
                     # split the pred_edge into two parts
                     split_pred = pred_edge.copy()
                     split_pred[gt_edge == 1] = 0
 
-                    # TODO replace the current prediction egde with the new one
+                    # replace the current prediction edge with the new one
                     self.pred[unmatched_pred_idx] = split_pred
 
-                    res.TPS += (gt_edge == 1).sum()
-                    res.TNS += (gt_edge == 0).sum()
+                    res.TPS += nb_get_tps(gt_edge)
                     res.FPS += 1
 
                     # TODO how to insert a partial match?
@@ -376,9 +364,9 @@ class TopologyEvaluator:
 
                     for unmatched_gt_idx in unmatched_gt_idxs:
                         gt_edge = self.gt[unmatched_gt_idx]
-                        if self._is_perfect_match(gt_edge, split_pred):
-                            res.TPS += (gt_edge == 1).sum()
-                            res.TNS += (gt_edge == 0).sum()
+                        # NUMBA
+                        if nb_is_perfect_match(gt_edge, split_pred):
+                            res.TPS += nb_get_tps(gt_edge)
                             matched_idxs.append(
                                 Match(unmatched_gt_idx, unmatched_pred_idx)
                             )
@@ -408,6 +396,40 @@ class TopologyEvaluator:
 
     def _is_perfect_match(self, gt_edge, pred_edge):
         return np.all(gt_edge == pred_edge)
+
+@nb.njit
+def nb_is_sub_edge(e1, e2):
+    where_e1_1 = np.argwhere(e1 == 1)
+    for e1_1_idx in where_e1_1:
+        if e2[e1_1_idx] == 0:
+            return False
+
+    return True
+
+@nb.njit
+def nb_is_perfect_match(gt_edge, pred_edge):
+    return np.all(gt_edge == pred_edge)
+
+@nb.njit
+def nb_get_tps(edge):
+    tps = 0
+    for v in edge:
+        if v == 1:
+            tps += 1
+
+    return tps - 1
+
+@nb.njit
+def nb_combine_edge(pred_idxs, pred_edges):
+    cols = pred_edges.shape[1]
+    combined = np.zeros((1, cols))
+    for pred_idx in pred_idxs:
+        pred_edge = pred_edges[pred_idx]
+        for idx, val in enumerate(pred_edge):
+            if val == 1:
+                combined[0, idx] = 1
+
+    return combined
 
 
 class ArrowAndTextMatchingEvaluator:

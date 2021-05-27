@@ -57,9 +57,10 @@ def init_unet():
     unet = MobileNetV2_unet(
         mode="eval",
         n_classes=config.unet.n_classes,
-        input_size=config.unet.input_size,
+        input_size=config.unet.test_input_size,
         channels=config.unet.channels,
         pretrained=None,
+        scale=config.unet.scale
     )
     unet.load_state_dict(t.load(config.unet.weights))
     unet.to(device)
@@ -230,7 +231,7 @@ def predict(img_paths, iou_thresh, conf_thresh):
         img_path = Path(img_path)
 
         img = imread(str(img_path))
-        img = utils.resize_max_axis(img, 1000)
+        img = utils.resize_max_axis(img, config.unet.test_input_size)
 
         pred_bboxes = [YoloBBox(img.shape).from_prediction(p) for p in yolo_pred]
 
@@ -238,7 +239,6 @@ def predict(img_paths, iou_thresh, conf_thresh):
         gt_bboxes = [YoloBBox(img.shape).from_ground_truth(gt) for gt in ground_truth]
 
         output = unet.predict(img)
-
         segmentation = cv.resize(output, img.shape[:2][::-1])
         # DEBUG
         # utils.show(segmentation[..., np.newaxis], img)
@@ -286,29 +286,33 @@ def add_false_negatives_and_false_positive(eval_item, threshold):
 
     for gt_idx, match in matches.items():
         # unmatched gt
-        if len(match) == 0:
+        if not match:
             # we definetly have a false negative!
-            if len(gt_bboxes) > len(pred_bboxes):
-                # missing gt_bbox
-                gt_bbox = gt_bboxes[gt_idx]
-                # add the missing bbox to the predictions
-                pred_bboxes.append(gt_bbox)
-                # the idx of the fn prediction added to the predictions to match
-                # the gt
-                fn_pred_idx = len(pred_bboxes) - 1
-                # add the fn to the gt_idx s.t. it can get synced with the gt
-                # in the next step
-                matches[gt_idx] = [fn_pred_idx]
-                # remember that we have added this one
-                eval_item.false_negative_gts.append(gt_idx)
-                # add the fn to the topology of the prediciton
+            # if len(gt_bboxes) > len(pred_bboxes) - len(unmatched_gt):
+            # missing gt_bbox
+            gt_bbox = gt_bboxes[gt_idx]
+            # add the missing bbox to the predictions
+            pred_bboxes.append(gt_bbox)
+            # the idx of the fn prediction added to the predictions to match
+            # the gt
+            fn_pred_idx = len(pred_bboxes) - 1
+            # add the fn to the gt_idx s.t. it can get synced with the gt
+            # in the next step
+            matches[gt_idx] = [fn_pred_idx]
+            # remember that we have added this one
+            eval_item.false_negative_gts.append(gt_idx)
+            # add the fn to the topology of the prediciton
 
         elif len(match) > 1:
+            # DEBUG
+            bboxes = [pred_bboxes[idx] for idx in match]
+            utils.show_bboxes(eval_item.img, bboxes, type_="utils")
             raise ValueError("FALSE POSITIVE WITH GROUND TRUTH NOT YET HANDLED")
             # print("FALSE POSITIVE OCCURED CARE!!!! TRYING TO HANDLE")
 
         # else == 1 correct
 
+    # print(matches)
     gt_to_pred = {gt_idx: pred_idxs[0] for gt_idx, pred_idxs in matches.items()}
     pred_to_gt = {pred_idx: gt_idx for gt_idx, pred_idx in gt_to_pred.items()}
 

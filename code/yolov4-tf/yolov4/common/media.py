@@ -87,8 +87,12 @@ def resize_image(
         dw = dw // 2
         dh = dh // 2
         # height, width, channels
+        # padded_image = np.full(
+        #     (target_size[1], target_size[0], image.shape[2]), 255, dtype=np.uint8
+        # )
+        # dimfred
         padded_image = np.full(
-            (target_size[1], target_size[0], image.shape[2]), 255, dtype=np.uint8
+            (target_size[1], target_size[0], image.shape[2]), 0, dtype=np.uint8
         )
         # print("RESIZED", resized_image.shape)
         padded_image[dh : height + dh, dw : width + dw, :] = resized_image
@@ -109,6 +113,17 @@ def resize_image(
         scale = height / target_size[1]
         ground_truth[:, 1] = scale * (ground_truth[:, 1] - 0.5) + 0.5
         ground_truth[:, 3] = scale * ground_truth[:, 3]
+
+    # dimfred
+    # if dw < dh:
+    #     scale = width / target_size[0]
+    #     ground_truth[:, 0] = scale * (ground_truth[:, 0] - 0.5) + 0.5
+    #     ground_truth[:, 2] = scale * ground_truth[:, 2]
+    # elif dw > dh:
+    #     scale = height / target_size[1]
+    #     ground_truth[:, 1] = scale * (ground_truth[:, 1] - 0.5) + 0.5
+    #     ground_truth[:, 3] = scale * ground_truth[:, 3]
+
 
     return padded_image, ground_truth
 

@@ -72,6 +72,8 @@ class YOLOv4Loss(Loss):
             self.bbox_xiou = bbox_ciou
         elif iou_type == "eiou":
             self.bbox_xiou = lambda bboxes1, bboxes2: bbox_eiou(bboxes1, bboxes2, gamma)
+        else:
+            raise ValueError(f"Loss: '{iou_type}' not defined.")
 
         self.verbose = verbose
 

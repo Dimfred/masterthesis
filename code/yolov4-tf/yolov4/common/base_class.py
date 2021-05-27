@@ -189,6 +189,7 @@ class BaseClass:
         candidates,
         iou_threshold: float = 0.3,
         score_threshold: float = 0.25,
+        raw: bool = False,
     ):
         """
         @param candidates: Dim(-1, (x, y, w, h, conf, prob_0, prob_1, ...))
@@ -200,6 +201,7 @@ class BaseClass:
             self.input_size,
             iou_threshold=iou_threshold,
             score_threshold=score_threshold,
+            raw=raw,
         )
 
     def fit_pred_bboxes_to_original(self, pred_bboxes, original_shape):

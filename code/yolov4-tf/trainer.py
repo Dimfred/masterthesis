@@ -62,6 +62,8 @@ class Trainer:
             self.yolo.classes,
             self.yolo.input_size,
             iou_threshs=(0.5, (0.5, 0.76, 0.05)),
+            # calculates the mAP for the unpadded img version
+            same_img_shape=False,
         )
         self.best_mAP = 0.0
         self.best_mAP_step = 0
@@ -77,7 +79,7 @@ class Trainer:
         self.lr = lr
         self.burn_in = burn_in
 
-        self.early_stopping = 30000
+        self.early_stopping = 10000
         self.early_stopping_counter = 0
 
         self.train_time = time.perf_counter()
@@ -152,9 +154,24 @@ class Trainer:
                 vlosses = vloss_accu.accumulate(vlosses)
 
                 if self.is_map_time():
-                    pred_batch = self.bboxes_from_outputs(voutputs)
                     label_batch = valid_ds.get_ground_truth(idxs)
+                    shapes_batch = valid_ds.get_original_shape(idxs)
+                    pred_batch = self.bboxes_from_outputs(voutputs, shapes_batch)
+                    self.mAP.img_shape = shapes_batch
                     self.mAP.add(pred_batch, label_batch, inverted_gt=True)
+
+                    # DEBUG
+                    original_batch = valid_ds.get_original_img(idxs)
+                    with tf.device("CPU:0"):
+                        for oimg, label, pred in zip(
+                            original_batch, label_batch, pred_batch
+                        ):
+                            utils.show_bboxes(
+                                oimg,
+                                pred,
+                                type_="pred",
+                                gt=utils.A.class_to_front(label),
+                            )
 
             if self.is_map_time():
                 results = self.mAP.compute(show=False)
@@ -168,7 +185,10 @@ class Trainer:
                     self.valid_summary_writer, "mAP@50", mAP50, step=self.step_counter
                 )
                 self.log_summary(
-                    self.valid_summary_writer, "mAP@50_75", mAP50_75, step=self.step_counter
+                    self.valid_summary_writer,
+                    "mAP@50_75",
+                    mAP50_75,
+                    step=self.step_counter,
                 )
 
                 if mAP50_75 > self.best_mAP:
@@ -247,7 +267,7 @@ class Trainer:
         return min_map_steps_reached and is_valid_map_step
         # return True
 
-    def bboxes_from_outputs(self, voutputs):
+    def bboxes_from_outputs(self, voutputs, original_shapes):
         # voutputs:
         # tuple(3)[(batch_size, *shape1), (batch_size, *shape2), (batch_size, *shape3)]
         candidates = self.yolo._transform_candidate_batch(voutputs)
@@ -261,6 +281,9 @@ class Trainer:
                 )
                 for candidate in candidates
             ]
+
+            for idx, (bboxes, shape) in enumerate(zip(bbox_batch, original_shapes)):
+                bbox_batch[idx] = self.yolo.fit_pred_bboxes_to_original(bboxes, shape)
 
         return bbox_batch
 
