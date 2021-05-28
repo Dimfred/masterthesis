@@ -169,7 +169,7 @@ def main():
     ##### SCALE ########################################################################
     ####################################################################################
     scale, *runs = sys.argv[1:]
-    scale = int(scale)
+    scale = float(scale)
     runs = (int(r) for r in runs)
 
     config.yolo.augment.random_scale = scale
