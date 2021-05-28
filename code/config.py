@@ -425,7 +425,8 @@ config.augment.perform_flip = False
 config.augment.include_merged = False
 
 ## experiment
-# config.yolo.experiment_dir = Path("experiments_yolo")
+config.yolo.experiment_dir = Path("experiments_yolo")
+
 # config.yolo.experiment_name = "lr_init"
 # config.yolo.experiment_param = lambda lr : f"LR_{lr}"
 
