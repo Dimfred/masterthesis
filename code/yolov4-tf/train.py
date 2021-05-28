@@ -81,15 +81,15 @@ def main():
                 value=0,
                 always_apply=True
             ),
-            A.Rotate(
-                limit=config.yolo.augment.rotate,
-                border_mode=cv.BORDER_CONSTANT,
-                p=0.5,
-            ),
-            # A.RandomScale(
-            #     scale_limit=config.yolo.augment.random_scale,
-            #     p=0.5
+            # A.Rotate(
+            #     limit=config.yolo.augment.rotate,
+            #     border_mode=cv.BORDER_CONSTANT,
+            #     p=0.5,
             # ),
+            A.RandomScale(
+                scale_limit=config.yolo.augment.random_scale,
+                p=0.5
+            ),
             # # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
             # A.RandomSizedBBoxSafeCrop(
             #     width=crop_width,
@@ -158,13 +158,22 @@ def main():
     ####################################################################################
     ##### ROTATION #####################################################################
     ####################################################################################
-    rot, *runs = sys.argv[1:]
-    rot = int(rot)
+    # rot, *runs = sys.argv[1:]
+    # rot = int(rot)
+    # runs = (int(r) for r in runs)
+
+    # config.yolo.augment.rotate = rot
+    # config.yolo.experiment_param = config.yolo.experiment_param(rot)
+
+    ####################################################################################
+    ##### SCALE ########################################################################
+    ####################################################################################
+    scale, *runs = sys.argv[1:]
+    scale = int(scale)
     runs = (int(r) for r in runs)
 
-
-    config.yolo.augment.rotate = rot
-    config.yolo.experiment_param = config.yolo.experiment_param(rot)
+    config.yolo.augment.random_scale = scale
+    config.yolo.experiment_param = config.yolo.experiment_param(scale)
 
     ####################################################################################
     ##### GRID #########################################################################

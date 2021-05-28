@@ -433,15 +433,15 @@ config.yolo.experiment_name = "offline_aug"
 config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
 config.yolo.augment.rotate = None
-config.yolo.augment.rotate = 10  # 10, 20, 30
-config.yolo.experiment_name = "rotate"
-config.yolo.experiment_param = lambda rot: f"rotate_{rot}"
+# config.yolo.augment.rotate = 10  # 10, 20, 30
+# config.yolo.experiment_name = "rotate"
+# config.yolo.experiment_param = lambda rot: f"rotate_{rot}"
 
 
 config.yolo.augment.random_scale = None
-# config.yolo.augment.random_scale = 0.3  # 0.1, 0.2, 0.3, 0.4, 0.5
-# config.yolo.experiment_name = "random_scale"
-# config.yolo.experiment_param = f"random_scale_{config.yolo.augment.random_scale}"
+config.yolo.augment.random_scale = 0.1  # 0.1, 0.2, 0.3
+config.yolo.experiment_name = "random_scale"
+config.yolo.experiment_param = lambda scale: f"random_scale_{scale}"
 
 config.yolo.augment.color_jitter = None
 # config.yolo.augment.color_jitter = 0.2  # 0.1, 0.2, 0.3
