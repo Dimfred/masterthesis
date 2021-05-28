@@ -420,17 +420,17 @@ config.labels_and_files_to_remove = [
 ]
 
 # whether to perform flip and rotation on the dataset
-config.augment.perform_rotation = False
+config.augment.perform_rotation = True
 config.augment.perform_flip = False
 config.augment.include_merged = False
 
 ## experiment
-config.yolo.experiment_dir = Path("experiments_yolo")
-config.yolo.experiment_name = "lr_init"
-config.yolo.experiment_param = lambda lr : f"LR_{lr}"
+# config.yolo.experiment_dir = Path("experiments_yolo")
+# config.yolo.experiment_name = "lr_init"
+# config.yolo.experiment_param = lambda lr : f"LR_{lr}"
 
-# config.yolo.experiment_name = "offline_aug"
-# config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
+config.yolo.experiment_name = "offline_aug"
+config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
 # config.yolo.experiment_name = "offline_baseline"
 # config.yolo.experiment_param = f"offline_baseline_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"

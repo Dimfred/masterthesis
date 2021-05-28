@@ -90,7 +90,7 @@ def dump_lr_init():
         ]
 
     lr_runs = (
-        # (0.01, (0, 1, 2)),
+        (0.01, (0, 1, 2)),
         (0.005, (0, 1, 2)),
         (0.0025, (0, 1, 2)),
         (0.001, (0, 1, 2)),
@@ -109,7 +109,7 @@ def dump_lr_init():
             [],
             [
                 f"LR@0.5: {lr}", "", "mean", "std", "",
-                f"LR@0.75: {lr}", "", "mean", "std"],
+                f"LR@50:75: {lr}", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -521,7 +521,7 @@ def main():
     #### lr_init ########
     #####################
     # process_lr_init()
-    # dump_lr_init()
+    dump_lr_init()
 
     #####################
     #### offline_aug ####
@@ -540,7 +540,7 @@ def main():
     # dump_blur_aug()
     # dump_all_augs("with")
     # dump_all_augs("without")
-    dump_grid()
+    # dump_grid()
 
 
 if __name__ == "__main__":

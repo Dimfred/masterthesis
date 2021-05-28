@@ -1,5 +1,5 @@
 # LR
-# cpcf ma/code/yolov4-tf/experiments_yolo/lr_init experiments_yolo/
+cpcf ma/code/yolov4-tf/experiments_yolo/lr_init experiments_yolo/
 
 # Offline Aug
 # cpcf ma/code/yolov4-tf/experiments_yolo/offline_aug experiments_yolo/
@@ -15,4 +15,4 @@
 # cpcf ma/code/yolov4-tf/experiments_yolo/all_augs_with_jitter_noise_blur experiments_yolo/
 # cpcf ma/code/yolov4-tf/experiments_yolo/all_augs_without_jitter_noise_blur experiments_yolo/
 # cpcf ma/code/yolov4-tf/experiments_yolo/grid experiments_yolo/
-cpcf ma/code/yolov4-tf/experiments_yolo/test experiments_yolo/test
+# cpcf ma/code/yolov4-tf/experiments_yolo/test experiments_yolo/test
