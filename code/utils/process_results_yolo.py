@@ -148,8 +148,8 @@ def dump_offline_aug():
         results += [
             [],
             [
-                f"P{P}F{F}R{R}@0.5", "", "", "", "mean", "std", "",
-                f"P{P}F{F}R{R}@0.75", "", "", "", "mean", "std"],
+                f"P{P}F{F}R{R}@50", "", "", "", "mean", "std", "",
+                f"P{P}F{F}R{R}@50:75", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -520,13 +520,12 @@ def main():
     #####################
     #### lr_init ########
     #####################
-    # process_lr_init()
-    dump_lr_init()
+    # dump_lr_init()
 
     #####################
     #### offline_aug ####
     #####################
-    # dump_offline_aug()
+    dump_offline_aug()
     # dump_offline_baseline_aug()
 
     #####################

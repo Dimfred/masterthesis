@@ -66,52 +66,55 @@ def main():
 
     # fmt:off
     classes = utils.Yolo.parse_classes(config.train_out_dir / "classes.txt")
-    # pad_size = 1.2 * 1000
+    pad_size = 1.2 * 1000
     # crop_width=pad_size * config.yolo.augment.bbox_safe_crop
     # crop_height=pad_size * config.yolo.augment.bbox_safe_crop
 
-    _train_augmentations = A.Compose([
-        A.PadIfNeeded(
-            # min_height=int(pad_size),
-            # min_width=int(pad_size),
-            min_height=1000,
-            min_width=1000,
-            border_mode=cv.BORDER_CONSTANT,
-            value=0,
-            always_apply=True
-        ),
-        # A.Rotate(
-        #     limit=config.yolo.augment.rotate,
-        #     border_mode=cv.BORDER_CONSTANT,
-        #     p=0.5,
-        # ),
-        # A.RandomScale(
-        #     scale_limit=config.yolo.augment.random_scale,
-        #     p=0.5
-        # ),
-        # # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
-        # A.RandomSizedBBoxSafeCrop(
-        #     width=crop_width,
-        #     height=crop_height,
-        #     p=0.5,
-        # ),
-        # A.ColorJitter(
-        #     brightness=config.yolo.augment.color_jitter,
-        #     contrast=config.yolo.augment.color_jitter,
-        #     saturation=config.yolo.augment.color_jitter,
-        #     hue=config.yolo.augment.color_jitter,
-        #     p=0.5
-        # ),
-        A.Resize(
-            width=config.yolo.input_size,
-            height=config.yolo.input_size,
-            always_apply=True
-        ),
-    ], bbox_params=A.BboxParams("yolo"))
+    def make_train_augmentation():
+        _train_augmentations = A.Compose([
+            A.PadIfNeeded(
+                # min_height=int(pad_size),
+                # min_width=int(pad_size),
+                min_height=1000,
+                min_width=1000,
+                border_mode=cv.BORDER_CONSTANT,
+                value=0,
+                always_apply=True
+            ),
+            A.Rotate(
+                limit=config.yolo.augment.rotate,
+                border_mode=cv.BORDER_CONSTANT,
+                p=0.5,
+            ),
+            # A.RandomScale(
+            #     scale_limit=config.yolo.augment.random_scale,
+            #     p=0.5
+            # ),
+            # # THIS DOES NOT RESIZE ANYMORE THE RESIZING WAS COMMENTED OUT
+            # A.RandomSizedBBoxSafeCrop(
+            #     width=crop_width,
+            #     height=crop_height,
+            #     p=0.5,
+            # ),
+            # A.ColorJitter(
+            #     brightness=config.yolo.augment.color_jitter,
+            #     contrast=config.yolo.augment.color_jitter,
+            #     saturation=config.yolo.augment.color_jitter,
+            #     hue=config.yolo.augment.color_jitter,
+            #     p=0.5
+            # ),
+            A.Resize(
+                width=config.yolo.input_size,
+                height=config.yolo.input_size,
+                always_apply=True
+            ),
+        ], bbox_params=A.BboxParams("yolo"))
 
-    def train_augmentations(image, bboxes):
-        augmented = _train_augmentations(image=image, bboxes=bboxes)
-        return augmented["image"], augmented["bboxes"]
+        def train_augmentations(image, bboxes):
+            augmented = _train_augmentations(image=image, bboxes=bboxes)
+            return augmented["image"], augmented["bboxes"]
+
+        return train_augmentations
 
     _valid_augmentations = A.Compose([
         A.PadIfNeeded(
@@ -149,8 +152,19 @@ def main():
     ####################################################################################
     ##### OFFLINE AUG ##################################################################
     ####################################################################################
-    runs = sys.argv[1:]
+    # runs = sys.argv[1:]
+    # runs = (int(r) for r in runs)
+
+    ####################################################################################
+    ##### ROTATION #####################################################################
+    ####################################################################################
+    rot, *runs = sys.argv[1:]
+    rot = int(rot)
     runs = (int(r) for r in runs)
+
+
+    config.yolo.augment.rotate = rot
+    config.yolo.experiment_param = config.yolo.experiment_param(rot)
 
     ####################################################################################
     ##### GRID #########################################################################
@@ -176,6 +190,11 @@ def main():
     #    config.yolo.lr,
     #    config.yolo.loss,
     # )
+
+    ####################################################################################
+    ##### END EXPERIEMENTS #############################################################
+    ####################################################################################
+    train_augmentations = make_train_augmentation()
 
     for run in runs:
         while True:

@@ -1,9 +1,8 @@
 # LR
-cpcf ma/code/yolov4-tf/experiments_yolo/lr_init experiments_yolo/
+# cpcf ma/code/yolov4-tf/experiments_yolo/lr_init experiments_yolo/
 
 # Offline Aug
-# cpcf ma/code/yolov4-tf/experiments_yolo/offline_aug experiments_yolo/
-# cpcf ma/code/yolov4-tf/experiments_yolo/offline_baseline experiments_yolo/
+cpcf ma/code/yolov4-tf/experiments_yolo/offline_aug experiments_yolo/
 
 # Online Aug
 # cpcf ma/code/yolov4-tf/experiments_yolo/rotate experiments_yolo/

@@ -1,7 +1,6 @@
 from easydict import EasyDict
 from pathlib import Path
 
-import easydict
 import utils
 
 config = EasyDict()
@@ -286,7 +285,7 @@ config.augment.label_transition_rotation = {
     "text": "text",
 }
 
-# flip over y axis
+# for horizontal flip
 config.augment.label_transition_flip = {
     "diode_left": "diode_right",
     "diode_top": "diode_top",
@@ -421,8 +420,8 @@ config.labels_and_files_to_remove = [
 
 # whether to perform flip and rotation on the dataset
 config.augment.perform_rotation = True
-config.augment.perform_flip = False
-config.augment.include_merged = False
+config.augment.perform_flip = True
+config.augment.include_merged = True
 
 ## experiment
 config.yolo.experiment_dir = Path("experiments_yolo")
@@ -433,13 +432,10 @@ config.yolo.experiment_dir = Path("experiments_yolo")
 config.yolo.experiment_name = "offline_aug"
 config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
-# config.yolo.experiment_name = "offline_baseline"
-# config.yolo.experiment_param = f"offline_baseline_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
-
 config.yolo.augment.rotate = None
-# config.yolo.augment.rotate = 20  # 10, 20, 30
-# config.yolo.experiment_name = "rotate"
-# config.yolo.experiment_param = f"rotate_{config.yolo.augment.rotate}"
+config.yolo.augment.rotate = 10  # 10, 20, 30
+config.yolo.experiment_name = "rotate"
+config.yolo.experiment_param = lambda rot: f"rotate_{rot}"
 
 
 config.yolo.augment.random_scale = None
