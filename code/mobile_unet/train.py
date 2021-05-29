@@ -102,7 +102,7 @@ def get_data_loaders(train_files, val_files, img_size=224):
             mask_value=mask_value,
             always_apply=True
         ),
-        A.SafeRotate(
+        A.Rotate(
             limit=config.unet.augment.rotate,
             border_mode=cv.BORDER_CONSTANT,
             value=pad_value,
@@ -114,32 +114,6 @@ def get_data_loaders(train_files, val_files, img_size=224):
             height=crop_size,
             p=0.5,
         ),
-        # A.ElasticTransform(
-        #     # alpha=1,
-        #     # alpha_affine=50,
-        #     # sigma=50,
-        #     border_mode=cv.BORDER_CONSTANT,
-        #     value=pad_value,
-        #     mask_value=mask_value,
-        #     interpolation=cv.INTER_CUBIC,
-        #     # always_apply=True
-        #     p=0.5,
-        # ),
-        # A.OneOf(
-        #     [
-        #         A.ColorJitter(
-        #             brightness=config.unet.augment.color_jitter,
-        #             contrast=config.unet.augment.color_jitter,
-        #             saturation=config.unet.augment.color_jitter,
-        #             hue=config.unet.augment.color_jitter,
-        #             # p=0.5
-        #         ),
-        #         A.CLAHE(
-        #             # p=0.5
-        #         ),
-        #     ],
-        #     p=0.5
-        # ),
         A.ColorJitter(
             brightness=config.unet.augment.color_jitter,
             contrast=config.unet.augment.color_jitter,
@@ -147,16 +121,6 @@ def get_data_loaders(train_files, val_files, img_size=224):
             hue=config.unet.augment.color_jitter,
             p=0.5
         ),
-        A.CLAHE(
-            p=0.5
-        ),
-        # A.Sharpen(
-        #     p=0.5
-        # ),
-        # A.Blur(
-        #     blur_limit=config.unet.augment.blur,
-        #     p=0.5
-        # ),
         A.Resize(
             width=img_size,
             height=img_size,

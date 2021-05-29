@@ -116,7 +116,7 @@ So the final output tensor of the network is $(2^{O-1}*S) \times (2^{O-1}*S) \ti
     c32 & c22 & YOLOConv & 3 * (5 + C) & 1x1 & 1 & same & $Pred_S$\\
 \end{tabular}
 
-\caption{PANetTiny Architecture}
+\caption{The PANetTiny architecture which is a scaled version of PANet \cite{pannet}, which is the decoder in the YOLO network. It takes as inputs the skip connections from the CSPDarknet53Tiny. The network is build by alternating an output branch and an upsampling branch. First, the most lowest skip connection $Skip_L$ from the backbone is convolved and the output fed into the first output layer. Each output layer has again a $3\times3$ convolution followed by a $1\times1$ convolution, which form a raw bounding box prediction, fed to the YOLO head. After an output has been processed the previous convolution is again convolved and upsampled to be fed into the next output block. This is done three times in the whole PANetTiny network.}
 \label{tab:panet_tiny_arch}
 \end{center}
 \end{table}
@@ -210,8 +210,8 @@ Finally, each of the above losses is multiplied with a tunable hyperparameter an
 \subsubsection{Non-Maximum Suppression (NMS)}
 
 During prediction time often multiple bounding boxes are predicted for one object.
-To deal with this and suppress unnecessary bounding boxes, a \ac{NMS} algorithm is applied.
-More precisely \ac{DIoU}-\ac{NMS} \cite{diou}, since it has shown to perform better than classical \ac{NMS} \cite{soft_nms}, especially in cases of occlusion.
+To suppress unnecessary bounding boxes, a \ac{NMS} algorithm is applied.
+More precisely \ac{DIoU}-\ac{NMS} \cite{diou} is used during training time, which has shown to perform better than classical \ac{NMS} \cite{soft_nms}, especially in cases of occlusion.
 
 In the following the algorithm for \ac{DIoU}-\ac{NMS} is presented.
 The input is a set of bounding boxes $B$, also called candidates, as well as the corresponding prediction scores $S$ and a suppression threshold $\epsilon$.
@@ -246,3 +246,41 @@ while $B \neq empty$ do
     return $B_S$, $S_S$
 end
 \end{algorithm}
+
+DIoU-NMS is used as the default baseline. In TODO SECTION WHERE it will be shown that some predicted classes suffer from multiple bounding boxes, which are not suppressed by DIoU-NMS, but a combination of that bounding boxes would lead to a superior prediction.
+Therefore, experiments are also evaluated using the \ac{WBF} \cite{weighted_bbox_fusion} algorithm, which could help increase the overall prediction quality. The algorithm will be described in the following.:
+
+\begin{enumerate}
+
+    \item Each predicted bounding box is added to a single list $\mathbf{B}$ if the confidence score of that bounding box is above a threshold $\boldsymbol{\sigma}$. Afterwards, the list is sorted in decreasing order of the confidence scores $\mathbf{C}$.
+
+    \item Declare empty list $\mathbf{L}$, which will hold clusters of bounding boxes from $\mathbf{B}$.  Populate it by comparing each bounding box in $\mathbf{B}$, with each other bounding box in $\mathbf{B}$ and add it to $\mathbf{L}$ if the compared boxes have the same class label and the \ac{IoU} of both boxes is above a threshold $\boldsymbol{\epsilon}$. If no match can be found for a bounding box add it to $\mathbf{L}$ as a cluster of size $1$.
+
+    \item Declare empty list $\mathbf{F}$, which will contain bounding boxes, which are fused from a cluster in $\mathbf{L}$. Populate $\mathbf{F}$ by recalculating the bounding box parameters of each cluster in $\mathbf{L}$ with:
+
+    \begin{equation}
+        C = \frac{\sum^T_{i=1} C_i}{T}
+    \end{equation}
+
+    \begin{equation}
+        X_{1,2} = \frac{\sum^T_{i=1} C_i * X_{1,2}}{\sum^T_{i=1} C_i}
+    \end{equation}
+
+    \begin{equation}
+        Y_{1,2} = \frac{\sum^T_{i=1} C_i * Y_{1,2}}{\sum^T_{i=1} C_i}
+    \end{equation}
+
+    \item \textbf{Optional.} When bounding boxes from more than one model are used, which is the case when \ac{TTA} is used, or an ensemble of multiple predictors, then the confidence score of the fused bounding box should be adapted to incorporate the uncertainty of multiple models. For example when one model predicts a bounding box, but the another model does not. Therefore, the confidence is rescaled with:
+
+    \begin{equation}
+        C = C * \frac{min(T, N)}{N}
+    \end{equation}
+
+    or
+
+    \begin{equation}
+        C = C * \frac{T}{N}
+    \end{equation}
+
+    Here, $T$ is number of bounding boxes in a cluster and $N$ is the number of predictors, which have predicted a bounding box in that particular cluster.
+\end{enumerate}

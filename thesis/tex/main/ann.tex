@@ -158,34 +158,34 @@ It is defined as follows:
     \end{cases}
 \end{equation}
 
-\subsubsection{ReLU6}
+% \subsubsection{ReLU6}
 
-ReLU6 is a modification of the classical \ac{ReLU}, where the output activation is limited to 6.
-It is often used in resource constrained environments, especially in cases of low precision computation, since it has shown to perform robust in such cases. \cite{mnetv1}
+% ReLU6 is a modification of the classical \ac{ReLU}, where the output activation is limited to 6.
+% It is often used in resource constrained environments, especially in cases of low precision computation, since it has shown to perform robust in such cases. \cite{mnetv1}
 
-\begin{equation}
-    ReLU6(x) =
-    \begin{cases}
-        6, & \text{if } x >= 6\\
-        x, & \text{if } 0 < x < 6\\
-        0, & else
-    \end{cases}
-\end{equation}
+% \begin{equation}
+%     ReLU6(x) =
+%     \begin{cases}
+%         6, & \text{if } x >= 6\\
+%         x, & \text{if } 0 < x < 6\\
+%         0, & else
+%     \end{cases}
+% \end{equation}
 
-\subsubsection{Hard Swish}
+% \subsubsection{Hard Swish}
 
-Hard Swish \cite{mnetv3} is an approximation of the original Swish activation function, which was discovered by the researchers at Google in their extensive search for novel activation functions \cite{swish}.
-Hard Swish is calculated by multiplying the input with a piece-wise linear sigmoid approximation, the Hard Sigmoid (eq. \ref{eq:hard_sigmoid}).
-As with ReLU6, Hard Swish is used in resource constrained environments.
+% Hard Swish \cite{mnetv3} is an approximation of the original Swish activation function, which was discovered by the researchers at Google in their extensive search for novel activation functions \cite{swish}.
+% Hard Swish is calculated by multiplying the input with a piece-wise linear sigmoid approximation, the Hard Sigmoid (eq. \ref{eq:hard_sigmoid}).
+% As with ReLU6, Hard Swish is used in resource constrained environments.
 
-\begin{equation}
-    Swish_{hard}(x) = x \sigma_{hard}(x)
-\end{equation}
+% \begin{equation}
+%     Swish_{hard}(x) = x \sigma_{hard}(x)
+% \end{equation}
 
-\begin{equation}
-    \sigma_{hard}(x) = \frac{ReLU6(x + 3)}{6}
-    \label{eq:hard_sigmoid}
-\end{equation}
+% \begin{equation}
+%     \sigma_{hard}(x) = \frac{ReLU6(x + 3)}{6}
+%     \label{eq:hard_sigmoid}
+% \end{equation}
 
 
 \subsection{Convolutional Neural Networks}

@@ -17,6 +17,12 @@ J.~Bridle.
   editors, {\em Neurocomputing}, pages 227--236, Berlin, Heidelberg, 1990.
   Springer Berlin Heidelberg.
 
+\bibitem[Bus20]{albumentation}
+A.~Buslaevnder, V.~Iglovikov, E.~Khvedchenya, A~Parinov, M.~Druzhinin, and
+  A.~Kalinin.
+\newblock Albumentations: Fast and flexible image augmentations.
+\newblock {\em Information}, 11(2), 2020.
+
 \bibitem[Dig19]{mish}
 M.~Diganta.
 \newblock Mish: {A} self regularized non-monotonic neural activation function.
@@ -74,17 +80,6 @@ K.~He, X.~Zhang, S.~Ren, and J.~Sun.
 \newblock Deep residual learning for image recognition.
 \newblock {\em CoRR}, abs/1512.03385, 2015.
 
-\bibitem[How17]{mnetv1}
-A.~Howard, M.~Zhu, B.~Chen, D.~Kalenichenko, W.~Wang, T.~Weyand, M.~Andreetto,
-  and H.~Adam.
-\newblock Mobilenets: Efficient convolutional neural networks for mobile vision
-  applications, 2017.
-
-\bibitem[How19]{mnetv3}
-A.~Howard, M.~Sandler, G.~Chu, L.~Chen, B.~Chen, M.~Tan, W.~Wang, Y.~Zhu,
-  R.~Pang, Vijay V., Q.~Le, and H.~Adam.
-\newblock Searching for mobilenetv3, 2019.
-
 \bibitem[Hua16]{densenet}
 G.~Huang, Z.~Liu, and K.~Weinberger.
 \newblock Densely connected convolutional networks.
@@ -116,6 +111,11 @@ S.~Jadon.
 \newblock {\em 2020 IEEE Conference on Computational Intelligence in
   Bioinformatics and Computational Biology (CIBCB)}, Oct 2020.
 
+\bibitem[Jun21]{map_pascal_voc}
+W.~Jun.
+\newblock Two-phase weakly supervised object detection with pseudo ground truth
+  mining, 2021.
+
 \bibitem[Kai19]{center_net}
 D.~Kaiwen, B.~Song, X.~Lingxi, Q.~Honggang, H.~Qingming, and T.~Qi.
 \newblock Centernet: Keypoint triplets for object detection.
@@ -134,6 +134,11 @@ H.~Law and J.~Deng.
 Y.~LeCun, P.~Haffner, L.~Bottou, and Y.~Bengio.
 \newblock Object recognition with gradient-based learning.
 \newblock In D.~Forsyth, editor, {\em Feature Grouping}. Springer, 1999.
+
+\bibitem[Lew21]{map_coco}
+Y.~Lewei, P.~Renjie, X.~Hang, Z.~Wei, L.~Zhenguo, and Z.~Tong.
+\newblock Joint-detnas: Upgrade your detector with nas, pruning and dynamic
+  distillation, 2021.
 
 \bibitem[Lin17]{focalloss}
 T.~Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Doll.
@@ -160,15 +165,16 @@ W.~McCulloch and W.~Pitts.
 \newblock A logical calculus of the ideas immanent in nervous activity.
 \newblock {\em Bulletin of mathematical biophysics}, 5:115--143, 1943.
 
+\bibitem[Mos20]{tta_segmentation_cells}
+N.~Moshkov, B.~Mathe, A.~Kertesz-Farkas, R.~Hollandi, and P.~Horvath.
+\newblock Test-time augmentation for deep learning-based cell segmentation on
+  microscopy images.
+\newblock {\em Scientific Reports}, 10(1), March 2020.
+
 \bibitem[Pri20]{sliding_window_satelite}
 M.~Pritt.
 \newblock Deep learning for recognizing mobile targets in satellite imagery,
   2020.
-
-\bibitem[Ram17]{swish}
-P.~Ramachandran, B.~Zoph, and Q.~Le.
-\newblock Searching for activation functions.
-\newblock {\em CoRR}, abs/1710.05941, 2017.
 
 \bibitem[Ram21]{sgd_momentum}
 A.~Ramezani{-}Kebrya, A.~Khisti, and B.~Liang.
@@ -207,10 +213,20 @@ F.~Rosenblatt.
   organization in the brain.
 \newblock {\em Psychological Review}, pages 65--386, 1958.
 
+\bibitem[Sha20]{when_tta_works}
+D.~Shanmugam, D.~Blalock, G.~Balakrishnan, and J.~Guttag.
+\newblock When and why test-time augmentation works.
+\newblock {\em CoRR}, abs/2011.11156, 2020.
+
 \bibitem[Sho19]{augmentation_survey}
 C.~Shorten and T.~Khoshgoftaar.
 \newblock A survey on image data augmentation for deep learning.
 \newblock {\em Journal of Big Data}, 6(1), July 2019.
+
+\bibitem[Sol19]{weighted_bbox_fusion}
+R.~Solovyev and W.~Wang.
+\newblock Weighted boxes fusion: ensembling boxes for object detection models.
+\newblock {\em CoRR}, abs/1910.13302, 2019.
 
 \bibitem[Sze14]{inception}
 C.~Szegedy, W.~Liu, Y.~Jia, P.~Sermanet, S.~Reed, D.~Anguelov, D.~Erhan,

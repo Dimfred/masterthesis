@@ -40,7 +40,8 @@
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{fadings}
-
+% define checkmark for tables
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
 % graphics
 \usepackage{graphicx}
 
@@ -67,7 +68,7 @@
         numberstyle=\tiny,
         basicstyle=\scriptsize,
         keywordstyle=\color{black}\bfseries\em,
-        keywords={,input, output, return, datatype, function, in, if, else, foreach, do, while, begin, end, for} %add the keywords you want, or load a language as Rubens explains in his comment above.
+        keywords={,input, then, output, return, datatype, function, in, if, else, foreach, do, while, begin, end, for} %add the keywords you want, or load a language as Rubens explains in his comment above.
         numbers=left,
         xleftmargin=.04\textwidth,
         #1 % this is to add specific settings to an usage of this environment (for instnce, the caption and referable label)

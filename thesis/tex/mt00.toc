@@ -2,9 +2,9 @@
 \contentsline {section}{\numberline {1.1}Motivation}{1}{}%
 \contentsline {section}{\numberline {1.2}Related Works}{1}{}%
 \contentsline {subsection}{\numberline {1.2.1}Classification of Eletrical Circuit Components}{1}{}%
-\contentsline {section}{\numberline {1.3}Goals of the Thesis}{2}{}%
-\contentsline {subsection}{\numberline {1.3.1}Task Description}{2}{}%
-\contentsline {subsection}{\numberline {1.3.2}Contribution}{2}{}%
+\contentsline {section}{\numberline {1.3}Goals of the Thesis}{1}{}%
+\contentsline {subsection}{\numberline {1.3.1}Task Description}{1}{}%
+\contentsline {subsection}{\numberline {1.3.2}Contribution}{1}{}%
 \contentsline {chapter}{\numberline {2}Theory}{3}{}%
 \contentsline {section}{\numberline {2.1}Electrical Circuit Diagrams}{3}{}%
 \contentsline {section}{\numberline {2.2}LTspice}{4}{}%
@@ -21,13 +21,11 @@
 \contentsline {subsection}{\numberline {2.3.2}Activation Functions}{10}{}%
 \contentsline {subsubsection}{Sigmoid}{10}{}%
 \contentsline {subsubsection}{Rectified Linear Unit (ReLU)}{10}{}%
-\contentsline {subsubsection}{ReLU6}{11}{}%
-\contentsline {subsubsection}{Hard Swish}{11}{}%
 \contentsline {subsection}{\numberline {2.3.3}Convolutional Neural Networks}{11}{}%
-\contentsline {subsubsection}{Convolutional Layer}{12}{}%
-\contentsline {subsubsection}{Pooling Layer}{12}{}%
-\contentsline {subsubsection}{Fully-Connected Layer}{13}{}%
-\contentsline {subsection}{\numberline {2.3.4}Batch Normalization}{13}{}%
+\contentsline {subsubsection}{Convolutional Layer}{11}{}%
+\contentsline {subsubsection}{Pooling Layer}{11}{}%
+\contentsline {subsubsection}{Fully-Connected Layer}{12}{}%
+\contentsline {subsection}{\numberline {2.3.4}Batch Normalization}{12}{}%
 \contentsline {section}{\numberline {2.4}Data Augmentation}{13}{}%
 \contentsline {section}{\numberline {2.5}Object Detection}{14}{}%
 \contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{14}{}%
@@ -45,25 +43,26 @@
 \contentsline {subsubsection}{Head}{21}{}%
 \contentsline {subsubsection}{Loss}{22}{}%
 \contentsline {subsubsection}{Non-Maximum Suppression (NMS)}{24}{}%
-\contentsline {section}{\numberline {2.7}Segmentation}{25}{}%
-\contentsline {section}{\numberline {2.8}Hypergraphs}{25}{}%
-\contentsline {section}{\numberline {2.9}Metrics}{25}{}%
-\contentsline {subsubsection}{Confusion Matrix}{25}{}%
-\contentsline {subsubsection}{Precision}{26}{}%
-\contentsline {subsubsection}{Recall}{26}{}%
-\contentsline {subsubsection}{Average Precision (AP)}{26}{}%
-\contentsline {subsubsection}{Mean Average Precision (mAP)}{26}{}%
-\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{26}{}%
+\contentsline {section}{\numberline {2.7}Segmentation}{26}{}%
+\contentsline {section}{\numberline {2.8}Hypergraphs}{26}{}%
+\contentsline {section}{\numberline {2.9}Metrics}{26}{}%
+\contentsline {subsubsection}{True Positive, False Positive, False Negative}{26}{}%
+\contentsline {subsubsection}{Precision}{27}{}%
+\contentsline {subsubsection}{Recall}{27}{}%
+\contentsline {subsubsection}{F1-Score}{27}{}%
+\contentsline {subsubsection}{Average Precision (AP)}{27}{}%
+\contentsline {subsubsection}{Mean Average Precision (mAP)}{28}{}%
+\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{28}{}%
 \contentsline {chapter}{\numberline {3}Material and Methods}{29}{}%
 \contentsline {section}{\numberline {3.1}Data}{29}{}%
-\contentsline {subsection}{\numberline {3.1.1}Statistics}{29}{}%
-\contentsline {subsection}{\numberline {3.1.2}Label Format}{29}{}%
-\contentsline {subsection}{\numberline {3.1.3}Training Split TODO}{29}{}%
-\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{29}{}%
-\contentsline {subsection}{\numberline {3.2.1}General Overview}{29}{}%
-\contentsline {subsection}{\numberline {3.2.2}Component Detection}{29}{}%
-\contentsline {subsection}{\numberline {3.2.3}ECD TODO Segmentation}{29}{}%
-\contentsline {subsection}{\numberline {3.2.4}Training}{29}{}%
+\contentsline {subsection}{\numberline {3.1.1}Statistics}{30}{}%
+\contentsline {subsection}{\numberline {3.1.2}Label Format}{30}{}%
+\contentsline {subsection}{\numberline {3.1.3}Training Split TODO}{30}{}%
+\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{30}{}%
+\contentsline {subsection}{\numberline {3.2.1}General Overview}{30}{}%
+\contentsline {subsection}{\numberline {3.2.2}Component Detection}{30}{}%
+\contentsline {subsection}{\numberline {3.2.3}ECD TODO Segmentation}{30}{}%
+\contentsline {subsection}{\numberline {3.2.4}Training}{30}{}%
 \contentsline {chapter}{\numberline {4}Results}{31}{}%
 \contentsline {chapter}{\numberline {5}Discussion}{33}{}%
 \contentsline {chapter}{\numberline {A}Abbrevations}{35}{}%

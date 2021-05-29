@@ -76,7 +76,6 @@ config.yolo.backbone = "yolo"  # yolo, mobilenetv3-large, mobilenetv3-small
 config.yolo.pretrained_weights = config.weights_dir / "yolov4-tiny-small.weights"
 
 ## training
-config.yolo.loss_gamma = 0.0  # 0.5
 
 config.yolo.burn_in = 1000
 config.yolo.decay = 0.00025
@@ -429,29 +428,9 @@ config.yolo.experiment_dir = Path("experiments_yolo")
 # config.yolo.experiment_name = "lr_init"
 # config.yolo.experiment_param = lambda lr : f"LR_{lr}"
 
-config.yolo.experiment_name = "offline_aug"
-config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
+# config.yolo.experiment_name = "offline_aug"
+# config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
-config.yolo.augment.rotate = None
-# config.yolo.augment.rotate = 10  # 10, 20, 30
-# config.yolo.experiment_name = "rotate"
-# config.yolo.experiment_param = lambda rot: f"rotate_{rot}"
-
-
-config.yolo.augment.random_scale = None
-config.yolo.augment.random_scale = 0.1  # 0.1, 0.2, 0.3
-config.yolo.experiment_name = "random_scale"
-config.yolo.experiment_param = lambda scale: f"random_scale_{scale}"
-
-config.yolo.augment.color_jitter = None
-# config.yolo.augment.color_jitter = 0.2  # 0.1, 0.2, 0.3
-# config.yolo.experiment_name = "color_jitter"
-# config.yolo.experiment_param = f"color_jitter_{config.yolo.augment.color_jitter}"
-
-config.yolo.augment.bbox_safe_crop = None #
-# config.yolo.augment.bbox_safe_crop = 0.9 #
-# config.yolo.experiment_name = "bbox_safe_crop"
-# config.yolo.experiment_param = f"bbox_safe_crop_{config.yolo.augment.bbox_safe_crop}"
 
 # all augs
 # config.yolo.experiment_name = "all_augs_with_jitter_noise_blur"
@@ -460,6 +439,10 @@ config.yolo.augment.bbox_safe_crop = None #
 # config.yolo.experiment_name = "all_augs_without_jitter_noise_blur"
 # config.yolo.experiment_param = "all_augs"
 
+config.yolo.augment.rotate = 10
+config.yolo.augment.random_scale = 0.2
+config.yolo.augment.bbox_safe_crop = 0.9
+config.yolo.augment.color_jitter = 0.2
 
 ################
 #### grid ######
@@ -478,22 +461,13 @@ config.yolo.real_batch_size = config.yolo.batch_size * config.yolo.accumulation_
 config.yolo.lr = 0.001  # 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001
 
 # loss
-config.yolo.loss = "ciou"  # "ciou", "eiou", "diou"
+config.yolo.loss = "ciou"  # "ciou", "eiou"
+config.yolo.gamma = 0.0  # 0.5
 
-# config.yolo.experiment_name = "grid"
-# config.yolo.experiment_param = (
-#    lambda a, bs, lr, l: f"grid_act_{a}_bs_{bs}_lr_{lr}_loss_{l}"
-# )
-
-# fmt: off
-# params = [
-#     ["Activation", config.yolo.activation],
-#     ["BatchSize", config.yolo.real_batch_size],
-#     ["LR", config.yolo.lr],
-#     ["Loss", config.yolo.loss],
-# ]
-# fmt: on
-
+config.yolo.experiment_name = "grid"
+config.yolo.experiment_param = (
+   lambda bs, l, lr: f"grid_bs_{bs}_loss_{l}_lr_{lr}"
+)
 
 # config.yolo.experiment_name = "test"
 # config.yolo.experiment_param = "test"

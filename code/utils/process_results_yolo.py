@@ -185,7 +185,7 @@ def dump_offline_baseline_aug():
             [],
             [
                 f"OffBase@0.5", "", "", "", "mean", "std", "",
-                f"OffBase@0.5:0.75", "", "", "", "mean", "std"],
+                f"OffBase@50:75", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -221,7 +221,7 @@ def dump_rotate_aug():
             [],
             [
                 f"Rotation@0.5: {rot}", "", "", "", "mean", "std", "",
-                f"Roationt@0.5:0.75: {rot}", "", "", "", "mean", "std"],
+                f"Roationt@50:75: {rot}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -244,8 +244,8 @@ def dump_random_scale_aug():
         (0.1, (0, 1, 2)),
         (0.2, (0, 1, 2)),
         (0.3, (0, 1, 2)),
-        (0.4, (0, 1, 2)),
-        (0.5, (0, 1, 2)),
+        # (0.4, (0, 1, 2)),
+        # (0.5, (0, 1, 2)),
     )
 
     results = []
@@ -258,7 +258,7 @@ def dump_random_scale_aug():
             [],
             [
                 f"Scale@0.5: {scale}", "", "", "", "mean", "std", "",
-                f"Scale@0.5:0.75: {scale}", "", "", "", "mean", "std"],
+                f"Scale@50:75: {scale}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -295,7 +295,7 @@ def dump_color_jitter_aug():
             [],
             [
                 f"ColorJitter@0.5: {color_jitter}", "", "", "", "mean", "std", "",
-                f"ColorJitter@0.5:0.75: {color_jitter}", "", "", "", "mean", "std"],
+                f"ColorJitter@50:75: {color_jitter}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -314,7 +314,11 @@ def dump_bbox_safe_crop_aug():
             for run in runs
         ]
 
-    lr_runs = ((1, (0, 1, 2)),)
+    lr_runs = (
+        (0.7, (0, 1, 2)),
+        (0.8, (0, 1, 2)),
+        (0.9, (0, 1, 2)),
+    )
 
     results = []
     for sc, runs in lr_runs:
@@ -326,7 +330,7 @@ def dump_bbox_safe_crop_aug():
             [],
             [
                 f"SafeCrop@0.5: {sc}", "", "", "", "mean", "std", "",
-                f"SafeCrop@0.5:0.75: {sc}", "", "", "", "mean", "std"],
+                f"SafeCrop@50:75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -357,7 +361,7 @@ def dump_gaussian_noise_aug():
             [],
             [
                 f"GaussianNoise@0.5: {sc}", "", "", "", "mean", "std", "",
-                f"GaussianNoise@0.5:0.75: {sc}", "", "", "", "mean", "std"],
+                f"GaussianNoise@50:75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -388,7 +392,7 @@ def dump_blur_aug():
             [],
             [
                 f"Blur@0.5: {sc}", "", "", "", "mean", "std", "",
-                f"Blur@0.5:0.75: {sc}", "", "", "", "mean", "std"],
+                f"Blur@50:75: {sc}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -419,7 +423,7 @@ def dump_all_augs(param):
             [],
             [
                 f"AllAugs@0.5: {param}", "", "", "", "mean", "std", "",
-                f"AllAugs@0.5:0.75: {param}", "", "", "", "mean", "std"],
+                f"AllAugs@50:75: {param}", "", "", "", "mean", "std"],
             [],
         ]
         # fmt: on
@@ -501,7 +505,7 @@ def dump_grid():
             [],
             [
                 f"Grid@0.5: {'le' if a == 'leaky' else 'hs'}_{bs}_{lr}_{'c' if l == 'ciou' else 'e'}", "", "", "", "mean", "std", "",
-                f"Grid@0.5:0.75: {'le' if a == 'leaky' else 'hs'}_{bs}_{lr}_{'c' if l == 'ciou' else 'e'}", "", "", "", "mean", "std"
+                f"Grid@50:75: {'le' if a == 'leaky' else 'hs'}_{bs}_{lr}_{'c' if l == 'ciou' else 'e'}", "", "", "", "mean", "std"
             ],
             [],
         ]
@@ -525,20 +529,16 @@ def main():
     #####################
     #### offline_aug ####
     #####################
-    dump_offline_aug()
-    # dump_offline_baseline_aug()
+    # dump_offline_aug()
 
     #####################
     #### online_aug #####
     #####################
     # dump_rotate_aug()
     # dump_random_scale_aug()
-    # dump_color_jitter_aug()
-    # dump_bbox_safe_crop_aug()
-    # dump_gaussian_noise_aug()
-    # dump_blur_aug()
-    # dump_all_augs("with")
-    # dump_all_augs("without")
+    dump_color_jitter_aug()
+    dump_bbox_safe_crop_aug()
+
     # dump_grid()
 
 

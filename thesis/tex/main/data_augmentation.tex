@@ -1,5 +1,31 @@
-\acp{CNN} require a big amount of data to learn and to prevent the problem of overfitting, where a network perfectly learns the underlying data and isn't able to generalize over unseen data \cite{augmentation_survey}.
-Augmentation is a way to artificially increase the amount of data.
+\acp{CNN} require a big amount of data to learn the desired objective and to prevent the problem of overfitting, where a network perfectly learns the underlying data and isn't able to generalize over unseen data \cite{augmentation_survey}.
+Augmentation is a way to artificially increase the amount of data in terms of size and diversity.
 In the image domain for example, images normally are transformed in various ways, like changing color parameters, rotating the image, or cropping parts of the image.
-Other successful augmentation techniques like the copy-paste augmentation \cite{copypaste_aug} exists, which takes a segmentation mask of the underlying object and projects it on another background.
+Other successful augmentation techniques like the copy-paste augmentation \cite{copypaste_aug} exists, which takes a segmentation mask of an object and projects it on another background.
 The copy-paste augmentation is highly used in this thesis, foremost to increase the number of \acp{ECD} with a checkered background.
+In this thesis images were augmented using the albumentations library \cite{albumentation}, since it includes augmentations for plane images, as well as bounding boxes and segmentation masks.
+Due to its convenient interface, which can easily be incorporated into different deep learning frameworks like pytorch or tensorflow, it is highly recommended.
+The different augmentations used from albumentations in this thesis are listed in table \ref{tab:used_augmentations}.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l|l|l}
+                                 & \textbf{Object Detection} & \textbf{Segmentation} \\
+    \hline
+    \textbf{ColorJitter}         & \checkmark                & \checkmark            \\
+    \textbf{RandomCrop}          &                           & \checkmark            \\
+    \textbf{RandomBBoxSafeCrop}  & \checkmark                &                       \\
+    \textbf{Rotation}            & \checkmark                & \checkmark            \\
+    \textbf{Random Scale}        & \checkmark                & \checkmark            \\
+
+\end{tabular}
+\caption{A listing of the different augmentations used from albumentations \cite{albumentation} in this thesis and the target domain where they were applied to.}
+\label{tab:used_augmentations}
+\end{center}
+\end{table}
+
+Normally augmentations are only applied to the training set - before or during training - but they can also benefit the predictions at test time \cite{tta_segmentation_cells}\cite{when_tta_works}.
+Such augmentations are then referred to as \acp{TTA}.
+Common augmentations used for \ac{TTA} are flip, rotate, color jitters and crop \cite{when_tta_works}, images augmented with those augmentations are additionally to the original image given to the network as a separate input.
+The augmented predictions are ``deaugmented'', e.g. by again flipping the prediction in the same direction or rotating it in the opposite direction the same amount, in which the image was previously rotated.
+Afterwards, an average, or weighted average for example is taken over the predictions to form the final prediction.

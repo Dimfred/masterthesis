@@ -138,60 +138,50 @@ Using best of above
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 
-| acti   | BS | LR       | Loss | Run1 | Run2 | Run3 |
-| ------ | -- | -------- | ---- | ---- | ---- | ---- |
-| leaky  | 32 | 0.005    | ciou | O    | O    | O    |
-| leaky  | 32 | 0.005    | eiou | O    | O    | O    |
-| leaky  | 32 | 0.0025   | ciou | O    | O    | O    |
-| leaky  | 32 | 0.0025   | eiou | O    | O    | O    |
-| leaky  | 32 | 0.001    | ciou | O    | O    | O    |
-| leaky  | 32 | 0.001    | eiou | O    | O    | O    |
-| leaky  | 32 | 0.0005   | ciou | O    | O    | O    |
-| leaky  | 32 | 0.0005   | eiou | O    | O    | O    |
-| leaky  | 32 | 0.00025  | ciou | O    | O    | O    |
-| leaky  | 32 | 0.00025  | eiou | O    | O    | O    |
-| leaky  | 32 | 0.0001   | ciou | O    | O    | O    |
-| leaky  | 32 | 0.0001   | eiou | O    | O    | O    |
-| leaky  | 64 | 0.005    | ciou | O    | O    | O    |
-| leaky  | 64 | 0.005    | eiou | O    | O    | O    |
-| leaky  | 64 | 0.0025   | ciou | O    | O    | O    |
-| leaky  | 64 | 0.0025   | eiou | O    | O    | O    |
-| leaky  | 64 | 0.001    | ciou | O    | O    | O    |
-| leaky  | 64 | 0.001    | eiou | O    | O    | O    |
-| leaky  | 64 | 0.0005   | ciou | O    | O    | O    |
-| leaky  | 64 | 0.0005   | eiou | O    | O    | O    |
-| leaky  | 64 | 0.00025  | ciou | O    | O    | O    |
-| leaky  | 64 | 0.00025  | eiou | O    | O    | O    |
-| leaky  | 64 | 0.0001   | ciou | O    | O    | O    |
-| leaky  | 64 | 0.0001   | eiou | O    | O    | O    |
-| hswish | 32 | 0.005    | ciou | O    | O    | O    |
-| hswish | 32 | 0.005    | eiou | O    |      |      |
-| hswish | 32 | 0.0025   | ciou | O    | O    | O    |
-| hswish | 32 | 0.0025   | eiou | O    | O    | O    |
-| hswish | 32 | 0.001    | ciou | O    | O    | O    |
-| hswish | 32 | 0.001    | eiou | O    | O    | O    |
-| hswish | 32 | 0.0005   | ciou |      |      |      |
-| hswish | 32 | 0.0005   | eiou | O    | O    | O    |
-| hswish | 32 | 0.00025  | ciou | O    | O    | O    |
-| hswish | 32 | 0.00025  | eiou | O    | O    | O    |
-| hswish | 32 | 0.0001   | ciou | O    | O    | O    |
-| hswish | 32 | 0.0001   | eiou |      |      |      |
-| hswish | 64 | 0.005    | ciou | O    | O    |      |
-| hswish | 64 | 0.005    | eiou |      |      |      |
-| hswish | 64 | 0.0025   | ciou |      |      |      |
-| hswish | 64 | 0.0025   | eiou | O    | O    |      |
-| hswish | 64 | 0.001    | ciou | O    | O    |      |
-| hswish | 64 | 0.001    | eiou |      |      |      |
-| hswish | 64 | 0.0005   | ciou | O    |      |      |
-| hswish | 64 | 0.0005   | eiou | O    | O    |      |
-| hswish | 64 | 0.00025  | ciou | O    | O    |      |
-| hswish | 64 | 0.00025  | eiou | O    | O    |      |
-| hswish | 64 | 0.0001   | ciou | O    | O    |      |
-| hswish | 64 | 0.0001   | eiou | O    |      |      |
-
-
-
-
+| bs | loss    | lr        |
+| -- | ------- | --------- |
+| 32 | ciou    | 0.01      |
+| 32 | ciou    | 0.005     |
+| 32 | ciou    | 0.0025    |
+| 32 | ciou    | 0.001     |
+| 32 | ciou    | 0.0005    |
+| 32 | ciou    | 0.00025   |
+| 32 | ciou    | 0.0001    |
+| 32 | eiou1   | 0.01      |
+| 32 | eiou1   | 0.005     |
+| 32 | eiou1   | 0.0025    |
+| 32 | eiou1   | 0.001     |
+| 32 | eiou1   | 0.0005    |
+| 32 | eiou1   | 0.00025   |
+| 32 | eiou1   | 0.0001    |
+| 32 | eiou0.8 | 0.01      |
+| 32 | eiou0.8 | 0.005     |
+| 32 | eiou0.8 | 0.0025    |
+| 32 | eiou0.8 | 0.001     |
+| 32 | eiou0.8 | 0.0005    |
+| 32 | eiou0.8 | 0.00025   |
+| 32 | eiou0.8 | 0.0001    |
+| 64 | ciou    | 0.01      |
+| 64 | ciou    | 0.005     |
+| 64 | ciou    | 0.0025    |
+| 64 | ciou    | 0.001     |
+| 64 | ciou    | 0.0005    |
+| 64 | ciou    | 0.00025   |
+| 64 | ciou    | 0.0001    |
+| 64 | eiou1   | 0.01      |
+| 64 | eiou1   | 0.005     |
+| 64 | eiou1   | 0.0025    |
+| 64 | eiou1   | 0.001     |
+| 64 | eiou1   | 0.0005    |
+| 64 | eiou1   | 0.00025   |
+| 64 | eiou1   | 0.0001    |
+| 64 | eiou0.8 | 0.01      |
+| 64 | eiou0.8 | 0.005     |
+| 64 | eiou0.8 | 0.0025    |
+| 64 | eiou0.8 | 0.001     |
+| 64 | eiou0.8 | 0.0005    |
+| 64 | eiou0.8 | 0.00025   |
+| 64 | eiou0.8 | 0.0001    |
 
 ----------------------------------------------------------------------
 
