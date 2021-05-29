@@ -264,7 +264,7 @@ def main():
 
     config.yolo.experiment_param = config.yolo.experiment_param(
        config.yolo.real_batch_size,
-       config.yolo.loss,
+       loss,
        config.yolo.lr,
     )
 
