@@ -68,7 +68,7 @@ class Trainer:
         # best model
         # self.best_iou = 0
         self.best_f1 = 0
-        self.best_iou_step = 0
+        self.best_step = 0
 
         # time
         self.train_time = 0
@@ -125,7 +125,7 @@ class Trainer:
                     if f1 > self.best_f1:
                         # self.best_iou = iou
                         self.best_f1 = f1
-                        self.best_iou_step = self.step_counter
+                        self.best_step = self.step_counter
                         torch.save(
                             self.model.state_dict(), str(self.experiment.weights)
                         )
@@ -208,8 +208,9 @@ class Trainer:
             ]
         ]
         pretty += [["Experiment", self.experiment.run]]
-        pretty += [["BesIoU", f"{ffloat(self.best_iou*100)}%"]]
-        pretty += [["BestIoUStep", self.best_iou_step]]
+        # pretty += [["BestIoU", f"{ffloat(self.best_iou*100)}%"]]
+        pretty += [["BestF1", f"{ffloat(self.best_f1*100)}%"]]
+        pretty += [["BestStep", self.best_step]]
         print(tabulate(pretty))
 
         self.train_time = time.perf_counter()
