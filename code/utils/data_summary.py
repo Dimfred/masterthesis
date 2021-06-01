@@ -155,21 +155,33 @@ class SummaryWriter:
             ]
         )
 
-        trains = summary_count[:, 0]
-        valids = summary_count[:, 1]
-        tests = summary_count[:, 2]
+        trains = summary_count[:, 0].reshape(-1, 1)
+        valids = summary_count[:, 1].reshape(-1, 1)
+        tests = summary_count[:, 2].reshape(-1, 1)
+
+        overall_count = summary_count[:, :3].sum(axis=1).reshape(-1, 1)
 
         # TODO kill that
-        valid_to_train_ratio = valids / trains
-        test_to_train_ratio = tests / trains
+        train_ratio = trains / overall_count
+        valid_ratio = valids / overall_count
+        test_ratio = tests / overall_count
 
         reals = summary_count[:, :3].copy()
         augs = summary_count[:, 3:].copy()
-        summary_count = np.append(reals, valid_to_train_ratio[:, np.newaxis], axis=1)
-        summary_count = np.append(
-            summary_count, test_to_train_ratio[:, np.newaxis], axis=1
+        summary_count = np.hstack(
+            [
+                overall_count,
+                reals,
+                train_ratio,
+                valid_ratio,
+                test_ratio,
+                augs
+            ]
         )
-        summary_count = np.append(summary_count, augs, axis=1)
+
+        # summary_count = np.append(summary_count, valid_ratio, axis=1)
+        # summary_count = np.append(summary_count, test_ratio, axis=1)
+        # summary_count = np.append(summary_count, augs, axis=1)
 
         # accumulate summary idxs with common base class
         # idxs_to_combine = {}
@@ -205,20 +217,31 @@ class SummaryWriter:
         pretty = []
         for cls_name, row in zip(class_names, summary_count):
             pretty_row = [cls_name]
-            pretty_row += [int(n) for n in row[0:3]]
-            pretty_row += ["{:.2f}%".format(f * 100) for f in row[3:5]]
-            pretty_row += [int(n) for n in row[5:8]]
+            pretty_row += [int(n) for n in row[0:4]]
+            pretty_row += ["{:.2f}%".format(f * 100) for f in row[4:7]]
+            pretty_row += [int(n) for n in row[7:]]
             pretty += [pretty_row]
 
+        count_sums = summary_count[:, :4].sum(axis=0)
+        mean_ratios = summary_count[:, 4:7].mean(axis=0)
+        aug_sums = summary_count[:, 7:].sum(axis=0)
+
+        pretty_total = [utils.green("total")]
+        pretty_total += [int(n) for n in count_sums]
+        pretty_total += ["{:.2f}%".format(f * 100) for f in mean_ratios]
+        pretty_total += [int(n) for n in aug_sums]
+        pretty += [pretty_total]
 
         summary_header = [
             [
                 "Labels",
+                "Overall",
                 "Train",
                 "Valid",
                 "Test",
-                "Val/Train",
-                "Test/Train",
+                "TrainRatio",
+                "ValRatio",
+                "TestRatio",
                 "AugTrain",
                 "AugValid",
                 "AugTest",

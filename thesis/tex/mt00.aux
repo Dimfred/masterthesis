@@ -181,6 +181,7 @@
 \citation{selective_search}
 \citation{bbox_regressor}
 \@writefile{toc}{\contentsline {section}{\numberline {2.5}Object Detection}{14}{}\protected@file@percent }
+\newlabel{sec:object_detection}{{2.5}{14}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{14}{}\protected@file@percent }
 \newlabel{sec:hostory_obj_detection}{{2.5.1}{14}}
 \@writefile{toc}{\contentsline {subsubsection}{Sliding Window}{14}{}\protected@file@percent }
@@ -377,6 +378,8 @@
 \acronymused{WBF}
 \acronymused{IoU}
 \acronymused{TTA}
+\newlabel{eq:confidence_rescale}{{2.34}{26}}
+\newlabel{eq:confidence_rescale_not_used}{{2.35}{26}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.7}Segmentation}{26}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2.8}Hypergraphs}{26}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2.9}Metrics}{26}{}\protected@file@percent }
@@ -393,11 +396,9 @@
 \acronymused{TP}
 \acronymused{FP}
 \acronymused{FN}
-\acronymused{TP}
 \citation{map_pascal_voc}
 \citation{map_coco}
-\citation{map_article}
-\citation{map_article}
+\acronymused{TP}
 \@writefile{toc}{\contentsline {subsubsection}{Precision}{27}{}\protected@file@percent }
 \acronymused{TP}
 \newlabel{eq:precision}{{2.36}{27}}
@@ -411,11 +412,13 @@
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{AP}
-\newlabel{eq:ap}{{2.39}{27}}
+\citation{map_article}
+\citation{map_article}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite  {map_article}. The \ac {AP} is the area under the curve.\relax }}{28}{}\protected@file@percent }
 \acronymused{IoU}
 \acronymused{AP}
 \newlabel{fig:pr_curve}{{2.6}{28}}
+\newlabel{eq:ap}{{2.39}{28}}
 \@writefile{toc}{\contentsline {subsubsection}{Mean Average Precision (mAP)}{28}{}\protected@file@percent }
 \acronymused{AP}
 \AC@undonewlabel{acro:mAP}
@@ -431,6 +434,7 @@
 \acronymused{IoU}
 \acronymused{mIoU}
 \newlabel{eq:miou}{{2.41}{28}}
+\citation{labelme}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}Material and Methods}{29}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -440,23 +444,30 @@
 \acronymused{ECC}
 \acronymused{ECD}
 \acronymused{ECD}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Statistics}{30}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Label Format}{30}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Training Split TODO}{30}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Labeling}{29}{}\protected@file@percent }
+\acronymused{YOLOv4}
+\acronymused{YOLOv4}
+\acronymused{ECC}
+\citation{canny_edge}
+\citation{opencv}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Amount of images of \acp {ECD} used in this thesis shown with their underlying background and whether they are annotated or not. Further, the train / validation / test split of the different image types is shown. While this might seem like a big split for test, the number of bounding boxes included in the test set is way smaller and is shown in table 3.2\hbox {}\relax }}{30}{}\protected@file@percent }
+\newlabel{tab:data_distribution}{{3.1}{30}}
+\acronymused{ECD}
+\acronymused{ECD}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{30}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}General Overview}{30}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Component Detection}{30}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}ECD TODO Segmentation}{30}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Training}{30}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Results}{31}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces The classes present in this thesis with their major class which is an \ac {ECC} and alternatively their orientation. Furthermore, the total amount of classes is shown and the train, valid, test ratio.\relax }}{31}{}\protected@file@percent }
+\newlabel{tab:yolo_classes}{{3.2}{31}}
+\acronymused{ECC}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Results}{33}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Discussion}{33}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Discussion}{35}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@input{mt07.aux}
 \@input{mt08.aux}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Abbrevations}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Abbrevations}{37}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newacro{ANN}[\AC@hyperlink{ANN}{ANN}]{Artificial Neural Network}
@@ -500,4 +511,4 @@
 \@input{mt-lof.aux}
 \@input{mt-lot.aux}
 \@input{mt-lit.aux}
-\gdef \@abspage@last{54}
+\gdef \@abspage@last{56}

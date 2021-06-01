@@ -438,74 +438,68 @@ def dump_all_augs(param):
 
 
 def dump_grid():
-    def build_paths(a, bs, lr, l, runs):
+    def build_paths(bs, l, lr, runs):
         return [
-            f"experiments_yolo/grid/grid_act_{a}_bs_{bs}_lr_{lr}_loss_{l}/run{run}/results_raw.txt"
+            f"experiments_yolo/grid/grid_bs_{bs}_loss_{l}_lr_{lr}/run{run}/results_raw.txt"
             for run in runs
         ]
 
     grid_params = (
-        ("leaky", 32, 0.005, "ciou"),
-        ("leaky", 32, 0.005, "eiou"),
-        ("leaky", 32, 0.0025, "ciou"),
-        ("leaky", 32, 0.0025, "eiou"),
-        ("leaky", 32, 0.001, "ciou"),
-        ("leaky", 32, 0.001, "eiou"),
-        ("leaky", 32, 0.0005, "ciou"),
-        ("leaky", 32, 0.0005, "eiou"),
-        ("leaky", 32, 0.00025, "ciou"),
-        ("leaky", 32, 0.00025, "eiou"),
-        ("leaky", 32, 0.0001, "ciou"),
-        ("leaky", 32, 0.0001, "eiou"),
-        ("leaky", 64, 0.005, "ciou"),
-        ("leaky", 64, 0.005, "eiou"),
-        ("leaky", 64, 0.0025, "ciou"),
-        ("leaky", 64, 0.0025, "eiou"),
-        ("leaky", 64, 0.001, "ciou"),
-        ("leaky", 64, 0.001, "eiou"),
-        ("leaky", 64, 0.0005, "ciou"),
-        ("leaky", 64, 0.0005, "eiou"),
-        ("leaky", 64, 0.00025, "ciou"),
-        ("leaky", 64, 0.00025, "eiou"),
-        ("leaky", 64, 0.0001, "ciou"),
-        ("leaky", 64, 0.0001, "eiou"),
-        ("hswish", 32, 0.005, "ciou"),
-        ("hswish", 32, 0.005, "eiou"),
-        ("hswish", 32, 0.0025, "ciou"),
-        ("hswish", 32, 0.0025, "eiou"),
-        ("hswish", 32, 0.001, "ciou"),
-        ("hswish", 32, 0.001, "eiou"),
-        ("hswish", 32, 0.0005, "ciou"),
-        ("hswish", 32, 0.0005, "eiou"),
-        ("hswish", 32, 0.00025, "ciou"),
-        ("hswish", 32, 0.00025, "eiou"),
-        ("hswish", 32, 0.0001, "ciou"),
-        ("hswish", 32, 0.0001, "eiou"),
-        ("hswish", 64, 0.005, "ciou"),
-        ("hswish", 64, 0.005, "eiou"),
-        ("hswish", 64, 0.0025, "ciou"),
-        ("hswish", 64, 0.0025, "eiou"),
-        ("hswish", 64, 0.001, "ciou"),
-        ("hswish", 64, 0.001, "eiou"),
-        ("hswish", 64, 0.0005, "ciou"),
-        ("hswish", 64, 0.0005, "eiou"),
-        ("hswish", 64, 0.00025, "ciou"),
-        ("hswish", 64, 0.00025, "eiou"),
-        ("hswish", 64, 0.0001, "ciou"),
-        ("hswish", 64, 0.0001, "eiou"),
+        (32,"ciou", 0.01),
+        (32,"ciou", 0.005),
+        (32,"ciou", 0.0025),
+        (32,"ciou", 0.001),
+        (32,"ciou", 0.0005),
+        (32,"ciou", 0.00025),
+        (32,"ciou", 0.0001),
+        (32,"eiou1",0.01),
+        (32,"eiou1",0.005),
+        (32,"eiou1",0.0025),
+        (32,"eiou1",0.001),
+        (32,"eiou1",0.0005),
+        (32,"eiou1",0.00025),
+        (32,"eiou1",0.0001),
+        (32,"eiou0.5",0.01),
+        (32,"eiou0.5",0.005),
+        (32,"eiou0.5",0.0025),
+        (32,"eiou0.5",0.001),
+        (32,"eiou0.5",0.0005),
+        (32,"eiou0.5",0.00025),
+        (32,"eiou0.5",0.0001),
+        (64,"ciou",0.01),
+        (64,"ciou",0.005),
+        (64,"ciou",0.0025),
+        (64,"ciou",0.001),
+        (64,"ciou",0.0005),
+        (64,"ciou",0.00025),
+        (64,"ciou",0.0001),
+        (64,"eiou1",0.01),
+        (64,"eiou1",0.005),
+        (64,"eiou1",0.0025),
+        (64,"eiou1",0.001),
+        (64,"eiou1",0.0005),
+        (64,"eiou1",0.00025),
+        (64,"eiou1",0.0001),
+        (64,"eiou0.5",0.01),
+        (64,"eiou0.5",0.005),
+        (64,"eiou0.5",0.0025),
+        (64,"eiou0.5",0.001),
+        (64,"eiou0.5",0.0005),
+        (64,"eiou0.5",0.00025),
+        (64,"eiou0.5",0.0001),
     )
 
     results = []
-    for a, bs, lr, l in grid_params:
-        paths = build_paths(a, bs, lr, l, (0, 1, 2))
+    for bs, l, lr in grid_params:
+        paths = build_paths(bs, l, lr, (0, 1, 2))
         pred_50, pred_75, cls_names = parse_results(paths)
 
         # fmt: off
         results += [
             [],
             [
-                f"Grid@0.5: {'le' if a == 'leaky' else 'hs'}_{bs}_{lr}_{'c' if l == 'ciou' else 'e'}", "", "", "", "mean", "std", "",
-                f"Grid@50:75: {'le' if a == 'leaky' else 'hs'}_{bs}_{lr}_{'c' if l == 'ciou' else 'e'}", "", "", "", "mean", "std"
+                f"Grid@0.5: {bs}_{lr}_{l}", "", "", "", "mean", "std", "",
+                f"Grid@50:75: {bs}_{lr}_{l}", "", "", "", "mean", "std"
             ],
             [],
         ]
@@ -536,10 +530,10 @@ def main():
     #####################
     # dump_rotate_aug()
     # dump_random_scale_aug()
-    dump_color_jitter_aug()
-    dump_bbox_safe_crop_aug()
+    # dump_color_jitter_aug()
+    # dump_bbox_safe_crop_aug()
 
-    # dump_grid()
+    dump_grid()
 
 
 if __name__ == "__main__":

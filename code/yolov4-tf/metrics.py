@@ -141,63 +141,11 @@ def main(
                 # for img_path in (Path("data/valid_out/00_22_a_000_nflip_aug.jpg"),):
                 # for img_path in (Path("data/test_out/08_07_c_000_nflip_aug.png"),):
                 print(img_path)
-
-                def test_augmentations(img, bboxes):
-                    resize = A.Compose(
-                        [
-                            A.LongestMaxSize(
-                                max_size=input_size,
-                                always_apply=True,
-                            )
-                        ],
-                        bbox_params=A.BboxParams("yolo"),
-                    )
-                    pad = A.Compose(
-                        [
-                            A.PadIfNeeded(
-                                min_height=input_size,
-                                min_width=input_size,
-                                border_mode=cv.BORDER_CONSTANT,
-                                value=0,
-                                always_apply=True,
-                            )
-                        ],
-                        bbox_params=A.BboxParams("yolo"),
-                    )
-                    gt = bboxes.copy()
-
-                    bboxes = utils.A.class_to_back(bboxes)
-
-                    transform = resize(image=img, bboxes=bboxes)
-                    img, bboxes = transform["image"], transform["bboxes"]
-
-                    # DEBUG
-                    # print("After resize")
-                    # bboxes = utils.A.class_to_front(bboxes)
-                    # utils.show_bboxes(img, bboxes, type_="gt", gt=gt)
-                    # bboxes = utils.A.class_to_back(bboxes)
-
-                    resized = img.copy()
-                    transform = pad(image=img, bboxes=bboxes)
-                    img, bboxes = transform["image"], transform["bboxes"]
-
-                    # DEBUG
-                    # print("After pad")
-                    # gt = utils.A.class_to_back(gt)
-                    # _, gt = yolo.resize_image(resized, gt)
-                    # gt = utils.A.class_to_front(gt)
-                    # bboxes = utils.A.class_to_front(bboxes)
-                    # utils.show_bboxes(img, bboxes, type_="gt", gt=gt)
-                    # bboxes = utils.A.class_to_back(bboxes)
-
-                    bboxes = utils.A.class_to_front(bboxes)
-
-                    return img, bboxes, resized
-
                 img = np.expand_dims(
                     cv.imread(str(img_path), cv.IMREAD_GRAYSCALE), axis=2
                 )
                 img = utils.resize_max_axis(img, 1000)
+                resized_img = utils.resize_max_axis(img, input_size)
                 orig = img.copy()
 
                 gt_path = utils.Yolo.label_from_img(img_path)
@@ -207,10 +155,7 @@ def main(
                 orignal_imgs.append(orig)
                 original_shapes.append(orig.shape)
 
-                img, gt, resized_img = test_augmentations(img, gt)
-                if show:
-                    utils.show(img)
-
+                # img, gt, resized_img = test_augmentations(img, gt)
                 gts.append(gt)
 
                 if wbf:
@@ -256,20 +201,7 @@ def main(
 
                         # de augment the prediction
                         pred = yolo_tta.perform(pred, comb)
-
-                        # DEBUG
-                        # utils.show_bboxes(img, pred, type_="pred", classes=yolo.classes)
-
                         tta_preds.append(pred)
-
-                    if show:
-                        print("Before WBF")
-                        utils.show_bboxes(
-                            img,
-                            np.vstack(tta_preds),
-                            type_="pred",
-                            classes=yolo.classes,
-                        )
 
                     pred = wbf_nms.perform(tta_preds)
                     if snms:
@@ -277,10 +209,6 @@ def main(
                         #     pred, text_label_idx, text_thresh
                         # )
                         pred = special_nms.remove_occlusion(pred, occlusion_thresh)
-
-                    if show:
-                        print("Prediction")
-                        utils.show_bboxes(img, pred, type_="pred", classes=yolo.classes)
 
                     preds.append(pred)
 
@@ -295,9 +223,6 @@ def main(
                     # store the tta_preds
                     tta_preds = []
                     for aug_img, comb in imgs_combs:
-                        # DEBUG
-                        # utils.show(aug_img)
-
                         # if raw is set no nms is applied, but boxes based on score are
                         # still removed
                         pred = yolo.predict(
@@ -310,44 +235,18 @@ def main(
                         pred = yolo_tta.perform(pred, comb)
                         tta_preds.append(pred)
 
-                        # DEBUG
-                        # utils.show_bboxes(img, pred, type_="pred")
-
-                    # DEBUG: show all predicted bboxes
-                    if show:
-                        utils.show_bboxes(img, np.vstack(tta_preds), type_="pred")
-
                     if wbf:
                         pred = wbf_nms.perform(tta_preds)
                         pred = np.vstack(pred)
 
-                        # if show:
-                        #     print("BeforeTextFuse")
-                        #     utils.show_bboxes(
-                        #         img, pred, type_="pred", classes=yolo.classes
-                        #     )
                         if snms:
                             pred = special_nms.fuse_textboxes(
                                 pred, text_label_idx, text_thresh
                             )
-
-                        # if show:
-                        #     print("BeforeOcclusion")
-                        #     utils.show_bboxes(
-                        #         img, pred, type_="pred", classes=yolo.classes
-                        #     )
-                        if snms:
                             pred = special_nms.remove_occlusion(pred, occlusion_thresh)
-
                     else:
                         pred = DIoU_NMS(np.vstack(tta_preds), threshold=iou_thresh)
 
-                    # DEBUG: show the tta pred
-                    if show:
-                        print("Prediction")
-                        utils.show_bboxes(img, pred, type_="pred", classes=yolo.classes)
-                        print("GroundTruth")
-                        utils.show_bboxes(img, gt, type_="gt", classes=yolo.classes)
 
                     preds.append(pred)
 
@@ -372,31 +271,6 @@ def main(
                         )
                         pred = special_nms.remove_occlusion(pred, occlusion_thresh)
 
-                    # if show:
-                    #     print("After NMS.")
-                    #     utils.show_bboxes(padded_img, pred, type_="pred", classes=yolo.classes)
-
-                    if show:
-                        # ONLY TEST
-                        # pred = np.delete(pred, [0], axis=0)
-                        print("Prediction")
-                        utils.show_bboxes(
-                            img, pred, type_="pred", classes=yolo.classes, gt=gt
-                        )
-                        utils.show_bboxes(
-                            resized_img,
-                            yolo.fit_pred_bboxes_to_original(pred, resized_img.shape),
-                            type_="pred",
-                            classes=yolo.classes,
-                            gt=original_gts[-1],
-                        )
-                        # for p in pred:
-                        #     utils.show_bboxes(img, [p], type_="pred", classes=yolo.classes)
-
-                    if show:
-                        print("Ground truth.")
-                        utils.show_bboxes(img, gt, type_="gt", classes=yolo.classes)
-
                     preds.append(pred)
 
             ############################################################################
@@ -416,6 +290,10 @@ def main(
                 yolo.fit_pred_bboxes_to_original(pred, original_shape)
                 for pred, original_shape in zip(preds, original_shapes)
             ]
+            # DEBUG: show the tta pred
+            if show:
+                for img, pred, gt in zip(orignal_imgs, original_preds, original_gts):
+                    utils.show_bboxes(img, pred, type_="pred", classes=yolo.classes, gt=gt)
 
             # DEBUG check fitted stuff
             for pred in original_preds:
@@ -429,7 +307,7 @@ def main(
             mAP = utils.MeanAveragePrecision(
                 yolo.classes,
                 original_shapes,
-                iou_threshs=(0.5, iou_threshs),
+                iou_threshs=(0.3, 0.4, 0.5, iou_threshs),
                 # policy="soft",
                 policy="greedy",
                 same_img_shape=False,
@@ -451,26 +329,26 @@ def main(
             ######################## MY ################################################
             ############################################################################
 
-            metric_result = []
-            metrics = ["f1", "recall", "precision"]
-            for iou in np.arange(*iou_threshs):
-                # my metrics
-                calculator = utils.Metrics(yolo.classes, dir_, iou_thresh=iou)
-                for gt, pred, shape in zip(
-                    original_gts, original_preds, original_shapes
-                ):
-                    calculator.calculate(gt, pred, shape)
+            # metric_result = []
+            # metrics = ["f1", "recall", "precision"]
+            # for iou in np.arange(*iou_threshs):
+            #     # my metrics
+            #     calculator = utils.Metrics(yolo.classes, dir_, iou_thresh=iou)
+            #     for gt, pred, shape in zip(
+            #         original_gts, original_preds, original_shapes
+            #     ):
+            #         calculator.calculate(gt, pred, shape)
 
-                res = calculator.perform(metrics)
-                metric_result.append(res)
+            #     res = calculator.perform(metrics)
+            #     metric_result.append(res)
 
-                # calculator.prettify(metrics, res, iou=iou)
+            #     # calculator.prettify(metrics, res, iou=iou)
 
-            metric_result = np.array(metric_result).mean(axis=0)
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!! ME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            calculator.prettify(metrics, metric_result, iou="0.5:0.75")
+            # metric_result = np.array(metric_result).mean(axis=0)
+            # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            # print("!!!!!!!!!!!!!!!!!!!!!!!! ME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            # print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            # calculator.prettify(metrics, metric_result, iou="0.5:0.75")
 
     if threshold_tuning:
         print("iou_thresh,score_thresh,mAP@0.5:0.75")

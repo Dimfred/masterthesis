@@ -154,13 +154,13 @@ Using best of above
 | 32 | eiou1   | 0.0005    |
 | 32 | eiou1   | 0.00025   |
 | 32 | eiou1   | 0.0001    |
-| 32 | eiou0.8 | 0.01      |
-| 32 | eiou0.8 | 0.005     |
-| 32 | eiou0.8 | 0.0025    |
-| 32 | eiou0.8 | 0.001     |
-| 32 | eiou0.8 | 0.0005    |
-| 32 | eiou0.8 | 0.00025   |
-| 32 | eiou0.8 | 0.0001    |
+| 32 | eiou0.5 | 0.01      |
+| 32 | eiou0.5 | 0.005     |
+| 32 | eiou0.5 | 0.0025    |
+| 32 | eiou0.5 | 0.001     |
+| 32 | eiou0.5 | 0.0005    |
+| 32 | eiou0.5 | 0.00025   |
+| 32 | eiou0.5 | 0.0001    |
 | 64 | ciou    | 0.01      |
 | 64 | ciou    | 0.005     |
 | 64 | ciou    | 0.0025    |
@@ -175,13 +175,37 @@ Using best of above
 | 64 | eiou1   | 0.0005    |
 | 64 | eiou1   | 0.00025   |
 | 64 | eiou1   | 0.0001    |
-| 64 | eiou0.8 | 0.01      |
-| 64 | eiou0.8 | 0.005     |
-| 64 | eiou0.8 | 0.0025    |
-| 64 | eiou0.8 | 0.001     |
-| 64 | eiou0.8 | 0.0005    |
-| 64 | eiou0.8 | 0.00025   |
-| 64 | eiou0.8 | 0.0001    |
+| 64 | eiou0.5 | 0.01      |
+| 64 | eiou0.5 | 0.005     |
+| 64 | eiou0.5 | 0.0025    |
+| 64 | eiou0.5 | 0.001     |
+| 64 | eiou0.5 | 0.0005    |
+| 64 | eiou0.5 | 0.00025   |
+| 64 | eiou0.5 | 0.0001    |
+
+O p3 train.py 64 ciou 0.01 0;       p3 train.py 64 ciou 0.01 1;       p3 train.py 64 ciou 0.01 2;
+O p3 train.py 64 ciou 0.005 0;      p3 train.py 64 ciou 0.005 1;      p3 train.py 64 ciou 0.005 2;
+O p3 train.py 64 ciou 0.0025 0;     p3 train.py 64 ciou 0.0025 1;     p3 train.py 64 ciou 0.0025 2;
+O p3 train.py 64 ciou 0.001 0;      p3 train.py 64 ciou 0.001 1;      p3 train.py 64 ciou 0.001 2;
+O p3 train.py 64 ciou 0.0005 0;     p3 train.py 64 ciou 0.0005 1;     p3 train.py 64 ciou 0.0005 2;
+O p3 train.py 64 ciou 0.00025 0;    p3 train.py 64 ciou 0.00025 1;    p3 train.py 64 ciou 0.00025 2;
+O p3 train.py 64 ciou 0.0001 0;     p3 train.py 64 ciou 0.0001 1;     p3 train.py 64 ciou 0.0001 2;
+
+O p3 train.py 64 eiou1 0.01 0;      p3 train.py 64 eiou1 0.01 1;      p3 train.py 64 eiou1 0.01 2;
+O p3 train.py 64 eiou1 0.005 0;     p3 train.py 64 eiou1 0.005 1;     p3 train.py 64 eiou1 0.005 2;
+O p3 train.py 64 eiou1 0.0025 0;    p3 train.py 64 eiou1 0.0025 1;    p3 train.py 64 eiou1 0.0025 2;
+O p3 train.py 64 eiou1 0.001 0;     p3 train.py 64 eiou1 0.001 1;     p3 train.py 64 eiou1 0.001 2;
+O p3 train.py 64 eiou1 0.0005 0;    p3 train.py 64 eiou1 0.0005 1;    p3 train.py 64 eiou1 0.0005 2;
+O p3 train.py 64 eiou1 0.00025 0;   p3 train.py 64 eiou1 0.00025 1;   p3 train.py 64 eiou1 0.00025 2;
+O p3 train.py 64 eiou1 0.0001 0;    p3 train.py 64 eiou1 0.0001 1;    p3 train.py 64 eiou1 0.0001 2;
+
+O p3 train.py 64 eiou0.5 0.01 0;    p3 train.py 64 eiou0.5 0.01 1;    p3 train.py 64 eiou0.5 0.01 2;
+O p3 train.py 64 eiou0.5 0.005 0;   p3 train.py 64 eiou0.5 0.005 1;   p3 train.py 64 eiou0.5 0.005 2;
+O p3 train.py 64 eiou0.5 0.0025 0;  p3 train.py 64 eiou0.5 0.0025 1;  p3 train.py 64 eiou0.5 0.0025 2;
+O p3 train.py 64 eiou0.5 0.001 0;   p3 train.py 64 eiou0.5 0.001 1;   p3 train.py 64 eiou0.5 0.001 2;
+O p3 train.py 64 eiou0.5 0.0005 0;  p3 train.py 64 eiou0.5 0.0005 1;  p3 train.py 64 eiou0.5 0.0005 2;
+O p3 train.py 64 eiou0.5 0.00025 0; p3 train.py 64 eiou0.5 0.00025 1; p3 train.py 64 eiou0.5 0.00025 2;
+O p3 train.py 64 eiou0.5 0.0001 0;  p3 train.py 64 eiou0.5 0.0001 1;  p3 train.py 64 eiou0.5 0.0001 2;
 
 ----------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.21)  29 MAY 2021 14:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.21)  30 MAY 2021 16:10
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -694,38 +694,38 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [13]
 Package acronym Info: Label `acro:R-CNN' newly defined as it shall be overridden
-although it is yet undefined on input line 55.
+although it is yet undefined on input line 57.
 Package acronym Info: Label `acro:SVM' newly defined as it shall be overridden
-although it is yet undefined on input line 59.
+although it is yet undefined on input line 61.
  [14]
 <imgs/selective_search.png, id=117, 702.625pt x 462.72874pt>
 File: imgs/selective_search.png Graphic file (type png)
 <use imgs/selective_search.png>
-Package pdftex.def Info: imgs/selective_search.png  used on input line 64.
+Package pdftex.def Info: imgs/selective_search.png  used on input line 66.
 (pdftex.def)             Requested size: 284.52756pt x 187.38293pt.
 Package acronym Info: Label `acro:RoI' newly defined as it shall be overridden
-although it is yet undefined on input line 74.
+although it is yet undefined on input line 76.
  [15 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/selective_search.png>]
 Package acronym Info: Label `acro:YOLO' newly defined as it shall be overridden
-although it is yet undefined on input line 103.
+although it is yet undefined on input line 105.
 Package acronym Info: Label `acro:SSD' newly defined as it shall be overridden
-although it is yet undefined on input line 103.
+although it is yet undefined on input line 105.
 Package acronym Info: Label `acro:YOLOv1' newly defined as it shall be overridden
-although it is yet undefined on input line 118.
+although it is yet undefined on input line 120.
 Package acronym Info: Label `acro:FCOS' newly defined as it shall be overridden
-although it is yet undefined on input line 118.
+although it is yet undefined on input line 120.
 Package acronym Info: Label `acro:IoU' newly defined as it shall be overridden
-although it is yet undefined on input line 119.
+although it is yet undefined on input line 121.
  [16]
 Package acronym Info: Label `acro:GIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 146.
+although it is yet undefined on input line 148.
 Package acronym Info: Label `acro:DIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 158.
+although it is yet undefined on input line 160.
 Package acronym Info: Label `acro:CIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 158.
+although it is yet undefined on input line 160.
  [17]
 Package acronym Info: Label `acro:EIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 190.
+although it is yet undefined on input line 192.
 ) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/yolo.tex
 Package acronym Info: Label `acro:YOLOv4' newly defined as it shall be overridden
 although it is yet undefined on input line 5.
@@ -753,7 +753,7 @@ LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
  [24]
 Package acronym Info: Label `acro:WBF' newly defined as it shall be overridden
 although it is yet undefined on input line 251.
- [25]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/metrics.tex
+ [25]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/hypergraph.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/metrics.tex
 Package acronym Info: Label `acro:TP' newly defined as it shall be overridden
 although it is yet undefined on input line 33.
 Package acronym Info: Label `acro:FP' newly defined as it shall be overridden
@@ -763,46 +763,44 @@ although it is yet undefined on input line 33.
  [26]
 Package acronym Info: Label `acro:AP' newly defined as it shall be overridden
 although it is yet undefined on input line 70.
-<imgs/pr_curve.png, id=162, 1509.64pt x 748.7975pt>
+ [27]
+<imgs/pr_curve.png, id=165, 1509.64pt x 748.7975pt>
 File: imgs/pr_curve.png Graphic file (type png)
 <use imgs/pr_curve.png>
 Package pdftex.def Info: imgs/pr_curve.png  used on input line 85.
 (pdftex.def)             Requested size: 312.9803pt x 155.24118pt.
 Package acronym Info: Label `acro:mAP' newly defined as it shall be overridden
 although it is yet undefined on input line 93.
- [27]
 Package acronym Info: Label `acro:mIoU' newly defined as it shall be overridden
 although it is yet undefined on input line 103.
 )) [28 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pr_curve.png (PNG copy)>] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
 Chapter 3.
-(/home/dimfred/workspaces/uni/ma/thesis/tex/main/data.tex))
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [29
+(/home/dimfred/workspaces/uni/ma/thesis/tex/main/data.tex [29
 
 
 
-] [30] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
+]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/pipeline.tex)) [30] [31] [32
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
 Chapter 4.
-) [31
-
-
-
-] [32
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
-Chapter 5.
 ) [33
 
 
 ] [34
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
+Chapter 5.
+) [35
+
+
+] [36
 
 ]
 No file mt07.tex.
 No file mt08.tex.
 (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-glossar.tex
 Appendix A.
-[35
+[37
 
 
 
@@ -814,18 +812,8 @@ Appendix A.
 
 
 
-]) [36] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
+]) [38] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
 \tf@lof=\write5
-) [37
-
-
-
-] [38
-
-
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot)
-\tf@lot=\write6
 ) [39
 
 
@@ -834,12 +822,21 @@ Appendix A.
 
 
 
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl [41
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot [41
+
+
+
+])
+\tf@lot=\write6
+) [42] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl [43
+
+
+
 
 
 
 ]
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 63.
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 74.
  (/usr/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
@@ -848,28 +845,28 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-Overfull \hbox (16.53606pt too wide) in paragraph at lines 89--95
+Overfull \hbox (16.53606pt too wide) in paragraph at lines 100--106
 \OT1/pcr/m/n/12 map-[]mean-[]average-[]precision-[]for-[]object-[]detection-[]45c121a31173$\OT1/ptm/m/n/12 (-20) , 
  []
 
-[42] [43] [44])) [45] [46
+[44] [45] [46])) [47] [48
 
 
 
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
 Here is how much of TeX's memory you used:
- 20885 strings out of 479383
- 386777 string characters out of 5875830
- 704638 words of memory out of 5000000
- 37339 multiletter control sequences out of 15000+600000
+ 20901 strings out of 479383
+ 387222 string characters out of 5875830
+ 704716 words of memory out of 5000000
+ 37349 multiletter control sequences out of 15000+600000
  438766 words of font info for 196 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  80i,11n,85p,939b,1705s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (54 pages, 895839 bytes).
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (56 pages, 902037 bytes).
 PDF statistics:
- 288 PDF objects out of 1000 (max. 8388607)
- 188 compressed objects within 2 object streams
+ 295 PDF objects out of 1000 (max. 8388607)
+ 193 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  24198 words of extra memory for PDF output out of 24883 (max. 10000000)
 

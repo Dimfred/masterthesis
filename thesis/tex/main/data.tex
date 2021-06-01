@@ -1,7 +1,82 @@
 In this section the data which was used in this thesis is presented, as well as some general information about that.
 Generally, the dataset is a collection of \acp{ECD}, with \acp{ECC} in German notation.
 The task was constrained to seven different \acp{ECC}, which are shown in figure \ref{fig:used_eccs}.
-Most of the images are taken with a mobile phone, but some are also directly drawn on a digital device such as a tablet.
+Most of the images were taken with a mobile phone, but some were also directly drawn on a digital device such as a tablet.
+
 The difficulty of the task in this thesis increased gradually and more data was always acquired when the difficulty increased.
 At first, only images of \acp{ECD} on a white background without annotations were gathered, when that showed promising results, additionally images of \acp{ECD} without annotation but on checkered background were gathered and finally when annotations were added both images with white and checkered background and annotations were acquired.
-The total amount of images is show in table
+The total amount of images is show in table \ref{tab:data_distribution}.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l|l|l|l|l|l|l}
+
+    & \textbf{Images} & \textbf{Background} & \textbf{Annotated}  & \textbf{train ratio} & \textbf{valid ratio} & \textbf{test ratio}\\
+    \hline
+    & 110 & white & & 74.66\% & 6.69\% & 18.65\% \\
+    & 17 & checkered & & 17.64\% & 11.77\% & 70.59\%\\
+    & 89 & white & \checkmark & 78.65\% & 11.24\% & 10.11\%\\
+    & 21 & checkered & \checkmark & 9.52\% & 19.05\% & 71.43\%\\
+    \hline
+    \textbf{Total} & 239 & & &45.12\% & 12.19\% & 42.69\%\\
+
+\end{tabular}
+\caption{Amount of images of \acp{ECD} used in this thesis shown with their underlying background and whether they are annotated or not. Further, the train / validation / test split of the different image types is shown. While this might seem like a big split for test, the number of bounding boxes included in the test set is way smaller and is shown in table \ref{tab:yolo_classes}}
+\label{tab:data_distribution}
+\end{center}
+\end{table}
+
+\subsubsection{Labeling}
+
+The pipeline in this thesis requires the object detection network \ac{YOLOv4} and the segmentation network MobilenetV2-UNet.
+Therefore, the data was labeled with bounding boxes for \ac{YOLOv4} and with segmentation masks for the MobilenetV2-UNet
+
+In table \ref{tab:yolo_classes} all classes used for object detection are presented.
+The classes have a major class which corresponds to the \ac{ECC} and an orientation subclass.
+Some major classes like resistors have two orientations (horizontal, vertical), while others have four, like diodes (left, top, right, bottom).
+The only exception is the text class, which does not have an orientation, since annotations were enforced to be horizontally aligned.
+
+Bounding boxes were annotated with the labeling tool labelme \cite{labelme} in the yolo format which was presented in section \ref{sec:object_detection}.
+To also capture parts of the wire in the prediction the bounding boxes were stretched towards the wire around an object.
+
+The segmentation masks were created in a binary fashion, where the foreground corresponds to the drawn \ac{ECD} and the background is everything else.
+The masks were created semi-automatically by applying a Canny Edge Detector \cite{canny_edge} on the image.
+The resulting edge mask is dilated five times to close the holes between the edges of a wire and afterwards eroded four times to reduce the thickness of the segmentation mask.
+The labels are not perfect because sometimes it is hard to remove the gridded background without removing parts of the wire with this technique, therefore each mask is additionally manually fine-tuned, with a simple drawing tool build with the Python version of OpenCV \cite{opencv}.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l|l|l|l|l|}
+
+\textbf{class} & \textbf{total} & \textbf{train ratio} & \textbf{valid ratio} & \textbf{test ratio} \\
+    \hline
+    diode left              & 156    &  83.33\%  &    8.97\%  &  7.69\% \\
+    diode top               & 210    &  82.38\%  &    6.19\%  & 11.43\% \\
+    diode right             & 150    &  82.00\%  &   12.67\%  &  5.33\% \\
+    diode bottom            & 102    &  67.65\%  &   15.69\%  & 16.67\% \\
+    resistor horizontal     & 318    &  71.38\%  &    6.92\%  & 21.70\% \\
+    resistor vertical       & 350    &  66.00\%  &    6.57\%  & 27.43\% \\
+    capacitor horizontal    & 405    &  85.68\%  &    4.94\%  &  9.38\% \\
+    capacitor vertical      & 268    &  65.30\%  &   10.45\%  & 24.25\% \\
+    ground left             & 137    &  72.99\%  &   10.95\%  & 16.06\% \\
+    ground top              & 137    &  81.02\%  &   13.87\%  &  5.11\% \\
+    ground right            & 116    &  78.45\%  &   14.66\%  &  6.90\% \\
+    ground bottom           & 178    &  73.60\%  &   14.04\%  & 12.36\% \\
+    inductor horizontal     & 251    &  76.89\%  &    8.37\%  & 14.74\% \\
+    inductor vertical       & 290    &  73.45\%  &    9.31\%  & 17.24\% \\
+    source horizontal       & 188    &  77.66\%  &   11.17\%  & 11.17\% \\
+    source vertical         & 238    &  64.71\%  &   14.29\%  & 21.01\% \\
+    current horizontal      & 202    &  77.72\%  &    9.41\%  & 12.87\% \\
+    current vertical        & 220    &  75.00\%  &   12.73\%  & 12.27\% \\
+    text                    & 877    &  61.92\%  &   16.76\%  & 21.32\% \\
+    arrow left              & 57     &  70.18\%  &   19.30\%  & 10.53\% \\
+    arrow top               & 77     &  64.94\%  &   23.38\%  & 11.69\% \\
+    arrow right             & 105    &  70.48\%  &   16.19\%  & 13.33\% \\
+    arrow bot               & 104    &  71.15\%  &   15.38\%  & 13.46\% \\
+    \hline
+    \textbf{total}          & 5136   &  73.65\%  &   12.27\%  & 14.08\% \\
+\end{tabular}
+\caption{The classes present in this thesis with their major class which is an \ac{ECC} and alternatively their orientation. Furthermore, the total amount of classes is shown and the train, valid, test ratio.}
+\label{tab:yolo_classes}
+\end{center}
+\end{table}

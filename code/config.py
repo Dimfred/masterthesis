@@ -122,8 +122,8 @@ architecture_type = {
     ),
     "text": (
         str(config.train_out_dir / "classes.txt"),
-        # str(config.weights_dir / "best_grid.weights"),
-        str(config.weights_dir / "best_test.weights"),
+        str(config.weights_dir / "best_grid.weights"),
+        # str(config.weights_dir / "best_test.weights"),
     ),
 }
 

@@ -270,17 +270,21 @@ Therefore, experiments are also evaluated using the \ac{WBF} \cite{weighted_bbox
         Y_{1,2} = \frac{\sum^T_{i=1} C_i * Y_{1,2}}{\sum^T_{i=1} C_i}
     \end{equation}
 
-    \item \textbf{Optional.} When bounding boxes from more than one model are used, which is the case when \ac{TTA} is used, or an ensemble of multiple predictors, then the confidence score of the fused bounding box should be adapted to incorporate the uncertainty of multiple models. For example when one model predicts a bounding box, but the another model does not. Therefore, the confidence is rescaled with:
+    \item \textbf{Optional.} When bounding boxes from more than one model are used, which is the case when \ac{TTA} is used, or an ensemble of multiple predictors, then the confidence score of the fused bounding box should be adapted to incorporate the uncertainty of multiple models. For example when one model predicts a bounding box, but another model does not. Therefore, the confidence is rescaled with:
 
     \begin{equation}
         C = C * \frac{min(T, N)}{N}
+        \label{eq:confidence_rescale}
     \end{equation}
 
     or
 
     \begin{equation}
         C = C * \frac{T}{N}
+        \label{eq:confidence_rescale_not_used}
     \end{equation}
 
-    Here, $T$ is number of bounding boxes in a cluster and $N$ is the number of predictors, which have predicted a bounding box in that particular cluster.
+    Here, $T$ is the number of bounding boxes in a cluster and $N$ is the number of predictors, which have predicted a bounding box in that particular cluster.
+    The experiments in this thesis utilize equation \ref{eq:confidence_rescale}, because there the confidence can't be greater than one.
+    In equation \ref{eq:confidence_rescale_not_used} the confidence can exceed one,  when the number of predicted bounding boxes is higher than the number of predictors, which is often the case.
 \end{enumerate}

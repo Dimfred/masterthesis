@@ -9,6 +9,11 @@ N.~Bodla, B.~Singh, R.~Chellappa, and L.~Davis.
 \newblock Improving object detection with one line of code.
 \newblock {\em CoRR}, abs/1704.04503, 2017.
 
+\bibitem[Bra00]{opencv}
+G.~Bradski.
+\newblock {The OpenCV Library}.
+\newblock {\em Dr. Dobb's Journal of Software Tools}, 2000.
+
 \bibitem[Bri90]{softmax}
 J.~Bridle.
 \newblock Probabilistic interpretation of feedforward classification network
@@ -22,6 +27,12 @@ A.~Buslaevnder, V.~Iglovikov, E.~Khvedchenya, A~Parinov, M.~Druzhinin, and
   A.~Kalinin.
 \newblock Albumentations: Fast and flexible image augmentations.
 \newblock {\em Information}, 11(2), 2020.
+
+\bibitem[Can86]{canny_edge}
+J.~Canny.
+\newblock A computational approach to edge detection.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  PAMI-8(6):679--698, 1986.
 
 \bibitem[Dig19]{mish}
 M.~Diganta.
@@ -86,7 +97,7 @@ G.~Huang, Z.~Liu, and K.~Weinberger.
 \newblock {\em CoRR}, abs/1608.06993, 2016.
 
 \bibitem[Hui18]{map_article}
-Jonathan Hui.
+J.~Hui.
 \newblock map (mean average precision) for object detection.
 \newblock
   \url{https://jonathan-hui.medium.com/map-mean-average-precision-for-object-detection-45c121a31173},
@@ -244,6 +255,11 @@ K.~van~de Sande, J.~Uijlings, T.~Gevers, and A.~Smeulders.
 \newblock Segmentation as selective search for object recognition.
 \newblock In {\em 2011 International Conference on Computer Vision}. {IEEE},
   nov 2011.
+
+\bibitem[Wad16]{labelme}
+K.~Wada.
+\newblock {labelme: Image Polygonal Annotation with Python}.
+\newblock \url{https://github.com/wkentaro/labelme}, 2016.
 
 \bibitem[Wan21]{yolov4_tiny}
 C.~Wang, A.~Bochkovskiy, and H.~Liao.
