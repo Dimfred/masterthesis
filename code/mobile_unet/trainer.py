@@ -66,7 +66,8 @@ class Trainer:
         self.valid_summary_writer = SummaryWriter(self.experiment.tb_valid_dir)
 
         # best model
-        self.best_iou = 0
+        # self.best_iou = 0
+        self.best_f1 = 0
         self.best_iou_step = 0
 
         # time
@@ -120,8 +121,10 @@ class Trainer:
 
                     vinputs = vinputs.cpu().numpy()
 
-                    if iou > self.best_iou:
-                        self.best_iou = iou
+                    # if iou > self.best_iou:
+                    if f1 > self.best_f1:
+                        # self.best_iou = iou
+                        self.best_f1 = f1
                         self.best_iou_step = self.step_counter
                         torch.save(
                             self.model.state_dict(), str(self.experiment.weights)
