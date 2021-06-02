@@ -745,7 +745,7 @@ def augment(target, test_only):
             config.test_out_dir,
             config.merged_dir,
             img_params=config.augment.unet.img_params,
-            include_merged=config.merged_dir,
+            include_merged=config.augment.incluse_merged,
             perform_rotation=config.augment.perform_rotation,
             perform_flip=config.augment.perform_flip,
             clean=True,
