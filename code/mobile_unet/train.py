@@ -102,25 +102,25 @@ def get_data_loaders(train_files, val_files, img_size=224):
             mask_value=mask_value,
             always_apply=True
         ),
-        A.Rotate(
-            limit=config.unet.augment.rotate,
-            border_mode=cv.BORDER_CONSTANT,
-            value=pad_value,
-            mask_value=mask_value,
-            p=0.5
-        ),
-        A.RandomCrop(
-            width=crop_size,
-            height=crop_size,
-            p=0.5,
-        ),
-        A.ColorJitter(
-            brightness=config.unet.augment.color_jitter,
-            contrast=config.unet.augment.color_jitter,
-            saturation=config.unet.augment.color_jitter,
-            hue=config.unet.augment.color_jitter,
-            p=0.5
-        ),
+        # A.Rotate(
+        #     limit=config.unet.augment.rotate,
+        #     border_mode=cv.BORDER_CONSTANT,
+        #     value=pad_value,
+        #     mask_value=mask_value,
+        #     p=0.5
+        # ),
+        # A.RandomCrop(
+        #     width=crop_size,
+        #     height=crop_size,
+        #     p=0.5,
+        # ),
+        # A.ColorJitter(
+        #     brightness=config.unet.augment.color_jitter,
+        #     contrast=config.unet.augment.color_jitter,
+        #     saturation=config.unet.augment.color_jitter,
+        #     hue=config.unet.augment.color_jitter,
+        #     p=0.5
+        # ),
         A.Resize(
             width=img_size,
             height=img_size,
@@ -168,161 +168,166 @@ def get_data_loaders(train_files, val_files, img_size=224):
 def main():
     import sys
 
-    run_ = sys.argv[1]
-    for run in (int(run_),):
-        # for run in (0, 1, 2):
-        seed = config.train.seeds[run]
-        utils.seed_all(seed)
+    ####################################################################################
+    # LR EXPERIMENT
+    ####################################################################################
+    lr, run = sys.argv[1:]
+    lr, run = float(lr), int(run)
 
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        # device = torch.device("cpu")
+    config.unet.experiment_name = "lr"
+    config.unet.experiment_param = f"lr_{lr}"
 
-        train_files = utils.list_imgs(config.train_out_dir)
-        val_files = utils.list_imgs(config.valid_out_dir)
-        data_loaders = get_data_loaders(train_files, val_files, config.unet.input_size)
+    seed = config.train.seeds[run]
+    utils.seed_all(seed)
 
-        ##########
-        ## LOSS ##
-        ##########
-        loss_type = "focal"
-        loss = losses.focal.FocalLoss(
-            config.unet.focal_alpha,
-            config.unet.focal_gamma,
-            config.unet.focal_reduction,
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # device = torch.device("cpu")
+
+    train_files = utils.list_imgs(config.train_out_dir)
+    val_files = utils.list_imgs(config.valid_out_dir)
+    data_loaders = get_data_loaders(train_files, val_files, config.unet.input_size)
+
+    ##########
+    ## LOSS ##
+    ##########
+    loss_type = "focal"
+    loss = losses.focal.FocalLoss(
+        config.unet.focal_alpha,
+        config.unet.focal_gamma,
+        config.unet.focal_reduction,
+    )
+
+    # loss_type = "dice"
+    # loss = dice_loss()
+    # loss = losses.dice.DiceLoss()
+
+    # loss_type = "binfocal"
+    # loss = BinaryFocalLoss(
+    #     config.unet.focal_alpha,
+    #     config.unet.focal_gamma,
+    #     config.unet.focal_reduction,
+    # )
+
+    ##########
+    ### V2 ###
+    ##########
+
+    if config.unet.architecture == "v2":
+        model = MobileNetV2_unet(
+            n_classes=config.unet.n_classes if loss_type == "focal" else 1,
+            input_size=config.unet.input_size,
+            channels=config.unet.channels,
+            pretrained=config.unet.pretrained_path,
+            width_multiplier=config.unet.width_multiplier,
+            scale=config.unet.scale,
+            upsampling=config.unet.upsampling
         )
+        if (
+            config.unet.checkpoint_path is not None
+            and config.unet.pretrained_path is None
+            # and config.unet.upsampling != "bilinear"
+        ):
+            print("Preloaded checkpoing path.")
+            model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
 
-        # loss_type = "dice"
-        # loss = dice_loss()
-        # loss = losses.dice.DiceLoss()
+    ##########
+    ### V3 ###
+    ##########
+    if config.unet.architecture == "v3":
+        # model = fastseg.MobileV3Large(num_classes=2)
+        model = fastseg.MobileV3Large(num_classes=2).from_pretrained()
 
+    if config.unet.architecture == "unet":
 
+        class DeeplabV3Resnet50(nn.Module):
+            def __init__(self, *args, **kwargs):
+                super(DeeplabV3Resnet50, self).__init__()
+                self.model = tv.models.segmentation.deeplabv3_resnet50(
+                    *args, **kwargs
+                )
 
-        # loss_type = "binfocal"
-        # loss = BinaryFocalLoss(
-        #     config.unet.focal_alpha,
-        #     config.unet.focal_gamma,
-        #     config.unet.focal_reduction,
-        # )
+            def forward(self, x):
+                x = self.model(x)["out"]
+                return x
 
-        ##########
-        ### V2 ###
-        ##########
+        model = DeeplabV3Resnet50(num_classes=2)
 
-        if config.unet.architecture == "v2":
-            model = MobileNetV2_unet(
-                n_classes=config.unet.n_classes if loss_type == "focal" else 1,
-                input_size=config.unet.input_size,
-                channels=config.unet.channels,
-                pretrained=config.unet.pretrained_path,
-                width_multiplier=config.unet.width_multiplier,
-                scale=config.unet.scale,
-                upsampling=config.unet.upsampling
-            )
-            if (
-                config.unet.checkpoint_path is not None
-                and config.unet.pretrained_path is None
-                # and config.unet.upsampling != "bilinear"
-            ):
-                print("Preloaded checkpoing path.")
-                model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
+    model.to(device)
 
-        ##########
-        ### V3 ###
-        ##########
-        if config.unet.architecture == "v3":
-            # model = fastseg.MobileV3Large(num_classes=2)
-            model = fastseg.MobileV3Large(num_classes=2).from_pretrained()
+    ###############
+    ## OPTIMIZER ##
+    ###############
+    optimizer = optimizers.Adam(
+        model.parameters(),
+        lr=config.unet.lr,
+        betas=config.unet.betas,
+        weight_decay=config.unet.decay,
+        amsgrad=config.unet.amsgrad,
+        # nesterov=config.unet.nesterov,
+    )
 
-        if config.unet.architecture == "unet":
+    def get_lr(optimizer):
+        for pg in optimizer.param_groups:
+            lr = pg["lr"]
+            break
 
-            class DeeplabV3Resnet50(nn.Module):
-                def __init__(self, *args, **kwargs):
-                    super(DeeplabV3Resnet50, self).__init__()
-                    self.model = tv.models.segmentation.deeplabv3_resnet50(
-                        *args, **kwargs
-                    )
+        return lr
 
-                def forward(self, x):
-                    x = self.model(x)["out"]
-                    return x
+    def set_lr(optimizer, lr):
+        for param_group in optimizer.param_groups:
+            param_group["lr"] = lr
 
-            model = DeeplabV3Resnet50(num_classes=2)
+        return optimizer
 
-        model.to(device)
+    def lr_scheduler(optimizer, step):
+        lr = config.unet.lr
+        if step in config.unet.lr_decay_fixed:
+            lr = get_lr(optimizer)
+            lr = lr / 5
+            config.unet.lr = lr
+            optimizer = set_lr(optimizer, lr)
 
-        ###############
-        ## OPTIMIZER ##
-        ###############
-        optimizer = optimizers.Adam(
-            model.parameters(),
-            lr=config.unet.lr,
-            betas=config.unet.betas,
-            weight_decay=config.unet.decay,
-            amsgrad=config.unet.amsgrad,
-            # nesterov=config.unet.nesterov,
-        )
+        return lr
 
-        def get_lr(optimizer):
-            for pg in optimizer.param_groups:
-                lr = pg["lr"]
-                break
+    # lr_scheduler = None
 
-            return lr
+    # optimizer = optimizers.SGD(
+    #     model.parameters(), lr=config.unet.lr, momentum=config.unet.momentum
+    # )
+    # def lr_scheduler(optimizer, step):
+    #     lr = config.unet.lr
 
-        def set_lr(optimizer, lr):
-            for param_group in optimizer.param_groups:
-                param_group["lr"] = lr
+    #     # if step < config.unet.burn_in:
+    #     #     multiplier = (step / config.unet.burn_in) ** 4
+    #     #     lr = lr * multiplier
 
-            return optimizer
+    #     # for param_group in optimizer.param_groups:
+    #     #     param_group["lr"] = lr
+    #     # print(lr)
 
-        def lr_scheduler(optimizer, step):
-            lr = config.unet.lr
-            if step in config.unet.lr_decay_fixed:
-                lr = get_lr(optimizer)
-                lr = lr / 5
-                config.unet.lr = lr
-                optimizer = set_lr(optimizer, lr)
+    #     return lr
 
-            return lr
+    experiment = utils.UnetExperiment(
+        config.unet.experiment_dir,
+        config.unet.experiment_name,
+        config.unet.experiment_param,
+        run,
+    )
 
-        # lr_scheduler = None
-
-        # optimizer = optimizers.SGD(
-        #     model.parameters(), lr=config.unet.lr, momentum=config.unet.momentum
-        # )
-        # def lr_scheduler(optimizer, step):
-        #     lr = config.unet.lr
-
-        #     # if step < config.unet.burn_in:
-        #     #     multiplier = (step / config.unet.burn_in) ** 4
-        #     #     lr = lr * multiplier
-
-        #     # for param_group in optimizer.param_groups:
-        #     #     param_group["lr"] = lr
-        #     # print(lr)
-
-        #     return lr
-
-        experiment = utils.UnetExperiment(
-            config.unet.experiment_dir,
-            config.unet.experiment_name,
-            config.unet.experiment_param,
-            run,
-        )
-
-        trainer = Trainer(
-            data_loaders=data_loaders,
-            loss=loss,
-            batch_size=config.unet.batch_size,
-            subdivision=config.unet.subdivision,
-            valid_batch_size=config.unet.valid_batch_size,
-            valid_subdivision=config.unet.valid_subdivision,
-            lr_scheduler=lr_scheduler,
-            device=device,
-            experiment=experiment,
-            loss_type=loss_type,
-        )
-        trainer.train(model, optimizer)
+    trainer = Trainer(
+        data_loaders=data_loaders,
+        loss=loss,
+        max_steps=config.unet.max_steps,
+        batch_size=config.unet.batch_size,
+        subdivision=config.unet.subdivision,
+        valid_batch_size=config.unet.valid_batch_size,
+        valid_subdivision=config.unet.valid_subdivision,
+        lr_scheduler=lr_scheduler,
+        device=device,
+        experiment=experiment,
+        loss_type=loss_type,
+    )
+    trainer.train(model, optimizer)
 
 
 if __name__ == "__main__":

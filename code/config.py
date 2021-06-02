@@ -144,7 +144,7 @@ config.unet = EasyDict()
 
 # net
 config.unet.n_classes = 2
-config.unet.input_size = 224 if utils.isme() else 256  # 448  # 448 #224 #608 #416 #288
+config.unet.input_size = 224 if utils.isme() else 384  # 448  # 448 #224 #608 #416 #288
 config.unet.test_input_size = 448  # 448, 480, 512, 544, 576, 608, 640, 672, 704
 config.unet.channels = 3
 config.unet.width_multiplier = 1.0
@@ -155,13 +155,13 @@ config.unet.scale = True  # use Upsample instead of last deconv
 # training
 config.unet.lr = 3e-3  # 3e-4 #0.0025
 config.unet.batch_size = 64 if utils.isme() else 64
-config.unet.subdivision = 4 if utils.isme() else 16
+config.unet.subdivision = 4 if utils.isme() else 4
 config.unet.valid_batch_size = 24 if utils.isme() else 24
-config.unet.valid_subdivision = 1 if utils.isme() else 3
+config.unet.valid_subdivision = 1 if utils.isme() else 1
 # minibatch_size = batch_size / subdivision
-config.unet.n_epochs = 1000
+config.unet.max_steps = 2000
 config.unet.burn_in = 100
-config.unet.lr_decay_fixed = [1500, 2000]
+config.unet.lr_decay_fixed = [1000, 1500]
 
 # optimizers
 config.unet.amsgrad = True
@@ -417,10 +417,6 @@ config.labels_and_files_to_remove = [
     "ind_us_ver",
 ]
 
-# whether to perform flip and rotation on the dataset
-config.augment.perform_rotation = True
-config.augment.perform_flip = True
-config.augment.include_merged = True
 
 ## experiment
 config.yolo.experiment_dir = Path("experiments_yolo")
@@ -471,3 +467,9 @@ config.yolo.experiment_param = (
 
 # config.yolo.experiment_name = "test"
 # config.yolo.experiment_param = "test"
+
+
+# whether to perform flip and rotation on the dataset
+config.augment.perform_rotation = False
+config.augment.perform_flip = False
+config.augment.include_merged = False

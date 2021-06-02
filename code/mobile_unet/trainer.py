@@ -31,6 +31,7 @@ class Trainer:
         data_loaders,
         loss,
         device,
+        max_steps=2000,
         batch_size=32,
         valid_batch_size=32,
         subdivision=1,
@@ -59,6 +60,7 @@ class Trainer:
         self.step_counter = 0
         self.early_stopping = 1000
         self.early_stopping_counter = 0
+        self.max_steps = max_steps
 
         # logging
         self.experiment = experiment
@@ -75,6 +77,7 @@ class Trainer:
         self.valid_time = 0
         self.overall_time = 0
 
+
     def train(self, model, optimizer):
         self.overall_time = time.perf_counter()
 
@@ -82,10 +85,14 @@ class Trainer:
 
         self.model = model
 
-        # valid_iter = iter(self.valid_ds)
-        while True:
+        done = False
+        while not done:
             for inputs, labels in self.train_ds:
                 self.step_counter += 1
+
+                if self.step_counter > self.max_steps:
+                    done = True
+                    break
 
                 if self.step_counter >= 1000:
                     self.early_stopping_counter += 1
