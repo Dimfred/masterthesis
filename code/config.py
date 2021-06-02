@@ -171,7 +171,7 @@ config.unet.momentum = 0.95
 config.unet.nesterov = False
 
 # loss functions
-config.unet.focal_alpha = 0.1  # 0.1 best
+config.unet.focal_alpha = 0.8  # 0.1 best
 config.unet.focal_gamma = 2  # 2 best
 config.unet.focal_reduction = "mean"
 
