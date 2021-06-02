@@ -253,7 +253,7 @@ def weighted_boxes_fusion(
 
                 # when not enough models have voted on that cluster skip it
                 if len(models_present) < vote_thr:
-                    print("Not enough votes casted, remove cluster.")
+                    # print("Not enough votes casted, remove cluster.")
                     cluster_to_remove.append(i)
                     continue
 

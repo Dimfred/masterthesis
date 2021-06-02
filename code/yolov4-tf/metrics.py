@@ -97,7 +97,26 @@ def main(
         thresholds = [[iou_thresh, score_thresh]]
 
     for iou_thresh, score_thresh in thresholds:
-        for input_size in (config.yolo.input_size,):  # 832):
+        # for input_size in (config.yolo.input_size,):
+        # for input_size in (config.yolo.input_size, 704,): # 736, 768, 800):  # 608, 640, 672, 704, 736, 768, 800, 832):
+
+        # todo compare input_size
+        for input_size in (
+            # 416,
+            # 448,
+            # 480,
+            # 512,
+            # 544,
+            # 576,
+            # config.yolo.input_size,
+            # 640,
+            # 672,
+            # 704,
+            736,
+            # 768,
+            # 800,
+            # 832,
+        ):
             ##################
             ### INIT YOLO ####
             ##################
@@ -140,7 +159,7 @@ def main(
             for img_path in utils.list_imgs(dir_):
                 # for img_path in (Path("data/valid_out/00_22_a_000_nflip_aug.jpg"),):
                 # for img_path in (Path("data/test_out/08_07_c_000_nflip_aug.png"),):
-                print(img_path)
+                # print(img_path)
                 img = np.expand_dims(
                     cv.imread(str(img_path), cv.IMREAD_GRAYSCALE), axis=2
                 )

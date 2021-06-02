@@ -58,9 +58,12 @@
 \contentsline {subsubsection}{Labeling}{29}{}%
 \contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{30}{}%
 \contentsline {subsection}{\numberline {3.2.1}General Overview}{30}{}%
-\contentsline {chapter}{\numberline {4}Results}{33}{}%
-\contentsline {chapter}{\numberline {5}Discussion}{35}{}%
-\contentsline {chapter}{\numberline {A}Abbrevations}{37}{}%
-\contentsline {chapter}{List of Figures}{39}{}%
-\contentsline {chapter}{List of Tables}{41}{}%
-\contentsline {chapter}{Bibliography}{43}{}%
+\contentsline {section}{\numberline {3.3}Training}{32}{}%
+\contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{32}{}%
+\contentsline {subsubsection}{MobileNetV2-UNet}{34}{}%
+\contentsline {chapter}{\numberline {4}Results}{35}{}%
+\contentsline {chapter}{\numberline {5}Discussion}{37}{}%
+\contentsline {chapter}{\numberline {A}Abbrevations}{39}{}%
+\contentsline {chapter}{List of Figures}{41}{}%
+\contentsline {chapter}{List of Tables}{43}{}%
+\contentsline {chapter}{Bibliography}{45}{}%

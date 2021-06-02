@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.21)  30 MAY 2021 16:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.21)  1 JUN 2021 18:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -263,7 +263,9 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-)) (/usr/share/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (/usr/share/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (/usr/share/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (/usr/share/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
+)) (/usr/share/texmf-dist/tex/latex/pgfplots/pgfplots.sty (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.revision.tex)
+Package: pgfplots 2020/02/29 v1.17 Data Visualization (1.17)
+ (/usr/share/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (/usr/share/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (/usr/share/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (/usr/share/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
 \pgfutil@everybye=\toks31
 \pgfutil@tempdima=\dimen162
 \pgfutil@tempdimb=\dimen163
@@ -441,18 +443,44 @@ File: pgfmodulematrix.code.tex 2020/12/01 v3.1.7a (3.1.7a)
 \tikz@expandcount=\count293
  (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2020/12/01 v3.1.7a (3.1.7a)
-))) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing.code.tex (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex (/usr/share/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.tex
-\pgfdecoratedcompleteddistance=\dimen268
-\pgfdecoratedremainingdistance=\dimen269
-\pgfdecoratedinputsegmentcompleteddistance=\dimen270
-\pgfdecoratedinputsegmentremainingdistance=\dimen271
-\pgf@decorate@distancetomove=\dimen272
-\pgf@decorate@repeatstate=\count294
-\pgfdecorationsegmentamplitude=\dimen273
-\pgfdecorationsegmentlength=\dimen274
+))) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotscore.code.tex
+\t@pgfplots@toka=\toks43
+\t@pgfplots@tokb=\toks44
+\t@pgfplots@tokc=\toks45
+\pgfplots@tmpa=\dimen268
+\c@pgfplots@coordindex=\count294
+\c@pgfplots@scanlineindex=\count295
+ (/usr/share/texmf-dist/tex/generic/pgfplots/sys/pgfplotssysgeneric.code.tex)) (/usr/share/texmf-dist/tex/generic/pgfplots/libs/pgfplotslibrary.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_loader.code.tex (/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex)) (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststructure.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststructureext.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsarray.code.tex
+\c@pgfplotsarray@tmp=\count296
+) (/usr/share/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsmatrix.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstableshared.code.tex
+\c@pgfplotstable@counta=\count297
+\t@pgfplotstable@a=\toks46
+) (/usr/share/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsdeque.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.data.code.tex)) (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.verb.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/libs/pgflibrarypgfplots.surfshading.code.tex
+\c@pgfplotslibrarysurf@no=\count298
+ (/usr/share/texmf-dist/tex/generic/pgfplots/sys/pgflibrarypgfplots.surfshading.pgfsys-pdftex.def))) (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotscolormap.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotscolor.code.tex)) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotsstackedplots.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotsplothandlers.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplothandler.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplotimage.code.tex))) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.scaling.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotscoordprocessing.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.errorbars.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.markers.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotsticks.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.paths.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex (/usr/share/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.tex
+\pgfdecoratedcompleteddistance=\dimen269
+\pgfdecoratedremainingdistance=\dimen270
+\pgfdecoratedinputsegmentcompleteddistance=\dimen271
+\pgfdecoratedinputsegmentremainingdistance=\dimen272
+\pgf@decorate@distancetomove=\dimen273
+\pgf@decorate@repeatstate=\count299
+\pgfdecorationsegmentamplitude=\dimen274
+\pgfdecorationsegmentlength=\dimen275
 )
 \tikz@lib@dec@box=\box64
-) (/usr/share/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.tex)) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfadings.code.tex
+) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.code.tex (/usr/share/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathmorphing.code.tex)) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing.code.tex (/usr/share/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.tex))
+\pgfplots@numplots=\count300
+\pgfplots@xmin@reg=\dimen276
+\pgfplots@xmax@reg=\dimen277
+\pgfplots@ymin@reg=\dimen278
+\pgfplots@ymax@reg=\dimen279
+\pgfplots@zmin@reg=\dimen280
+\pgfplots@zmax@reg=\dimen281
+) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
+File: tikzlibraryplotmarks.code.tex 2020/12/01 v3.1.7a (3.1.7a)
+ (/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
+File: pgflibraryplotmarks.code.tex 2020/12/01 v3.1.7a (3.1.7a)
+))) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfadings.code.tex
 File: tikzlibraryfadings.code.tex 2020/12/01 v3.1.7a (3.1.7a)
  (/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryfadings.code.tex
 File: pgflibraryfadings.code.tex 2020/12/01 v3.1.7a (3.1.7a)
@@ -460,22 +488,22 @@ File: pgflibraryfadings.code.tex 2020/12/01 v3.1.7a (3.1.7a)
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 ) (/usr/share/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count295
+\lst@mode=\count301
 \lst@gtempboxa=\box65
-\lst@token=\toks43
-\lst@length=\count296
-\lst@currlwidth=\dimen275
-\lst@column=\count297
-\lst@pos=\count298
-\lst@lostspace=\dimen276
-\lst@width=\dimen277
-\lst@newlines=\count299
-\lst@lineno=\count300
-\lst@maxwidth=\dimen278
+\lst@token=\toks47
+\lst@length=\count302
+\lst@currlwidth=\dimen282
+\lst@column=\count303
+\lst@pos=\count304
+\lst@lostspace=\dimen283
+\lst@width=\dimen284
+\lst@newlines=\count305
+\lst@lineno=\count306
+\lst@maxwidth=\dimen285
  (/usr/share/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
-\c@lstnumber=\count301
-\lst@skipnumbers=\count302
+\c@lstnumber=\count307
+\lst@skipnumbers=\count308
 \lst@framebox=\box66
 ) (/usr/share/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2020/03/24 1.8d listings configuration
@@ -485,47 +513,47 @@ Package: listings 2020/03/24 1.8d (Carsten Heinz)
 Package: caption 2020/10/26 v3.5g Customizing captions (AR)
  (/usr/share/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
-\captionmargin=\dimen279
-\captionmargin@=\dimen280
-\captionwidth=\dimen281
-\caption@tempdima=\dimen282
-\caption@indent=\dimen283
-\caption@parindent=\dimen284
-\caption@hangindent=\dimen285
+\captionmargin=\dimen286
+\captionmargin@=\dimen287
+\captionwidth=\dimen288
+\caption@tempdima=\dimen289
+\caption@indent=\dimen290
+\caption@parindent=\dimen291
+\caption@hangindent=\dimen292
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count303
-\c@continuedfloat=\count304
+\c@caption@flags=\count309
+\c@continuedfloat=\count310
 Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
 )
-\c@nalg=\count305
+\c@nalg=\count311
  (/usr/share/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count306
+\etb@tempcnta=\count312
 )
-LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 101.
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 106.
  (/usr/share/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 ) (/usr/share/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2020-09-24 L3 backend support: PDF output (pdfTeX)
-\l__kernel_color_stack_int=\count307
+\l__kernel_color_stack_int=\count313
 \l__pdf_internal_box=\box67
 ) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux))
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 101.
-LaTeX Font Info:    ... okay on input line 101.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 106.
+LaTeX Font Info:    ... okay on input line 106.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -563,41 +591,43 @@ LaTeX Font Info:    ... okay on input line 101.
 
 (/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count308
-\scratchdimen=\dimen286
+\scratchcounter=\count314
+\scratchdimen=\dimen293
 \scratchbox=\box68
-\nofMPsegments=\count309
-\nofMParguments=\count310
-\everyMPshowfont=\toks44
-\MPscratchCnt=\count311
-\MPscratchDim=\dimen287
-\MPnumerator=\count312
-\makeMPintoPDFobject=\count313
-\everyMPtoPDFconversion=\toks45
+\nofMPsegments=\count315
+\nofMParguments=\count316
+\everyMPshowfont=\toks48
+\MPscratchCnt=\count317
+\MPscratchDim=\dimen294
+\MPnumerator=\count318
+\makeMPintoPDFobject=\count319
+\everyMPtoPDFconversion=\toks49
 ) (/usr/share/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
  (/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-LaTeX Info: Redefining \microtypecontext on input line 101.
+LaTeX Info: Redefining \microtypecontext on input line 106.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `basictext'.
-LaTeX Info: Redefining \showhyphens on input line 101.
+LaTeX Info: Redefining \showhyphens on input line 106.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
  (/usr/share/texmf-dist/tex/latex/microtype/mt-ptm.cfg
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
-\c@lstlisting=\count314
+Package pgfplots notification 'compat/show suggested version=true': you might benefit from \pgfplotsset{compat=1.17} (current compat level: 1.9).
+
+\c@lstlisting=\count320
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
- [1
+[1
 
 
 
@@ -779,28 +809,133 @@ Chapter 3.
 
 
 
-]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/pipeline.tex)) [30] [31] [32
+]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/pipeline.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex
 
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
+/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.84 \end{axis}
+               
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `tikz@color'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.84 \end{axis}
+               
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.84 \end{axis}
+               
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `tikz@color'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.84 \end{axis}
+               
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.84 \end{axis}
+               
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `tikz@color'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.84 \end{axis}
+               
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.84 \end{axis}
+               
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `tikz@color'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.84 \end{axis}
+               
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [30] [31]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [32]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [33])) [34] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
 Chapter 4.
-) [33
-
-
-] [34
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
-Chapter 5.
 ) [35
 
 
+
 ] [36
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
+Chapter 5.
+) [37
+
+
+] [38
 
 ]
 No file mt07.tex.
 No file mt08.tex.
 (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-glossar.tex
 Appendix A.
-[37
+[39
 
 
 
@@ -812,23 +947,23 @@ Appendix A.
 
 
 
-]) [38] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
+]) [40] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
 \tf@lof=\write5
-) [39
+) [41
 
 
 
-] [40
+] [42
 
 
 
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot [41
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot [43
 
 
 
 ])
 \tf@lot=\write6
-) [42] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl [43
+) [44] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl [45
 
 
 
@@ -849,24 +984,24 @@ Overfull \hbox (16.53606pt too wide) in paragraph at lines 100--106
 \OT1/pcr/m/n/12 map-[]mean-[]average-[]precision-[]for-[]object-[]detection-[]45c121a31173$\OT1/ptm/m/n/12 (-20) , 
  []
 
-[44] [45] [46])) [47] [48
+[46] [47] [48])) [49] [50
 
 
 
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
 Here is how much of TeX's memory you used:
- 20901 strings out of 479383
- 387222 string characters out of 5875830
- 704716 words of memory out of 5000000
- 37349 multiletter control sequences out of 15000+600000
+ 30826 strings out of 479383
+ 719556 string characters out of 5875830
+ 1165255 words of memory out of 5000000
+ 47153 multiletter control sequences out of 15000+600000
  438766 words of font info for 196 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 80i,11n,85p,939b,1705s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 94i,17n,98p,939b,2190s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (56 pages, 902037 bytes).
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (58 pages, 909389 bytes).
 PDF statistics:
- 295 PDF objects out of 1000 (max. 8388607)
- 193 compressed objects within 2 object streams
+ 301 PDF objects out of 1000 (max. 8388607)
+ 197 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  24198 words of extra memory for PDF output out of 24883 (max. 10000000)
 
