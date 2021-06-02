@@ -210,7 +210,6 @@ config.unet.augment.random_scale = 0.4
 config.unet.augment.rotate = 30
 config.unet.augment.crop_size = 0.7
 config.unet.augment.color_jitter = 0.2
-config.unet.augment.blur = 3
 
 
 # grid

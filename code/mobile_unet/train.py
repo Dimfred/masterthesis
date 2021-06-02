@@ -79,6 +79,17 @@ class BinaryFocalLoss(nn.Module):
         return loss
 
 
+def print_params():
+    from tabulate import tabulate
+
+    pretty = [["LR", config.unet.lr]]
+    pretty += [["BS", config.unet.batch_size]]
+    pretty += [["Scale", config.unet.augment.random_scale]]
+    pretty += [["Rotate", config.unet.augment.rotate]]
+    pretty += [["ColorJitter", config.unet.augment.color_jitter]]
+    print(tabulate(pretty))
+
+
 # %%
 def get_data_loaders(train_files, val_files, img_size=224):
     pad_size = int(1.1 * config.augment.unet.img_params.resize)
@@ -174,8 +185,14 @@ def main():
     lr, run = sys.argv[1:]
     lr, run = float(lr), int(run)
 
+    config.unet.lr = lr
     config.unet.experiment_name = "lr"
     config.unet.experiment_param = f"lr_{lr}"
+
+    ####################################################################################
+    # EXPERIMENT END
+    ####################################################################################
+    print_params()
 
     seed = config.train.seeds[run]
     utils.seed_all(seed)
@@ -220,7 +237,7 @@ def main():
             pretrained=config.unet.pretrained_path,
             width_multiplier=config.unet.width_multiplier,
             scale=config.unet.scale,
-            upsampling=config.unet.upsampling
+            upsampling=config.unet.upsampling,
         )
         if (
             config.unet.checkpoint_path is not None
@@ -242,9 +259,7 @@ def main():
         class DeeplabV3Resnet50(nn.Module):
             def __init__(self, *args, **kwargs):
                 super(DeeplabV3Resnet50, self).__init__()
-                self.model = tv.models.segmentation.deeplabv3_resnet50(
-                    *args, **kwargs
-                )
+                self.model = tv.models.segmentation.deeplabv3_resnet50(*args, **kwargs)
 
             def forward(self, x):
                 x = self.model(x)["out"]
