@@ -470,5 +470,5 @@ config.yolo.experiment_param = (
 
 # whether to perform flip and rotation on the dataset
 config.augment.perform_rotation = True
-config.augment.perform_flip = False
-config.augment.include_merged = False
+config.augment.perform_flip = True
+config.augment.include_merged = True
