@@ -153,7 +153,7 @@ config.unet.upsampling = "transpose"  # transpose, bilinear
 config.unet.scale = True  # use Upsample instead of last deconv
 
 # training
-config.unet.lr = 3e-3  # 3e-4 #0.0025
+config.unet.lr = 0.01
 config.unet.batch_size = 64 if utils.isme() else 64
 config.unet.subdivision = 4 if utils.isme() else 4
 config.unet.valid_batch_size = 24 if utils.isme() else 24
