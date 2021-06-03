@@ -242,7 +242,10 @@ class MobileNetV2_unet(nn.Module):
     def predict(self, img, score_thresh=0.5, tta=False, debug=False, label=None):
         # pad equally left or right, and top or bottom
         img = utils.resize_max_axis(img, config.unet.test_input_size)
+        # orig = img.copy()
         img, y_slice, x_slice = utils.pad_equal(img, config.unet.test_input_size)
+        # WORKS!
+        # assert np.all(orig == img[y_slice, x_slice])
 
         if label is not None:
             label = utils.resize_max_axis(label, config.unet.test_input_size)

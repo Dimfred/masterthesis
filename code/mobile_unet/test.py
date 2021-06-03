@@ -105,14 +105,34 @@ def tps_fps_fns(target, prediction):
 def ffloat(f):
     return "{:.5f}".format(f * 100)
 
+def get_exp_weights():
+    exp_dir = config.unet.experiment_dir
+    ####################################################################################
+    ## LR
+    ####################################################################################
+    exp_base = exp_dir / "lr"
+    exp = lambda val, run: exp_base / f"lr_{val}/run{run}/best.pth"
+
+    weights = []
+    for val in (0.01, 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001):
+        for run in (0, 1, 2):
+            weights.append(exp(val, run))
+
+    return weights
+
+
+
 
 @click.command()
 @click.argument("dataset")
 @click.option("-s", "--score_thresh", type=click.types.FLOAT, default=0.5)
+@click.option("--exp", is_flag=True, default=False)
 @click.option("--tta", is_flag=True, default=False)
 @click.option("--show", is_flag=True, default=False)
-def main(dataset, score_thresh, tta, show):
+def main(dataset, score_thresh, exp, tta, show):
+    exp = True if exp else False
     tta = True if tta else False
+    show = True if show else False
 
     if dataset == "test":
         test_files = utils.list_imgs(config.test_out_dir)
@@ -136,62 +156,73 @@ def main(dataset, score_thresh, tta, show):
     # loaded = torch.load("weights/best.pth")
     # loaded = torch.load("experiments_unet/test/test/run0/best.pth")
     # loaded = torch.load("weights/best_safe_FUCKING_KEEP_IT.pth")
-    loaded = torch.load("weights/best_78miou@608_trained_with_448.pth")
-    model.load_state_dict(loaded)
-    model.to(device)
-    model.eval()
 
-    ious = []
+    if exp:
+        weights = get_exp_weights()
+    else:
+        weights = ["weights/best_78miou@608_trained_with_448.pth"]
 
-    tps, fps, fns = 0, 0, 0
-    with torch.no_grad():
 
-        for img_path in test_files:
-            print(img_path)
 
-            label_path = utils.segmentation_label_from_img(img_path)
-            label = np.load(str(label_path))
-            # label = utils.resize_max_axis(label, config.unet.test_input_size)
+    for weight_path in weights:
+        print(weight_path)
 
-            img = cv.imread(str(img_path), cv.IMREAD_GRAYSCALE)
+        loaded = torch.load(weight_path)
+        model.load_state_dict(loaded)
+        model.to(device)
+        model.eval()
 
-            pred, label = model.predict(
-                img, label=label, score_thresh=score_thresh, tta=tta, debug=show
-            )
+        ious = []
 
-            # metrics
-            iou = calc_iou(label, pred)
-            ious.append(iou)
+        tps, fps, fns = 0, 0, 0
+        with torch.no_grad():
 
-            tps_, fps_, fns_ = tps_fps_fns(label, pred)
-            tps += tps_
-            fps += fps_
-            fns += fns_
+            for img_path in test_files:
+                # print(img_path)
 
-            # DEBUG
-            if show:
-                utils.show(img, label, pred)
+                label_path = utils.segmentation_label_from_img(img_path)
+                label = np.load(str(label_path))
+                # label = utils.resize_max_axis(label, config.unet.test_input_size)
 
-    # print("All:", ious)
+                img = cv.imread(str(img_path), cv.IMREAD_GRAYSCALE)
 
-    miou = np.array(ious).mean()
-    recall = calc_recall(tps, fns)
-    precision = calc_precision(tps, fps)
-    f1 = calc_f1(precision, recall)
+                pred, label = model.predict(
+                    img, label=label, score_thresh=score_thresh, tta=tta, debug=show
+                )
 
-    pretty = [["ds", "input", "TTA", "mIoU", "Precision", "Recall", "F1"]]
-    pretty += [
-        [
-            dataset,
-            config.unet.test_input_size,
-            tta,
-            ffloat(miou),
-            ffloat(precision),
-            ffloat(recall),
-            ffloat(f1),
+                # metrics
+                iou = calc_iou(label, pred)
+                ious.append(iou)
+
+                tps_, fps_, fns_ = tps_fps_fns(label, pred)
+                tps += tps_
+                fps += fps_
+                fns += fns_
+
+                # DEBUG
+                if show:
+                    utils.show(img, label, pred)
+
+        # print("All:", ious)
+
+        miou = np.array(ious).mean()
+        recall = calc_recall(tps, fns)
+        precision = calc_precision(tps, fps)
+        f1 = calc_f1(precision, recall)
+
+        pretty = [["ds", "input", "TTA", "mIoU", "Precision", "Recall", "F1"]]
+        pretty += [
+            [
+                dataset,
+                config.unet.test_input_size,
+                tta,
+                ffloat(miou),
+                ffloat(precision),
+                ffloat(recall),
+                ffloat(f1),
+            ]
         ]
-    ]
-    print(tabulate(pretty))
+        print(tabulate(pretty))
 
 
 def calc_iou(target, prediction):

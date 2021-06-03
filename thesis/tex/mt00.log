@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.21)  1 JUN 2021 18:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.21)  2 JUN 2021 15:30
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -809,133 +809,30 @@ Chapter 3.
 
 
 
-]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/pipeline.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex
-
-/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `'.
-
-See the xcolor package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.84 \end{axis}
-               
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `tikz@color'.
-
-See the xcolor package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.84 \end{axis}
-               
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `'.
-
-See the xcolor package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.84 \end{axis}
-               
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `tikz@color'.
-
-See the xcolor package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.84 \end{axis}
-               
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `'.
-
-See the xcolor package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.84 \end{axis}
-               
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `tikz@color'.
-
-See the xcolor package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.84 \end{axis}
-               
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `'.
-
-See the xcolor package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.84 \end{axis}
-               
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex:84: Package xcolor Error: Undefined color `tikz@color'.
-
-See the xcolor package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.84 \end{axis}
-               
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
+]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/pipeline.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex))
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [30] [31]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [32]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [33])) [34] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
+ [30] [31] [32] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
 Chapter 4.
-) [35
+) [33
 
 
 
-] [36
+] [34
 
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
 Chapter 5.
-) [37
+) [35
 
 
-] [38
+] [36
 
 ]
 No file mt07.tex.
 No file mt08.tex.
 (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-glossar.tex
 Appendix A.
-[39
+[37
 
 
 
@@ -947,23 +844,23 @@ Appendix A.
 
 
 
-]) [40] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
+]) [38] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
 \tf@lof=\write5
-) [41
+) [39
 
 
 
-] [42
+] [40
 
 
 
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot [43
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot [41
 
 
 
 ])
 \tf@lot=\write6
-) [44] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl [45
+) [42] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl [43
 
 
 
@@ -984,24 +881,24 @@ Overfull \hbox (16.53606pt too wide) in paragraph at lines 100--106
 \OT1/pcr/m/n/12 map-[]mean-[]average-[]precision-[]for-[]object-[]detection-[]45c121a31173$\OT1/ptm/m/n/12 (-20) , 
  []
 
-[46] [47] [48])) [49] [50
+[44] [45] [46])) [47] [48
 
 
 
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
 Here is how much of TeX's memory you used:
- 30826 strings out of 479383
- 719556 string characters out of 5875830
- 1165255 words of memory out of 5000000
- 47153 multiletter control sequences out of 15000+600000
+ 30309 strings out of 479383
+ 705486 string characters out of 5875830
+ 1123761 words of memory out of 5000000
+ 46636 multiletter control sequences out of 15000+600000
  438766 words of font info for 196 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 94i,17n,98p,939b,2190s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 94i,11n,98p,939b,1705s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (58 pages, 909389 bytes).
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (56 pages, 902198 bytes).
 PDF statistics:
- 301 PDF objects out of 1000 (max. 8388607)
- 197 compressed objects within 2 object streams
+ 295 PDF objects out of 1000 (max. 8388607)
+ 193 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  24198 words of extra memory for PDF output out of 24883 (max. 10000000)
 

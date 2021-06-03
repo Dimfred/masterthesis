@@ -3,7 +3,8 @@
 import argparse
 import logging
 import os
-from albumentations.core.composition import OneOf
+from albumentations.augmentations.transforms import PadIfNeeded, RandomScale
+from albumentations.core.composition import Compose, OneOf
 
 import numpy as np
 import pandas as pd
@@ -92,52 +93,175 @@ def print_params():
 
 # %%
 def get_data_loaders(train_files, val_files, img_size=224):
-    pad_size = int(1.1 * config.augment.unet.img_params.resize)
-    # crop_size = int(config.unet.augment.crop_size * pad_size)
-    crop_size = int(
-        config.unet.augment.crop_size * config.augment.unet.img_params.resize
-    )
+    if config.unet.augment.aug == "all":
+        pad_size = int(1.2 * config.augment.unet.img_params.resize)
+        # crop_size = int(config.unet.augment.crop_size * pad_size)
+        crop_size = int(
+            config.unet.augment.crop_size * config.augment.unet.img_params.resize
+        )
 
-    # print(pad_size, img_size)
-    # fmt:off
-    train_transform = A.Compose([
-        # SafeRotate!
-        # rotation
-        A.PadIfNeeded(
-            # min_width=800,
-            # min_height=800,
-            min_width=config.augment.unet.img_params.resize,
-            min_height=config.augment.unet.img_params.resize,
-            border_mode=cv.BORDER_CONSTANT,
-            value=pad_value,
-            mask_value=mask_value,
+        # fmt:off
+        train_transform = A.Compose([
+            # either pad only or pad for rotation such that it is safe and nothing
+            # disappears
+            A.ColorJitter(
+                brightness=config.unet.augment.color_jitter,
+                contrast=config.unet.augment.color_jitter,
+                saturation=config.unet.augment.color_jitter,
+                hue=config.unet.augment.color_jitter,
+                p=0.5
+            ),
+            A.OneOf([
+                A.Compose([
+                    A.PadIfNeeded(
+                        min_width=pad_size,
+                        min_height=pad_size,
+                        border_mode=cv.BORDER_CONSTANT,
+                        value=pad_value,
+                        mask_value=mask_value,
+                    ),
+                    A.Rotate(
+                        limit=config.unet.augment.rotate,
+                        border_mode=cv.BORDER_CONSTANT,
+                        value=pad_value,
+                        mask_value=mask_value,
+                    ),
+                ], p=0.5),
+                A.PadIfNeeded(
+                    min_width=config.augment.unet.img_params.resize,
+                    min_height=config.augment.unet.img_params.resize,
+                    border_mode=cv.BORDER_CONSTANT,
+                    value=pad_value,
+                    mask_value=mask_value,
+                    always_apply=True
+                ),
+            ],
             always_apply=True
-        ),
-        # A.Rotate(
-        #     limit=config.unet.augment.rotate,
-        #     border_mode=cv.BORDER_CONSTANT,
-        #     value=pad_value,
-        #     mask_value=mask_value,
-        #     p=0.5
-        # ),
-        # A.RandomCrop(
-        #     width=crop_size,
-        #     height=crop_size,
-        #     p=0.5,
-        # ),
-        # A.ColorJitter(
-        #     brightness=config.unet.augment.color_jitter,
-        #     contrast=config.unet.augment.color_jitter,
-        #     saturation=config.unet.augment.color_jitter,
-        #     hue=config.unet.augment.color_jitter,
-        #     p=0.5
-        # ),
-        A.Resize(
-            width=img_size,
-            height=img_size,
+            ),
+            A.RandomCrop(
+                width=crop_size,
+                height=crop_size,
+                p=0.5,
+            ),
+            # sometimes pad such that the aspect ratio is not broke after cropping
+            A.PadIfNeeded(
+                min_width=config.augmnet.unet.img_params.resize,
+                min_height=config.augmnet.unet.img_params.resize,
+                border_mode=cv.BORDER_CONSTANT,
+                value=pad_value,
+                mask_value=mask_value,
+                p=0.5
+            ),
+            A.Resize(
+                width=img_size,
+                height=img_size,
+                always_apply=True
+            ),
+        ])
+    elif config.unet.augment.aug == "rot":
+        pad_size = int(1.2 * config.augment.unet.img_params.resize)
+        # fmt:off
+        train_transform = A.Compose([
+            A.OneOf([
+                A.Compose([
+                    A.PadIfNeeded(
+                        min_width=pad_size,
+                        min_height=pad_size,
+                        border_mode=cv.BORDER_CONSTANT,
+                        value=pad_value,
+                        mask_value=mask_value,
+                    ),
+                    A.Rotate(
+                        limit=config.unet.augment.rotate,
+                        border_mode=cv.BORDER_CONSTANT,
+                        value=pad_value,
+                        mask_value=mask_value,
+                    ),
+                ], p=0.5),
+                A.PadIfNeeded(
+                    min_width=config.augment.unet.img_params.resize,
+                    min_height=config.augment.unet.img_params.resize,
+                    border_mode=cv.BORDER_CONSTANT,
+                    value=pad_value,
+                    mask_value=mask_value,
+                    always_apply=True
+                ),
+            ],
             always_apply=True
-        ),
-    ])
+            ),
+            A.Resize(
+                width=img_size,
+                height=img_size,
+                always_apply=True
+            ),
+        ])
+    elif config.unet.augment.aug == "scale":
+        train_transform = A.Compose([
+            A.PadIfNeeded(
+                min_width=config.augment.unet.img_params.resize,
+                min_height=config.augment.unet.img_params.resize,
+                border_mode=cv.BORDER_CONSTANT,
+                value=pad_value,
+                mask_value=mask_value,
+                always_apply=True
+            ),
+            A.RandomScale(
+                scale_limit=config.unet.augment.random_scale,
+                p=0.5
+            ),
+            A.Resize(
+                width=img_size,
+                height=img_size,
+                always_apply=True
+            ),
+        ])
+    elif config.unet.augment.aug == "crop":
+        crop_size = int(
+            config.unet.augment.crop_size * config.augment.unet.img_params.resize
+        )
+        train_transform = A.Compose([
+            A.PadIfNeeded(
+                min_width=config.augment.unet.img_params.resize,
+                min_height=config.augment.unet.img_params.resize,
+                border_mode=cv.BORDER_CONSTANT,
+                value=pad_value,
+                mask_value=mask_value,
+                always_apply=True
+            ),
+            A.RandomCrop(
+                width=crop_size,
+                height=crop_size,
+                p=0.5,
+            ),
+            A.Resize(
+                width=img_size,
+                height=img_size,
+                always_apply=True
+            ),
+        ])
+    elif config.unet.augment.aug == "color":
+        train_transform = A.Compose([
+            A.PadIfNeeded(
+                min_width=config.augment.unet.img_params.resize,
+                min_height=config.augment.unet.img_params.resize,
+                border_mode=cv.BORDER_CONSTANT,
+                value=pad_value,
+                mask_value=mask_value,
+                always_apply=True
+            ),
+            A.ColorJitter(
+                brightness=config.unet.augment.color_jitter,
+                contrast=config.unet.augment.color_jitter,
+                saturation=config.unet.augment.color_jitter,
+                hue=config.unet.augment.color_jitter,
+                p=0.5
+            ),
+            A.Resize(
+                width=img_size,
+                height=img_size,
+                always_apply=True
+            ),
+        ])
 
     valid_transform = A.Compose([
         A.PadIfNeeded(
@@ -182,12 +306,41 @@ def main():
     ####################################################################################
     # LR EXPERIMENT
     ####################################################################################
-    lr, run = sys.argv[1:]
-    lr, run = float(lr), int(run)
+    # lr, run = sys.argv[1:]
+    # lr, run = float(lr), int(run)
 
-    config.unet.lr = lr
-    config.unet.experiment_name = "lr"
-    config.unet.experiment_param = f"lr_{lr}"
+    # config.unet.lr = lr
+    # config.unet.experiment_name = "lr"
+    # config.unet.experiment_param = f"lr_{lr}"
+
+    ####################################################################################
+    # OFFLINE AUG EXPERIMENT
+    ####################################################################################
+    run = int(sys.argv[1])
+
+    config.unet.experiment_name = "offline_aug"
+    config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
+
+    ####################################################################################
+    # AUGMENTATION EXPERIMENT
+    ####################################################################################
+    # aug, param, run = sys.argv[1:]
+    # config.unet.augment.aug = aug
+    # if aug == "rot":
+    #     config.unet.augment.rotate = int(param)
+    # elif aug == "scale":
+    #     config.unet.augment.random_scale = float(param)
+    # elif aug == "crop":
+    #     config.unet.augment.crop_size = float(param)
+    # elif aug == "color":
+    #     config.unet.augment.color_jitter = float(param)
+    # else:
+    #     raise ValueError(f"Unknown aug: '{aug}'")
+
+    ####################################################################################
+    # GRID EXPERIMENT
+    ####################################################################################
+
 
     ####################################################################################
     # EXPERIMENT END

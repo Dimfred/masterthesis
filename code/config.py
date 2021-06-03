@@ -145,7 +145,7 @@ config.unet = EasyDict()
 # net
 config.unet.n_classes = 2
 config.unet.input_size = 224 if utils.isme() else 352  # 448  # 448 #224 #608 #416 #288
-config.unet.test_input_size = 448  # 448, 480, 512, 544, 576, 608, 640, 672, 704
+config.unet.test_input_size = 352  # 448, 480, 512, 544, 576, 608, 640, 672, 704
 config.unet.channels = 3
 config.unet.width_multiplier = 1.0
 config.unet.architecture = "v2"  # v2, v3, unet
@@ -205,9 +205,9 @@ config.unet.experiment_param = "test"
 
 # online aug
 config.unet.augment = EasyDict()
-
-config.unet.augment.random_scale = 0.4
+config.unet.augment.aug = "all"
 config.unet.augment.rotate = 30
+config.unet.augment.random_scale = 0.4
 config.unet.augment.crop_size = 0.7
 config.unet.augment.color_jitter = 0.2
 
