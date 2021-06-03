@@ -191,18 +191,15 @@ def get_data_loaders(train_files, val_files, img_size=224):
                         value=pad_value,
                         mask_value=mask_value,
                     ),
-                ], p=0.5),
+                ]),
                 A.PadIfNeeded(
                     min_width=config.augment.unet.img_params.resize,
                     min_height=config.augment.unet.img_params.resize,
                     border_mode=cv.BORDER_CONSTANT,
                     value=pad_value,
                     mask_value=mask_value,
-                    always_apply=True
                 ),
-            ],
-            always_apply=True
-            ),
+            ], p=1.0),
             A.Resize(
                 width=img_size,
                 height=img_size,
@@ -332,27 +329,28 @@ def main():
     ####################################################################################
     # OFFLINE AUG EXPERIMENT
     ####################################################################################
-    config.unet.augment.aug = "none"
-    run = int(sys.argv[1])
+    # config.unet.augment.aug = "none"
+    # run = int(sys.argv[1])
 
-    config.unet.experiment_name = "offline_aug"
-    config.unet.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
+    # config.unet.experiment_name = "offline_aug"
+    # config.unet.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
     ####################################################################################
     # AUGMENTATION EXPERIMENT
     ####################################################################################
-    # aug, param, run = sys.argv[1:]
-    # config.unet.augment.aug = aug
-    # if aug == "rot":
-    #     config.unet.augment.rotate = int(param)
-    # elif aug == "scale":
-    #     config.unet.augment.random_scale = float(param)
-    # elif aug == "crop":
-    #     config.unet.augment.crop_size = float(param)
-    # elif aug == "color":
-    #     config.unet.augment.color_jitter = float(param)
-    # else:
-    #     raise ValueError(f"Unknown aug: '{aug}'")
+    aug, param, run = sys.argv[1:]
+    run = int(run)
+    config.unet.augment.aug = aug
+    if aug == "rot":
+        config.unet.augment.rotate = int(param)
+    elif aug == "scale":
+        config.unet.augment.random_scale = float(param)
+    elif aug == "crop":
+        config.unet.augment.crop_size = float(param)
+    elif aug == "color":
+        config.unet.augment.color_jitter = float(param)
+    else:
+        raise ValueError(f"Unknown aug: '{aug}'")
 
     ####################################################################################
     # GRID EXPERIMENT

@@ -105,22 +105,43 @@ def tps_fps_fns(target, prediction):
 def ffloat(f):
     return "{:.5f}".format(f * 100)
 
+
 def get_exp_weights():
     exp_dir = config.unet.experiment_dir
     ####################################################################################
     ## LR
     ####################################################################################
-    exp_base = exp_dir / "lr"
-    exp = lambda val, run: exp_base / f"lr_{val}/run{run}/best.pth"
+    # exp_base = exp_dir / "lr"
+    # exp = lambda val, run: exp_base / f"lr_{val}/run{run}/best.pth"
+
+    # weights = []
+    # for val in (0.01, 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001):
+    #     for run in (0, 1, 2):
+    #         weights.append(exp(val, run))
+
+    ####################################################################################
+    ## OFFLINE AUG
+    ####################################################################################
+    exp_base = exp_dir / "offline_aug"
+    exp = (
+        lambda p, f, r, run: exp_base / f"offaug_P{p}_F{f}_R{r}/run{run}/best.pth"
+    )
 
     weights = []
-    for val in (0.01, 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001):
+    for p, f, r in (
+        # (0, 0, 0),
+        # (0, 0, 1),
+        # (0, 1, 0),
+        # (0, 1, 1),
+        # (1, 0, 0),
+        # (1, 0, 1),
+        # (1, 1, 0),
+        (1, 1, 1),
+    ):
         for run in (0, 1, 2):
-            weights.append(exp(val, run))
+            weights.append(exp(p, f, r, run))
 
     return weights
-
-
 
 
 @click.command()
@@ -152,7 +173,6 @@ def main(dataset, score_thresh, exp, tta, show):
         scale=config.unet.scale,
     )
 
-
     if exp:
         weights = get_exp_weights()
     else:
@@ -163,8 +183,6 @@ def main(dataset, score_thresh, exp, tta, show):
         w = "experiments_unet/lr/lr_0.01/run2/best.pth"
         # w = "weights/best_78miou@608_trained_with_448.pth"
         weights = [w]
-
-
 
     for weight_path in weights:
         print(weight_path)
