@@ -149,6 +149,9 @@ class Trainer:
                 if self.early_stopping_counter >= self.early_stopping:
                     done = True
 
+        with open(self.experiment.results, "w") as f:
+            print(self.best_f1, file=f)
+
     def on_nan_or_zero(self, inputs, labels):
         self.model.eval()
 
