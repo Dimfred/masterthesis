@@ -58,7 +58,7 @@ class Trainer:
 
         # runtime
         self.step_counter = 0
-        self.early_stopping = 1000
+        self.early_stopping = 1500
         self.early_stopping_counter = 0
         self.max_steps = max_steps
 

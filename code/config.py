@@ -159,7 +159,7 @@ config.unet.subdivision = 4 if utils.isme() else 8
 config.unet.valid_batch_size = 24 if utils.isme() else 24
 config.unet.valid_subdivision = 1 if utils.isme() else 1
 # minibatch_size = batch_size / subdivision
-config.unet.max_steps = 2000
+config.unet.max_steps = 3000
 config.unet.burn_in = 100
 config.unet.lr_decay_fixed = [1000, 1500]
 
