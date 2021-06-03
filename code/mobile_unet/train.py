@@ -3,8 +3,6 @@
 import argparse
 import logging
 import os
-from albumentations.augmentations.transforms import PadIfNeeded, RandomScale
-from albumentations.core.composition import Compose, OneOf
 
 import numpy as np
 import pandas as pd
@@ -113,30 +111,30 @@ def get_data_loaders(train_files, val_files, img_size=224):
             ),
             A.OneOf([
                 A.Compose([
+                        A.PadIfNeeded(
+                            min_width=pad_size,
+                            min_height=pad_size,
+                            border_mode=cv.BORDER_CONSTANT,
+                            value=pad_value,
+                            mask_value=mask_value,
+                        ),
+                        A.Rotate(
+                            limit=config.unet.augment.rotate,
+                            border_mode=cv.BORDER_CONSTANT,
+                            value=pad_value,
+                            mask_value=mask_value,
+                        ),
+                    ], p=0.5),
                     A.PadIfNeeded(
-                        min_width=pad_size,
-                        min_height=pad_size,
+                        min_width=config.augment.unet.img_params.resize,
+                        min_height=config.augment.unet.img_params.resize,
                         border_mode=cv.BORDER_CONSTANT,
                         value=pad_value,
                         mask_value=mask_value,
+                        always_apply=True
                     ),
-                    A.Rotate(
-                        limit=config.unet.augment.rotate,
-                        border_mode=cv.BORDER_CONSTANT,
-                        value=pad_value,
-                        mask_value=mask_value,
-                    ),
-                ], p=0.5),
-                A.PadIfNeeded(
-                    min_width=config.augment.unet.img_params.resize,
-                    min_height=config.augment.unet.img_params.resize,
-                    border_mode=cv.BORDER_CONSTANT,
-                    value=pad_value,
-                    mask_value=mask_value,
-                    always_apply=True
-                ),
-            ],
-            always_apply=True
+                ],
+                always_apply=True
             ),
             A.RandomCrop(
                 width=crop_size,
@@ -151,6 +149,22 @@ def get_data_loaders(train_files, val_files, img_size=224):
                 value=pad_value,
                 mask_value=mask_value,
                 p=0.5
+            ),
+            A.Resize(
+                width=img_size,
+                height=img_size,
+                always_apply=True
+            ),
+        ])
+    elif config.unet.augment.aug == "none":
+        train_transform = A.Compose([
+            A.PadIfNeeded(
+                min_width=config.augment.unet.img_params.resize,
+                min_height=config.augment.unet.img_params.resize,
+                border_mode=cv.BORDER_CONSTANT,
+                value=pad_value,
+                mask_value=mask_value,
+                always_apply=True
             ),
             A.Resize(
                 width=img_size,
@@ -316,6 +330,7 @@ def main():
     ####################################################################################
     # OFFLINE AUG EXPERIMENT
     ####################################################################################
+    config.unet.augment.aug = "none"
     run = int(sys.argv[1])
 
     config.unet.experiment_name = "offline_aug"
