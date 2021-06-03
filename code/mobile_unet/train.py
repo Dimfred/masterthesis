@@ -320,21 +320,23 @@ def main():
     ####################################################################################
     # LR EXPERIMENT
     ####################################################################################
-    # lr, run = sys.argv[1:]
-    # lr, run = float(lr), int(run)
+    config.unet.augment.aug = "none"
 
-    # config.unet.lr = lr
-    # config.unet.experiment_name = "lr"
-    # config.unet.experiment_param = f"lr_{lr}"
+    lr, run = sys.argv[1:]
+    lr, run = float(lr), int(run)
+
+    config.unet.lr = lr
+    config.unet.experiment_name = "lr"
+    config.unet.experiment_param = f"lr_{lr}"
 
     ####################################################################################
     # OFFLINE AUG EXPERIMENT
     ####################################################################################
-    config.unet.augment.aug = "none"
-    run = int(sys.argv[1])
+    # config.unet.augment.aug = "none"
+    # run = int(sys.argv[1])
 
-    config.unet.experiment_name = "offline_aug"
-    config.unet.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
+    # config.unet.experiment_name = "offline_aug"
+    # config.unet.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
     ####################################################################################
     # AUGMENTATION EXPERIMENT
