@@ -152,15 +152,17 @@ def main(dataset, score_thresh, exp, tta, show):
         scale=config.unet.scale,
     )
 
-    # loaded = torch.load("weights/non_transfer_best.pth")
-    # loaded = torch.load("weights/best.pth")
-    # loaded = torch.load("experiments_unet/test/test/run0/best.pth")
-    # loaded = torch.load("weights/best_safe_FUCKING_KEEP_IT.pth")
 
     if exp:
         weights = get_exp_weights()
     else:
-        weights = ["weights/best_78miou@608_trained_with_448.pth"]
+        # loaded = torch.load("weights/non_transfer_best.pth")
+        # loaded = torch.load("weights/best.pth")
+        # loaded = torch.load("experiments_unet/test/test/run0/best.pth")
+        # loaded = torch.load("weights/best_safe_FUCKING_KEEP_IT.pth")
+        w = "experiments_unet/lr/lr_0.01/run2/best.pth"
+        # w = "weights/best_78miou@608_trained_with_448.pth"
+        weights = [w]
 
 
 

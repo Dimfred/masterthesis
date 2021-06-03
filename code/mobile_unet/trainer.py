@@ -176,6 +176,8 @@ class Trainer:
 
         subbatch_size = int(self.batch_size / self.subdivision)
 
+        n_subbatches = np.ceil(len(inputs) / self.subdivision)
+
         total_loss = 0
         with torch.set_grad_enabled(True):
             for subdiv in range(self.subdivision):
@@ -189,7 +191,7 @@ class Trainer:
                 sub_labels = sub_labels.to(self.device)
 
                 pred = self.model(sub_inputs)
-                loss = self.loss(pred, sub_labels) / self.subdivision
+                loss = self.loss(pred, sub_labels) / n_subbatches
                 loss.backward()
                 total_loss += loss.item()
 

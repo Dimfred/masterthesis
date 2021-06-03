@@ -334,7 +334,7 @@ def main():
     run = int(sys.argv[1])
 
     config.unet.experiment_name = "offline_aug"
-    config.yolo.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
+    config.unet.experiment_param = f"offaug_P{int(config.augment.include_merged)}_F{int(config.augment.perform_flip)}_R{int(config.augment.perform_rotation)}"
 
     ####################################################################################
     # AUGMENTATION EXPERIMENT
