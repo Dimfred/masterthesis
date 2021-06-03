@@ -89,13 +89,11 @@ class Trainer:
         while not done:
             for inputs, labels in self.train_ds:
                 self.step_counter += 1
+                self.early_stopping_counter += 1
 
                 if self.step_counter > self.max_steps:
                     done = True
                     break
-
-                if self.step_counter >= 1000:
-                    self.early_stopping_counter += 1
 
                 if self.lr_scheduler is not None:
                     lr = self.lr_scheduler(optimizer, self.step_counter)
@@ -130,6 +128,8 @@ class Trainer:
 
                     # if iou > self.best_iou:
                     if f1 > self.best_f1:
+                        self.early_stopping_counter = 0
+
                         # self.best_iou = iou
                         self.best_f1 = f1
                         self.best_step = self.step_counter
@@ -145,6 +145,9 @@ class Trainer:
                         #             img.transpose((1, 2, 0)),
                         #             np.expand_dims(pred, axis=2),
                         #         )
+
+                if self.early_stopping_counter >= self.early_stopping:
+                    done = True
 
     def on_nan_or_zero(self, inputs, labels):
         self.model.eval()
