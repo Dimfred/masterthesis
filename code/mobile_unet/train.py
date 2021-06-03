@@ -343,12 +343,20 @@ def main():
     config.unet.augment.aug = aug
     if aug == "rot":
         config.unet.augment.rotate = int(param)
+        config.unet.experiment_name = "rotate"
+        config.unet.experiment_param = f"rot_{param}"
     elif aug == "scale":
         config.unet.augment.random_scale = float(param)
+        config.unet.experiment_name = "scale"
+        config.unet.experiment_param = f"scale_{param}"
     elif aug == "crop":
         config.unet.augment.crop_size = float(param)
+        config.unet.experiment_name = "crop"
+        config.unet.experiment_param = f"crop_{param}"
     elif aug == "color":
         config.unet.augment.color_jitter = float(param)
+        config.unet.experiment_name = "color"
+        config.unet.experiment_param = f"color_{param}"
     else:
         raise ValueError(f"Unknown aug: '{aug}'")
 
