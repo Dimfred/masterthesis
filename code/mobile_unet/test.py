@@ -122,24 +122,49 @@ def get_exp_weights():
     ####################################################################################
     ## OFFLINE AUG
     ####################################################################################
-    exp_base = exp_dir / "offline_aug"
-    exp = (
-        lambda p, f, r, run: exp_base / f"offaug_P{p}_F{f}_R{r}/run{run}/best.pth"
-    )
+    # exp_base = exp_dir / "offline_aug"
+    # exp = lambda p, f, r, run: exp_base / f"offaug_P{p}_F{f}_R{r}/run{run}/best.pth"
+
+    # weights = []
+    # for p, f, r in (
+    #     (0, 0, 0),
+    #     (0, 0, 1),
+    #     (0, 1, 0),
+    #     (0, 1, 1),
+    #     (1, 0, 0),
+    #     (1, 0, 1),
+    #     (1, 1, 0),
+    #     (1, 1, 1),
+    # ):
+    #     for run in (0, 1, 2):
+    #         weights.append(exp(p, f, r, run))
+
+    # return weights
+
+    ####################################################################################
+    ## ONLINE AUGS
+    ####################################################################################
+    # exp_base = exp_dir / "rotate"
+    # exp = lambda param, run: exp_base / f"rot_{param}/run{run}/best.pth"
+    # params = (10, 20, 30)
+
+    # exp_base = exp_dir / "scale"
+    # exp = lambda param, run: exp_base / f"scale_{param}/run{run}/best.pth"
+    # params = (0.1, 0.2, 0.3)
+
+    exp_base = exp_dir / "crop"
+    exp = lambda param, run: exp_base / f"crop_{param}/run{run}/best.pth"
+    params = (0.7, 0.8, 0.9)
+    # params = (0.9,)
+
+    # exp_base = exp_dir / "color"
+    # exp = lambda param, run: exp_base / f"color_{param}/run{run}/best.pth"
+    # params = (0.1, 0.2, 0.3)
 
     weights = []
-    for p, f, r in (
-        # (0, 0, 0),
-        # (0, 0, 1),
-        # (0, 1, 0),
-        # (0, 1, 1),
-        # (1, 0, 0),
-        # (1, 0, 1),
-        # (1, 1, 0),
-        (1, 1, 1),
-    ):
+    for param in params:
         for run in (0, 1, 2):
-            weights.append(exp(p, f, r, run))
+            weights.append(exp(param, run))
 
     return weights
 

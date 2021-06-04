@@ -86,6 +86,7 @@ def print_params():
     pretty += [["Scale", config.unet.augment.random_scale]]
     pretty += [["Rotate", config.unet.augment.rotate]]
     pretty += [["ColorJitter", config.unet.augment.color_jitter]]
+    pretty += [["Experiemtn", config.unet.experiment_param]]
     print(tabulate(pretty))
 
 
@@ -111,30 +112,31 @@ def get_data_loaders(train_files, val_files, img_size=224):
             ),
             A.OneOf([
                 A.Compose([
-                        A.PadIfNeeded(
-                            min_width=pad_size,
-                            min_height=pad_size,
-                            border_mode=cv.BORDER_CONSTANT,
-                            value=pad_value,
-                            mask_value=mask_value,
-                        ),
-                        A.Rotate(
-                            limit=config.unet.augment.rotate,
-                            border_mode=cv.BORDER_CONSTANT,
-                            value=pad_value,
-                            mask_value=mask_value,
-                        ),
-                    ], p=0.5),
                     A.PadIfNeeded(
-                        min_width=config.augment.unet.img_params.resize,
-                        min_height=config.augment.unet.img_params.resize,
+                        min_width=pad_size,
+                        min_height=pad_size,
                         border_mode=cv.BORDER_CONSTANT,
                         value=pad_value,
                         mask_value=mask_value,
-                        always_apply=True
+                        p=1.0
                     ),
-                ],
-                always_apply=True
+                    A.Rotate(
+                        limit=config.unet.augment.rotate,
+                        border_mode=cv.BORDER_CONSTANT,
+                        value=pad_value,
+                        mask_value=mask_value,
+                        p=1.0
+                    ),
+                ]),
+                A.PadIfNeeded(
+                    min_width=config.augment.unet.img_params.resize,
+                    min_height=config.augment.unet.img_params.resize,
+                    border_mode=cv.BORDER_CONSTANT,
+                    value=pad_value,
+                    mask_value=mask_value,
+                    p=1.0
+                )],
+                p=1.0
             ),
             A.RandomCrop(
                 width=crop_size,
@@ -338,35 +340,62 @@ def main():
     ####################################################################################
     # AUGMENTATION EXPERIMENT
     ####################################################################################
-    aug, param, run = sys.argv[1:]
-    run = int(run)
-    config.unet.augment.aug = aug
-    if aug == "rot":
-        config.unet.augment.rotate = int(param)
-        config.unet.experiment_name = "rotate"
-        config.unet.experiment_param = f"rot_{param}"
-    elif aug == "scale":
-        config.unet.augment.random_scale = float(param)
-        config.unet.experiment_name = "scale"
-        config.unet.experiment_param = f"scale_{param}"
-    elif aug == "crop":
-        config.unet.augment.crop_size = float(param)
-        config.unet.experiment_name = "crop"
-        config.unet.experiment_param = f"crop_{param}"
-    elif aug == "color":
-        config.unet.augment.color_jitter = float(param)
-        config.unet.experiment_name = "color"
-        config.unet.experiment_param = f"color_{param}"
-    else:
-        raise ValueError(f"Unknown aug: '{aug}'")
+    # aug, param, run = sys.argv[1:]
+    # run = int(run)
+    # config.unet.augment.aug = aug
+    # if aug == "rot":
+    #     config.unet.augment.rotate = int(param)
+    #     config.unet.experiment_name = "rotate"
+    #     config.unet.experiment_param = f"rot_{param}"
+    # elif aug == "scale":
+    #     config.unet.augment.random_scale = float(param)
+    #     config.unet.experiment_name = "scale"
+    #     config.unet.experiment_param = f"scale_{param}"
+    # elif aug == "crop":
+    #     config.unet.augment.crop_size = float(param)
+    #     config.unet.experiment_name = "crop"
+    #     config.unet.experiment_param = f"crop_{param}"
+    # elif aug == "color":
+    #     config.unet.augment.color_jitter = float(param)
+    #     config.unet.experiment_name = "color"
+    #     config.unet.experiment_param = f"color_{param}"
+    # else:
+    #     raise ValueError(f"Unknown aug: '{aug}'")
 
     ####################################################################################
-    # GRID EXPERIMENT
+    ## GRID EXPERIMENT
     ####################################################################################
+    config.unet.augmentation.aug = "all"
 
+    bs, loss, lr, run = sys.argv[1:]
+    bs, lr, run = int(run), float(lr), int(bs)
+
+    fit_batch = 8 if not utils.isme() else 4
+
+    config.unet.batch_size = bs
+    config.unet.subdivision = int(bs / fit_batch)
+    config.unet.lr = lr
+
+    if loss == "focal2_0.1":
+        loss_type = "focal"
+        config.unet.focal_alpha = 0.1
+        config.unet.focal_gamma = 2
+    elif loss == "focal2_0.4":
+        loss_type = "focal"
+        config.unet.focal_alpha = 0.4
+        config.unet.focal_gamma = 2
+    elif loss == "focal2_0.8":
+        loss_type = "focal"
+        config.unet.focal_alpha = 0.8
+        config.unet.focal_gamma = 2
+    elif loss == "dice":
+        loss_type = "dice"
+
+    config.unet.experiment_name = "grid"
+    config.unet.experiment_param = f"grid_bs_{bs}_loss_{loss}_lr_{lr}"
 
     ####################################################################################
-    # EXPERIMENT END
+    ## EXPERIMENT END
     ####################################################################################
     print_params()
 
@@ -383,31 +412,24 @@ def main():
     ##########
     ## LOSS ##
     ##########
-    loss_type = "focal"
-    loss = losses.focal.FocalLoss(
-        config.unet.focal_alpha,
-        config.unet.focal_gamma,
-        config.unet.focal_reduction,
-    )
+    if loss_type == "focal":
+        # loss_type = "focal"
+        loss = losses.focal.FocalLoss(
+            config.unet.focal_alpha,
+            config.unet.focal_gamma,
+            config.unet.focal_reduction,
+        )
+    elif loss_type == "dice":
+        # loss_type = "dice"
+        loss = losses.dice.DiceLoss()
 
-    # loss_type = "dice"
-    # loss = dice_loss()
-    # loss = losses.dice.DiceLoss()
-
-    # loss_type = "binfocal"
-    # loss = BinaryFocalLoss(
-    #     config.unet.focal_alpha,
-    #     config.unet.focal_gamma,
-    #     config.unet.focal_reduction,
-    # )
-
-    ##########
-    ### V2 ###
-    ##########
+    ####################################################################################
+    ## MobileNet V2
+    ####################################################################################
 
     if config.unet.architecture == "v2":
         model = MobileNetV2_unet(
-            n_classes=config.unet.n_classes if loss_type == "focal" else 1,
+            n_classes=config.unet.n_classes if (loss_type == "focal" or loss_type == "dice") else 1,
             input_size=config.unet.input_size,
             channels=config.unet.channels,
             pretrained=config.unet.pretrained_path,
@@ -423,13 +445,17 @@ def main():
             print("Preloaded checkpoing path.")
             model.load_state_dict(torch.load(str(config.unet.checkpoint_path)))
 
-    ##########
-    ### V3 ###
-    ##########
+    ####################################################################################
+    ## MobileNet V3
+    ####################################################################################
     if config.unet.architecture == "v3":
         # model = fastseg.MobileV3Large(num_classes=2)
         model = fastseg.MobileV3Large(num_classes=2).from_pretrained()
 
+
+    ####################################################################################
+    ## UNet
+    ####################################################################################
     if config.unet.architecture == "unet":
 
         class DeeplabV3Resnet50(nn.Module):
@@ -445,9 +471,14 @@ def main():
 
     model.to(device)
 
-    ###############
-    ## OPTIMIZER ##
-    ###############
+    ####################################################################################
+    ## MODEL END
+    ####################################################################################
+
+
+    ####################################################################################
+    ## OPTIMIZER
+    ####################################################################################
     optimizer = optimizers.Adam(
         model.parameters(),
         lr=config.unet.lr,

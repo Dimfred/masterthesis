@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.21)  2 JUN 2021 15:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Arch Linux) (preloaded format=pdflatex 2021.5.21)  4 JUN 2021 13:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -783,56 +783,66 @@ LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
  [24]
 Package acronym Info: Label `acro:WBF' newly defined as it shall be overridden
 although it is yet undefined on input line 251.
- [25]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/hypergraph.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/metrics.tex
+ [25]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex
+<imgs/instance_vs_semantic_seg.png, id=159, 1222.5675pt x 333.245pt>
+File: imgs/instance_vs_semantic_seg.png Graphic file (type png)
+<use imgs/instance_vs_semantic_seg.png>
+Package pdftex.def Info: imgs/instance_vs_semantic_seg.png  used on input line 12.
+(pdftex.def)             Requested size: 455.24408pt x 124.08687pt.
+) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/hypergraph.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/metrics.tex
 Package acronym Info: Label `acro:TP' newly defined as it shall be overridden
 although it is yet undefined on input line 33.
 Package acronym Info: Label `acro:FP' newly defined as it shall be overridden
 although it is yet undefined on input line 33.
 Package acronym Info: Label `acro:FN' newly defined as it shall be overridden
 although it is yet undefined on input line 33.
- [26]
+
+Underfull \vbox (badness 1742) has occurred while \output is active []
+
+ [26] [27 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/instance_vs_semantic_seg.png (PNG copy)>]
 Package acronym Info: Label `acro:AP' newly defined as it shall be overridden
 although it is yet undefined on input line 70.
- [27]
-<imgs/pr_curve.png, id=165, 1509.64pt x 748.7975pt>
+<imgs/pr_curve.png, id=166, 1509.64pt x 748.7975pt>
 File: imgs/pr_curve.png Graphic file (type png)
 <use imgs/pr_curve.png>
 Package pdftex.def Info: imgs/pr_curve.png  used on input line 85.
 (pdftex.def)             Requested size: 312.9803pt x 155.24118pt.
 Package acronym Info: Label `acro:mAP' newly defined as it shall be overridden
 although it is yet undefined on input line 93.
+ [28]
 Package acronym Info: Label `acro:mIoU' newly defined as it shall be overridden
 although it is yet undefined on input line 103.
-)) [28 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pr_curve.png (PNG copy)>] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
-Chapter 3.
-(/home/dimfred/workspaces/uni/ma/thesis/tex/main/data.tex [29
+)) [29 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pr_curve.png (PNG copy)>] [30
 
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
+Chapter 3.
+(/home/dimfred/workspaces/uni/ma/thesis/tex/main/data.tex [31
 
 
 ]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/pipeline.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex))
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [30] [31] [32] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
+ [32] [33] [34] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
 Chapter 4.
-) [33
-
-
-
-] [34
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
-Chapter 5.
 ) [35
 
 
+
 ] [36
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
+Chapter 5.
+) [37
+
+
+] [38
 
 ]
 No file mt07.tex.
 No file mt08.tex.
 (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-glossar.tex
 Appendix A.
-[37
+[39
 
 
 
@@ -844,23 +854,25 @@ Appendix A.
 
 
 
-]) [38] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
+]) [40] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof)
 \tf@lof=\write5
-) [39
+)
+Underfull \vbox (badness 2512) has occurred while \output is active []
+
+ [41
 
 
 
-] [40
+] [42] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot [43
 
 
 
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot [41
 
 
 
 ])
 \tf@lot=\write6
-) [42] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl [43
+) [44] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl [45
 
 
 
@@ -877,28 +889,55 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-Overfull \hbox (16.53606pt too wide) in paragraph at lines 100--106
+Overfull \hbox (16.53606pt too wide) in paragraph at lines 105--111
 \OT1/pcr/m/n/12 map-[]mean-[]average-[]precision-[]for-[]object-[]detection-[]45c121a31173$\OT1/ptm/m/n/12 (-20) , 
  []
 
-[44] [45] [46])) [47] [48
+[46]
+
+/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl:172: Package inputenc Error: Keyboard character used is undefined
+(inputenc)                in inputencoding `latin1'.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.172 ...ock Single stage instance segmentation â€
+                                                  ” a review.
+You need to provide a definition with \DeclareInputText 
+or \DeclareInputMath before using this key.
+
+
+/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl:172: Package inputenc Error: Keyboard character used is undefined
+(inputenc)                in inputencoding `latin1'.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.172 ...ck Single stage instance segmentation â€”
+                                                   a review.
+You need to provide a definition with \DeclareInputText 
+or \DeclareInputMath before using this key.
+
+[47] [48])) [49] [50
 
 
 
 ] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt07.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt08.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
 Here is how much of TeX's memory you used:
- 30309 strings out of 479383
- 705486 string characters out of 5875830
- 1123761 words of memory out of 5000000
- 46636 multiletter control sequences out of 15000+600000
+ 30324 strings out of 479383
+ 705837 string characters out of 5875830
+ 1123815 words of memory out of 5000000
+ 46650 multiletter control sequences out of 15000+600000
  438766 words of font info for 196 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  94i,11n,98p,939b,1705s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (56 pages, 902198 bytes).
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (58 pages, 1073287 bytes).
 PDF statistics:
- 295 PDF objects out of 1000 (max. 8388607)
- 193 compressed objects within 2 object streams
+ 302 PDF objects out of 1000 (max. 8388607)
+ 197 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 24198 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 24203 words of extra memory for PDF output out of 24883 (max. 10000000)
 

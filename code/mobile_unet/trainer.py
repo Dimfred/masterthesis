@@ -95,6 +95,10 @@ class Trainer:
                     done = True
                     break
 
+                if self.early_stopping_counter >= self.early_stopping:
+                    done = True
+                    break
+
                 if self.lr_scheduler is not None:
                     lr = self.lr_scheduler(optimizer, self.step_counter)
                     # print(lr)
@@ -111,9 +115,9 @@ class Trainer:
                     vloss, preds = self.valid_step(vinputs, vlabels)
                     vlabels = vlabels.cpu().numpy()
 
-                    if self.loss_type == "focal":
+                    if self.loss_type == "focal" or self.loss_type == "dice":
                         preds = [nn.Softmax(dim=1)(pred) for pred in preds]
-                    else: # binfocal / dice?
+                    else: # binfocal
                         preds = [nn.Sigmoid()(pred) for pred in preds]
 
                     preds = [pred.cpu().numpy() for pred in preds]
@@ -146,8 +150,6 @@ class Trainer:
                         #             np.expand_dims(pred, axis=2),
                         #         )
 
-                if self.early_stopping_counter >= self.early_stopping:
-                    done = True
 
         with open(self.experiment.results, "w") as f:
             print(self.best_f1, file=f)

@@ -44,26 +44,27 @@
 \contentsline {subsubsection}{Loss}{22}{}%
 \contentsline {subsubsection}{Non-Maximum Suppression (NMS)}{24}{}%
 \contentsline {section}{\numberline {2.7}Segmentation}{26}{}%
-\contentsline {section}{\numberline {2.8}Hypergraphs}{26}{}%
-\contentsline {section}{\numberline {2.9}Metrics}{26}{}%
-\contentsline {subsubsection}{True Positive, False Positive, False Negative}{26}{}%
+\contentsline {subsection}{\numberline {2.7.1}MobileNetV2-UNet}{26}{}%
+\contentsline {section}{\numberline {2.8}Hypergraphs}{27}{}%
+\contentsline {section}{\numberline {2.9}Metrics}{27}{}%
+\contentsline {subsubsection}{True Positive, False Positive, False Negative}{27}{}%
 \contentsline {subsubsection}{Precision}{27}{}%
-\contentsline {subsubsection}{Recall}{27}{}%
-\contentsline {subsubsection}{F1-Score}{27}{}%
-\contentsline {subsubsection}{Average Precision (AP)}{27}{}%
+\contentsline {subsubsection}{Recall}{28}{}%
+\contentsline {subsubsection}{F1-Score}{28}{}%
+\contentsline {subsubsection}{Average Precision (AP)}{28}{}%
 \contentsline {subsubsection}{Mean Average Precision (mAP)}{28}{}%
-\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{28}{}%
-\contentsline {chapter}{\numberline {3}Material and Methods}{29}{}%
-\contentsline {section}{\numberline {3.1}Data}{29}{}%
-\contentsline {subsubsection}{Labeling}{29}{}%
-\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{30}{}%
-\contentsline {subsection}{\numberline {3.2.1}General Overview}{30}{}%
-\contentsline {section}{\numberline {3.3}Training}{32}{}%
-\contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{32}{}%
-\contentsline {subsubsection}{MobileNetV2-UNet}{32}{}%
-\contentsline {chapter}{\numberline {4}Results}{33}{}%
-\contentsline {chapter}{\numberline {5}Discussion}{35}{}%
-\contentsline {chapter}{\numberline {A}Abbrevations}{37}{}%
-\contentsline {chapter}{List of Figures}{39}{}%
-\contentsline {chapter}{List of Tables}{41}{}%
-\contentsline {chapter}{Bibliography}{43}{}%
+\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{29}{}%
+\contentsline {chapter}{\numberline {3}Material and Methods}{31}{}%
+\contentsline {section}{\numberline {3.1}Data}{31}{}%
+\contentsline {subsubsection}{Labeling}{31}{}%
+\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{32}{}%
+\contentsline {subsection}{\numberline {3.2.1}General Overview}{32}{}%
+\contentsline {section}{\numberline {3.3}Training}{34}{}%
+\contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{34}{}%
+\contentsline {subsubsection}{MobileNetV2-UNet}{34}{}%
+\contentsline {chapter}{\numberline {4}Results}{35}{}%
+\contentsline {chapter}{\numberline {5}Discussion}{37}{}%
+\contentsline {chapter}{\numberline {A}Abbrevations}{39}{}%
+\contentsline {chapter}{List of Figures}{41}{}%
+\contentsline {chapter}{List of Tables}{43}{}%
+\contentsline {chapter}{Bibliography}{45}{}%

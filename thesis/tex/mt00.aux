@@ -378,46 +378,52 @@
 \acronymused{WBF}
 \acronymused{IoU}
 \acronymused{TTA}
+\citation{semantic_segmentation}
+\citation{mask_rcnn}
+\citation{instance_vs_semantic_fig}
+\citation{instance_vs_semantic_fig}
+\citation{mobile_unet}
+\citation{unet}
 \newlabel{eq:confidence_rescale}{{2.34}{26}}
 \newlabel{eq:confidence_rescale_not_used}{{2.35}{26}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.7}Segmentation}{26}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.8}Hypergraphs}{26}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.9}Metrics}{26}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{True Positive, False Positive, False Negative}{26}{}\protected@file@percent }
+\newlabel{sec:segmentation}{{2.7}{26}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7.1}MobileNetV2-UNet}{26}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces The difference between object detection, semantic segmentation and instance segmentation. In object detection the instance with a rough estimate (bounding box) is predicted, in semantic segmentation a segmentation mask for an object is predicted without considering the underlying instance and in instance segmentation the instance as well as a segmentation mask for an object is predicted. \cite  {instance_vs_semantic_fig}\relax }}{27}{}\protected@file@percent }
+\newlabel{fig:instance_vs_semantic}{{2.6}{27}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.8}Hypergraphs}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.9}Metrics}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{True Positive, False Positive, False Negative}{27}{}\protected@file@percent }
 \AC@undonewlabel{acro:TP}
-\newlabel{acro:TP}{{2.9}{26}}
+\newlabel{acro:TP}{{2.9}{27}}
 \acronymused{TP}
 \AC@undonewlabel{acro:FP}
-\newlabel{acro:FP}{{2.9}{26}}
+\newlabel{acro:FP}{{2.9}{27}}
 \acronymused{FP}
 \AC@undonewlabel{acro:FN}
-\newlabel{acro:FN}{{2.9}{26}}
+\newlabel{acro:FN}{{2.9}{27}}
 \acronymused{FN}
 \acronymused{TP}
 \acronymused{FP}
 \acronymused{FN}
-\citation{map_pascal_voc}
-\citation{map_coco}
 \acronymused{TP}
 \@writefile{toc}{\contentsline {subsubsection}{Precision}{27}{}\protected@file@percent }
 \acronymused{TP}
-\newlabel{eq:precision}{{2.36}{27}}
-\@writefile{toc}{\contentsline {subsubsection}{Recall}{27}{}\protected@file@percent }
-\newlabel{eq:recall}{{2.37}{27}}
-\@writefile{toc}{\contentsline {subsubsection}{F1-Score}{27}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Average Precision (AP)}{27}{}\protected@file@percent }
+\citation{map_pascal_voc}
+\citation{map_coco}
+\citation{map_article}
+\citation{map_article}
+\newlabel{eq:precision}{{2.36}{28}}
+\@writefile{toc}{\contentsline {subsubsection}{Recall}{28}{}\protected@file@percent }
+\newlabel{eq:recall}{{2.37}{28}}
+\@writefile{toc}{\contentsline {subsubsection}{F1-Score}{28}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Average Precision (AP)}{28}{}\protected@file@percent }
 \AC@undonewlabel{acro:AP}
-\newlabel{acro:AP}{{2.9}{27}}
+\newlabel{acro:AP}{{2.9}{28}}
 \acronymused{AP}
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{AP}
-\citation{map_article}
-\citation{map_article}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite  {map_article}. The \ac {AP} is the area under the curve.\relax }}{28}{}\protected@file@percent }
-\acronymused{IoU}
-\acronymused{AP}
-\newlabel{fig:pr_curve}{{2.6}{28}}
 \newlabel{eq:ap}{{2.39}{28}}
 \@writefile{toc}{\contentsline {subsubsection}{Mean Average Precision (mAP)}{28}{}\protected@file@percent }
 \acronymused{AP}
@@ -425,52 +431,56 @@
 \newlabel{acro:mAP}{{2.9}{28}}
 \acronymused{mAP}
 \acronymused{AP}
-\newlabel{eq:map}{{2.40}{28}}
-\@writefile{toc}{\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{28}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite  {map_article}. The \ac {AP} is the area under the curve.\relax }}{29}{}\protected@file@percent }
+\acronymused{IoU}
+\acronymused{AP}
+\newlabel{fig:pr_curve}{{2.7}{29}}
+\newlabel{eq:map}{{2.40}{29}}
+\@writefile{toc}{\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{29}{}\protected@file@percent }
 \AC@undonewlabel{acro:mIoU}
-\newlabel{acro:mIoU}{{2.9}{28}}
+\newlabel{acro:mIoU}{{2.9}{29}}
 \acronymused{mIoU}
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{mIoU}
-\newlabel{eq:miou}{{2.41}{28}}
+\newlabel{eq:miou}{{2.41}{29}}
 \citation{labelme}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Material and Methods}{29}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Material and Methods}{31}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Data}{29}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Data}{31}{}\protected@file@percent }
 \acronymused{ECD}
 \acronymused{ECC}
 \acronymused{ECC}
 \acronymused{ECD}
 \acronymused{ECD}
-\@writefile{toc}{\contentsline {subsubsection}{Labeling}{29}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Labeling}{31}{}\protected@file@percent }
 \acronymused{YOLOv4}
 \acronymused{YOLOv4}
 \acronymused{ECC}
 \citation{canny_edge}
 \citation{opencv}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Amount of images of \acp {ECD} used in this thesis shown with their underlying background and whether they are annotated or not. Further, the train / validation / test split of the different image types is shown. While this might seem like a big split for test, the number of bounding boxes included in the test set is way smaller and is shown in table 3.2\hbox {}\relax }}{30}{}\protected@file@percent }
-\newlabel{tab:data_distribution}{{3.1}{30}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Amount of images of \acp {ECD} used in this thesis shown with their underlying background and whether they are annotated or not. Further, the train / validation / test split of the different image types is shown. While this might seem like a big split for test, the number of bounding boxes included in the test set is way smaller and is shown in table 3.2\hbox {}\relax }}{32}{}\protected@file@percent }
+\newlabel{tab:data_distribution}{{3.1}{32}}
 \acronymused{ECD}
 \acronymused{ECD}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{30}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}General Overview}{30}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces The classes present in this thesis with their major class which is an \ac {ECC} and alternatively their orientation. Furthermore, the total amount of classes is shown and the train, valid, test ratio.\relax }}{31}{}\protected@file@percent }
-\newlabel{tab:yolo_classes}{{3.2}{31}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{32}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}General Overview}{32}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces The classes present in this thesis with their major class which is an \ac {ECC} and alternatively their orientation. Furthermore, the total amount of classes is shown and the train, valid, test ratio.\relax }}{33}{}\protected@file@percent }
+\newlabel{tab:yolo_classes}{{3.2}{33}}
 \acronymused{ECC}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Training}{32}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{32}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{MobileNetV2-UNet}{32}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Results}{33}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Training}{34}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{34}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{MobileNetV2-UNet}{34}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Results}{35}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Discussion}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Discussion}{37}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@input{mt07.aux}
 \@input{mt08.aux}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Abbrevations}{37}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Abbrevations}{39}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newacro{ANN}[\AC@hyperlink{ANN}{ANN}]{Artificial Neural Network}
@@ -514,4 +524,4 @@
 \@input{mt-lof.aux}
 \@input{mt-lot.aux}
 \@input{mt-lit.aux}
-\gdef \@abspage@last{56}
+\gdef \@abspage@last{58}

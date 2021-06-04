@@ -91,6 +91,11 @@ K.~He, X.~Zhang, S.~Ren, and J.~Sun.
 \newblock Deep residual learning for image recognition.
 \newblock {\em CoRR}, abs/1512.03385, 2015.
 
+\bibitem[He17]{mask_rcnn}
+K.~He, G.~Gkioxari, P.~Doll{\'{a}}r, and R.~Girshick.
+\newblock Mask {R-CNN}.
+\newblock {\em CoRR}, abs/1703.06870, 2017.
+
 \bibitem[Hua16]{densenet}
 G.~Huang, Z.~Liu, and K.~Weinberger.
 \newblock Densely connected convolutional networks.
@@ -121,6 +126,12 @@ S.~Jadon.
 \newblock A survey of loss functions for semantic segmentation.
 \newblock {\em 2020 IEEE Conference on Computational Intelligence in
   Bioinformatics and Computational Biology (CIBCB)}, Oct 2020.
+
+\bibitem[Jin20]{mobile_unet}
+J.~Jing, Z.~Wang, M.~R\"{a}tsch, and H.~Zhang.
+\newblock Mobile-unet: An efficient convolutional neural network for fabric
+  defect detection.
+\newblock {\em Textile Research Journal}, page 004051752092860, May 2020.
 
 \bibitem[Jun21]{map_pascal_voc}
 W.~Jun.
@@ -156,6 +167,13 @@ T.~Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Doll.
 \newblock Focal loss for dense object detection.
 \newblock {\em CoRR}, abs/1708.02002, 2017.
 
+\bibitem[Liu]{instance_vs_semantic_fig}
+P.~Liu.
+\newblock Single stage instance segmentation — a review.
+\newblock
+  \url{https://towardsdatascience.com/single-stage-instance-segmentation-a-review-1eeb66e0cc49}.
+\newblock Accessed: 04.06.2021.
+
 \bibitem[Liu15]{ssd}
 W.~Liu, D.~Anguelov, D.~Erhan, C.~Szegedy, S.~Reed, C.~Fu, and A.~Berg.
 \newblock {SSD:} single shot multibox detector.
@@ -181,6 +199,10 @@ N.~Moshkov, B.~Mathe, A.~Kertesz-Farkas, R.~Hollandi, and P.~Horvath.
 \newblock Test-time augmentation for deep learning-based cell segmentation on
   microscopy images.
 \newblock {\em Scientific Reports}, 10(1), March 2020.
+
+\bibitem[Net21]{semantic_segmentation}
+P.~Neto.
+\newblock Deep learning based analysis of prostate cancer from mp-mri, 2021.
 
 \bibitem[Pri20]{sliding_window_satelite}
 M.~Pritt.
@@ -217,6 +239,11 @@ S.~Rezatofighi, N.~Tsoi, J.~Gwak, A.~Sadeghian, I.~Reid, and S.~Savarese.
 \newblock Generalized intersection over union: {A} metric and {A} loss for
   bounding box regression.
 \newblock {\em CoRR}, abs/1902.09630, 2019.
+
+\bibitem[Ron15]{unet}
+O.~Ronneberger, P., and T.~Brox.
+\newblock U-net: Convolutional networks for biomedical image segmentation,
+  2015.
 
 \bibitem[Ros58]{perceptron}
 F.~Rosenblatt.

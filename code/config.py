@@ -155,7 +155,7 @@ config.unet.scale = True  # use Upsample instead of last deconv
 # training
 config.unet.lr = 0.01
 config.unet.batch_size = 64 if utils.isme() else 64
-config.unet.subdivision = 4 if utils.isme() else 8
+config.unet.subdivision = 16 if utils.isme() else 8
 config.unet.valid_batch_size = 24 if utils.isme() else 24
 config.unet.valid_subdivision = 1 if utils.isme() else 1
 # minibatch_size = batch_size / subdivision
@@ -197,20 +197,13 @@ config.unet.experiment_dir = Path("experiments_unet")
 config.unet.experiment_name = "test"
 config.unet.experiment_param = "test"
 
-# lr init SGD
-
-# lr init AMSGrad
-
-# offline aug
-
 # online aug
 config.unet.augment = EasyDict()
 config.unet.augment.aug = "all"
-config.unet.augment.rotate = 30
-config.unet.augment.random_scale = 0.4
-config.unet.augment.crop_size = 0.7
+config.unet.augment.rotate = 20
+config.unet.augment.random_scale = None
+config.unet.augment.crop_size = 0.9
 config.unet.augment.color_jitter = 0.2
-
 
 # grid
 
