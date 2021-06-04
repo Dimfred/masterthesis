@@ -189,7 +189,7 @@ config.unet.weights = (
 )
 
 # utility
-config.unet.n_workers = 8 if utils.isme() else 8
+config.unet.n_workers = 1 if utils.isme() else 8
 
 # experiments
 config.unet.experiment_dir = Path("experiments_unet")

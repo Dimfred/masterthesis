@@ -72,6 +72,7 @@ class MaskDataset(Dataset):
             # simg = np.uint8(img)
             # smask = np.expand_dims(np.uint8(mask * 255), axis=2)
             # simg_mask = np.uint8(mask * img)
+            # utils.show(simg, smask, simg_mask)
             # utils.show(orig, simg, smask, simg_mask)
             pass
 

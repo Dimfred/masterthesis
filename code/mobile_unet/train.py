@@ -145,8 +145,8 @@ def get_data_loaders(train_files, val_files, img_size=224):
             ),
             # sometimes pad such that the aspect ratio is not broke after cropping
             A.PadIfNeeded(
-                min_width=config.augmnet.unet.img_params.resize,
-                min_height=config.augmnet.unet.img_params.resize,
+                min_width=config.augment.unet.img_params.resize,
+                min_height=config.augment.unet.img_params.resize,
                 border_mode=cv.BORDER_CONSTANT,
                 value=pad_value,
                 mask_value=mask_value,
@@ -365,10 +365,10 @@ def main():
     ####################################################################################
     ## GRID EXPERIMENT
     ####################################################################################
-    config.unet.augmentation.aug = "all"
+    config.unet.augment.aug = "all"
 
     bs, loss, lr, run = sys.argv[1:]
-    bs, lr, run = int(run), float(lr), int(bs)
+    bs, lr, run = int(bs), float(lr), int(run)
 
     fit_batch = 8 if not utils.isme() else 4
 
@@ -390,6 +390,8 @@ def main():
         config.unet.focal_gamma = 2
     elif loss == "dice":
         loss_type = "dice"
+    else:
+        raise ValueError(f"Unknown loss: '{loss}'")
 
     config.unet.experiment_name = "grid"
     config.unet.experiment_param = f"grid_bs_{bs}_loss_{loss}_lr_{lr}"
