@@ -76,7 +76,7 @@ def show_bboxes(img, bboxes, orig=None, type_="gt", classes=None, others=[], gt=
 
     for bbox in bboxes:
         x1, y1, x2, y2 = bbox.abs
-        cv.rectangle(cimg, (x1, y1), (x2, y2), (0, 0, 255), 1)
+        cv.rectangle(cimg, (x1, y1), (x2, y2), (0, 0, 255), 2)
         if classes is not None:
             cls_name = classes[bbox.label]
             cv.putText(
@@ -86,7 +86,7 @@ def show_bboxes(img, bboxes, orig=None, type_="gt", classes=None, others=[], gt=
                 cv.FONT_HERSHEY_SIMPLEX,
                 0.5,
                 (0, 0, 255),
-                1,
+                2,
             )
 
     if gt is not None:
@@ -99,6 +99,8 @@ def show_bboxes(img, bboxes, orig=None, type_="gt", classes=None, others=[], gt=
         show(cimg, *others)
     else:
         show(cimg, orig, *others)
+
+    return cimg
 
 
 def resize(img, width: int = None, height: int = None, interpolation=cv.INTER_CUBIC):

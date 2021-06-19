@@ -105,7 +105,7 @@
 \newlabel{eq:ce}{{2.7}{9}}
 \acronymused{MLP}
 \citation{dl}
-\citation{lecun_lenet}
+\citation{mnetv1}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Activation Functions}{10}{}\protected@file@percent }
 \newlabel{sec:activation_functions}{{2.3.2}{10}}
 \acronymused{ANN}
@@ -125,13 +125,13 @@
 \acronymused{LReLU}
 \acronymused{LReLU}
 \acronymused{ReLU}
+\citation{lecun_lenet}
 \citation{inception}
 \citation{resnet}
 \citation{densenet}
 \citation{dl}
-\citation{conv_arithmetic}
-\citation{conv_arithmetic}
-\citation{dl}
+\@writefile{toc}{\contentsline {subsubsection}{ReLU6}{11}{}\protected@file@percent }
+\acronymused{ReLU}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Convolutional Neural Networks}{11}{}\protected@file@percent }
 \acronymused{MLP}
 \acronymused{ANN}
@@ -139,36 +139,37 @@
 \acronymused{CNN}
 \@writefile{toc}{\contentsline {subsubsection}{Convolutional Layer}{11}{}\protected@file@percent }
 \acronymused{CNN}
-\newlabel{eq:conv}{{2.14}{11}}
-\@writefile{toc}{\contentsline {subsubsection}{Pooling Layer}{11}{}\protected@file@percent }
-\newlabel{sec:max_pooling}{{2.3.3}{11}}
-\acronymused{CNN}
+\newlabel{eq:conv}{{2.15}{11}}
+\citation{conv_arithmetic}
+\citation{conv_arithmetic}
+\citation{dl}
 \citation{batchnorm}
-\citation{augmentation_survey}
-\citation{copypaste_aug}
-\citation{albumentation}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Example convolution of a 4x4 input (blue) with a 3x3 kernel (dark blue) and a stride of 1, resulting in a 2x2 output (cyan) \cite  {conv_arithmetic}\relax }}{12}{}\protected@file@percent }
 \newlabel{fig:conv_example}{{2.3}{12}}
+\@writefile{toc}{\contentsline {subsubsection}{Pooling Layer}{12}{}\protected@file@percent }
+\newlabel{sec:max_pooling}{{2.3.3}{12}}
+\acronymused{CNN}
 \@writefile{toc}{\contentsline {subsubsection}{Fully-Connected Layer}{12}{}\protected@file@percent }
 \acronymused{FC}
 \acronymused{CNN}
 \acronymused{FC}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Batch Normalization}{12}{}\protected@file@percent }
-\acronymused{ReLU}
-\acronymused{ReLU}
-\AC@undonewlabel{acro:BatchNorm}
-\newlabel{acro:BatchNorm}{{2.3.4}{12}}
-\acronymused{BatchNorm}
-\acronymused{ANN}
-\acronymused{BatchNorm}
+\citation{augmentation_survey}
+\citation{copypaste_aug}
+\citation{albumentation}
 \citation{albumentation}
 \citation{albumentation}
 \citation{tta_segmentation_cells}
 \citation{when_tta_works}
 \citation{when_tta_works}
 \citation{yolov1}
-\@writefile{lot}{\contentsline {table}{\numberline {2.7}{\ignorespaces A listing of the different augmentations used from albumentations \cite  {albumentation} in this thesis and the target domain where they were applied to.\relax }}{13}{}\protected@file@percent }
-\newlabel{tab:used_augmentations}{{2.7}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Batch Normalization}{13}{}\protected@file@percent }
+\acronymused{ReLU}
+\acronymused{ReLU}
+\AC@undonewlabel{acro:BatchNorm}
+\newlabel{acro:BatchNorm}{{2.3.4}{13}}
+\acronymused{BatchNorm}
+\acronymused{ANN}
+\acronymused{BatchNorm}
 \@writefile{toc}{\contentsline {section}{\numberline {2.4}Data Augmentation}{13}{}\protected@file@percent }
 \acronymused{CNN}
 \acronymused{ECD}
@@ -177,41 +178,32 @@
 \acronymused{TTA}
 \acronymused{TTA}
 \citation{sliding_window_satelite}
-\citation{rcnn}
-\citation{selective_search}
-\citation{bbox_regressor}
+\@writefile{lot}{\contentsline {table}{\numberline {2.7}{\ignorespaces A listing of the different augmentations used from albumentations \cite  {albumentation} in this thesis and the target domain where they were applied to.\relax }}{14}{}\protected@file@percent }
+\newlabel{tab:used_augmentations}{{2.7}{14}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.5}Object Detection}{14}{}\protected@file@percent }
 \newlabel{sec:object_detection}{{2.5}{14}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{14}{}\protected@file@percent }
 \newlabel{sec:hostory_obj_detection}{{2.5.1}{14}}
 \@writefile{toc}{\contentsline {subsubsection}{Sliding Window}{14}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{14}{}\protected@file@percent }
-\AC@undonewlabel{acro:R-CNN}
-\newlabel{acro:R-CNN}{{2.5.1}{14}}
-\acronymused{R-CNN}
+\citation{rcnn}
+\citation{selective_search}
+\citation{bbox_regressor}
 \citation{selective_search}
 \citation{selective_search}
 \citation{fast_rcnn}
-\citation{rcnn}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Example of results obtained through the Selective Search algorithm (top) with increasing region scale from left to right and bounding boxes drawn around those regions (bottom). Selective Search produces sub-segmentations of objects in an image, considering size, color, texture and shape based features for the grouping of the regions. \cite  {selective_search}\relax }}{15}{}\protected@file@percent }
 \newlabel{fig:selective_search}{{2.4}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{15}{}\protected@file@percent }
+\AC@undonewlabel{acro:R-CNN}
+\newlabel{acro:R-CNN}{{2.5.1}{15}}
+\acronymused{R-CNN}
 \acronymused{CNN}
 \acronymused{CNN}
 \AC@undonewlabel{acro:SVM}
 \newlabel{acro:SVM}{{2.5.1}{15}}
 \acronymused{SVM}
 \acronymused{SVM}
-\@writefile{toc}{\contentsline {subsubsection}{Fast R-CNN}{15}{}\protected@file@percent }
-\acronymused{R-CNN}
-\acronymused{R-CNN}
-\acronymused{R-CNN}
-\acronymused{CNN}
-\acronymused{CNN}
-\AC@undonewlabel{acro:RoI}
-\newlabel{acro:RoI}{{2.5.1}{15}}
-\acronymused{RoI}
-\acronymused{CNN}
-\acronymused{RoI}
+\citation{rcnn}
 \citation{faster_rcnn}
 \citation{yolov1}
 \citation{ssd}
@@ -226,8 +218,17 @@
 \citation{fcos}
 \citation{center_net}
 \citation{yolov4}
-\citation{giou}
-\citation{iou}
+\@writefile{toc}{\contentsline {subsubsection}{Fast R-CNN}{16}{}\protected@file@percent }
+\acronymused{R-CNN}
+\acronymused{R-CNN}
+\acronymused{R-CNN}
+\acronymused{CNN}
+\acronymused{CNN}
+\AC@undonewlabel{acro:RoI}
+\newlabel{acro:RoI}{{2.5.1}{16}}
+\acronymused{RoI}
+\acronymused{CNN}
+\acronymused{RoI}
 \acronymused{RoI}
 \acronymused{SVM}
 \acronymused{R-CNN}
@@ -249,19 +250,20 @@
 \AC@undonewlabel{acro:IoU}
 \newlabel{acro:IoU}{{2.5.1}{16}}
 \acronymused{IoU}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Intersection Over Union (IoU)}{16}{}\protected@file@percent }
-\acronymused{IoU}
-\acronymused{IoU}
+\citation{giou}
+\citation{iou}
 \citation{iou}
 \citation{giou}
 \citation{eiou}
 \citation{diou}
-\citation{eiou}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Intersection Over Union (IoU)}{17}{}\protected@file@percent }
+\acronymused{IoU}
+\acronymused{IoU}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}IoU Based Loss Functions}{17}{}\protected@file@percent }
 \acronymused{MSE}
 \acronymused{IoU}
 \acronymused{IoU}
-\newlabel{eq:iou_loss}{{2.17}{17}}
+\newlabel{eq:iou_loss}{{2.18}{17}}
 \AC@undonewlabel{acro:GIoU}
 \newlabel{acro:GIoU}{{2.5.3}{17}}
 \acronymused{GIoU}
@@ -270,54 +272,51 @@
 \acronymused{GIoU}
 \acronymused{IoU}
 \acronymused{GIoU}
-\newlabel{eq:giou_loss}{{2.18}{17}}
+\newlabel{eq:giou_loss}{{2.19}{17}}
 \acronymused{IoU}
-\AC@undonewlabel{acro:DIoU}
-\newlabel{acro:DIoU}{{2.5.3}{17}}
-\acronymused{DIoU}
-\AC@undonewlabel{acro:CIoU}
-\newlabel{acro:CIoU}{{2.5.3}{17}}
-\acronymused{CIoU}
-\acronymused{GIoU}
-\acronymused{DIoU}
-\newlabel{eq:diou_loss}{{2.19}{17}}
-\acronymused{DIoU}
-\acronymused{CIoU}
-\acronymused{CIoU}
+\citation{eiou}
 \citation{eiou}
 \citation{yolov1}
 \citation{yolov4}
 \citation{yolov4_tiny}
-\newlabel{eq:ciou_loss}{{2.20}{18}}
-\newlabel{eq:ciou_nu}{{2.21}{18}}
-\newlabel{eq:ciou_alpha}{{2.22}{18}}
+\AC@undonewlabel{acro:DIoU}
+\newlabel{acro:DIoU}{{2.5.3}{18}}
+\acronymused{DIoU}
+\AC@undonewlabel{acro:CIoU}
+\newlabel{acro:CIoU}{{2.5.3}{18}}
+\acronymused{CIoU}
+\acronymused{GIoU}
+\acronymused{DIoU}
+\newlabel{eq:diou_loss}{{2.20}{18}}
+\acronymused{DIoU}
+\acronymused{CIoU}
+\acronymused{CIoU}
+\newlabel{eq:ciou_loss}{{2.21}{18}}
+\newlabel{eq:ciou_nu}{{2.22}{18}}
+\newlabel{eq:ciou_alpha}{{2.23}{18}}
 \AC@undonewlabel{acro:EIoU}
 \newlabel{acro:EIoU}{{2.5.3}{18}}
 \acronymused{EIoU}
-\newlabel{eq:eiou_loss}{{2.23}{18}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.6}You Only Look Once (YOLO)}{18}{}\protected@file@percent }
-\acronymused{YOLO}
-\acronymused{YOLO}
-\acronymused{YOLO}
-\AC@undonewlabel{acro:YOLOv4}
-\newlabel{acro:YOLOv4}{{2.6}{18}}
-\acronymused{YOLOv4}
-\acronymused{YOLOv4}
-\@writefile{toc}{\contentsline {subsubsection}{General}{18}{}\protected@file@percent }
-\acronymused{YOLOv4}
+\newlabel{eq:eiou_loss}{{2.24}{18}}
 \citation{batchnorm}
 \citation{yolov4}
 \citation{yolov4}
 \citation{pannet}
 \citation{yolov4_tiny}
+\@writefile{toc}{\contentsline {section}{\numberline {2.6}You Only Look Once (YOLO)}{19}{}\protected@file@percent }
+\newlabel{sec:yolo}{{2.6}{19}}
+\acronymused{YOLO}
+\acronymused{YOLO}
+\acronymused{YOLO}
+\AC@undonewlabel{acro:YOLOv4}
+\newlabel{acro:YOLOv4}{{2.6}{19}}
+\acronymused{YOLOv4}
+\acronymused{YOLOv4}
+\@writefile{toc}{\contentsline {subsubsection}{General}{19}{}\protected@file@percent }
+\acronymused{YOLOv4}
 \@writefile{toc}{\contentsline {subsubsection}{Backbone}{19}{}\protected@file@percent }
 \acronymused{YOLOv4}
 \acronymused{ReLU}
-\@writefile{toc}{\contentsline {subsubsection}{Neck}{19}{}\protected@file@percent }
-\acronymused{YOLOv4}
-\AC@undonewlabel{acro:PANet}
-\newlabel{acro:PANet}{{2.6}{19}}
-\acronymused{PANet}
 \@writefile{lot}{\contentsline {table}{\numberline {2.8}{\ignorespaces The CSPDarknet53Tiny Architecture is a scaled version of the original CSPDarknet53 architecture \cite  {yolov4}. The definition for YOLOConv can be found in table 2.9\hbox {}. MaxPool indicates here the Max Pooling operation as described in sec. 2.3.3\hbox {}. The network is build out of five blocks, the first block reducing the image size and the following blocks building up features. Further, features from three different scales are taken and used as skip connections to the following network.\relax }}{20}{}\protected@file@percent }
 \newlabel{tab:darknet_tiny_arch}{{2.8}{20}}
 \@writefile{lot}{\contentsline {table}{\numberline {2.9}{\ignorespaces Convolutional basic building block in YOLOv4 (YOLOConv). A convolutional layer, followed by a batch normalization layer, followed by a leaky ReLU activation function.\relax }}{20}{}\protected@file@percent }
@@ -325,162 +324,267 @@
 \citation{pannet}
 \citation{pannet}
 \citation{yolov3}
-\@writefile{lot}{\contentsline {table}{\numberline {2.10}{\ignorespaces The PANetTiny architecture which is a scaled version of PANet \cite  {pannet}, which is the decoder in the YOLO network. It takes as inputs the skip connections from the CSPDarknet53Tiny. The network is build by alternating an output branch and an upsampling branch. First, the most lowest skip connection $Skip_L$ from the backbone is convolved and the output fed into the first output layer. Each output layer has again a $3\times 3$ convolution followed by a $1\times 1$ convolution, which form a raw bounding box prediction, fed to the YOLO head. After an output has been processed the previous convolution is again convolved and upsampled to be fed into the next output block. This is done three times in the whole PANetTiny network.\relax }}{21}{}\protected@file@percent }
-\newlabel{tab:panet_tiny_arch}{{2.10}{21}}
+\citation{yolov2}
+\citation{fast_rcnn}
+\citation{faster_rcnn}
+\citation{yolov2}
+\citation{fast_rcnn}
+\citation{faster_rcnn}
+\@writefile{toc}{\contentsline {subsubsection}{Neck}{21}{}\protected@file@percent }
+\acronymused{YOLOv4}
+\AC@undonewlabel{acro:PANet}
+\newlabel{acro:PANet}{{2.6}{21}}
+\acronymused{PANet}
 \@writefile{toc}{\contentsline {subsubsection}{Head}{21}{}\protected@file@percent }
 \acronymused{YOLOv4}
-\citation{yolov2}
-\citation{fast_rcnn}
-\citation{faster_rcnn}
-\citation{yolov2}
-\citation{fast_rcnn}
-\citation{faster_rcnn}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Bounding box calculation in the YOLOv4 network based on a prior anchor box \cite  {yolov2}. The $b_*$ indicate the final prediction, $p_*$ indicate parameters of the prior bounding box and $c_*$ indicate the prior bounding box spatial offset based on the current cell. The final center coordinate offset is predicted non-linearly with a sigmoid function, while the final width and height are predicted linearly, as it is done in \cite  {fast_rcnn} and \cite  {faster_rcnn}.\relax }}{22}{}\protected@file@percent }
-\newlabel{fig:bbox_calculation}{{2.5}{22}}
-\@writefile{toc}{\contentsline {subsubsection}{Loss}{22}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Loss}{21}{}\protected@file@percent }
 \acronymused{YOLO}
+\@writefile{lot}{\contentsline {table}{\numberline {2.10}{\ignorespaces The PANetTiny architecture which is a scaled version of PANet \cite  {pannet}, which is the decoder in the YOLO network. It takes as inputs the skip connections from the CSPDarknet53Tiny. The network is build by alternating an output branch and an upsampling branch. First, the most lowest skip connection $Skip_L$ from the backbone is convolved and the output fed into the first output layer. Each output layer has again a $3\times 3$ convolution followed by a $1\times 1$ convolution, which form a raw bounding box prediction, fed to the YOLO head. After an output has been processed the previous convolution is again convolved and upsampled to be fed into the next output block. This is done three times in the whole PANetTiny network.\relax }}{22}{}\protected@file@percent }
+\newlabel{tab:panet_tiny_arch}{{2.10}{22}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Bounding box calculation in the YOLOv4 network based on a prior anchor box \cite  {yolov2}. The $b_*$ indicate the final prediction, $p_*$ indicate parameters of the prior bounding box and $c_*$ indicate the prior bounding box spatial offset based on the current cell. The final center coordinate offset is predicted non-linearly with a sigmoid function, while the final width and height are predicted linearly, as it is done in \cite  {fast_rcnn} and \cite  {faster_rcnn}.\relax }}{23}{}\protected@file@percent }
+\newlabel{fig:bbox_calculation}{{2.5}{23}}
 \acronymused{IoU}
 \acronymused{YOLOv4}
 \acronymused{CE}
-\newlabel{eq:yolo_lclass}{{2.25}{23}}
+\newlabel{eq:yolo_lclass}{{2.26}{23}}
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{GIoU}
 \acronymused{DIoU}
 \acronymused{CIoU}
 \acronymused{EIoU}
-\newlabel{eq:yolo_lbbox}{{2.26}{23}}
+\citation{diou}
+\citation{soft_nms}
+\newlabel{eq:yolo_lbbox}{{2.27}{24}}
 \acronymused{CE}
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{IoU}
-\newlabel{eq:yolo_lobj}{{2.28}{23}}
-\citation{diou}
-\citation{soft_nms}
-\newlabel{eq:yolo_lnoobj}{{2.29}{24}}
+\newlabel{eq:yolo_lobj}{{2.29}{24}}
+\newlabel{eq:yolo_lnoobj}{{2.30}{24}}
 \acronymused{YOLO}
-\newlabel{eq:yolo_loss}{{2.30}{24}}
+\newlabel{eq:yolo_loss}{{2.31}{24}}
 \@writefile{toc}{\contentsline {subsubsection}{Non-Maximum Suppression (NMS)}{24}{}\protected@file@percent }
 \AC@undonewlabel{acro:NMS}
 \newlabel{acro:NMS}{{2.6}{24}}
 \acronymused{NMS}
-\acronymused{DIoU}
-\acronymused{NMS}
-\acronymused{NMS}
-\acronymused{DIoU}
-\acronymused{NMS}
-\acronymused{DIoU}
-\newlabel{alg1}{{2.1}{24}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}DIoU-NMS Algorithm TODO caption to bottom and format}{24}{}\protected@file@percent }
 \citation{weighted_bbox_fusion}
+\acronymused{DIoU}
+\acronymused{NMS}
+\acronymused{NMS}
+\acronymused{DIoU}
+\acronymused{NMS}
+\acronymused{DIoU}
+\newlabel{alg1}{{2.1}{25}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}DIoU-NMS Algorithm TODO caption to bottom and format}{25}{}\protected@file@percent }
 \AC@undonewlabel{acro:WBF}
 \newlabel{acro:WBF}{{2.6}{25}}
 \acronymused{WBF}
-\acronymused{IoU}
-\acronymused{TTA}
 \citation{semantic_segmentation}
 \citation{mask_rcnn}
+\acronymused{IoU}
+\acronymused{TTA}
+\newlabel{eq:confidence_rescale}{{2.35}{26}}
+\newlabel{eq:confidence_rescale_not_used}{{2.36}{26}}
 \citation{instance_vs_semantic_fig}
 \citation{instance_vs_semantic_fig}
 \citation{mobile_unet}
 \citation{unet}
-\newlabel{eq:confidence_rescale}{{2.34}{26}}
-\newlabel{eq:confidence_rescale_not_used}{{2.35}{26}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.7}Segmentation}{26}{}\protected@file@percent }
-\newlabel{sec:segmentation}{{2.7}{26}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.7.1}MobileNetV2-UNet}{26}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces The difference between object detection, semantic segmentation and instance segmentation. In object detection the instance with a rough estimate (bounding box) is predicted, in semantic segmentation a segmentation mask for an object is predicted without considering the underlying instance and in instance segmentation the instance as well as a segmentation mask for an object is predicted. \cite  {instance_vs_semantic_fig}\relax }}{27}{}\protected@file@percent }
 \newlabel{fig:instance_vs_semantic}{{2.6}{27}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.8}Hypergraphs}{27}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2.9}Metrics}{27}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{True Positive, False Positive, False Negative}{27}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.7}Segmentation}{27}{}\protected@file@percent }
+\newlabel{sec:segmentation}{{2.7}{27}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.8}MobileNetV2-UNet}{27}{}\protected@file@percent }
+\newlabel{sec:mobilenetv2_unet}{{2.8}{27}}
+\acronymused{CNN}
+\citation{mnetv2}
+\citation{mnetv1}
+\citation{unet}
+\acronymused{YOLOv4}
+\@writefile{toc}{\contentsline {subsubsection}{MobileNetV2-UNet backbone}{28}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2.11}{\ignorespaces An inverted residual block transforming from $k$ to $k'$ channels, with stride $s$ and expansion factor $t$.\relax }}{29}{}\protected@file@percent }
+\newlabel{tab:invres_expansion}{{2.11}{29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces The inverted residual block. A $1 \times 1$ convolution with non-linear activation followed by a depthwise separable convolution and a linear $1 \times 1$ convolution with residual connection to the input. The residual connection is here additive, i.e. the input gets added to the output of the linear $1 \times 1$ convolution.\relax }}{29}{}\protected@file@percent }
+\newlabel{fig:inverted_residual}{{2.7}{29}}
+\citation{hypergraph_def}
+\@writefile{lot}{\contentsline {table}{\numberline {2.12}{\ignorespaces MobileNetV2 backbone used in MobileNetV2-UNet. Blocks marked as $Skip_*$ are outputs from the network which are used in the decoder. The parameters above define the configuration of the respective block, $t$ is the expansion factor inside an inverted residual block as defined in 2.11\hbox {}, $k$ is the kernel size for the two standard convolutions used in the backbone, $n$ defines how often that particular block is repeated and $s$ is the stride of a block. Note that if $s = 2$ only the first block has this stride, the others have $s = 1$.\relax }}{30}{}\protected@file@percent }
+\newlabel{tab:mobilenetv2_architecture}{{2.12}{30}}
+\@writefile{toc}{\contentsline {subsubsection}{MobileNetV2-UNet decoder}{30}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.9}Hypergraphs}{30}{}\protected@file@percent }
+\acronymused{ECD}
+\@writefile{lot}{\contentsline {table}{\numberline {2.13}{\ignorespaces MobileNetV2-UNet decoder. The decoder uses transpose convolutions to upsample the input (ConvTranspose) and as the backbone, inverted residuals to process the upsampled input together with the skip connection. The '+' indicates a concatenation along the channel axis. Since the first block in the backbone directly downsamples the input there is no skip connection with the size of the input. Therefore the last layer of the decoder is a upsampling layer, which uses a bilinear upsampling method to increase the size of the prediction to the size of the input. As with the backbone $t$ indicates the expansion size of the inverted residual block, $k$ indicates the used kernel size and $s$ indicates the used stride.\relax }}{31}{}\protected@file@percent }
+\newlabel{tab:mobilenetv2_decoder}{{2.13}{31}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.10}Metrics}{31}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{True Positive, False Positive, False Negative}{31}{}\protected@file@percent }
 \AC@undonewlabel{acro:TP}
-\newlabel{acro:TP}{{2.9}{27}}
+\newlabel{acro:TP}{{2.10}{31}}
 \acronymused{TP}
 \AC@undonewlabel{acro:FP}
-\newlabel{acro:FP}{{2.9}{27}}
+\newlabel{acro:FP}{{2.10}{31}}
 \acronymused{FP}
 \AC@undonewlabel{acro:FN}
-\newlabel{acro:FN}{{2.9}{27}}
+\newlabel{acro:FN}{{2.10}{31}}
 \acronymused{FN}
 \acronymused{TP}
 \acronymused{FP}
 \acronymused{FN}
 \acronymused{TP}
-\@writefile{toc}{\contentsline {subsubsection}{Precision}{27}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.8}{\ignorespaces An example drawing of a hypergraph with its corresponding adjacency matrix. The hypergraph is defined as: $H = (V, E)$, $V = \{v1, v2, v3, v4\}$, $E = \{e1, e2\}$, with $e1 = \{v1, v2, v3\}$, $e2 = \{v3, v4\}$. In the adjacency matrix a row corresponds to a hyperedge and each column to a vertex. When a vertex is present in a hyperedge it has a 1 as an entry in the matrix, when a vertex is not present it has a 0.\relax }}{32}{}\protected@file@percent }
+\newlabel{fig:hypergraph_adjacency}{{2.8}{32}}
+\@writefile{toc}{\contentsline {subsubsection}{Precision}{32}{}\protected@file@percent }
 \acronymused{TP}
+\newlabel{eq:precision}{{2.37}{32}}
+\@writefile{toc}{\contentsline {subsubsection}{Recall}{32}{}\protected@file@percent }
+\newlabel{eq:recall}{{2.38}{32}}
+\@writefile{toc}{\contentsline {subsubsection}{F1-Score}{32}{}\protected@file@percent }
 \citation{map_pascal_voc}
 \citation{map_coco}
 \citation{map_article}
 \citation{map_article}
-\newlabel{eq:precision}{{2.36}{28}}
-\@writefile{toc}{\contentsline {subsubsection}{Recall}{28}{}\protected@file@percent }
-\newlabel{eq:recall}{{2.37}{28}}
-\@writefile{toc}{\contentsline {subsubsection}{F1-Score}{28}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Average Precision (AP)}{28}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.9}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite  {map_article}. The \ac {AP} is the area under the curve.\relax }}{33}{}\protected@file@percent }
+\acronymused{IoU}
+\acronymused{AP}
+\newlabel{fig:pr_curve}{{2.9}{33}}
+\@writefile{toc}{\contentsline {subsubsection}{Average Precision (AP)}{33}{}\protected@file@percent }
 \AC@undonewlabel{acro:AP}
-\newlabel{acro:AP}{{2.9}{28}}
+\newlabel{acro:AP}{{2.10}{33}}
 \acronymused{AP}
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{AP}
-\newlabel{eq:ap}{{2.39}{28}}
-\@writefile{toc}{\contentsline {subsubsection}{Mean Average Precision (mAP)}{28}{}\protected@file@percent }
+\newlabel{eq:ap}{{2.40}{33}}
+\@writefile{toc}{\contentsline {subsubsection}{Mean Average Precision (mAP)}{33}{}\protected@file@percent }
 \acronymused{AP}
 \AC@undonewlabel{acro:mAP}
-\newlabel{acro:mAP}{{2.9}{28}}
+\newlabel{acro:mAP}{{2.10}{33}}
 \acronymused{mAP}
 \acronymused{AP}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite  {map_article}. The \ac {AP} is the area under the curve.\relax }}{29}{}\protected@file@percent }
-\acronymused{IoU}
-\acronymused{AP}
-\newlabel{fig:pr_curve}{{2.7}{29}}
-\newlabel{eq:map}{{2.40}{29}}
-\@writefile{toc}{\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{29}{}\protected@file@percent }
+\newlabel{eq:map}{{2.41}{34}}
+\@writefile{toc}{\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{34}{}\protected@file@percent }
 \AC@undonewlabel{acro:mIoU}
-\newlabel{acro:mIoU}{{2.9}{29}}
+\newlabel{acro:mIoU}{{2.10}{34}}
 \acronymused{mIoU}
 \acronymused{IoU}
 \acronymused{IoU}
 \acronymused{mIoU}
-\newlabel{eq:miou}{{2.41}{29}}
+\newlabel{eq:miou}{{2.42}{34}}
 \citation{labelme}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Material and Methods}{31}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Material and Methods}{35}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Data}{31}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Data}{35}{}\protected@file@percent }
+\newlabel{sec:data}{{3.1}{35}}
 \acronymused{ECD}
 \acronymused{ECC}
 \acronymused{ECC}
 \acronymused{ECD}
 \acronymused{ECD}
-\@writefile{toc}{\contentsline {subsubsection}{Labeling}{31}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Labeling}{35}{}\protected@file@percent }
 \acronymused{YOLOv4}
 \acronymused{YOLOv4}
 \acronymused{ECC}
 \citation{canny_edge}
 \citation{opencv}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Amount of images of \acp {ECD} used in this thesis shown with their underlying background and whether they are annotated or not. Further, the train / validation / test split of the different image types is shown. While this might seem like a big split for test, the number of bounding boxes included in the test set is way smaller and is shown in table 3.2\hbox {}\relax }}{32}{}\protected@file@percent }
-\newlabel{tab:data_distribution}{{3.1}{32}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Amount of images of \acp {ECD} used in this thesis shown with their underlying background and whether they are annotated or not. Further, the train / validation / test split of the different image types is shown. While this might seem like a big split for test, the number of bounding boxes included in the test set is way smaller and is shown in table 3.2\hbox {}\relax }}{36}{}\protected@file@percent }
+\newlabel{tab:data_distribution}{{3.1}{36}}
 \acronymused{ECD}
 \acronymused{ECD}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{32}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}General Overview}{32}{}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces The classes present in this thesis with their major class which is an \ac {ECC} and alternatively their orientation. Furthermore, the total amount of classes is shown and the train, valid, test ratio.\relax }}{33}{}\protected@file@percent }
-\newlabel{tab:yolo_classes}{{3.2}{33}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{36}{}\protected@file@percent }
+\acronymused{ECD}
+\acronymused{ECD}
+\AC@undonewlabel{acro:IDom}
+\newlabel{acro:IDom}{{3.2}{36}}
+\acronymused{IDom}
+\AC@undonewlabel{acro:LDom}
+\newlabel{acro:LDom}{{3.2}{36}}
+\acronymused{LDom}
 \acronymused{ECC}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Training}{34}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{34}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{MobileNetV2-UNet}{34}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Results}{35}{}\protected@file@percent }
+\acronymused{ECC}
+\acronymused{ECC}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces The classes present in this thesis with their major class which is an \ac {ECC} and alternatively their orientation. Furthermore, the total amount of classes is shown and the train, valid, test ratio.\relax }}{37}{}\protected@file@percent }
+\newlabel{tab:yolo_classes}{{3.2}{37}}
+\acronymused{ECC}
+\citation{cca}
+\citation{cv}
+\@writefile{toc}{\contentsline {subsubsection}{Recognition}{38}{}\protected@file@percent }
+\acronymused{YOLOv4}
+\acronymused{YOLO}
+\acronymused{ECC}
+\acronymused{ECC}
+\acronymused{IDom}
+\acronymused{YOLO}
+\acronymused{IDom}
+\acronymused{ECD}
+\@writefile{toc}{\contentsline {subsubsection}{Topology Creation}{38}{}\protected@file@percent }
+\acronymused{ECC}
+\acronymused{IDom}
+\acronymused{LDom}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Example predictions of YOLO (left) and MobileNetV2-UNet (right). YOLO predicts a bounding box around each component with its corresponding class, while MobileNetV2-UNet predicts a segmentation mask a binary fashion of the whole \ac {ECD} drawing, including \ac {ECC} annotations. Primary segmentation is needed to remove the checkered background from the image.\relax }}{39}{}\protected@file@percent }
+\acronymused{ECD}
+\acronymused{ECC}
+\newlabel{fig:example_predictions}{{3.1}{39}}
+\acronymused{ECC}
+\@writefile{toc}{\contentsline {subsubsection}{Annotation Matching}{40}{}\protected@file@percent }
+\acronymused{ECC}
+\acronymused{LDom}
+\acronymused{ECC}
+\acronymused{ECC}
+\acronymused{ECC}
+\acronymused{ECC}
+\acronymused{ECC}
+\acronymused{FP}
+\newlabel{alg:annotation_matching}{{3.1}{41}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}Annotation Matching TODO caption to bottom and format}{41}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{LTspice Conversion}{41}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Training}{42}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{42}{}\protected@file@percent }
+\acronymused{YOLO}
+\acronymused{CIoU}
+\citation{yolov2}
+\citation{yolov4}
+\AC@undonewlabel{acro:SGD}
+\newlabel{acro:SGD}{{3.3.1}{43}}
+\acronymused{SGD}
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces The initial training configuration for the experiments performed with the YOLO network.\relax }}{43}{}\protected@file@percent }
+\newlabel{tab:initial_yolo_config}{{3.3}{43}}
+\acronymused{YOLO}
+\acronymused{YOLOv4}
+\acronymused{IoU}
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{43}{}\protected@file@percent }
+\citation{copypaste_aug}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces The results of the initial learning rate search shown on the validation set, as the mean of the mAPs of three separate training runs.\relax }}{44}{}\protected@file@percent }
+\newlabel{fig:yolo_lr_experiment_results}{{3.2}{44}}
+\acronymused{mAP}
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Offline Augmentations}{44}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces The results of the offline augmentation with the different offline augmentation configurations compared with the results of the best performing learning rate (baseline). When rotation and flip are enabled simultaneously the flipped image also gets rotated three times by 90\textdegree . Results are given as the mean of the mAP of three separate training runs.\relax }}{45}{}\protected@file@percent }
+\newlabel{fig:yolo_offline_aug_results}{{3.3}{45}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces The training configuration for the offline augmentation experiment, where the learning rate is set to the best performing learning rate from the learning rate search and the data is pre-augmented with the respective experiment configuration.\relax }}{45}{}\protected@file@percent }
+\newlabel{tab:yolo_offline_aug_config}{{3.4}{45}}
+\acronymused{AP}
+\citation{albumentation}
+\acronymused{mAP}
+\acronymused{mAP}
+\acronymused{ECC}
+\acronymused{mAP}
+\acronymused{ECC}
+\acronymused{ECC}
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Online Augmentations}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Grid Search}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}MobileNetV2-UNet}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Offline Augmentations}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Online Augmentations}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Grid Search}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}MobileNetV2-UNet}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Results}{47}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Discussion}{37}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Discussion}{49}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@input{mt07.aux}
 \@input{mt08.aux}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Abbrevations}{39}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Abbrevations}{51}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newacro{ANN}[\AC@hyperlink{ANN}{ANN}]{Artificial Neural Network}
@@ -521,7 +625,26 @@
 \newacro{FCOS}[\AC@hyperlink{FCOS}{FCOS}]{Fully Convolutional One Stage Detector}
 \newacro{WBF}[\AC@hyperlink{WBF}{WBF}]{Weighted Bounding Box Fusion}
 \newacro{TTA}[\AC@hyperlink{TTA}{TTA}]{Test-Time Augmentation}
+\newacro{LDom}[\AC@hyperlink{LDom}{LDom}]{LTspice Domain}
+\newacro{IDom}[\AC@hyperlink{IDom}{IDom}]{Image Domain}
+\newacro{SGD}[\AC@hyperlink{SGD}{SGD}]{Stochastic Gradient Descent}
 \@input{mt-lof.aux}
 \@input{mt-lot.aux}
 \@input{mt-lit.aux}
-\gdef \@abspage@last{58}
+\@writefile{toc}{\contentsline {chapter}{Appendix}{68}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}YOLOv4-Tiny Experiments}{68}{}\protected@file@percent }
+\newlabel{app:yolo_experiments}{{A}{68}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The results of the initial learning rate search shown on the validation set, with mAP over all classes as well as the classwise AP. The mean and standard deviation are taken over three separate runs.\relax }}{68}{}\protected@file@percent }
+\newlabel{tab:yolo_init_lr_results}{{1}{68}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces The results of the offline augmentation configuration search. The configuration should be interpreted in a way that a 1 behind a letter means that particular augmentation is enabled. Further, the letter ``P'' stands for projection, ``F'' for flip and ``R'' means rotation. Rotation always includes a 90\textdegree \, 180\textdegree \ and a 270\textdegree \ rotation. Flip is a horizontal flip. Additionally, when flip and rotation are enabled at the same time the flipped imaged gets also rotated three times. All results are again given with the mean and standard deviation over three runs and the results are compared against the baseline, which is the best performing learning rate from the learning rate search experiment (table 1\hbox {}).\relax }}{69}{}\protected@file@percent }
+\newlabel{tab:yolo_offline_aug_results}{{2}{69}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces The results of the rotation augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{70}{}\protected@file@percent }
+\newlabel{tab:yolo_rotation_augmentation_result}{{3}{70}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces The results of the random scale augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{71}{}\protected@file@percent }
+\newlabel{tab:yolo_random_scale_augmentation_result}{{4}{71}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces The results of the safe bounding box crop augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{72}{}\protected@file@percent }
+\newlabel{tab:yolo_bbox_safe_crop_augmentation_result}{{5}{72}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces The results of the color jitter augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{73}{}\protected@file@percent }
+\newlabel{tab:yolo_color_jitter_augmentation_result}{{6}{73}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}MobileNetV2-UNet experiments}{73}{}\protected@file@percent }
+\gdef \@abspage@last{81}

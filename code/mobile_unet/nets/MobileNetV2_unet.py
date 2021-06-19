@@ -147,34 +147,34 @@ class MobileNetV2_unet(nn.Module):
             print("Done loading weights.")
 
     def forward(self, x, *args, **kwargs):
-        # print((x.shape, "input"))
+        print((x.shape, "input"))
         for n in range(0, 2):
             x = self.backbone.features[n](x)
 
         x1 = x
-        # print((x1.shape, "x1"))
+        print((x1.shape, "x1"))
 
         for n in range(2, 4):
             x = self.backbone.features[n](x)
         x2 = x
-        # print((x2.shape, "x2"))
+        print((x2.shape, "x2"))
 
         for n in range(4, 7):
             x = self.backbone.features[n](x)
         x3 = x
-        # print((x3.shape, "x3"))
+        print((x3.shape, "x3"))
 
         for n in range(7, 14):
             x = self.backbone.features[n](x)
         x4 = x
-        # print((x4.shape, "x4"))
+        print((x4.shape, "x4"))
 
         # TODO 1x1 layer removed hence 18 instead of 19
         for n in range(14, 18):
             x = self.backbone.features[n](x)
 
         x5 = self.backbone.conv(x)
-        # print((x5.shape, "x5"))
+        print((x5.shape, "x5"))
 
         dc1 = self.dconv1(x5)
         up1 = torch.cat([x4, dc1], dim=1)

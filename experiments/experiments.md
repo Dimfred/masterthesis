@@ -310,7 +310,7 @@ bs  loss        lr       Run1  Run2  Run3
 32  focal2_0.8  0.0025
 32  focal2_0.8  0.001
 32  focal2_0.8  0.0005
-32  focal2_0.8  0.00025
+32  focal2_0.8  0.00025  NEXT
 32  focal2_0.8  0.0001
 64  focal2_0.1  0.01
 64  focal2_0.1  0.005

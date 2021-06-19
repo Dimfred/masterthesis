@@ -1,3 +1,4 @@
+\label{sec:yolo}
 
 In this thesis the single shot detector \ac{YOLO} \cite{yolov1} is used.
 Single shot means that \ac{YOLO} produces class predictions as well as bounding box predictions in a single network pass.
@@ -24,7 +25,6 @@ The number of filters for the four convolutions is always $N * (K, K/2, K/2, K)$
 So as can be seen in \ref{tab:darknet_tiny_arch}, where the whole architecture of the backbone is presented, in the first layer the kernel sizes are set to $(64, 32, 32, 64)$.
 Further, the backbone has three outputs, seen on the right of the table ($Skip_S$, $Skip_M$, $Skip_L$), which are used as skip connections to the following neck network.
 $S$, $M$, $L$ indicates here the size of the detected object (small, medium, large).
-
 
 
 \begin{table} %[H]
@@ -84,7 +84,7 @@ $S$, $M$, $L$ indicates here the size of the detected object (small, medium, lar
 
 The neck of the \ac{YOLOv4} network is a scaled version of the \ac{PANet} \cite{pannet} and is further referred to as PANet-tiny \cite{yolov4_tiny}.
 The PANet-tiny receives as input the outputs of the backbone and produces three output tensors, where each output tensor is a prediction for a particular scale of object.
-Each prediction output has twice the featuremap size of the previous output, except for the most lowest output ($Pred_L$), which has the size of the last backbone output block.
+Each prediction output has twice the feature map size of the previous output, except for the most lowest output ($Pred_L$), which has the size of the last backbone output block.
 Therefore, $Pred_L$ has a size of $S \times S$, $Pred_M$ has a size of $2S \times 2S$ and $Pred_S$ has a size of $4S \times 4S$, where $S \times S$ .
 Generally, the PANet-tiny is build by using a separate output branch to produce a prediction, followed by an upsampling layer, where the feature map is bilinearly upsampled and convolved together with the skip connection from the backbone to serve again as input for the next output branch.
 Each output branch is a $1 \times 1$ convolution and hence acts as a fully-connected layer.

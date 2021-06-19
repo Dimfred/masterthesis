@@ -14,6 +14,8 @@ from torchgeometry import losses
 from loss import dice_loss
 import torchvision as tv
 
+from pytorch_model_summary import summary
+
 from sklearn.model_selection import KFold
 
 # from tensorboardX import SummaryWriter
@@ -439,6 +441,11 @@ def main():
             scale=config.unet.scale,
             upsampling=config.unet.upsampling,
         )
+        print(summary(model.backbone, torch.zeros((1, 3, 448, 448)), show_input=True))
+        print(summary(model, torch.zeros((1, 3, 448, 448)), show_input=True))
+        sys.exit()
+
+
         if (
             config.unet.checkpoint_path is not None
             and config.unet.pretrained_path is None

@@ -247,7 +247,7 @@ def main(dataset, score_thresh, exp, tta, show):
                 # DEBUG
                 if show:
                     utils.show(img, label, pred)
-
+                    cv.imwrite("prediction.png", pred)
         # print("All:", ious)
 
         miou = np.array(ious).mean()

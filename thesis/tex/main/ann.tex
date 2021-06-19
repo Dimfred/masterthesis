@@ -158,19 +158,19 @@ It is defined as follows:
     \end{cases}
 \end{equation}
 
-% \subsubsection{ReLU6}
+\subsubsection{ReLU6}
 
-% ReLU6 is a modification of the classical \ac{ReLU}, where the output activation is limited to 6.
-% It is often used in resource constrained environments, especially in cases of low precision computation, since it has shown to perform robust in such cases. \cite{mnetv1}
+ReLU6 is a modification of the classical \ac{ReLU}, where the output activation is limited to 6.
+It is often used in resource constrained environments, especially in cases of low precision computation, since it has shown to perform robust in such cases. \cite{mnetv1}
 
-% \begin{equation}
-%     ReLU6(x) =
-%     \begin{cases}
-%         6, & \text{if } x >= 6\\
-%         x, & \text{if } 0 < x < 6\\
-%         0, & else
-%     \end{cases}
-% \end{equation}
+\begin{equation}
+    ReLU6(x) =
+    \begin{cases}
+        6, & \text{if } x >= 6\\
+        x, & \text{if } 0 < x < 6\\
+        0, & else
+    \end{cases}
+\end{equation}
 
 % \subsubsection{Hard Swish}
 
@@ -245,5 +245,5 @@ A common problem while training with the \ac{ReLU} activation function is that t
 So with each layer the output distribution gets shifted from the input distribution.
 This observed phenomenon is called the \textit{internal co-variate shift} and forces the network to adapt to the shifting output distribution.
 The adaption produces an overhead, which is expressed in a longer training time of the network.
-Therefore, Ioffe and Szegedy \cite{batchnorm} introduced \ac{BatchNorm}, a trainable layer for \ac{ANN}.
+Therefore, Ioffe and Szegedy \cite{batchnorm} introduced \ac{BatchNorm}, a trainable layer for \acp{ANN}.
 The \ac{BatchNorm} layer normalizes the feature maps along the batch axis to have zero-mean and a standard deviation of one, which not only decreases the training time, but also allows for higher learning rates and less careful initialization of the network weights.

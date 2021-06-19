@@ -73,6 +73,13 @@ I.~Goodfellow, Y.~Bengio, and A.~Courville.
 \newblock MIT Press, 2016.
 \newblock \url{http://www.deeplearningbook.org}.
 
+\bibitem[Gra10]{cca}
+C.~Grana, D.~Borghesani, and R.~Cucchiara.
+\newblock Optimized block-based connected components labeling with decision
+  trees.
+\newblock {\em IEEE transactions on image processing : a publication of the
+  IEEE Signal Processing Society}, 19(6):1596--609, Jun 2010.
+
 \bibitem[Gro73]{mlp}
 S.~Grossberg.
 \newblock Contour enhancement, short term memory, and constancies in
@@ -95,6 +102,12 @@ K.~He, X.~Zhang, S.~Ren, and J.~Sun.
 K.~He, G.~Gkioxari, P.~Doll{\'{a}}r, and R.~Girshick.
 \newblock Mask {R-CNN}.
 \newblock {\em CoRR}, abs/1703.06870, 2017.
+
+\bibitem[How17]{mnetv1}
+A.~Howard, M.~Zhu, B.~Chen, D.~Kalenichenko, W.~Wang, T.~Weyand, M.~Andreetto,
+  and H.~Adam.
+\newblock Mobilenets: Efficient convolutional neural networks for mobile vision
+  applications, 2017.
 
 \bibitem[Hua16]{densenet}
 G.~Huang, Z.~Liu, and K.~Weinberger.
@@ -131,7 +144,7 @@ S.~Jadon.
 J.~Jing, Z.~Wang, M.~R\"{a}tsch, and H.~Zhang.
 \newblock Mobile-unet: An efficient convolutional neural network for fabric
   defect detection.
-\newblock {\em Textile Research Journal}, page 004051752092860, May 2020.
+\newblock {\em Textile Research Journal}, page 004051752092860, may 2020.
 
 \bibitem[Jun21]{map_pascal_voc}
 W.~Jun.
@@ -146,6 +159,11 @@ D.~Kaiwen, B.~Song, X.~Lingxi, Q.~Honggang, H.~Qingming, and T.~Qi.
 \bibitem[Kin17]{adam}
 D.~Kingma and J.~Ba.
 \newblock Adam: A method for stochastic optimization, 2017.
+
+\bibitem[Kos20]{cv}
+R.~Kosti, V.~Christlein, and M.~Stamminger.
+\newblock {\em Computer Vision Lecture}.
+\newblock Friedrich-Alexander-University, 2020.
 
 \bibitem[Law18]{corner_net}
 H.~Law and J.~Deng.
@@ -169,7 +187,7 @@ T.~Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Doll.
 
 \bibitem[Liu]{instance_vs_semantic_fig}
 P.~Liu.
-\newblock Single stage instance segmentation — a review.
+\newblock Single stage instance segmentation - a review.
 \newblock
   \url{https://towardsdatascience.com/single-stage-instance-segmentation-a-review-1eeb66e0cc49}.
 \newblock Accessed: 04.06.2021.
@@ -198,7 +216,7 @@ W.~McCulloch and W.~Pitts.
 N.~Moshkov, B.~Mathe, A.~Kertesz-Farkas, R.~Hollandi, and P.~Horvath.
 \newblock Test-time augmentation for deep learning-based cell segmentation on
   microscopy images.
-\newblock {\em Scientific Reports}, 10(1), March 2020.
+\newblock {\em Scientific Reports}, 10(1), mar 2020.
 
 \bibitem[Net21]{semantic_segmentation}
 P.~Neto.
@@ -241,7 +259,7 @@ S.~Rezatofighi, N.~Tsoi, J.~Gwak, A.~Sadeghian, I.~Reid, and S.~Savarese.
 \newblock {\em CoRR}, abs/1902.09630, 2019.
 
 \bibitem[Ron15]{unet}
-O.~Ronneberger, P., and T.~Brox.
+O.~Ronneberger, P.~Fischer, and T.~Brox.
 \newblock U-net: Convolutional networks for biomedical image segmentation,
   2015.
 
@@ -251,6 +269,10 @@ F.~Rosenblatt.
   organization in the brain.
 \newblock {\em Psychological Review}, pages 65--386, 1958.
 
+\bibitem[San19]{mnetv2}
+M.~Sandler, A.~Howard, M.~Zhu, A.~Zhmoginov, and L.~Chen.
+\newblock Mobilenetv2: Inverted residuals and linear bottlenecks, 2019.
+
 \bibitem[Sha20]{when_tta_works}
 D.~Shanmugam, D.~Blalock, G.~Balakrishnan, and J.~Guttag.
 \newblock When and why test-time augmentation works.
@@ -259,7 +281,7 @@ D.~Shanmugam, D.~Blalock, G.~Balakrishnan, and J.~Guttag.
 \bibitem[Sho19]{augmentation_survey}
 C.~Shorten and T.~Khoshgoftaar.
 \newblock A survey on image data augmentation for deep learning.
-\newblock {\em Journal of Big Data}, 6(1), July 2019.
+\newblock {\em Journal of Big Data}, 6(1), jul 2019.
 
 \bibitem[Sol19]{weighted_bbox_fusion}
 R.~Solovyev and W.~Wang.
@@ -276,6 +298,13 @@ C.~Szegedy, W.~Liu, Y.~Jia, P.~Sermanet, S.~Reed, D.~Anguelov, D.~Erhan,
 Z.~Tian, C.~Shen, H.~Chen, and T.~He.
 \newblock {FCOS:} {A} simple and strong anchor-free object detector.
 \newblock {\em CoRR}, abs/2006.09214, 2020.
+
+\bibitem[Val21]{hypergraph_def}
+P.~Valdivia, P.~Buono, C.~Plaisant, N.~Dufournaud, and J.~Fekete.
+\newblock {Analyzing Dynamic Hypergraphs with Parallel Aggregated Ordered
+  Hypergraph Visualization}.
+\newblock {\em {IEEE Transactions on Visualization and Computer Graphics}},
+  27(1):1--13, Jan 2021.
 
 \bibitem[vdS11]{selective_search}
 K.~van~de Sande, J.~Uijlings, T.~Gevers, and A.~Smeulders.

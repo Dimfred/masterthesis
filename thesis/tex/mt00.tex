@@ -25,9 +25,9 @@
 \restylefloat{table}
 \usepackage[table]{xcolor}
 
+
 % TODO add this in the end, currently makes compilation insanely slow
 % \usepackage{hyperref}
-% maybe like this idk
 % \usepackage[pdftex,colorlinks=true,urlcolor=refC,linkcolor=refC,citecolor=citeC]{hyperref} % math
 
 \usepackage{amsmath}
@@ -39,6 +39,8 @@
 \usepackage{pgfplots}
 \pgfplotsset{width=14cm,compat=1.9}
 
+%appendix with names
+\usepackage[title]{appendix}
 
 
 % drawing
@@ -58,6 +60,8 @@
 \usepackage{color}
 \usepackage{caption}
 
+\usepackage{rotating}
+
 \newcounter{nalg}[chapter] % defines algorithm counter for chapter-level
 \renewcommand{\thenalg}{\thechapter .\arabic{nalg}} %defines appearance of the algorithm counter
 \DeclareCaptionLabelFormat{algocaption}{Algorithm \thenalg} % defines a new caption label as Algorithm x.y
@@ -73,7 +77,7 @@
         numberstyle=\tiny,
         basicstyle=\scriptsize,
         keywordstyle=\color{black}\bfseries\em,
-        keywords={,input, then, output, return, datatype, function, in, if, else, foreach, do, while, begin, end, for} %add the keywords you want, or load a language as Rubens explains in his comment above.
+        keywords={input, then, output, return, datatype, function, in, if, else, foreach, do, while, begin, end, for, elif} %add the keywords you want, or load a language as Rubens explains in his comment above.
         numbers=left,
         xleftmargin=.04\textwidth,
         #1 % this is to add specific settings to an usage of this environment (for instnce, the caption and referable label)
@@ -173,7 +177,6 @@ Abstract
 \cleardoublepage
 
 
-\appendix
 \cleardoublepage
 \input{mt-glossar}   % Glossar (\chapter{Glossar}  TEXT)
 % \cleardoublepage
@@ -188,5 +191,14 @@ Abstract
 \cleardoublepage
 \include{mt-lit} % Literaturverzeichnis
 \cleardoublepage
+
+\cleardoublepage
+% \begin{appendices}
+\appendix
+\chapter*{Appendix}
+\addcontentsline{toc}{chapter}{Appendix}
+\renewcommand{\thesection}{\Alph{section}}
+\input{main/app_yolo_experiments}
+% \end{appendices}
 
 \end{document}
