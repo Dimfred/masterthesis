@@ -145,7 +145,7 @@ config.unet = EasyDict()
 # net
 config.unet.n_classes = 2
 config.unet.input_size = 448 if utils.isme() else 448  # 448  # 448 #224 #608 #416 #288
-config.unet.test_input_size = 448  # 448, 480, 512, 544, 576, 608, 640, 672, 704
+config.unet.test_input_size = 608  # 448, 480, 512, 544, 576, 608, 640, 672, 704
 config.unet.channels = 3
 config.unet.width_multiplier = 1.0
 config.unet.architecture = "v2"  # v2, v3, unet
@@ -159,7 +159,7 @@ config.unet.subdivision = 16 if utils.isme() else 8
 config.unet.valid_batch_size = 24 if utils.isme() else 24
 config.unet.valid_subdivision = 1 if utils.isme() else 1
 # minibatch_size = batch_size / subdivision
-config.unet.max_steps = 3000
+config.unet.max_steps = 7000
 config.unet.burn_in = 100
 config.unet.lr_decay_fixed = [1000, 1500]
 

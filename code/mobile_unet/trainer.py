@@ -58,7 +58,7 @@ class Trainer:
 
         # runtime
         self.step_counter = 0
-        self.early_stopping = 1500
+        self.early_stopping = 3000
         self.early_stopping_counter = 0
         self.max_steps = max_steps
 
@@ -153,6 +153,7 @@ class Trainer:
 
         with open(self.experiment.results, "w") as f:
             print(self.best_f1, file=f)
+            print(self.best_step, file=f)
 
     def on_nan_or_zero(self, inputs, labels):
         self.model.eval()

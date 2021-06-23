@@ -37,13 +37,11 @@ This configuration is given in \ref{tab:initial_yolo_config}, it consist of a fi
 \hline
 \textbf{Loss} & CIoU \\
 \hline
-\textbf{Optimizer} & SGD with Momentum \\
-\hline
-\textbf{Momentum} & $0.9$ \\
+\textbf{Optimizer} & \ac{SGD} with Momentum ($\mu = 0.9$)\\
 \hline
 \textbf{Burn in} & 1000 steps \\
 \hline
-\textbf{Dataset} & Base Dataset \\
+\textbf{Dataset} & No pre-augmentation performed \\
 \hline
 
 \end{tabular}
@@ -81,7 +79,7 @@ This experiment has shown that the text class and especially the arrow classes s
 
 \begin{figure}
 \begin{center}
-    \includegraphics[width=16cm]{imgs/yolo_lr_experiment.png}
+    \includegraphics[width=13cm]{imgs/yolo_lr_experiment.pdf}
     \caption{The results of the initial learning rate search shown on the validation set, as the mean of the mAPs of three separate training runs.}
     \label{fig:yolo_lr_experiment_results}
 \end{center}
@@ -101,19 +99,17 @@ The new configuration can be found in table \ref{tab:yolo_offline_aug_config}.
 \begin{tabular}{|l|l|}
 
 \hline
-\textbf{Learning Rate} & $0.001$ \\
+\textbf{Learning Rate} & $1e^{-3}$ \\
 \hline
 \textbf{Batch Size} & $64$\\
 \hline
 \textbf{Loss} & CIoU \\
 \hline
-\textbf{Optimizer} & SGD with Momentum \\
-\hline
-\textbf{Momentum} & $0.9$ \\
+\textbf{Optimizer} & SGD with Momentum ($\mu = 0.9$)\\
 \hline
 \textbf{Burn in} & 1000 steps \\
 \hline
-\textbf{Dataset} & Depending on experiment configuration \\
+\textbf{Dataset} & Pre-augmented with respective experiment configuration \\
 \hline
 
 \end{tabular}
@@ -125,7 +121,7 @@ The new configuration can be found in table \ref{tab:yolo_offline_aug_config}.
 The full results with classwise \ac{AP} can be found in the appendix in table \ref{tab:yolo_offline_aug_results}.
 \begin{figure}
 \begin{center}
-    \includegraphics[width=14cm]{imgs/yolo_offline_aug_experiment.png}
+    \includegraphics[width=13cm]{imgs/yolo_offline_aug_experiment.pdf}
     \caption{The results of the offline augmentation with the different offline augmentation configurations compared with the results of the best performing learning rate (baseline). When rotation and flip are enabled simultaneously the flipped image also gets rotated three times by 90\textdegree. Results are given as the mean of the mAP of three separate training runs.}
     \label{fig:yolo_offline_aug_results}
 \end{center}
@@ -139,26 +135,223 @@ When specifically comparing the results of the best performing configuration wit
 The text and arrow classes have also greatly increased.
 Text shows an increase of $24.485\%$ and the mean over the arrow classes shows an increase of $47.988\%$, however those two classes are still not near the desired performance observed at the \acp{ECC}.
 It should be pointed out that especially the increase in the text class is very interesting, because this is the only class which is not rotation and flip invariant, i.e. flipping a diode produces again a diode (also for the human perception), but with a different orientation, however flipping a text will produce something no more really interpretable (at least for the human perception).
-An explanation why there is still an increase in recognition performance could be that the network starts learning blob like regions, which are located near \acp{ECC}, instead of specific features of the different texts.
+An explanation why there is still an increase in recognition performance could be that the network starts learning blob like regions, which are located near \acp{ECC}, instead of specific features of the different textual annotations.
 
 
 \subsubsection{Experiment: Online Augmentations}
 
-The next presented experiment is an ablation study performed on various augmentations and parameters for those augmentations.
-Since these augmentations are performed at runtime, they are also called online augmentations.
-As mentioned, the images were augmented utilizing the open-source library albumentations \cite{albumentation}.
+The next presented experiment is an ablation study performed on the following augmentations:
+\begin{itemize}
+    \item Rotation: 10\textdegree, 20\textdegree, 30\textdegree\ (maximum angle to rotate the base image +- value)
+    \item Scale: 10\%, 20\%, 30\% (the maximum percentage of the base scale to change +- value)
+    \item SafeCrop: 70\%, 80\%, 90\% (the maximum size of the crop relative to the input image size, but considers bounding boxes such that bounding boxes are never cropped)
+    \item ColorJitter: 10\%, 20\%, 30\% (the maximum percentage to change the brightness, contrast, saturation or the hue of the input image)
+\end{itemize}
+These augmentations are performed at runtime and are therefore also referred to as  online augmentations.
+Each augmentation was applied with a probability of 50\%.
+The general configuration for this experiment is shown in table \ref{tab:yolo_online_config}
 
+\begin{table}[H]
+\footnotesize
+\begin{center}
+\begin{tabular}{|l|l|}
+
+\hline
+\textbf{Batch Size} & $64$\\
+\hline
+\textbf{Loss} & CIoU \\
+\hline
+\textbf{Optimizer} & SGD with Momentum ($\mu = 0.9$)\\
+\hline
+\textbf{Burn in} & 1000 steps \\
+\hline
+\textbf{Dataset} & Pre-augmented with projection, flip and rotation \\
+\hline
+
+\end{tabular}
+\caption{The YOLO training configuration for the online augmentation experiment. The dataset is now additionally pre-augmented with the projection, flip and rotation augmentation.}
+\label{tab:yolo_online_config}
+\end{center}
+\end{table}
+
+Again, the detailed results can be found in the appendix in the tables \ref{tab:yolo_rotation_augmentation_result}, \ref{tab:yolo_random_scale_augmentation_result}, \ref{tab:yolo_bbox_safe_crop_augmentation_result}, \ref{tab:yolo_color_jitter_augmentation_result}, for each used augmentation separately.
+Further, the combined results can be found in figure \ref{fig:yolo_online_aug_results}.
+The figure shows, for each augmentation and for all parameters a clear increase.
+The best performing parameters are selected and used in the following grid search experiment.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=16cm]{imgs/yolo_online_aug_experiment.pdf}
+    \caption{Results of the online augmentation experiment compared to the baseline which was established in the offline augmentation experiment. Each augmentation shows a clear increase in mAP in comparison to the baseline. The best performing parameters are used together in the grid search experiments.}
+    \label{fig:yolo_online_aug_results}
+\end{center}
+\end{figure}
 
 \subsubsection{Experiment: Grid Search}
 
-\subsection{MobileNetV2-UNet}
+The last training experiment is a grid search for finding the best learning rate, batch size and most suitable loss function.
+The used parameters in the grid search are listed in table \ref{tab:yolo_grid_search_config}, seven learning rates, two batch sizes and three different types of loss functions were used.
+\ac{CIoU} is also the default loss used throughout the previous experiments, while \ac{EIoU} and Focal-\ac{EIoU} are newly added for this experiment.
+The $\gamma$ parameter in Focal-\ac{EIoU} was not set arbitrary, but was selected based on the experiments of the authors of \ac{EIoU} \cite{eiou}, where that $\gamma$ has shown the best results.
 
-\subsubsection{Experiment: Initial Learning Rate Search}
 
-\subsubsection{Experiment: Offline Augmentations}
+\begin{table}[H]
+\footnotesize
+\begin{center}
+\begin{tabular}{|l|l|}
 
-\subsubsection{Experiment: Online Augmentations}
+\hline
+\textbf{Learning Rates} & $1.0e^{-2}, 5.0e^{-3}, 2.5e^{-3}, 1.0e^{-3}, 5.0e^{-4}, 2.5e^{-4}, 1.0e^{-4}$ \\
+\hline
+\textbf{Batch Sizes} & $32, 64$\\
+\hline
+\textbf{Losses} & CIoU, EIoU, Focal-EIoU ($\gamma = 0.5$) \\
+\hline
+\textbf{Optimizer} & SGD with Momentum ($\mu = 0.9$) \\
+\hline
+\textbf{Burn in} & 1000 steps \\
+\hline
+\textbf{Dataset} & Pre-augmented with projection, flip and rotation \\
+\hline
 
-\subsubsection{Experiment: Grid Search}
+\end{tabular}
+\caption{Configuration of the YOLO grid search experiment. The networks were trained for all possible configurations of learning rate, batch size and loss function.}
+\label{tab:yolo_grid_search_config}
+\end{center}
+\end{table}
 
-\subsection{MobileNetV2-UNet}
+The full results of the grid search can be found in appendix in the tables TODO REF TABLES.
+In figure \ref{fig:yolo_grid_bs_compare_results} first the batch sizes are compared.
+It can be clearly seen that a batch size of 32 performed consistently worse than a batch size of 64.
+Therefore, the following evaluation of the results is only done on the networks, which were trained with a batch size of 64.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=12cm]{imgs/yolo_grid_bs_compare.pdf}
+    \caption{Results of the grid search shown for all loss functions, learning rates and batch sizes.}
+    \label{fig:yolo_grid_bs_compare_results}
+\end{center}
+\end{figure}
+
+Figure \ref{fig:yolo_grid_heat_results} shows a heat map for all possible configurations trained with a batch size of 64.
+It can be observed that networks trained with \ac{EIoU} performed better over all learning rates, while those trained with \ac{CIoU} performed second best and networks trained with Focal-\ac{EIoU} performed the worst.
+For fine tuning of the thresholds used in during the training the best performing network from the grid search is selected.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=16cm]{imgs/yolo_grid_heat.pdf}
+    \caption{Results of the YOLO grid search for all used loss functions and learning rates shown for batch size 64.}
+    \label{fig:yolo_grid_heat_results}
+\end{center}
+\end{figure}
+
+\subsubsection{Tuning: Input Size}
+
+Redmon et al. \cite{yolov2} normally trained their YOLO networks with a small input resolution and after training increased it to get a further boost in performance.
+The same is done in this thesis.
+The networks were trained with an input size of $608 \times 608$, which is the default input size for \ac{YOLOv4}-Tiny.
+The new input size was tuned on the validation set, for each tested input size the \ac{mAP} was recorded and the results can be seen in figure \ref{fig:yolo_input_size}.
+The input size $736 \times 736$, shows an increase in performance and is hence selected for further tuning.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=14cm]{imgs/yolo_input_size_tuning.pdf}
+    \caption{Different input sizes tested after training on the validation set. The scalar on the x-axis should be interpreted as $val \times val$, since the input size is quadratic.}
+    \label{fig:yolo_input_size}
+\end{center}
+\end{figure}
+
+\subsubsection{Experiment: Non-Maximum Suppression and Test-Time Augmentation}
+
+YOLO predicts multiple bounding boxes per object.
+To suppress unnecessary ones and keep only the most suitable, \ac{NMS} is used.
+The used \ac{NMS} algorithm during all previous experiments was \ac{DIoU}-\ac{NMS} \cite{diou}.
+In this subsection the results are also evaluated using the \ac{WBF} algorithm \cite{weighted_bbox_fusion}, which has shown to perform well in combination with \ac{TTA}.
+Both algorithms were explained in section \ref{sec:yolo}.
+All tunings are performed only on the validation dataset, with the new input size of $736 \times 736$.
+
+First a tuning of the \ac{DIoU}-\ac{NMS} thresholds is performed.
+To recall, \ac{DIoU}-\ac{NMS} takes as input two thresholds a score threshold, which will remove predictions with a prediction score below that one, and an \ac{IoU} threshold which is used to define whether two bounding boxes are the same one, i.e. if two bounding boxes have an $IoU > IoU_{thresh}$, then only the one with the maximum prediction score is kept and the other one is removed.
+The tuning was performed on all possible combinations of score threshold and \ac{IoU} threshold, where both have the same parameter set.
+The parameter set for both is ranging from 0.1 to 0.5 in 0.05 steps.
+The results of the tuning can be found in figure \ref{fig:diou_nms_tuning}.
+The best performing combination has a score threshold of 0.1 and a \ac{IoU} threshold of 0.45.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/yolo_diou_heat.pdf}
+    \caption{The results of the \ac{DIoU}-\ac{NMS} parameter tuning. All possible combinations of score threshold and \ac{IoU} threshold were evaluated on the validation set. The best performing combination is the one with a score threshold of 0.1 and a \ac{IoU} threshold of 0.45.}
+    \label{fig:diou_nms_tuning}
+\end{center}
+\end{figure}
+
+The second tuning is done using the above setup, except that now the thresholds are tuned for the \ac{WBF} algorithm.
+The results the tuning are shown in figure \ref{fig:wbf_nms_tuning}.
+The best performing configuration has a score threshold of 0.15 and an \ac{IoU} threshold of 0.25.
+Further, \ac{WBF} shows slightly better results with a relative improvement of 0.15\%.
+This improvement was expected, since in the predictions with the DIoU-NMS, some \acp{FP} were found, where multiple bounding boxes were predicted for the same text object.
+In \ac{WBF} such predictions are fused into one bounding box, hence the slight increase in performance.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/yolo_wbf_heat.pdf}
+    \caption{The results of the \ac{WBF} parameter tuning. All possible combinations of score threshold and \ac{IoU} threshold were evaluated on the validation set. The best performing combination is the one with a score threshold of 0.15 and an \ac{IoU} threshold of 0.25.}
+    \label{fig:wbf_nms_tuning}
+\end{center}
+\end{figure}
+
+In the last tuning additionally \ac{TTA} is added to the configuration.
+The used augmentations are, as in the offline augmentation experiment, three 90\textdegree\ rotations of the original image, a horizontal flip and again three 90\textdegree\ rotations of the horizontally flipped image.
+This experiment also uses \ac{WBF} to merge the predicted bounding boxes.
+The full results of this tuning can be found in figure \ref{fig:wbf_tta_nms_tuning}, where the best configuration has a score threshold of 0.1 and an \ac{IoU} threshold of 0.45.
+The relative improvement of \ac{WBF}-\ac{TTA}, compared to \ac{DIoU}-\ac{NMS} is 1.5\%.
+For the sake of completeness it should be noted that, \ac{TTA} was also performed in the combination with \ac{DIoU}-\ac{NMS}, but this actually slightly worsened the results, when comparing them to \ac{DIoU} without \ac{TTA}.
+
+% \begin{figure}
+% \begin{center}
+%     \includegraphics[width=\columnwidth]{imgs/yolo_diou_tta_heat.pdf}
+%     \caption{DIOU + TTA TUNING}
+%     \label{fig:diou_tta_nms_tuning}
+% \end{center}
+% \end{figure}
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/yolo_wbf_tta_heat.pdf}
+    \caption{WBF + TTA TUNING}
+    \label{fig:wbf_tta_nms_tuning}
+\end{center}
+\end{figure}
+
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/yolo_wbf_tta_votes.pdf}
+    \caption{WBF + TTA + VOTES}
+    \label{fig:wbf_tta_nms_votes}
+\end{center}
+\end{figure}
+
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/yolo_all_tuning.pdf}
+    \caption{Combined tuning results}
+    \label{fig:yolo_tuning_combined_results}
+\end{center}
+\end{figure}
+
+% \subsection{MobileNetV2-UNet}
+
+
+
+
+% \subsubsection{Experiment: Initial Learning Rate Search}
+
+% \subsubsection{Experiment: Offline Augmentations}
+
+% \subsubsection{Experiment: Online Augmentations}
+
+% \subsubsection{Experiment: Grid Search}
+
+% \subsection{MobileNetV2-UNet}

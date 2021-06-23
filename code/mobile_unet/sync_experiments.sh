@@ -8,8 +8,11 @@
 # cpcf ma/code/mobile_unet/experiments_unet/offline_aug experiments_unet/
 
 # online
-cpcf ma/code/mobile_unet/experiments_unet/rotate experiments_unet/
-cpcf ma/code/mobile_unet/experiments_unet/crop experiments_unet/
-cpcf ma/code/mobile_unet/experiments_unet/color experiments_unet/
-cpcf ma/code/mobile_unet/experiments_unet/scale experiments_unet/
+# cpcf ma/code/mobile_unet/experiments_unet/rotate experiments_unet/
+# cpcf ma/code/mobile_unet/experiments_unet/crop experiments_unet/
+# cpcf ma/code/mobile_unet/experiments_unet/color experiments_unet/
+# cpcf ma/code/mobile_unet/experiments_unet/scale experiments_unet/
+
+# grid
+cpcf ma/code/mobile_unet/experiments_unet/grid experiments_unet/
 

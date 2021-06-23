@@ -70,19 +70,15 @@
 \contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{43}{}%
 \contentsline {subsubsection}{Experiment: Offline Augmentations}{44}{}%
 \contentsline {subsubsection}{Experiment: Online Augmentations}{46}{}%
-\contentsline {subsubsection}{Experiment: Grid Search}{46}{}%
-\contentsline {subsection}{\numberline {3.3.2}MobileNetV2-UNet}{46}{}%
-\contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{46}{}%
-\contentsline {subsubsection}{Experiment: Offline Augmentations}{46}{}%
-\contentsline {subsubsection}{Experiment: Online Augmentations}{46}{}%
-\contentsline {subsubsection}{Experiment: Grid Search}{46}{}%
-\contentsline {subsection}{\numberline {3.3.3}MobileNetV2-UNet}{46}{}%
-\contentsline {chapter}{\numberline {4}Results}{47}{}%
-\contentsline {chapter}{\numberline {5}Discussion}{49}{}%
-\contentsline {chapter}{\numberline {6}Abbrevations}{51}{}%
-\contentsline {chapter}{List of Figures}{54}{}%
-\contentsline {chapter}{List of Tables}{57}{}%
-\contentsline {chapter}{Bibliography}{61}{}%
-\contentsline {chapter}{Appendix}{68}{}%
-\contentsline {section}{\numberline {A}YOLOv4-Tiny Experiments}{68}{}%
-\contentsline {section}{\numberline {B}MobileNetV2-UNet experiments}{73}{}%
+\contentsline {subsubsection}{Experiment: Grid Search}{47}{}%
+\contentsline {subsubsection}{Tuning: Input Size}{49}{}%
+\contentsline {subsubsection}{Experiment: Non-Maximum Suppression and Test-Time Augmentation}{49}{}%
+\contentsline {chapter}{\numberline {4}Results}{57}{}%
+\contentsline {chapter}{\numberline {5}Discussion}{59}{}%
+\contentsline {chapter}{\numberline {6}Abbrevations}{61}{}%
+\contentsline {chapter}{List of Figures}{64}{}%
+\contentsline {chapter}{List of Tables}{69}{}%
+\contentsline {chapter}{Bibliography}{73}{}%
+\contentsline {chapter}{Appendix}{80}{}%
+\contentsline {section}{\numberline {A}YOLOv4-Tiny Experiments}{80}{}%
+\contentsline {section}{\numberline {B}MobileNetV2-UNet experiments}{85}{}%

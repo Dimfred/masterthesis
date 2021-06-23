@@ -88,51 +88,58 @@ def main(
         thresholds = []
         # for iou in (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75):
         #     for score in (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75):
-        for iou in (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65):
-            for score in (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65):
+        # for iou in (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65):
+        #     for score in (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65):
+        for iou in (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5):
+            for score in (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5):
                 thresholds.append((iou, score))
         # fmt: on
         mAPs_for_thresholds = []
     else:
         thresholds = [[iou_thresh, score_thresh]]
 
+    ##################
+    ### INIT YOLO ####
+    ##################
+
+    input_size = 736
+    # input_size = 608
+
+    yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
+    yolo.classes = config.yolo.classes
+    yolo.input_size = input_size
+    yolo.channels = config.yolo.channels
+    yolo.make_model()
+    yolo.load_weights(
+        config.yolo.weights, weights_type=config.yolo.weights_type
+    )
+
+    for idx, cls_name in yolo.classes.items():
+        if cls_name == "text":
+            text_label_idx = idx
+            break
+
     for iou_thresh, score_thresh in thresholds:
         # for input_size in (config.yolo.input_size,):
         # for input_size in (config.yolo.input_size, 704,): # 736, 768, 800):  # 608, 640, 672, 704, 736, 768, 800, 832):
 
-        # todo compare input_size
-        for input_size in (
-            # 416,
-            # 448,
-            # 480,
-            # 512,
-            # 544,
-            # 576,
-            # config.yolo.input_size,
-            # 640,
-            # 672,
-            # 704,
-            736,
-            # 768,
-            # 800,
-            # 832,
-        ):
-            ##################
-            ### INIT YOLO ####
-            ##################
-            yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-            yolo.classes = config.yolo.classes
-            yolo.input_size = input_size
-            yolo.channels = config.yolo.channels
-            yolo.make_model()
-            yolo.load_weights(
-                config.yolo.weights, weights_type=config.yolo.weights_type
-            )
-
-            for idx, cls_name in yolo.classes.items():
-                if cls_name == "text":
-                    text_label_idx = idx
-                    break
+        # # todo compare input_size
+        # for input_size in (
+        #     # 416,
+        #     # 448,
+        #     # 480,
+        #     # 512,
+        #     # 544,
+        #     # 576,
+        #     # config.yolo.input_size,
+        #     # 640,
+        #     # 672,
+        #     # 704,
+        #     736,
+        #     # 768,
+        #     # 800,
+        #     # 832,
+        # ):
 
             ##################
             ### PARAMTER  ####
@@ -335,11 +342,23 @@ def main(
             )
             mAP.add(original_preds, original_gts, absolute=absolute)
             results = mAP.compute()
+
+
             pretty = mAP.prettify(results)
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             print("!!!!!!!!!!!!!!!!!!!!!!!! MAP !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             print(pretty)
+
+            ############################################################################
+            ## THRESHOLD_TUNING
+            ############################################################################
+            _, mAP_val = mAP.get_maps(results)[-1]
+            if threshold_tuning:
+                mAPs_for_thresholds.append((iou_thresh, score_thresh, mAP_val))
+
+            print(mAP_val)
+
 
             # DEBUG
             # for oimg, gt, pred in zip(orignal_imgs, original_gts, original_preds):

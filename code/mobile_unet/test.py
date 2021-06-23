@@ -152,19 +152,31 @@ def get_exp_weights():
     # exp = lambda param, run: exp_base / f"scale_{param}/run{run}/best.pth"
     # params = (0.1, 0.2, 0.3)
 
-    exp_base = exp_dir / "crop"
-    exp = lambda param, run: exp_base / f"crop_{param}/run{run}/best.pth"
-    params = (0.7, 0.8, 0.9)
-    # params = (0.9,)
+    # exp_base = exp_dir / "crop"
+    # exp = lambda param, run: exp_base / f"crop_{param}/run{run}/best.pth"
+    # params = (0.7, 0.8, 0.9)
 
     # exp_base = exp_dir / "color"
     # exp = lambda param, run: exp_base / f"color_{param}/run{run}/best.pth"
     # params = (0.1, 0.2, 0.3)
 
+    # weights = []
+    # for param in params:
+    #     for run in (0, 1, 2):
+    #         weights.append(exp(param, run))
+
+    ####################################################################################
+    ## GRID
+    ####################################################################################
+    exp_base = exp_dir / "grid"
+    exp = lambda bs, loss, lr, run: exp_base / f"grid_bs_{bs}_loss_{loss}_lr_{lr}/run{run}/best.pth"
+
     weights = []
-    for param in params:
-        for run in (0, 1, 2):
-            weights.append(exp(param, run))
+    for bs in (32, 64):
+        for loss in ("focal2_0.1", "focal2_0.8"):
+            for lr in (0.01, 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001):
+                for run in (0, 1, 2):
+                    weights.append(exp(bs, loss, lr, run))
 
     return weights
 
@@ -203,9 +215,13 @@ def main(dataset, score_thresh, exp, tta, show):
     else:
         # loaded = torch.load("weights/non_transfer_best.pth")
         # loaded = torch.load("weights/best.pth")
-        # loaded = torch.load("experiments_unet/test/test/run0/best.pth")
-        # loaded = torch.load("weights/best_safe_FUCKING_KEEP_IT.pth")
-        w = "experiments_unet/lr/lr_0.01/run2/best.pth"
+        # w = "experiments_unet/test/test/run0/best.pth"
+        # w = "weights/best_safe_FUCKING_KEEP_IT.pth"
+        # w = "weights/best_78miou@608_trained_with_448.pth"
+        # w = "experiments_unet/lr/lr_0.01/run2/best.pth"
+        # w = "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.005/run2/best.pth"
+        # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.00025/run0/best.pth"
+        w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run0/best.pth"
         # w = "weights/best_78miou@608_trained_with_448.pth"
         weights = [w]
 
@@ -224,6 +240,16 @@ def main(dataset, score_thresh, exp, tta, show):
 
             for img_path in test_files:
                 # print(img_path)
+
+                ##################################
+                ## HARD VALID EXAMPLES
+                ##################################
+                # if not ("04_03" in str(img_path)
+                #     or "13_01" in str(img_path)
+                #     or "24_04" in str(img_path)
+                # ):
+                #     continue
+
 
                 label_path = utils.segmentation_label_from_img(img_path)
                 label = np.load(str(label_path))
