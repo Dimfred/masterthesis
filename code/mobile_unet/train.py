@@ -441,9 +441,9 @@ def main():
             scale=config.unet.scale,
             upsampling=config.unet.upsampling,
         )
-        print(summary(model.backbone, torch.zeros((1, 3, 448, 448)), show_input=True))
-        print(summary(model, torch.zeros((1, 3, 448, 448)), show_input=True))
-        sys.exit()
+        # print(summary(model.backbone, torch.zeros((1, 3, 448, 448)), show_input=True))
+        # print(summary(model, torch.zeros((1, 3, 448, 448)), show_input=True))
+        # sys.exit()
 
 
         if (
