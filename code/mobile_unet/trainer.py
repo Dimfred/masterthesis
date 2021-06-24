@@ -285,7 +285,7 @@ class Trainer:
         print(tabulate(pretty))
 
     def combine_prediction(self, prediction):
-        if self.loss_type == "focal":
+        if self.loss_type == "focal" or self.loss_type == "dice":
             bg_pred = prediction[:, 0]
             fg_pred = prediction[:, 1]
 

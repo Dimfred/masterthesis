@@ -396,49 +396,58 @@
 \newlabel{sec:segmentation}{{2.7}{27}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.8}MobileNetV2-UNet}{27}{}\protected@file@percent }
 \newlabel{sec:mobilenetv2_unet}{{2.8}{27}}
+\AC@undonewlabel{acro:MUnet}
+\newlabel{acro:MUnet}{{2.8}{27}}
+\acronymused{MUnet}
 \acronymused{CNN}
 \citation{mnetv2}
 \citation{mnetv1}
 \citation{unet}
 \acronymused{YOLOv4}
+\acronymused{MUnet}
+\acronymused{MUnet}
 \@writefile{toc}{\contentsline {subsubsection}{MobileNetV2-UNet backbone}{28}{}\protected@file@percent }
+\acronymused{MUnet}
+\@writefile{toc}{\contentsline {subsubsection}{MobileNetV2-UNet decoder}{28}{}\protected@file@percent }
+\acronymused{MUnet}
 \@writefile{lot}{\contentsline {table}{\numberline {2.11}{\ignorespaces An inverted residual block transforming from $k$ to $k'$ channels, with stride $s$ and expansion factor $t$.\relax }}{29}{}\protected@file@percent }
 \newlabel{tab:invres_expansion}{{2.11}{29}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces The inverted residual block. A $1 \times 1$ convolution with non-linear activation followed by a depthwise separable convolution and a linear $1 \times 1$ convolution with residual connection to the input. The residual connection is here additive, i.e. the input gets added to the output of the linear $1 \times 1$ convolution.\relax }}{29}{}\protected@file@percent }
 \newlabel{fig:inverted_residual}{{2.7}{29}}
 \citation{hypergraph_def}
-\@writefile{lot}{\contentsline {table}{\numberline {2.12}{\ignorespaces MobileNetV2 backbone used in MobileNetV2-UNet. Blocks marked as $Skip_*$ are outputs from the network which are used in the decoder. The parameters above define the configuration of the respective block, $t$ is the expansion factor inside an inverted residual block as defined in 2.11\hbox {}, $k$ is the kernel size for the two standard convolutions used in the backbone, $n$ defines how often that particular block is repeated and $s$ is the stride of a block. Note that if $s = 2$ only the first block has this stride, the others have $s = 1$.\relax }}{30}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2.12}{\ignorespaces MobileNetV2 backbone used in \ac {MUnet} Blocks marked as $Skip_*$ are outputs from the network which are used in the decoder. The parameters above define the configuration of the respective block, $t$ is the expansion factor inside an inverted residual block as defined in 2.11\hbox {}, $k$ is the kernel size for the two standard convolutions used in the backbone, $n$ defines how often that particular block is repeated and $s$ is the stride of a block. Note that if $s = 2$ only the first block has this stride, the others have $s = 1$.\relax }}{30}{}\protected@file@percent }
 \newlabel{tab:mobilenetv2_architecture}{{2.12}{30}}
-\@writefile{toc}{\contentsline {subsubsection}{MobileNetV2-UNet decoder}{30}{}\protected@file@percent }
+\acronymused{MUnet}
 \@writefile{toc}{\contentsline {section}{\numberline {2.9}Hypergraphs}{30}{}\protected@file@percent }
 \acronymused{ECD}
-\@writefile{lot}{\contentsline {table}{\numberline {2.13}{\ignorespaces MobileNetV2-UNet decoder. The decoder uses transpose convolutions to upsample the input (ConvTranspose) and as the backbone, inverted residuals to process the upsampled input together with the skip connection. The '+' indicates a concatenation along the channel axis. Since the first block in the backbone directly downsamples the input there is no skip connection with the size of the input. Therefore the last layer of the decoder is a upsampling layer, which uses a bilinear upsampling method to increase the size of the prediction to the size of the input. As with the backbone $t$ indicates the expansion size of the inverted residual block, $k$ indicates the used kernel size and $s$ indicates the used stride.\relax }}{31}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2.13}{\ignorespaces \ac {MUnet} decoder. The decoder uses transpose convolutions to upsample the input (ConvTranspose) and as the backbone, inverted residuals to process the upsampled input together with the skip connection. The '+' indicates a concatenation along the channel axis. Since the first block in the backbone directly downsamples the input there is no skip connection with the size of the input. Therefore the last layer of the decoder is a upsampling layer, which uses a bilinear upsampling method to increase the size of the prediction to the size of the input. As with the backbone $t$ indicates the expansion size of the inverted residual block, $k$ indicates the used kernel size and $s$ indicates the used stride.\relax }}{31}{}\protected@file@percent }
 \newlabel{tab:mobilenetv2_decoder}{{2.13}{31}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.10}Metrics}{31}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{True Positive, False Positive, False Negative}{31}{}\protected@file@percent }
+\acronymused{MUnet}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.8}{\ignorespaces An example drawing of a hypergraph with its corresponding adjacency matrix. The hypergraph is defined as: $H = (V, E)$, $V = \{v1, v2, v3, v4\}$, $E = \{e1, e2\}$, with $e1 = \{v1, v2, v3\}$, $e2 = \{v3, v4\}$. In the adjacency matrix a row corresponds to a hyperedge and each column to a vertex. When a vertex is present in a hyperedge it has a 1 as an entry in the matrix, when a vertex is not present it has a 0.\relax }}{31}{}\protected@file@percent }
+\newlabel{fig:hypergraph_adjacency}{{2.8}{31}}
+\citation{map_pascal_voc}
+\citation{map_coco}
+\@writefile{toc}{\contentsline {section}{\numberline {2.10}Metrics}{32}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{True Positive, False Positive, False Negative}{32}{}\protected@file@percent }
 \AC@undonewlabel{acro:TP}
-\newlabel{acro:TP}{{2.10}{31}}
+\newlabel{acro:TP}{{2.10}{32}}
 \acronymused{TP}
 \AC@undonewlabel{acro:FP}
-\newlabel{acro:FP}{{2.10}{31}}
+\newlabel{acro:FP}{{2.10}{32}}
 \acronymused{FP}
 \AC@undonewlabel{acro:FN}
-\newlabel{acro:FN}{{2.10}{31}}
+\newlabel{acro:FN}{{2.10}{32}}
 \acronymused{FN}
 \acronymused{TP}
 \acronymused{FP}
 \acronymused{FN}
 \acronymused{TP}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.8}{\ignorespaces An example drawing of a hypergraph with its corresponding adjacency matrix. The hypergraph is defined as: $H = (V, E)$, $V = \{v1, v2, v3, v4\}$, $E = \{e1, e2\}$, with $e1 = \{v1, v2, v3\}$, $e2 = \{v3, v4\}$. In the adjacency matrix a row corresponds to a hyperedge and each column to a vertex. When a vertex is present in a hyperedge it has a 1 as an entry in the matrix, when a vertex is not present it has a 0.\relax }}{32}{}\protected@file@percent }
-\newlabel{fig:hypergraph_adjacency}{{2.8}{32}}
 \@writefile{toc}{\contentsline {subsubsection}{Precision}{32}{}\protected@file@percent }
 \acronymused{TP}
 \newlabel{eq:precision}{{2.37}{32}}
 \@writefile{toc}{\contentsline {subsubsection}{Recall}{32}{}\protected@file@percent }
 \newlabel{eq:recall}{{2.38}{32}}
 \@writefile{toc}{\contentsline {subsubsection}{F1-Score}{32}{}\protected@file@percent }
-\citation{map_pascal_voc}
-\citation{map_coco}
 \citation{map_article}
 \citation{map_article}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.9}{\ignorespaces Example of a precision-recall curve, where precision and recall were calculated for different \ac {IoU} thresholds and sorted and plotted by their recall values \cite  {map_article}. The \ac {AP} is the area under the curve.\relax }}{33}{}\protected@file@percent }
@@ -459,7 +468,7 @@
 \newlabel{acro:mAP}{{2.10}{33}}
 \acronymused{mAP}
 \acronymused{AP}
-\newlabel{eq:map}{{2.41}{34}}
+\newlabel{eq:map}{{2.41}{33}}
 \@writefile{toc}{\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{34}{}\protected@file@percent }
 \AC@undonewlabel{acro:mIoU}
 \newlabel{acro:mIoU}{{2.10}{34}}
@@ -481,7 +490,9 @@
 \acronymused{ECD}
 \@writefile{toc}{\contentsline {subsubsection}{Labeling}{35}{}\protected@file@percent }
 \acronymused{YOLOv4}
+\acronymused{MUnet}
 \acronymused{YOLOv4}
+\acronymused{MUnet}
 \acronymused{ECC}
 \citation{canny_edge}
 \citation{opencv}
@@ -513,13 +524,17 @@
 \acronymused{ECC}
 \acronymused{IDom}
 \acronymused{YOLO}
+\acronymused{MUnet}
 \acronymused{IDom}
 \acronymused{ECD}
+\acronymused{MUnet}
 \@writefile{toc}{\contentsline {subsubsection}{Topology Creation}{38}{}\protected@file@percent }
 \acronymused{ECC}
 \acronymused{IDom}
 \acronymused{LDom}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Example predictions of YOLO (left) and MobileNetV2-UNet (right). YOLO predicts a bounding box around each component with its corresponding class, while MobileNetV2-UNet predicts a segmentation mask a binary fashion of the whole \ac {ECD} drawing, including \ac {ECC} annotations. Primary segmentation is needed to remove the checkered background from the image.\relax }}{39}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Example predictions of YOLO (left) and \ac {MUnet} (right). YOLO predicts a bounding box around each component with its corresponding class, while \ac {MUnet} predicts a segmentation mask a binary fashion of the whole \ac {ECD} drawing, including \ac {ECC} annotations. Primary segmentation is needed to remove the checkered background from the image.\relax }}{39}{}\protected@file@percent }
+\acronymused{MUnet}
+\acronymused{MUnet}
 \acronymused{ECD}
 \acronymused{ECC}
 \newlabel{fig:example_predictions}{{3.1}{39}}
@@ -537,14 +552,16 @@
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}Annotation Matching TODO caption to bottom and format}{41}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{LTspice Conversion}{41}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3.3}Training}{42}{}\protected@file@percent }
+\newlabel{sec:training}{{3.3}{42}}
+\acronymused{MUnet}
+\acronymused{TTA}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{42}{}\protected@file@percent }
 \acronymused{YOLO}
-\acronymused{CIoU}
 \citation{yolov2}
 \citation{yolov4}
+\citation{copypaste_aug}
 \AC@undonewlabel{acro:SGD}
-\newlabel{acro:SGD}{{3.3.1}{43}}
-\acronymused{SGD}
+\newlabel{acro:SGD}{{\caption@xref {acro:SGD}{ on input line 45}}{43}}
 \acronymused{SGD}
 \@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces The initial training configuration for the experiments performed with the YOLO network.\relax }}{43}{}\protected@file@percent }
 \newlabel{tab:initial_yolo_config}{{3.3}{43}}
@@ -553,57 +570,52 @@
 \acronymused{IoU}
 \@writefile{toc}{\contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{43}{}\protected@file@percent }
 \acronymused{mAP}
-\citation{copypaste_aug}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces The results of the initial learning rate search shown on the validation set, as the mean of the mAPs of three separate training runs.\relax }}{44}{}\protected@file@percent }
 \newlabel{fig:yolo_lr_experiment_results}{{3.2}{44}}
-\@writefile{toc}{\contentsline {subsubsection}{Experiment: Offline Augmentations}{44}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces The results of the offline augmentation with the different offline augmentation configurations compared with the results of the best performing learning rate (baseline). When rotation and flip are enabled simultaneously the flipped image also gets rotated three times by 90\textdegree . Results are given as the mean of the mAP of three separate training runs.\relax }}{45}{}\protected@file@percent }
 \newlabel{fig:yolo_offline_aug_results}{{3.3}{45}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces The training configuration for the offline augmentation experiment, where the learning rate is set to the best performing learning rate from the learning rate search and the data is pre-augmented with the respective experiment configuration.\relax }}{45}{}\protected@file@percent }
-\newlabel{tab:yolo_offline_aug_config}{{3.4}{45}}
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Offline Augmentations}{45}{}\protected@file@percent }
 \acronymused{AP}
 \acronymused{mAP}
+\citation{eiou}
 \acronymused{mAP}
 \acronymused{ECC}
 \acronymused{mAP}
 \acronymused{ECC}
 \acronymused{ECC}
 \@writefile{toc}{\contentsline {subsubsection}{Experiment: Online Augmentations}{46}{}\protected@file@percent }
-\citation{eiou}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Results of the online augmentation experiment compared to the baseline which was established in the offline augmentation experiment. Each augmentation shows a clear increase in mAP in comparison to the baseline. The best performing parameters are used together in the grid search experiments.\relax }}{47}{}\protected@file@percent }
+\acronymused{mAP}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Results of the online augmentation experiment compared to the baseline which was established in the offline augmentation experiment. Each augmentation shows a clear increase in mAP in comparison to the baseline.\relax }}{47}{}\protected@file@percent }
 \newlabel{fig:yolo_online_aug_results}{{3.4}{47}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces The YOLO training configuration for the online augmentation experiment. The dataset is now additionally pre-augmented with the projection, flip and rotation augmentation.\relax }}{47}{}\protected@file@percent }
-\newlabel{tab:yolo_online_config}{{3.5}{47}}
 \@writefile{toc}{\contentsline {subsubsection}{Experiment: Grid Search}{47}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Results of the grid search shown for all loss functions, learning rates and batch sizes.\relax }}{48}{}\protected@file@percent }
-\newlabel{fig:yolo_grid_bs_compare_results}{{3.5}{48}}
 \acronymused{CIoU}
 \acronymused{EIoU}
 \acronymused{EIoU}
 \acronymused{EIoU}
 \acronymused{EIoU}
-\@writefile{lot}{\contentsline {table}{\numberline {3.6}{\ignorespaces Configuration of the YOLO grid search experiment. The networks were trained for all possible configurations of learning rate, batch size and loss function.\relax }}{48}{}\protected@file@percent }
-\newlabel{tab:yolo_grid_search_config}{{3.6}{48}}
-\acronymused{EIoU}
-\acronymused{CIoU}
-\acronymused{EIoU}
+\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces Configuration of the YOLO grid search experiment. The networks were trained for all possible configurations of learning rate, batch size and loss function.\relax }}{47}{}\protected@file@percent }
+\newlabel{tab:yolo_grid_search_config}{{3.4}{47}}
 \citation{yolov2}
 \citation{diou}
 \citation{weighted_bbox_fusion}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Results of the grid search shown for all loss functions, learning rates and batch sizes.\relax }}{48}{}\protected@file@percent }
+\newlabel{fig:yolo_grid_bs_compare_results}{{3.5}{48}}
+\acronymused{EIoU}
+\acronymused{CIoU}
+\acronymused{EIoU}
+\@writefile{toc}{\contentsline {subsubsection}{Tuning: Input Size}{48}{}\protected@file@percent }
+\acronymused{YOLOv4}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Results of the YOLO grid search for all used loss functions and learning rates shown for batch size 64.\relax }}{49}{}\protected@file@percent }
 \newlabel{fig:yolo_grid_heat_results}{{3.6}{49}}
-\@writefile{toc}{\contentsline {subsubsection}{Tuning: Input Size}{49}{}\protected@file@percent }
-\acronymused{YOLOv4}
-\acronymused{mAP}
-\@writefile{toc}{\contentsline {subsubsection}{Experiment: Non-Maximum Suppression and Test-Time Augmentation}{49}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces Different input sizes tested after training on the validation set.\relax }}{49}{}\protected@file@percent }
+\newlabel{fig:yolo_input_size}{{3.7}{49}}
+\@writefile{toc}{\contentsline {subsubsection}{Tuning: Non-Maximum Suppression and Test-Time Augmentation}{50}{}\protected@file@percent }
 \acronymused{NMS}
 \acronymused{NMS}
 \acronymused{DIoU}
 \acronymused{NMS}
 \acronymused{WBF}
 \acronymused{TTA}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces Different input sizes tested after training on the validation set. The scalar on the x-axis should be interpreted as $val \times val$, since the input size is quadratic.\relax }}{50}{}\protected@file@percent }
-\newlabel{fig:yolo_input_size}{{3.7}{50}}
 \acronymused{DIoU}
 \acronymused{NMS}
 \acronymused{DIoU}
@@ -618,17 +630,6 @@
 \acronymused{WBF}
 \acronymused{TTA}
 \acronymused{WBF}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces The results of the \ac {DIoU}-\ac {NMS} parameter tuning. All possible combinations of score threshold and \ac {IoU} threshold were evaluated on the validation set. The best performing combination is the one with a score threshold of 0.1 and a \ac {IoU} threshold of 0.45.\relax }}{51}{}\protected@file@percent }
-\acronymused{DIoU}
-\acronymused{NMS}
-\acronymused{IoU}
-\acronymused{IoU}
-\newlabel{fig:diou_nms_tuning}{{3.8}{51}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces The results of the \ac {WBF} parameter tuning. All possible combinations of score threshold and \ac {IoU} threshold were evaluated on the validation set. The best performing combination is the one with a score threshold of 0.15 and an \ac {IoU} threshold of 0.25.\relax }}{52}{}\protected@file@percent }
-\acronymused{WBF}
-\acronymused{IoU}
-\acronymused{IoU}
-\newlabel{fig:wbf_nms_tuning}{{3.9}{52}}
 \acronymused{IoU}
 \acronymused{WBF}
 \acronymused{TTA}
@@ -639,21 +640,42 @@
 \acronymused{NMS}
 \acronymused{DIoU}
 \acronymused{TTA}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces WBF + TTA TUNING\relax }}{54}{}\protected@file@percent }
-\newlabel{fig:wbf_tta_nms_tuning}{{3.10}{54}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.11}{\ignorespaces WBF + TTA + VOTES\relax }}{55}{}\protected@file@percent }
-\newlabel{fig:wbf_tta_nms_votes}{{3.11}{55}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.12}{\ignorespaces Combined tuning results\relax }}{55}{}\protected@file@percent }
-\newlabel{fig:yolo_tuning_combined_results}{{3.12}{55}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Results}{57}{}\protected@file@percent }
+\acronymused{WBF}
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Improve Model Uncertainty Through Voting Based Thresholding in \ac {WBF}}{51}{}\protected@file@percent }
+\acronymused{TTA}
+\acronymused{WBF}
+\acronymused{FP}
+\acronymused{WBF}
+\acronymused{TTA}
+\acronymused{WBF}
+\acronymused{WBF}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces Results of the voting based thresholding approach to improve model performance, shown on the validation set for all possible voting thresholds.\relax }}{51}{}\protected@file@percent }
+\newlabel{fig:wbf_tta_nms_votes}{{3.8}{51}}
+\@writefile{toc}{\contentsline {subsubsection}{Final Results}{51}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces The final results of the tuning experiment performed on the validation set, presented also with the performance on the test dataset. Specific explanation of the experiments with the optimal obtained parameters can be found in table 3.5\hbox {}.\relax }}{52}{}\protected@file@percent }
+\newlabel{fig:yolo_tuning_combined_results}{{3.9}{52}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces Results of the tuning experiment performed on the validation set, presented also with the performance on the test dataset. A visual representation can also be found in figure 3.9\hbox {}.\relax }}{53}{}\protected@file@percent }
+\newlabel{tab:yolo_tuning_combined_results}{{3.5}{53}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}MobileNetV2-UNet}{53}{}\protected@file@percent }
+\acronymused{MUnet}
+\acronymused{MUnet}
+\@writefile{lot}{\contentsline {table}{\numberline {3.6}{\ignorespaces Configuration of the YOLO grid search experiment. The networks were trained for all possible configurations of learning rate, batch size and loss function.\relax }}{53}{}\protected@file@percent }
+\newlabel{tab:munet_config}{{3.6}{53}}
+\acronymused{MUnet}
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{54}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Offline Augmentations}{54}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Online Augmentations}{54}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Experiment: Grid Search}{54}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Tuning: Input Size}{54}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Results}{55}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Discussion}{59}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Discussion}{57}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@input{mt07.aux}
 \@input{mt08.aux}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Abbrevations}{61}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Abbrevations}{59}{}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newacro{ANN}[\AC@hyperlink{ANN}{ANN}]{Artificial Neural Network}
@@ -697,23 +719,41 @@
 \newacro{LDom}[\AC@hyperlink{LDom}{LDom}]{LTspice Domain}
 \newacro{IDom}[\AC@hyperlink{IDom}{IDom}]{Image Domain}
 \newacro{SGD}[\AC@hyperlink{SGD}{SGD}]{Stochastic Gradient Descent}
+\newacro{MUnet}[\AC@hyperlink{MUnet}{MUnet}]{MobileNetV2-UNet}
 \@input{mt-lof.aux}
 \@input{mt-lot.aux}
 \@input{mt-lit.aux}
-\@writefile{toc}{\contentsline {chapter}{Appendix}{80}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A}YOLOv4-Tiny Experiments}{80}{}\protected@file@percent }
-\newlabel{app:yolo_experiments}{{A}{80}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces The results of the initial learning rate search shown on the validation set, with mAP over all classes as well as the classwise AP. The mean and standard deviation are taken over three separate runs.\relax }}{80}{}\protected@file@percent }
-\newlabel{tab:yolo_init_lr_results}{{1}{80}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces The results of the offline augmentation configuration search. The configuration should be interpreted in a way that a 1 behind a letter means that particular augmentation is enabled. Further, the letter ``P'' stands for projection, ``F'' for flip and ``R'' means rotation. Rotation always includes a 90\textdegree \, 180\textdegree \ and a 270\textdegree \ rotation. Flip is a horizontal flip. Additionally, when flip and rotation are enabled at the same time the flipped imaged gets also rotated three times. All results are again given with the mean and standard deviation over three runs and the results are compared against the baseline, which is the best performing learning rate from the learning rate search experiment (table 1\hbox {}).\relax }}{81}{}\protected@file@percent }
-\newlabel{tab:yolo_offline_aug_results}{{2}{81}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces The results of the rotation augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{82}{}\protected@file@percent }
-\newlabel{tab:yolo_rotation_augmentation_result}{{3}{82}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces The results of the random scale augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{83}{}\protected@file@percent }
-\newlabel{tab:yolo_random_scale_augmentation_result}{{4}{83}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces The results of the safe bounding box crop augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{84}{}\protected@file@percent }
-\newlabel{tab:yolo_bbox_safe_crop_augmentation_result}{{5}{84}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces The results of the color jitter augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{85}{}\protected@file@percent }
-\newlabel{tab:yolo_color_jitter_augmentation_result}{{6}{85}}
-\@writefile{toc}{\contentsline {section}{\numberline {B}MobileNetV2-UNet experiments}{85}{}\protected@file@percent }
-\gdef \@abspage@last{93}
+\@writefile{toc}{\contentsline {chapter}{Appendix}{78}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}YOLOv4-Tiny Experiments}{78}{}\protected@file@percent }
+\newlabel{app:yolo_experiments}{{A}{78}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces The results of the initial learning rate search shown on the validation set, with mAP over all classes as well as the classwise AP. The mean and standard deviation are taken over three separate runs.\relax }}{78}{}\protected@file@percent }
+\newlabel{tab:yolo_init_lr_results}{{A.1}{78}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.2}{\ignorespaces The results of the offline augmentation configuration search. The configuration should be interpreted in a way that a 1 behind a letter means that particular augmentation is enabled. Further, the letter ``P'' stands for projection, ``F'' for flip and ``R'' means rotation. Rotation always includes a 90\textdegree \, 180\textdegree \ and a 270\textdegree \ rotation. Flip is a horizontal flip. Additionally, when flip and rotation are enabled at the same time the flipped imaged gets also rotated three times. All results are again given with the mean and standard deviation over three runs and the results are compared against the baseline, which is the best performing learning rate from the learning rate search experiment (table A.1\hbox {}).\relax }}{79}{}\protected@file@percent }
+\newlabel{tab:yolo_offline_aug_results}{{A.2}{79}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.3}{\ignorespaces The results of the rotation augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{80}{}\protected@file@percent }
+\newlabel{tab:yolo_rotation_augmentation_result}{{A.3}{80}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.4}{\ignorespaces The results of the random scale augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{81}{}\protected@file@percent }
+\newlabel{tab:yolo_random_scale_augmentation_result}{{A.4}{81}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.5}{\ignorespaces The results of the safe bounding box crop augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{82}{}\protected@file@percent }
+\newlabel{tab:yolo_bbox_safe_crop_augmentation_result}{{A.5}{82}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.6}{\ignorespaces The results of the color jitter augmentation, performed on different parameters and compared against the best offline augmentation configuration. The results are given with the mean and standard deviation over three runs.\relax }}{83}{}\protected@file@percent }
+\newlabel{tab:yolo_color_jitter_augmentation_result}{{A.6}{83}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}MobileNetV2-UNet experiments}{83}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {A.1}{\ignorespaces The results of the \ac {DIoU}-\ac {NMS} parameter tuning. All possible combinations of score threshold and \ac {IoU} threshold were evaluated on the validation set. The best performing combination is the one with a score threshold of 0.1 and a \ac {IoU} threshold of 0.45.\relax }}{84}{}\protected@file@percent }
+\acronymused{DIoU}
+\acronymused{NMS}
+\acronymused{IoU}
+\acronymused{IoU}
+\newlabel{fig:diou_nms_tuning}{{A.1}{84}}
+\@writefile{lof}{\contentsline {figure}{\numberline {A.2}{\ignorespaces The results of the \ac {WBF} parameter tuning. All possible combinations of score threshold and \ac {IoU} threshold were evaluated on the validation set. The best performing combination is the one with a score threshold of 0.15 and an \ac {IoU} threshold of 0.25.\relax }}{85}{}\protected@file@percent }
+\acronymused{WBF}
+\acronymused{IoU}
+\acronymused{IoU}
+\newlabel{fig:wbf_nms_tuning}{{A.2}{85}}
+\@writefile{lof}{\contentsline {figure}{\numberline {A.3}{\ignorespaces The results of the \ac {WBF} tuning with \ac {TTA}. All possible combinations of score threshold and \ac {IoU} threshold were evaluated on the validation set. The best performing combination is the one with a score threshold of 0.1 and an \ac {IoU} threshold of 0.45.\relax }}{86}{}\protected@file@percent }
+\acronymused{WBF}
+\acronymused{TTA}
+\acronymused{IoU}
+\acronymused{IoU}
+\newlabel{fig:wbf_tta_nms_tuning}{{A.3}{86}}
+\gdef \@abspage@last{94}

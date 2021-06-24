@@ -19,7 +19,7 @@ Figure \ref{fig:instance_vs_semantic} illustrates the two different types of seg
 \section{MobileNetV2-UNet}
 \label{sec:mobilenetv2_unet}
 
-For the segmentation of the circuits MobileNetV2-UNet \cite{mobile_unet} is used.
+For the segmentation of the circuits \ac{MUnet} \cite{mobile_unet} is used.
 This network is build upon the principles of the famous U-Net proposed by Ronneberger et al. \cite{unet}.
 The classical U-Net architecture consists of two main components: an encoder and a decoder.
 The encoder is a classical \ac{CNN} which learns the features of the provided data.
@@ -28,12 +28,12 @@ The decoder does the inverse, here the feature maps are convolved and then upsam
 Which made the U-Net unique at the proposed time is that to enhance the segmentation results, additionally after a feature map was upsampled it gets concatenated with a feature map from the backbone which has the same resolution.
 It should be noted that this approach was probably picked up by the \ac{YOLOv4} developers and reused in their architecture as has been shown in section \ref{sec:yolo}.
 
-MobileNetV2-UNet is a combination of the MobileNetV2 \cite{mnetv2} which is used as the backbone and a decoder which is adapted to the backbone.
-In the following section the architecture of the MobileNetV2-UNet is explained.
+\ac{MUnet} is a combination of the MobileNetV2 \cite{mnetv2} which is used as the backbone and a decoder which is adapted to the backbone.
+In the following section the architecture of the \ac{MUnet} is explained.
 
 \subsubsection{MobileNetV2-UNet backbone}
 
-MobileNetV2 is the backbone of the MobileNetV2-UNet and can be decomposed into two main components:
+MobileNetV2 is the backbone of the \ac{MUnet} and can be decomposed into two main components:
 
 \begin{itemize}
     \item depthwise separable convolutions
@@ -101,14 +101,14 @@ $Skip_{4}$      & InvRes        & 6 & - & 3 & 1 & (28, 28, 96) \\
 $Skip_{5}$      & Conv+BN+ReLU6 & - & 1 & - & - & (14, 14, 1280) \\
 \end{tabular}
 
-\caption{MobileNetV2 backbone used in MobileNetV2-UNet. Blocks marked as $Skip_*$ are outputs from the network which are used in the decoder. The parameters above define the configuration of the respective block, $t$ is the expansion factor inside an inverted residual block as defined in \ref{tab:invres_expansion}, $k$ is the kernel size for the two standard convolutions used in the backbone, $n$ defines how often that particular block is repeated and $s$ is the stride of a block. Note that if $s = 2$ only the first block has this stride, the others have $s = 1$.}
+\caption{MobileNetV2 backbone used in \ac{MUnet} Blocks marked as $Skip_*$ are outputs from the network which are used in the decoder. The parameters above define the configuration of the respective block, $t$ is the expansion factor inside an inverted residual block as defined in \ref{tab:invres_expansion}, $k$ is the kernel size for the two standard convolutions used in the backbone, $n$ defines how often that particular block is repeated and $s$ is the stride of a block. Note that if $s = 2$ only the first block has this stride, the others have $s = 1$.}
 \label{tab:mobilenetv2_architecture}
 \end{center}
 \end{table}
 
 \subsubsection{MobileNetV2-UNet decoder}
 
-The decoder of MobileNetV2-UNet is build by the principles of U-Net\cite{unet}.
+The decoder of \ac{MUnet} is build by the principles of U-Net\cite{unet}.
 Feature map upsampling is done using transposed convolutions.
 After a feature map has been upsampled it is concatenated with a skip connection from the backbone with the same spatial dimension.
 Concatenation is performed along the channel axis.
@@ -135,7 +135,7 @@ $InvRes4$ & $Skip_1 + Up4$  & InvRes        & 6 & - & 1 & (224, 224, 2) \\
 $Up5$     & $InvRes4$       & UpBillinear   & - & - & 2 & (448, 448, 2) \\
 \end{tabular}
 
-\caption{MobileNetV2-UNet decoder. The decoder uses transpose convolutions to upsample the input (ConvTranspose) and as the backbone, inverted residuals to process the upsampled input together with the skip connection. The '+' indicates a concatenation along the channel axis. Since the first block in the backbone directly downsamples the input there is no skip connection with the size of the input. Therefore the last layer of the decoder is a upsampling layer, which uses a bilinear upsampling method to increase the size of the prediction to the size of the input. As with the backbone $t$ indicates the expansion size of the inverted residual block, $k$ indicates the used kernel size and $s$ indicates the used stride.}
+\caption{\ac{MUnet} decoder. The decoder uses transpose convolutions to upsample the input (ConvTranspose) and as the backbone, inverted residuals to process the upsampled input together with the skip connection. The '+' indicates a concatenation along the channel axis. Since the first block in the backbone directly downsamples the input there is no skip connection with the size of the input. Therefore the last layer of the decoder is a upsampling layer, which uses a bilinear upsampling method to increase the size of the prediction to the size of the input. As with the backbone $t$ indicates the expansion size of the inverted residual block, $k$ indicates the used kernel size and $s$ indicates the used stride.}
 \label{tab:mobilenetv2_decoder}
 \end{center}
 \end{table}

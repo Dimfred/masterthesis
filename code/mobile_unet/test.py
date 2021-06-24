@@ -218,11 +218,14 @@ def main(dataset, score_thresh, exp, tta, show):
         # w = "experiments_unet/test/test/run0/best.pth"
         # w = "weights/best_safe_FUCKING_KEEP_IT.pth"
         # w = "weights/best_78miou@608_trained_with_448.pth"
-        # w = "experiments_unet/lr/lr_0.01/run2/best.pth"
         # w = "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.005/run2/best.pth"
         # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.00025/run0/best.pth"
-        w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run0/best.pth"
+        # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run0/best.pth"
         # w = "weights/best_78miou@608_trained_with_448.pth"
+
+        # w = "experiments_unet/lr/lr_0.01/run2/best.pth"
+        w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run0/best.pth"
+
         weights = [w]
 
     for weight_path in weights:

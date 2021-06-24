@@ -319,9 +319,9 @@ def main(
             # DEBUG: show the tta pred
             if show:
                 for img, pred, gt in zip(orignal_imgs, original_preds, original_gts):
-                    # cimg = utils.show_bboxes(img, pred, type_="pred", classes=yolo.classes, gt=gt)
-                    cimg = utils.show_bboxes(img, pred, type_="pred", classes=yolo.classes)
-                    cv.imwrite("prediction.png", cimg)
+                    cimg = utils.show_bboxes(img, pred, type_="pred", classes=yolo.classes, gt=gt)
+                    # cimg = utils.show_bboxes(img, pred, type_="pred", classes=yolo.classes)
+                    # cv.imwrite("prediction.png", cimg)
 
             # DEBUG check fitted stuff
             for pred in original_preds:

@@ -569,4 +569,29 @@ arrow bottom                    & 79.281\%  & 5.008\% & 83.450\%  & 3.019\% & 79
 \end{center}
 \end{table}
 
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/yolo_diou_heat.pdf}
+    \caption{The results of the \ac{DIoU}-\ac{NMS} parameter tuning. All possible combinations of score threshold and \ac{IoU} threshold were evaluated on the validation set. The best performing combination is the one with a score threshold of 0.1 and a \ac{IoU} threshold of 0.45.}
+    \label{fig:diou_nms_tuning}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/yolo_wbf_heat.pdf}
+    \caption{The results of the \ac{WBF} parameter tuning. All possible combinations of score threshold and \ac{IoU} threshold were evaluated on the validation set. The best performing combination is the one with a score threshold of 0.15 and an \ac{IoU} threshold of 0.25.}
+    \label{fig:wbf_nms_tuning}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/yolo_wbf_tta_heat.pdf}
+    \caption{The results of the \ac{WBF} tuning with \ac{TTA}. All possible combinations of score threshold and \ac{IoU} threshold were evaluated on the validation set. The best performing combination is the one with a score threshold of 0.1 and an \ac{IoU} threshold of 0.45.}
+    \label{fig:wbf_tta_nms_tuning}
+\end{center}
+\end{figure}
+
 \section{MobileNetV2-UNet experiments}

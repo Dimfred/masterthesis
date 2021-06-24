@@ -21,17 +21,17 @@ Furthermore, the pipeline also utilizes segmentation to segment the circuit.
 Segmentation is needed because the topology building step, which will be described next requires a clean mask of the circuit.
 The initial clean mask was created using image binarization.
 While the topology building worked for circuits with white background it failed for circuits with checkered background.
-Therefore, the MobileNetV2-UNet (section \ref{sec:mobilenetv2_unet}) is used to segment a circuit in the \ac{IDom}.
+Therefore, the \ac{MUnet} (section \ref{sec:mobilenetv2_unet}) is used to segment a circuit in the \ac{IDom}.
 The network predicts a binary classification output in the form background / not background, where everything which is unrelated to the \ac{ECD} is considered background.
 Note that the network was trained for both checkered and uncheckered backgrounds, such that it can be applied on both types of images.
-Again, MobileNetV2-UNet was chosen, since it is a lightweight network with appropriate performance, able to be used on mobile devices.
+Again, \ac{MUnet} was chosen, since it is a lightweight network with appropriate performance, able to be used on mobile devices.
 
 An example prediction of both networks can be seen in figure \ref{fig:example_predictions}.
 
 \begin{figure}
 \begin{center}
     \includegraphics[width=16cm]{imgs/pipeline/combined_pred.png}
-    \caption{Example predictions of YOLO (left) and MobileNetV2-UNet (right). YOLO predicts a bounding box around each component with its corresponding class, while MobileNetV2-UNet predicts a segmentation mask a binary fashion of the whole \ac{ECD} drawing, including \ac{ECC} annotations. Primary segmentation is needed to remove the checkered background from the image.}
+    \caption{Example predictions of YOLO (left) and \ac{MUnet} (right). YOLO predicts a bounding box around each component with its corresponding class, while \ac{MUnet} predicts a segmentation mask a binary fashion of the whole \ac{ECD} drawing, including \ac{ECC} annotations. Primary segmentation is needed to remove the checkered background from the image.}
     \label{fig:example_predictions}
 \end{center}
 \end{figure}

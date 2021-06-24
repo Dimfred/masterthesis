@@ -47,10 +47,10 @@
 \contentsline {section}{\numberline {2.7}Segmentation}{27}{}%
 \contentsline {section}{\numberline {2.8}MobileNetV2-UNet}{27}{}%
 \contentsline {subsubsection}{MobileNetV2-UNet backbone}{28}{}%
-\contentsline {subsubsection}{MobileNetV2-UNet decoder}{30}{}%
+\contentsline {subsubsection}{MobileNetV2-UNet decoder}{28}{}%
 \contentsline {section}{\numberline {2.9}Hypergraphs}{30}{}%
-\contentsline {section}{\numberline {2.10}Metrics}{31}{}%
-\contentsline {subsubsection}{True Positive, False Positive, False Negative}{31}{}%
+\contentsline {section}{\numberline {2.10}Metrics}{32}{}%
+\contentsline {subsubsection}{True Positive, False Positive, False Negative}{32}{}%
 \contentsline {subsubsection}{Precision}{32}{}%
 \contentsline {subsubsection}{Recall}{32}{}%
 \contentsline {subsubsection}{F1-Score}{32}{}%
@@ -68,17 +68,25 @@
 \contentsline {section}{\numberline {3.3}Training}{42}{}%
 \contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{42}{}%
 \contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{43}{}%
-\contentsline {subsubsection}{Experiment: Offline Augmentations}{44}{}%
+\contentsline {subsubsection}{Experiment: Offline Augmentations}{45}{}%
 \contentsline {subsubsection}{Experiment: Online Augmentations}{46}{}%
 \contentsline {subsubsection}{Experiment: Grid Search}{47}{}%
-\contentsline {subsubsection}{Tuning: Input Size}{49}{}%
-\contentsline {subsubsection}{Experiment: Non-Maximum Suppression and Test-Time Augmentation}{49}{}%
-\contentsline {chapter}{\numberline {4}Results}{57}{}%
-\contentsline {chapter}{\numberline {5}Discussion}{59}{}%
-\contentsline {chapter}{\numberline {6}Abbrevations}{61}{}%
-\contentsline {chapter}{List of Figures}{64}{}%
-\contentsline {chapter}{List of Tables}{69}{}%
-\contentsline {chapter}{Bibliography}{73}{}%
-\contentsline {chapter}{Appendix}{80}{}%
-\contentsline {section}{\numberline {A}YOLOv4-Tiny Experiments}{80}{}%
-\contentsline {section}{\numberline {B}MobileNetV2-UNet experiments}{85}{}%
+\contentsline {subsubsection}{Tuning: Input Size}{48}{}%
+\contentsline {subsubsection}{Tuning: Non-Maximum Suppression and Test-Time Augmentation}{50}{}%
+\contentsline {subsubsection}{Experiment: Improve Model Uncertainty Through Voting Based Thresholding in \ac {WBF}}{51}{}%
+\contentsline {subsubsection}{Final Results}{51}{}%
+\contentsline {subsection}{\numberline {3.3.2}MobileNetV2-UNet}{53}{}%
+\contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{54}{}%
+\contentsline {subsubsection}{Experiment: Offline Augmentations}{54}{}%
+\contentsline {subsubsection}{Experiment: Online Augmentations}{54}{}%
+\contentsline {subsubsection}{Experiment: Grid Search}{54}{}%
+\contentsline {subsubsection}{Tuning: Input Size}{54}{}%
+\contentsline {chapter}{\numberline {4}Results}{55}{}%
+\contentsline {chapter}{\numberline {5}Discussion}{57}{}%
+\contentsline {chapter}{\numberline {6}Abbrevations}{59}{}%
+\contentsline {chapter}{List of Figures}{62}{}%
+\contentsline {chapter}{List of Tables}{67}{}%
+\contentsline {chapter}{Bibliography}{71}{}%
+\contentsline {chapter}{Appendix}{78}{}%
+\contentsline {section}{\numberline {A}YOLOv4-Tiny Experiments}{78}{}%
+\contentsline {section}{\numberline {B}MobileNetV2-UNet experiments}{83}{}%

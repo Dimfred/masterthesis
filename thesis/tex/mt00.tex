@@ -41,6 +41,8 @@
 
 %appendix with names
 \usepackage[title]{appendix}
+% appendix countering figures with A.n
+\usepackage{chngcntr}
 
 % drawing
 \usepackage{tikz}
@@ -194,6 +196,8 @@ Abstract
 \cleardoublepage
 % \begin{appendices}
 \appendix
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
 \chapter*{Appendix}
 \addcontentsline{toc}{chapter}{Appendix}
 \renewcommand{\thesection}{\Alph{section}}
