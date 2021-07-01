@@ -38,8 +38,10 @@ from tqdm import tqdm
 from tabulate import tabulate
 import time
 from cached_property import cached_property
+from yolov4.common.predict import DIoU_NMS
 
 import utils
+from config import config
 
 
 class YOLOv4(BaseClass):
@@ -270,6 +272,83 @@ class YOLOv4(BaseClass):
             pred_bboxes = self.fit_pred_bboxes_to_original(pred_bboxes, frame.shape)
 
         return pred_bboxes
+
+    def predictme(
+        self,
+        frame: np.ndarray,
+        iou_thresh: float = 0.3,
+        score_thresh: float = 0.25,
+        tta: bool = False,
+        nms: str = "diou",
+        vote_thresh: int = 1
+    ):
+        wbf = utils.WBF(
+            iou_thresh=iou_thresh,
+            score_thresh=score_thresh,
+            vote_thresh=vote_thresh,
+            conf_type="avg",  # avg, max
+        )
+
+        if tta:
+            yolo_tta = utils.YoloTTA(
+                self.classes,
+                config.augment.label_transition_flip,
+                config.augment.label_transition_rotation,
+            )
+
+            imgs_combs = yolo_tta.augment(frame.copy())
+            tta_preds = []
+            for aug_img, comb in imgs_combs:
+                pred = self.predict(
+                    aug_img,
+                    iou_threshold=iou_thresh,
+                    score_threshold=score_thresh,
+                    raw=True,
+                )
+                pred = yolo_tta.perform(pred, comb)
+                tta_preds.append(pred)
+
+            pred = wbf.perform(tta_preds)
+            pred = np.vstack(pred)
+        else:
+            pred = self.predict(
+                frame,
+                iou_threshold=iou_thresh,
+                score_threshold=score_thresh,
+                raw=True,
+            )
+
+            if nms == "wbf":
+                pred = wbf.perform([pred])
+            else:
+                pred = DIoU_NMS(pred, threshold=iou_thresh)
+
+
+        pred = self.fit_pred_bboxes_to_original(pred, frame.shape)
+        return pred
+
+
+
+        # image_data = self.resize_image(frame)
+        # image_data = image_data / 255.0
+        # image_data = image_data[np.newaxis, ...].astype(np.float32)
+
+        # candidates = self._predict(image_data)
+
+        # Select 0
+        # pred_bboxes = self.candidates_to_pred_bboxes(
+        #     candidates[0].numpy(),
+        #     iou_threshold=iou_threshold,
+        #     score_threshold=score_threshold,
+        #     raw=raw,
+        # )
+
+        # when raw is set we want to use TTA hence no DIoU in the above method
+        # and we will fit the boxes manually outside after we de-ttad the prediction
+        # if not raw:
+        #     pred_bboxes = self.fit_pred_bboxes_to_original(pred_bboxes, frame.shape)
+
+        # return pred_bboxes
 
     ############
     # Training #

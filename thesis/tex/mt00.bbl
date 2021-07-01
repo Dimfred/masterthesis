@@ -1,5 +1,11 @@
 \begin{thebibliography}{{G"u}20}
 
+\bibitem[AD18]{ecd_knn_recog}
+A.~Dhole A.~Dewangan.
+\newblock {KNN} based hand drawn electrical circuit recognition.
+\newblock {\em International Journal for Research in Applied Science and
+  Engineering Technology}, 6(6):1111--1115, jun 2018.
+
 \bibitem[Boc20]{yolov4}
 A.~Bochkovskiy, C~Wang, and H.~Liao.
 \newblock Yolov4: Optimal speed and accuracy of object detection, 2020.
@@ -33,6 +39,17 @@ J.~Canny.
 \newblock A computational approach to edge detection.
 \newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence},
   PAMI-8(6):679--698, 1986.
+
+\bibitem[Cao]{line_primitive}
+R.~Cao and C.~Tan.
+\newblock Line primitive extraction by interpretation of line continuation.
+
+\bibitem[{Dha}19]{ecd_yolobool}
+T.~{Dhanushika} and L.~{Ranathunga}.
+\newblock Fine-tuned line connection accompanied boolean expression generation
+  for hand-drawn logic circuits.
+\newblock In {\em 2019 14th Conference on Industrial and Information Systems
+  (ICIIS)}, pages 436--441, 2019.
 
 \bibitem[Dig19]{mish}
 M.~Diganta.
@@ -212,6 +229,13 @@ W.~McCulloch and W.~Pitts.
 \newblock A logical calculus of the ideas immanent in nervous activity.
 \newblock {\em Bulletin of mathematical biophysics}, 5:115--143, 1943.
 
+\bibitem[Moe18]{ecd_seghogsvm}
+M.~Moetesum, S.~Younus, M.~Warsi, and I.~Siddiqi.
+\newblock Segmentation and recognition of electronic components in hand-drawn
+  circuit diagrams.
+\newblock {\em EAI Endorsed Transactions on Scalable Information Systems},
+  5(16), 4 2018.
+
 \bibitem[Mos20]{tta_segmentation_cells}
 N.~Moshkov, B.~Mathe, A.~Kertesz-Farkas, R.~Hollandi, and P.~Horvath.
 \newblock Test-time augmentation for deep learning-based cell segmentation on
@@ -226,6 +250,13 @@ P.~Neto.
 M.~Pritt.
 \newblock Deep learning for recognizing mobile targets in satellite imagery,
   2020.
+
+\bibitem[Rab16]{ecd_anngeo}
+M.~Rabbani, R.~Khoshkangini, H.S. Nagendraswamy, and M.~Conti.
+\newblock Hand drawn optical circuit recognition.
+\newblock {\em Procedia Computer Science}, 84:41 -- 48, 2016.
+\newblock Proceeding of the Seventh International Conference on Intelligent
+  Human Computer Interaction (IHCI 2015).
 
 \bibitem[Ram21]{sgd_momentum}
 A.~Ramezani{-}Kebrya, A.~Khisti, and B.~Liang.
@@ -245,6 +276,13 @@ J.~Redmon and A.~Farhadi.
 J.~Redmon and A.~Farhadi.
 \newblock Yolov3: An incremental improvement.
 \newblock {\em CoRR}, abs/1804.02767, 2018.
+
+\bibitem[{Ref}08]{ecd_ctxindependentsvm}
+K.~{Refaat}, W.~{Helmy}, A.~{Ali}, M.~{AbdelGhany}, and A.~{Atiya}.
+\newblock A new approach for context-independent handwritten offline diagram
+  recognition using support vector machines.
+\newblock In {\em 2008 IEEE International Joint Conference on Neural Networks
+  (IEEE World Congress on Computational Intelligence)}, pages 177--182, 2008.
 
 \bibitem[Ren15]{faster_rcnn}
 S.~Ren, K.~He, R.~Girshick, and J.~Sun.
@@ -269,6 +307,12 @@ F.~Rosenblatt.
   organization in the brain.
 \newblock {\em Psychological Review}, pages 65--386, 1958.
 
+\bibitem[Roy20]{ecd_texturesmo}
+S.~Roy, A.~Bhattacharya, and N.~Sarkar et~al.
+\newblock Offline hand-drawn circuit component recognition using texture and
+  shape-based features.
+\newblock {\em Springer Science+Business Media}, August 2020.
+
 \bibitem[San19]{mnetv2}
 M.~Sandler, A.~Howard, M.~Zhu, A.~Zhmoginov, and L.~Chen.
 \newblock Mobilenetv2: Inverted residuals and linear bottlenecks, 2019.
@@ -282,6 +326,12 @@ D.~Shanmugam, D.~Blalock, G.~Balakrishnan, and J.~Guttag.
 C.~Shorten and T.~Khoshgoftaar.
 \newblock A survey on image data augmentation for deep learning.
 \newblock {\em Journal of Big Data}, 6(1), jul 2019.
+
+\bibitem[Smi09]{tesseract}
+R.~Smith, D.~Antonova, and D.~Lee.
+\newblock Adapting the tesseract open source ocr engine for multilingual ocr.
+\newblock In {\em Proceedings of the International Workshop on Multilingual
+  OCR}, page~1, 2009.
 
 \bibitem[Sol19]{weighted_bbox_fusion}
 R.~Solovyev and W.~Wang.

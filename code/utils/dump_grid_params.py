@@ -19,7 +19,7 @@ print(tabulate(pretty))
 
 pretty = [["bs", "loss", "lr", "Run1", "Run2", "Run3"]]
 for bs in (32, 64):
-    for loss in ("focal2_0.1", "focal2_0.8"):
+    for loss in ("focal2_0.1", "focal2_0.8", "dice"):
         for lr in (0.01, 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001):
             pretty += [[str(bs), loss, str(lr)]]
 print(tabulate(pretty))

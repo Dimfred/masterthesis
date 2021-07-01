@@ -1,0 +1,823 @@
+Preloading dataset...
+Took: 0.019s
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.01/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.872  81.375     84.885
+Recall     85.468  78.494     88.531
+Precision  82.334  84.477     81.529
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.01/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.842  82.567     85.791
+Recall     84.974  79.697     87.292
+Precision  84.711  85.650     84.340
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.01/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.358  80.319     86.145
+Recall     85.597  81.927     87.209
+Precision  83.153  78.772     85.106
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.005/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.628  82.417     84.152
+Recall     84.316  82.278     85.211
+Precision  82.951  82.555     83.119
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.005/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.401  82.785     85.046
+Recall     88.224  80.899     91.441
+Precision  80.895  84.761     79.486
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.005/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.663  82.471     85.573
+Recall     85.199  79.744     87.594
+Precision  84.134  85.390     83.643
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0025/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         82.975  81.717     83.489
+Recall     79.242  74.103     81.499
+Precision  87.078  91.075     85.578
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0025/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.146  80.391     84.250
+Recall     79.838  72.384     83.111
+Precision  86.740  90.391     85.421
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0025/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.778  81.902     84.563
+Recall     81.435  77.004     83.380
+Precision  86.259  87.465     85.780
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.001/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.132  82.163     84.923
+Recall     81.943  75.079     84.958
+Precision  86.442  90.723     84.888
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.001/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.675  82.277     84.260
+Recall     81.416  77.399     83.180
+Precision  86.063  87.810     85.368
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.001/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.257  81.784     83.863
+Recall     81.121  76.097     83.327
+Precision  85.509  88.388     84.406
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0005/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.184  84.204     84.176
+Recall     84.348  80.290     86.130
+Precision  84.021  88.519     82.309
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0005/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.916  82.830     84.356
+Recall     86.178  80.502     88.671
+Precision  81.769  85.297     80.442
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0005/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.367  82.761     85.026
+Recall     84.873  79.454     87.253
+Precision  83.866  86.356     82.910
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.00025/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.809  84.114     83.683
+Recall     85.523  81.824     87.148
+Precision  82.162  86.537     80.484
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.00025/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.384  82.752     85.039
+Recall     84.643  77.869     87.618
+Precision  84.127  88.288     82.607
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.00025/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.018  83.953     84.044
+Recall     84.985  80.136     87.115
+Precision  83.073  88.153     81.183
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0001/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.022  83.802     82.704
+Recall     85.795  82.103     87.417
+Precision  80.422  85.572     78.474
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0001/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         82.931  83.399     82.739
+Recall     86.270  82.848     87.772
+Precision  79.841  83.957     78.251
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0001/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.427  84.136     83.137
+Recall     86.754  83.093     88.362
+Precision  80.345  85.207     78.495
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.01/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.208  82.069     85.101
+Recall     85.690  80.598     87.925
+Precision  82.777  83.593     82.453
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.01/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.613  83.391     85.104
+Recall     85.775  79.353     88.596
+Precision  83.482  87.862     81.877
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.01/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.722  82.538     85.623
+Recall     84.583  78.878     87.089
+Precision  84.861  86.554     84.206
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.005/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.344  82.070     85.287
+Recall     84.213  78.664     86.650
+Precision  84.477  85.786     83.966
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.005/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.172  82.279     84.946
+Recall     84.133  78.240     86.721
+Precision  84.211  86.759     83.242
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.005/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         85.356  84.684     85.633
+Recall     83.931  79.539     85.860
+Precision  86.830  90.540     85.406
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0025/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.529  82.311     84.029
+Recall     81.008  76.008     83.203
+Precision  86.214  89.754     84.870
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0025/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.967  83.033     84.349
+Recall     82.856  77.930     85.020
+Precision  85.108  88.851     83.688
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0025/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         82.858  81.779     83.293
+Recall     79.582  73.883     82.085
+Precision  86.416  91.564     84.537
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.001/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.400  82.064     83.936
+Recall     81.511  75.242     84.264
+Precision  85.379  90.247     83.611
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.001/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.556  82.710     83.904
+Recall     84.110  79.407     86.176
+Precision  83.010  86.300     81.748
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.001/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.026  80.400     84.096
+Recall     79.657  73.168     82.506
+Precision  86.693  89.220     85.748
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0005/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.521  83.526     83.519
+Recall     83.494  79.591     85.207
+Precision  83.548  87.870     81.896
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0005/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.406  82.827     83.638
+Recall     83.586  77.860     86.101
+Precision  83.226  88.472     81.311
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0005/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.783  82.687     84.233
+Recall     82.598  77.791     84.710
+Precision  85.003  88.242     83.763
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.00025/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.717  83.925     83.633
+Recall     84.017  79.785     85.876
+Precision  83.420  88.518     81.505
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.00025/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.742  83.133     83.989
+Recall     84.516  79.094     86.897
+Precision  82.983  87.607     81.268
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.00025/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.831  84.469     83.570
+Recall     84.067  80.533     85.619
+Precision  83.595  88.809     81.616
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0001/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         82.897  84.193     82.364
+Recall     86.202  83.593     87.347
+Precision  79.836  84.802     77.919
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0001/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         82.805  83.369     82.576
+Recall     85.794  81.711     87.588
+Precision  80.017  85.095     78.108
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0001/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         82.954  83.765     82.626
+Recall     85.442  81.515     87.166
+Precision  80.608  86.143     78.535
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.01/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         85.574  84.557     86.001
+Recall     88.059  84.341     89.692
+Precision  83.225  84.775     82.602
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.01/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         85.131  84.956     85.202
+Recall     88.789  83.407     91.152
+Precision  81.763  86.563     79.981
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.01/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         85.642  83.823     86.442
+Recall     87.954  86.140     88.751
+Precision  83.448  81.627     84.250
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.005/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.131  81.599     85.192
+Recall     86.821  81.457     89.177
+Precision  81.603  81.741     81.548
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.005/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         85.299  83.276     86.127
+Recall     85.958  79.875     88.629
+Precision  84.650  86.979     83.763
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.005/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         85.424  83.707     86.157
+Recall     87.485  84.117     88.965
+Precision  83.457  83.302     83.522
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0025/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.915  83.618     85.459
+Recall     87.889  83.886     89.647
+Precision  82.135  83.352     81.645
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0025/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         85.285  83.496     86.027
+Recall     88.148  82.833     90.482
+Precision  82.603  84.169     81.990
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0025/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.801  83.491     85.333
+Recall     86.381  80.518     88.956
+Precision  83.278  86.691     81.994
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.001/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.604  84.821     83.116
+Recall     86.857  82.576     88.737
+Precision  80.585  87.191     78.164
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.001/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.843  85.137     83.326
+Recall     87.343  83.000     89.250
+Precision  80.613  87.387     78.140
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.001/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.808  85.013     83.327
+Recall     87.943  83.443     89.919
+Precision  80.045  86.642     77.635
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0005/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         79.901  81.403     79.273
+Recall     94.114  92.679     94.744
+Precision  69.418  72.574     68.144
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0005/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         79.440  80.836     78.859
+Recall     93.903  91.998     94.739
+Precision  68.837  72.089     67.538
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0005/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         79.621  81.194     78.963
+Recall     94.712  93.307     95.329
+Precision  68.678  71.865     67.393
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.00025/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         71.369  72.647     70.827
+Recall     97.871  97.257     98.141
+Precision  56.161  57.976     55.407
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.00025/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         71.109  71.691     70.859
+Recall     97.653  97.090     97.900
+Precision  55.912  56.826     55.523
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.00025/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         70.786  72.200     70.186
+Recall     98.098  97.587     98.322
+Precision  55.370  57.295     54.571
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0001/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         61.201  60.058     61.714
+Recall     99.187  98.733     99.387
+Precision  44.253  43.154     44.751
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0001/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         61.646  60.834     62.004
+Recall     98.949  98.035     99.350
+Precision  44.768  44.100     45.065
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0001/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         60.812  59.636     61.340
+Recall     99.286  98.986     99.417
+Precision  43.828  42.673     44.353
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.01/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.698  83.185     85.334
+Recall     84.122  80.070     85.901
+Precision  85.283  86.551     84.775
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.01/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.500  82.723     85.226
+Recall     87.955  81.857     90.633
+Precision  81.306  83.608     80.428
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.01/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.371  81.999     85.371
+Recall     83.985  79.342     86.024
+Precision  84.760  84.841     84.728
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.005/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.529  82.222     85.441
+Recall     81.751  73.864     85.215
+Precision  87.501  92.713     85.668
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.005/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.946  81.545     84.898
+Recall     83.703  75.692     87.221
+Precision  84.190  88.378     82.696
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.005/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.595  84.180     84.765
+Recall     84.207  79.959     86.073
+Precision  84.986  88.872     83.497
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0025/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.756  81.333     84.760
+Recall     80.579  75.154     82.961
+Precision  87.194  88.618     86.640
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0025/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.470  80.855     84.537
+Recall     83.198  76.568     86.110
+Precision  83.743  85.651     83.021
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0025/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.265  83.635     84.522
+Recall     82.729  78.044     84.786
+Precision  85.860  90.090     84.260
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.001/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.551  80.895     84.639
+Recall     79.860  73.613     82.603
+Precision  87.601  89.774     86.778
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.001/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.350  82.732     83.595
+Recall     81.359  75.115     84.100
+Precision  85.442  92.068     83.096
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.001/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.246  81.640     83.910
+Recall     85.425  80.261     87.692
+Precision  81.177  83.068     80.440
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0005/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.335  82.681     85.002
+Recall     83.964  77.521     86.794
+Precision  84.709  88.576     83.283
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0005/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.811  83.377     83.983
+Recall     83.070  76.952     85.757
+Precision  84.565  90.974     82.281
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0005/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.117  83.808     84.243
+Recall     85.279  80.754     87.266
+Precision  82.986  87.102     81.423
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.00025/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         84.321  84.219     84.362
+Recall     84.558  79.609     86.731
+Precision  84.085  89.397     82.119
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.00025/run1/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.807  83.913     83.765
+Recall     84.498  79.092     86.872
+Precision  83.128  89.360     80.873
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.00025/run2/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.899  82.603     84.433
+Recall     84.409  79.510     86.560
+Precision  83.395  85.947     82.409
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run0/best.pth
+---------  ------  ---------  -----------
+ds         input   TTA
+valid      448     False
+
+           Both    Checkered  Uncheckered
+F1         83.603  84.060     83.416
+Recall     86.166  82.413     87.814
+Precision  81.188  85.774     79.437
+---------  ------  ---------  -----------
+experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run1/best.pth

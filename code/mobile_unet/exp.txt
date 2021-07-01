@@ -1,0 +1,3 @@
+Preloading dataset...
+Took: 0.019s
+experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.01/run0/best.pth

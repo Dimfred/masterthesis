@@ -200,15 +200,18 @@ class Result:
 
 
 class TopologyEvaluator:
-    def __init__(self, gt, pred):
+    def __init__(self, gt, pred, fn_predictions):
         self.gt = gt.copy()
         self.pred = pred.copy()
+        self.fn_predictions = fn_predictions
 
     def evaluate(self):
         res = Result()
 
         n_eccs_gt, n_eccs_pred = self.gt.shape[1], self.pred.shape[1]
         if n_eccs_gt != n_eccs_pred:
+            fps = np.sum(self.pred[:, n_eccs_gt:])
+            res.FPS += int(fps)
             print(f"Found FPs: '{(n_eccs_pred - n_eccs_gt) // 2}'")
             self.pred = self.pred[:, :n_eccs_gt]
 
@@ -242,16 +245,24 @@ class TopologyEvaluator:
 
             unmatched_gt_idxs, unmatched_pred_idxs = self._get_unmatched(matched_idxs)
 
-            if depth_exceeded_counter > 100:
+            if depth_exceeded_counter >= 1:
                 print(utils.red("DEPTH EXCEEDED FINISH."))
-                raise RuntimeError(
-                    "Something went insanely wrong check the labels at this file."
-                )
+                # raise RuntimeError(
+                #     "Something went insanely wrong check the labels at this file."
+                # )
+                break
+
+        if unmatched_gt_idxs:
+            print("Real Unmatched:", unmatched_gt_idxs)
+            for unmatched_gt_idx in unmatched_gt_idxs:
+                max_tps = np.sum(self.gt[unmatched_gt_idx])
+                res.FNS += max_tps - 1
+
 
         # TODO probably due to some FPs in detection which won't be able to be matched
         # against
-        if unmatched_pred_idxs:
-            print("Unmatched:", unmatched_pred_idxs)
+        # if unmatched_pred_idxs:
+        #     print("Unmatched:", unmatched_pred_idxs)
 
         return res
 
@@ -279,6 +290,8 @@ class TopologyEvaluator:
             edge = self.gt[match.gt_idx]
             res.TPS += nb_get_tps(edge)
 
+
+
         return res
 
     def count_permutation_matches(self, matched_idxs):
@@ -295,7 +308,7 @@ class TopologyEvaluator:
         found = False
         for r in range(2, len(unmatched_pred_idxs) + 1):
             # DEBUG
-            # print("CurrentComb:", r)
+            print("CurrentComb:", r, "/", upper_depth_limit + 1)
             if r == upper_depth_limit + 1:
                 print("Depth exceeded.")
                 depth_exceeded = True
@@ -331,7 +344,12 @@ class TopologyEvaluator:
             if found:
                 break
 
-        return res, matched_idxs, depth_exceeded
+        if r == upper_depth_limit:
+            print("Depth exceeded.")
+            depth_exceeded = True
+            # break
+
+        return res, matched_idxs, not found #depth_exceeded
 
     def count_split_matches(self, matched_idxs):
         res = Result()
@@ -397,6 +415,7 @@ class TopologyEvaluator:
     def _is_perfect_match(self, gt_edge, pred_edge):
         return np.all(gt_edge == pred_edge)
 
+
 @nb.njit
 def nb_is_sub_edge(e1, e2):
     where_e1_1 = np.argwhere(e1 == 1)
@@ -406,9 +425,11 @@ def nb_is_sub_edge(e1, e2):
 
     return True
 
+
 @nb.njit
 def nb_is_perfect_match(gt_edge, pred_edge):
     return np.all(gt_edge == pred_edge)
+
 
 @nb.njit
 def nb_get_tps(edge):
@@ -418,6 +439,7 @@ def nb_get_tps(edge):
             tps += 1
 
     return tps - 1
+
 
 @nb.njit
 def nb_combine_edge(pred_idxs, pred_edges):
@@ -450,16 +472,14 @@ class ArrowAndTextMatchingEvaluator:
         res = Result()
         for gt_text_or_arrow_idx, gt_ecc_idx in gt:
             # [(distance, ecc_idx), ....]
-
-            # happens when the arrow has not been predicted does it tho?
             if gt_text_or_arrow_idx not in distances:
-                print("TODO is this right?; text matcher eval")
                 res.FNS += 1
                 continue
 
             # we inserted a fake arrow, this is a false negative since it was not predicted
             if gt_text_or_arrow_idx in self.eval_item.false_negative_gts:
                 res.FNS += 1
+                continue
 
             distance_item = distances[gt_text_or_arrow_idx]
             nearest = distance_item[0]

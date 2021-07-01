@@ -1,0 +1,92 @@
+\chapter{Introduction}
+
+\section{Motivation}
+
+\section{Related Works}
+
+The aim of this thesis is to provide a conversion pipeline for hand-drawn \acp{ECD} into the LTspice schematic file format.
+To provide some context for the task, the following subsections present approaches related to the goal of this thesis.
+
+- TODO general structure
+
+\subsection{Classification}
+
+G"unay et al. \cite{ecd_basecnn} compared in their work the accuracy of various common \ac{CNN} architectures trained on a dataset of hand-drawn \acp{ECC}.
+The dataset consisted of four classes (resistor, capacitor, inductor, voltage source) and had overall a size of 863 images.
+With the best performing \ac{CNN} architecture they were able to obtain an accuracy of 83\%.
+
+Rabbani et al. \cite{ecd_anngeo} tested classification performance of letters, numbers and \acp{ECC} in their work.
+For each class a total of 20 samples was used.
+Classification was here done using an \ac{ANN}, where different geometric and moment features were obtained beforehand and fed into the network.
+Overall they reported an f1-score of 83.5\%.
+
+Roy et al. \cite{ecd_texturesmo}, used in their dataset 20 different \acp{ECC} with around 150 samples per class.
+As a classifier \ac{SMO} was used, which was fed with different features, based on texture and shape.
+Further, they compared the performance of the \ac{SMO} to the Random Forest classifier, a \ac{MLP}, a \ac{KNN} classifier and the Naive Bayes.
+An accuracy of 91.88\% was here reported.
+
+
+\subsection{Extraction and Classification}
+
+Dewangan and Dhole \cite{ecd_knn_recog} proposed a pipeline , which is able to extract \acp{ECC} from an \ac{ECD} and classify it.
+The initial step was formed by a preprocessing pipeline, which binarized the image, denoised it and then skeletonized it.
+Afterwards, segmentation was used to segment wires and components individually.
+How exactly the segmentation was performed, was not mentioned.
+Finally, based on the segmented \acp{ECC}, numerous features were obtained like, area, major axis length, minor axis length, centroid, orientation, eccentricity, convex area, filled are, equiv diameter and extent.
+Those features were used to train a \ac{KNN} classifier, where an accuracy of 90\% was reported.
+
+Moetesum et al. \cite{ecd_seghogsvm} proposed a similar pipeline.
+A dataset of 100 images of \acp{ECD}, which contained a total of ten different classes, with 35 samples per class was here used.
+With a total amount of 350 samples, 200 were used for training and 150 for testing.
+Preprocessing was done by first converting the image to grayscale, denoising it with a smoothing filter and afterwards image binarization was applied.
+Afterwards, the \acp{ECC} were segmented using different strategies based on the shapes of the \acp{ECC}.
+E.g. diodes were segmented using the assumption that the shape is closed and capacitors were segmented using its parallel line property.
+Afterwards, \ac{HOG} features were obtained from the segmented components, which were then fed for classification into a \ac{SVM}.
+An accuracy of 87.71\% was reported on the whole dataset, where the evaluation was done using transient error, i.e. an error produced in the segmentation will automatically produce an error in the classification, since the component could not be segmented and hence also not classified.
+
+\subsection{Extraction, Classification and Topology Creation}
+
+Edwards and Chandrun proposed a pipeline to create an \ac{ECD} from an hand-drawn image into a digital form.
+The dataset comprised 449 \acp{ECC} and 107 nodes, where a node is defined as a connection or set of connections.
+In the preprocessing step first a grayscale conversion was performed, followed by noise reduction and image binarization.
+Afterwards, to mitigate common errors such as small gaps in lines morphological closing is performed and to normalize the amount of pixels per region a thinning algorithm is applied.
+In the next step the \acp{ECC} and connections are segmented, based on pixel density in a region.
+Here the assumption is that plain lines (wires), will have a lower pixel density inside a small circular region than \acp{ECC} or connections and with an appropriate threshold they can be segmented.
+Now classification of the segmented components is performed with a \ac{KNN} classifier, which is fed different different geometric and moment features of the segmented regions.
+To recreate the topology the connections between the \acp{ECC} have to be identified, this is done using the Breadth-First Search algorithm, which starts at a certain component and tries to find a path to another one.
+When a path is found this indicates a connection between those two components.
+Finally, a node recognition accuracy of 92\% can be reported and a classification accuracy of 86\%.
+
+Refaat et al. \cite{ecd_ctxindependentsvm} proposed a context-independent approach for structured diagram recognition utilizing \acp{SVM}.
+Their dataset was comprised of graphics, which are basic line primitives such as rectangles, circles, triangles, ellipse and of text annotations as well as lines connecting the graphics.
+The preprocessing consisted of an adaptive thresholding approach to separate the foreground from the background.
+Afterwards, segmentation was performed based on size filters to segment the text annotations, which are relatively small compared to the graphics.
+To segment the graphics and lines, a psychological method was used, which tries to mathematically model the humans perception of shapes, based on the smoothness and continuity property.
+The used algorithm can be found in \cite{line_primitive}.
+After segmentation the shapes were classified using a \ac{SVM} classifier, which was trained with 120 images of each shape.
+For testing 20 images per shape were used and a classification accuracy of 90\% was reported.
+
+Dhanushika and Ranathunga \cite{ecd_yolobool} proposed an approach, which is able to provide a boolean expression for an image of a logical gate diagram.
+Their dataset consisted of 300 diagrams, where 240 were used for training and 60 were used for testing.
+To detect the logical gate components two different object detection networks were presented.
+They trained a \ac{YOLO} network and a network from the open source deep learning framework tensorflow (the exact network was not mentioned).
+Detection of connections between components was done using a rule based approach.
+Here, first the lines were extracted using the Hough Transform and vertical and horizontal lines were split up in different chunks.
+Afterwards intersections were calculated between the chunks and different patterns were identified, based on their proposed rules.
+For example a pattern for an edge was identified or for a ``T'' connection, which indicates that three components are connected at this particular connection.
+By starting from a logical gates component and tracing along the identified pattern it can be identified whether two (or more) components are connected.
+From the gathered results a boolean expression could then be generated.
+Three different metrics were reported, based on the different detection types.
+For the \ac{YOLO} network an accuracy of 40\%  was reported, while for the unknown tensorflow object detection algorithm an accuracy of 90\% was reported.
+Further, for the line and connection detection an accuracy of 83.11\% and 89.49\% was reported respectively.
+
+\section{Contribution}
+
+The main goal of this thesis was to create a pipeline, which is able to convert an image of a hand-drawn \ac{ECD} into the LTspice schematic file format.
+To achieve this goal, several problems were identified, the first one being that no dataset is available on, which such pipeline could be tested.
+Therefore, initially a dataset had to be created, which is publicly available at \url{https://github.com/Dimfred/german_circuit_diagram_dataset}, which consists of over 239 \acp{ECD}.
+The created dataset includes labels for object detection, where each component was labeled with a bounding box and its respective class, as well as segmentation labels for the segmentation of the \acp{ECD}, which were labeled in a foreground / background manner.
+Part of the pipeline was the training of the two networks \ac{YOLOv4} and \ac{MUnet}.
+Both networks were systematically improved based on conducted experiments.
+Finally, to quantify the results of proposed pipeline an evaluation pipeline was created.
+This evaluation pipeline, could not be finished due to time constraints and hence only partially reflects the obtained results.

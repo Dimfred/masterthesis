@@ -36,41 +36,6 @@ N = 0
 import utils
 from config import config
 
-# %%
-# fmt: off
-val_transform = A.Compose(
-    [
-        # A.Blur(always_apply=True),
-        A.PadIfNeeded(
-            min_width=config.augment.unet.img_params.resize,
-            min_height=config.augment.unet.img_params.resize,
-            border_mode=cv.BORDER_CONSTANT,
-            value=0,
-            mask_value=0,
-            always_apply=True
-        ),
-        A.Resize(
-            width=config.unet.test_input_size,
-            height=config.unet.test_input_size,
-            always_apply=True
-        ),
-    ]
-)
-# fmt: on
-
-
-def get_data_loaders(val_files):
-    val_loader = DataLoader(
-        # MaskDataset(val_files, val_transform),
-        MaskDataset(val_files, val_transform),
-        batch_size=1,
-        shuffle=False,
-        pin_memory=True,
-        # num_workers=1,
-    )
-
-    return val_loader
-
 
 def calc_recall(tp, fn):
     return tp / (tp + fn)
@@ -80,8 +45,13 @@ def calc_precision(tp, fp):
     return tp / (tp + fp)
 
 
-def calc_f1(precision, recall):
-    return 2 * precision * recall / (precision + recall)
+def calc_f1(precision, recall, weight=1):
+    return (
+        (1 + (weight ** 2))
+        * precision
+        * recall
+        / (((weight ** 2) * precision) + recall)
+    )
 
 
 @nb.njit
@@ -103,7 +73,7 @@ def tps_fps_fns(target, prediction):
 
 
 def ffloat(f):
-    return "{:.5f}".format(f * 100)
+    return "{:.3f}".format(f * 100)
 
 
 def get_exp_weights():
@@ -168,29 +138,171 @@ def get_exp_weights():
     ####################################################################################
     ## GRID
     ####################################################################################
-    exp_base = exp_dir / "grid"
-    exp = lambda bs, loss, lr, run: exp_base / f"grid_bs_{bs}_loss_{loss}_lr_{lr}/run{run}/best.pth"
+    # exp_base = exp_dir / "grid"
+    # exp = (
+    #     lambda bs, loss, lr, run: exp_base
+    #     / f"grid_bs_{bs}_loss_{loss}_lr_{lr}/run{run}/best.pth"
+    # )
 
-    weights = []
-    for bs in (32, 64):
-        for loss in ("focal2_0.1", "focal2_0.8"):
-            for lr in (0.01, 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001):
-                for run in (0, 1, 2):
-                    weights.append(exp(bs, loss, lr, run))
+    # weights = []
+    # for bs in (32, 64):
+    #     for loss in ("focal2_0.1", "focal2_0.8", "dice"):
+    #         for lr in (0.01, 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001):
+    #             for run in (0, 1, 2):
+    #                 weights.append(exp(bs, loss, lr, run))
+
+    ####################################################################################
+    ## SELECTED FOLDS
+    ####################################################################################
+    # exp_base = exp_dir / "grid"
+    # exp = (
+    #     lambda bs, loss, lr, run: exp_base
+    #     / f"grid_bs_{bs}_loss_{loss}_lr_{lr}/run{run}/best.pth"
+    # )
+
+    # # fmt: off
+    # weights = []
+    # comps = (
+        # bs, loss, lr, metric, value, best_weights
+        # (32, "focal2_0.1", 0.01  ,  "F1 B", 84.3573, "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.01/run0/best.pth"),
+        # (32, "focal2_0.1", 0.0001,  "R B ", 86.273,  "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0001/run2/best.pth"),
+        # (32, "focal2_0.1", 0.0025,  "P B ", 86.6923, "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0025/run0/best.pth"),
+        # (32, "focal2_0.1", 0.0001,  "F1 C", 83.779,  "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0001/run2/best.pth" ),
+        # (32, "focal2_0.1", 0.0001,  "R C ", 82.6813, "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0001/run2/best.pth"),
+        # (32, "focal2_0.1", 0.0025,  "P C ", 89.6437, "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0025/run0/best.pth"),
+        # (32, "focal2_0.8", 0.005 ,  "F1 B", 84.624,  "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.005/run2/best.pth" ),
+        # (32, "focal2_0.8", 0.0001,  "R B ", 85.8127, "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0001/run0/best.pth"),
+        # (32, "focal2_0.8", 0.0025,  "P B ", 85.9127, "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0025/run2/best.pth"),
+        # (32, "focal2_0.8", 0.00025,  "F1 C", 83.8423 "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.00025/run2/best.pth"),
+        # (32, "focal2_0.8", 0.0001,  "R C ", 82.273,  "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0001/run0/best.pth" ),
+        # (32, "focal2_0.8", 0.0025,  "P C ", 90.0563, "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0025/run2/best.pth"),
+        # (32, "dice"      , 0.01  ,  "F1 B", 85.449,  "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.01/run2/best.pth" ),
+        # (32, "dice"      , 0.0001,  "R B ", 99.1407, "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0001/run2/best.pth"),
+        # (32, "dice"      , 0.005 ,  "P B ", 83.2367, "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.005/run1/best.pth"),
+        # (32, "dice"      , 0.001 ,  "F1 C", 84.9903, "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.001/run1/best.pth"),
+        # (32, "dice"      , 0.0001,  "R C ", 98.5847, "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0001/run2/best.pth"),
+        # (32, "dice"      , 0.001 ,  "P C ", 87.0733, "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.001/run1/best.pth"),
+        # (64, "focal2_0.1", 0.01  ,  "F1 B", 84.523,  "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.01/run0/best.pth" ),
+        # (64, "focal2_0.1", 0.0001,  "R B ", 86.31,   "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run1/best.pth" ),
+        # (64, "focal2_0.1", 0.0025,  "P B ", 85.599 "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0025/run0/best.pth"),
+        # (64, "focal2_0.1", 0.0001,  "F1 C", 84.114, "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run2/best.pth" ),
+        # (64, "focal2_0.1", 0.0001,  "R C ", 82.8, "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run1/best.pth"   ),
+        # (64, "focal2_0.1", 0.005 ,  "P C ", 89.9877, "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.005/run0/best.pth"),
+        # (64, "focal2_0.8", 0.01  ,  "F1 B", 84.879, "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.01/run1/best.pth" ),
+        # (64, "focal2_0.8", 0.0001,  "R B ", 85.5173, "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.0001/run2/best.pth"),
+        # (64, "focal2_0.8", 0.01  ,  "P B ", 84.8933, "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.01/run0/best.pth"),
+        # (64, "focal2_0.8", 0.0005,  "F1 C", 84.133, "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.0005/run2/best.pth" ),
+        # (64, "focal2_0.8", 0.0001,  "R C ", 81.942, "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.0001/run2/best.pth" ),
+        # (64, "focal2_0.8", 0.001 ,  "P C ", 89.655, "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.001/run2/best.pth" ),
+        # (64, "dice"      , 0.005 ,  "F1 B", 84.52 , "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.005/run0/best.pth" ),
+        # (64, "dice"      , 0.0001,  "R B ", 99.279, "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.0001/run2/best.pth" ),
+        # (64, "dice"      , 0.0025,  "P B ", 84.5423, "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.0025/run2/best.pth"),
+        # (64, "dice"      , 0.001 ,  "F1 C", 85.2167, "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.001/run1/best.pth"),
+        # (64, "dice"      , 0.0001,  "R C ", 98.911 , "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.0001/run2/best.pth"),
+        # (64, "dice"      , 0.001 ,  "P C ", 87.815, "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.001/run0/best.pth"),
+    # )
+    # fmt: on
+
+    # runs = (0, 1, 2)
+    # for bs, loss, lr, metric, _ in comps:
+    #     print("-----------------------------------------------")
+    #     print(f"-- METRIC: {metric}")
+    #     print("-----------------------------------------------")
+    #     for run in runs:
+    #         weights.append(exp(bs, loss, lr, run))
+
+    ####################################################################################
+    ## TEST SELECTED FOLDS
+    ####################################################################################
+    weights = [
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.01/run0/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0025/run0/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.1_lr_0.0025/run0/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.005/run2/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0001/run0/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0025/run2/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.00025/run2/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0001/run0/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.0025/run2/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.01/run2/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.005/run1/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.001/run1/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.001/run1/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.01/run0/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run1/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0025/run0/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run1/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.005/run0/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.01/run1/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.0001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.01/run0/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.0005/run2/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.0001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.005/run0/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.0001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.0025/run2/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.001/run1/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.0001/run2/best.pth",
+        "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.001/run0/best.pth",
+    ]
+    # print(len(weights))
+    print(set(weights))
 
     return weights
 
 
+# config.unet.test_input_size = 544  # 448, 480, 512, 544, 576, 608, 640, 672, 704, 736
+
+
 @click.command()
 @click.argument("dataset")
-@click.option("-s", "--score_thresh", type=click.types.FLOAT, default=0.5)
+@click.option("-s", "--score_thresh", type=float, default=0.5)
+@click.option("-i", "--input_size", type=int, default=448)
 @click.option("--exp", is_flag=True, default=False)
+@click.option("--input_sizes", is_flag=True, default=False)
 @click.option("--tta", is_flag=True, default=False)
 @click.option("--show", is_flag=True, default=False)
-def main(dataset, score_thresh, exp, tta, show):
-    exp = True if exp else False
-    tta = True if tta else False
-    show = True if show else False
+@click.option("--checkered_only", is_flag=True, default=False)
+def main(dataset, score_thresh, input_size, exp, input_sizes, tta, show, checkered_only):
+    # fmt: off
+    val_transform = A.Compose(
+        [
+            # A.Blur(always_apply=True),
+            A.PadIfNeeded(
+                min_width=config.augment.unet.img_params.resize,
+                min_height=config.augment.unet.img_params.resize,
+                border_mode=cv.BORDER_CONSTANT,
+                value=0,
+                mask_value=0,
+                always_apply=True
+            ),
+            A.Resize(
+                width=input_size,
+                height=input_size,
+                always_apply=True
+            ),
+        ]
+    )
+    # fmt: on
+
+    def get_data_loaders(val_files):
+        val_loader = DataLoader(
+            # MaskDataset(val_files, val_transform),
+            MaskDataset(val_files, val_transform),
+            batch_size=1,
+            shuffle=False,
+            pin_memory=True,
+            # num_workers=1,
+        )
+
+        return val_loader
 
     if dataset == "test":
         test_files = utils.list_imgs(config.test_out_dir)
@@ -200,103 +312,158 @@ def main(dataset, score_thresh, exp, tta, show):
         test_files = utils.list_imgs(config.train_out_dir)
     data_loader = get_data_loaders(test_files)
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = MobileNetV2_unet(
-        mode="eval",
-        n_classes=config.unet.n_classes,
-        input_size=config.unet.test_input_size,
-        channels=config.unet.channels,
-        pretrained=None,
-        scale=config.unet.scale,
-    )
-
-    if exp:
-        weights = get_exp_weights()
+    if input_sizes:
+        input_sizes = [448, 480, 512, 544, 576, 608, 640, 672]
     else:
-        # loaded = torch.load("weights/non_transfer_best.pth")
-        # loaded = torch.load("weights/best.pth")
-        # w = "experiments_unet/test/test/run0/best.pth"
-        # w = "weights/best_safe_FUCKING_KEEP_IT.pth"
-        # w = "weights/best_78miou@608_trained_with_448.pth"
-        # w = "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.005/run2/best.pth"
-        # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.00025/run0/best.pth"
-        # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run0/best.pth"
-        # w = "weights/best_78miou@608_trained_with_448.pth"
+        input_sizes = [input_size]
 
-        # w = "experiments_unet/lr/lr_0.01/run2/best.pth"
-        w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run0/best.pth"
+    for input_size in input_sizes:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model = MobileNetV2_unet(
+            mode="eval",
+            n_classes=config.unet.n_classes,
+            input_size=input_size,
+            channels=config.unet.channels,
+            pretrained=None,
+            scale=config.unet.scale,
+        )
 
-        weights = [w]
+        if exp:
+            weights = get_exp_weights()
+        else:
+            # w = "experiments_unet/test/test/run0/best.pth"
+            # w = "weights/best_safe_FUCKING_KEEP_IT.pth"
+            # w = "weights/best_78miou@608_trained_with_448.pth"
+            # w = "experiments_unet/grid/grid_bs_32_loss_focal2_0.8_lr_0.005/run2/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.00025/run0/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run0/best.pth"
+            # w = "weights/best_78miou@608_trained_with_448.pth"
 
-    for weight_path in weights:
-        print(weight_path)
+            # w = "experiments_unet/lr/lr_0.01/run2/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run0/best.pth"
 
-        loaded = torch.load(weight_path)
-        model.load_state_dict(loaded)
-        model.to(device)
-        model.eval()
+            # w = "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.01/run0/best.pth"
+            # w = "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.01/run1/best.pth"
+            # w = "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.01/run2/best.pth"
 
-        ious = []
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.00025/run0/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.00025/run1/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.00025/run2/best.pth"
 
-        tps, fps, fns = 0, 0, 0
-        with torch.no_grad():
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run0/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run1/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.1_lr_0.0001/run2/best.pth"
 
-            for img_path in test_files:
-                # print(img_path)
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.001/run0/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.001/run1/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_focal2_0.8_lr_0.001/run2/best.pth"
 
-                ##################################
-                ## HARD VALID EXAMPLES
-                ##################################
-                # if not ("04_03" in str(img_path)
-                #     or "13_01" in str(img_path)
-                #     or "24_04" in str(img_path)
-                # ):
-                #     continue
+            # w = "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.001/run0/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.001/run1/best.pth"
+            # w = "experiments_unet/grid/grid_bs_64_loss_dice_lr_0.001/run2/best.pth"
+
+            # w = "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0005/run0/best.pth"
+            # w = "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0005/run1/best.pth"
+            w = "experiments_unet/grid/grid_bs_32_loss_dice_lr_0.0005/run2/best.pth"
+
+            weights = [w]
 
 
-                label_path = utils.segmentation_label_from_img(img_path)
-                label = np.load(str(label_path))
-                # label = utils.resize_max_axis(label, config.unet.test_input_size)
+        for weight_path in weights:
+            print(weight_path)
 
-                img = cv.imread(str(img_path), cv.IMREAD_GRAYSCALE)
+            loaded = torch.load(weight_path)
+            model.load_state_dict(loaded)
+            model.to(device)
+            model.eval()
 
-                pred, label = model.predict(
-                    img, label=label, score_thresh=score_thresh, tta=tta, debug=show
-                )
+            ious = []
 
-                # metrics
-                iou = calc_iou(label, pred)
-                ious.append(iou)
+            tps, fps, fns = 0, 0, 0
+            tps_c, fps_c, fns_c = 0, 0, 0
+            tps_n, fps_n, fns_n = 0, 0, 0
+            with torch.no_grad():
 
-                tps_, fps_, fns_ = tps_fps_fns(label, pred)
-                tps += tps_
-                fps += fps_
-                fns += fns_
+                for img_path in test_files:
+                    # if checkered_only and "_c_" not in str(img_path):
+                    #     continue
+                    # print(img_path)
 
-                # DEBUG
-                if show:
-                    utils.show(img, label, pred)
-                    cv.imwrite("prediction.png", pred)
-        # print("All:", ious)
+                    ##################################
+                    ## HARD VALID EXAMPLES
+                    ##################################
+                    # if not ("04_03" in str(img_path)
+                    #     or "13_01" in str(img_path)
+                    #     or "24_04" in str(img_path)
+                    # ):
+                    #     continue
 
-        miou = np.array(ious).mean()
-        recall = calc_recall(tps, fns)
-        precision = calc_precision(tps, fps)
-        f1 = calc_f1(precision, recall)
+                    label_path = utils.segmentation_label_from_img(img_path)
+                    label = np.load(str(label_path))
+                    # label = utils.resize_max_axis(label, config.unet.test_input_size)
 
-        pretty = [["ds", "input", "TTA", "mIoU", "Precision", "Recall", "F1"]]
-        pretty += [
-            [
-                dataset,
-                config.unet.test_input_size,
-                tta,
-                ffloat(miou),
-                ffloat(precision),
-                ffloat(recall),
-                ffloat(f1),
+                    img = cv.imread(str(img_path), cv.IMREAD_GRAYSCALE)
+
+                    pred, label = model.predict(
+                        img,
+                        label=label,
+                        score_thresh=score_thresh,
+                        tta=tta,
+                        input_size=input_size,
+                        debug=show,
+                    )
+
+                    # metrics
+                    iou = calc_iou(label, pred)
+                    ious.append(iou)
+
+                    tps_, fps_, fns_ = tps_fps_fns(label, pred)
+                    tps += tps_
+                    fps += fps_
+                    fns += fns_
+
+                    if "_c_" in str(img_path):
+                        tps_c += tps_
+                        fps_c += fps_
+                        fns_c += fns_
+                    else:
+                        tps_n += tps_
+                        fps_n += fps_
+                        fns_n += fns_
+
+                    # DEBUG
+                    if show:
+                        # utils.show(img, label, pred)
+                        utils.show(label, pred)
+                        cv.imwrite("prediction.png", pred)
+            # print("All:", ious)
+
+            # miou = np.array(ious).mean()
+
+            r, p = calc_recall(tps, fns), calc_precision(tps, fps)
+            r_c, p_c = calc_recall(tps_c, fns_c), calc_precision(tps_c, fps_c)
+            r_n, p_n = calc_recall(tps_n, fns_n), calc_precision(tps_n, fps_n)
+
+            weight = 1.0
+            f1, f1_c, f1_n = (
+                calc_f1(p, r, weight),
+                calc_f1(p_c, r_c, weight),
+                calc_f1(p_n, r_n, weight),
+            )
+
+            # fmt: off
+            pretty = [
+                ["ds", "input", "TTA"],
+                [dataset, input_size, tta],
+                [""],
+                ["", "Both", "Checkered", "Uncheckered"],
+                ["F1", *(ffloat(v) for v in (f1, f1_c, f1_n))],
+                ["Recall", *(ffloat(v) for v in (r, r_c, r_n))],
+                ["Precision", *(ffloat(v) for v in (p, p_c, p_n))],
             ]
-        ]
-        print(tabulate(pretty))
+
+            print(tabulate(pretty))
+            # fmt: on
 
 
 def calc_iou(target, prediction):

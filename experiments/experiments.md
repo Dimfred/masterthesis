@@ -312,6 +312,13 @@ bs  loss        lr       Run1  Run2  Run3
 32  focal2_0.8  0.0005    O
 32  focal2_0.8  0.00025   O
 32  focal2_0.8  0.0001    O
+32  dice        0.01      O
+32  dice        0.005     O
+32  dice        0.0025    O
+32  dice        0.001     O
+32  dice        0.0005    O
+32  dice        0.00025   O
+32  dice        0.0001    O
 64  focal2_0.1  0.01      O
 64  focal2_0.1  0.005     O
 64  focal2_0.1  0.0025    O
@@ -325,5 +332,12 @@ bs  loss        lr       Run1  Run2  Run3
 64  focal2_0.8  0.001     O
 64  focal2_0.8  0.0005    O
 64  focal2_0.8  0.00025   O
-64  focal2_0.8  0.0001
+64  focal2_0.8  0.0001    O
+64  dice        0.01      O
+64  dice        0.005     O
+64  dice        0.0025    O
+64  dice        0.001     O
+64  dice        0.0005    O
+64  dice        0.00025
+64  dice        0.0001    O
 --  ----------  -------  ----  ----  ----

@@ -4,6 +4,7 @@ import cv2 as cv
 import numpy as np
 import torch as t
 
+from evaluation import Result
 
 from numba import njit
 from pathlib import Path
@@ -20,7 +21,12 @@ import math
 # if len(physical_devices) > 0:
 #     tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-# from yolov4.tf import YOLOv4
+import tensorflow as tf
+
+physical_devices = tf.config.experimental.list_physical_devices("GPU")
+if len(physical_devices) > 0:
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+from yolov4.tf import YOLOv4
 from mobile_unet import MobileNetV2_unet
 
 import utils
@@ -51,100 +57,136 @@ def init_yolo():
     return yolo
 
 
-def init_unet():
+def init_unet(input_size, weights=config.unet.weights):
     device = t.device("cuda")
 
     unet = MobileNetV2_unet(
         mode="eval",
         n_classes=config.unet.n_classes,
-        input_size=config.unet.test_input_size,
+        # input_size=config.unet.test_input_size,
+        input_size=input_size,
         channels=config.unet.channels,
         pretrained=None,
-        scale=config.unet.scale
+        scale=config.unet.scale,
     )
-    unet.load_state_dict(t.load(config.unet.weights))
+    print(weights)
+    unet.load_state_dict(t.load(weights))
     unet.to(device)
     unet.eval()
     return unet
 
 
-def run_prediction(img_paths, iou_thresh=0.25, conf_thresh=0.3, debug=False):
-    print("Run YOLO prediction...")
+# def run_prediction(img_paths, iou_thresh=0.25, conf_thresh=0.3, debug=False):
+#     print("Run YOLO prediction...")
 
-    import subprocess as sp
+#     import subprocess as sp
 
-    prediction_dir = "predictions"
+#     prediction_dir = "predictions"
 
-    sp.check_call(
-        [
-            "python3.8",
-            "-c",
-            f"""
-import cv2 as cv
-import numpy as np
-import tensorflow as tf
-import os
-from pathlib import Path
-physical_devices = tf.config.experimental.list_physical_devices("GPU")
-if len(physical_devices) > 0:
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+#     sp.check_call(
+#         [
+#             "python3.8",
+#             "-c",
+#             f"""
+# import cv2 as cv
+# import numpy as np
+# import tensorflow as tf
+# import os
+# from pathlib import Path
+# physical_devices = tf.config.experimental.list_physical_devices("GPU")
+# if len(physical_devices) > 0:
+#     tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-from yolov4.tf import YOLOv4
-import utils
-from config import config
+# from yolov4.tf import YOLOv4
+# import utils
+# from config import config
 
 
-prediction_dir = Path("{prediction_dir}")
+# prediction_dir = Path("{prediction_dir}")
 
-yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
-yolo.classes = config.yolo.classes
-yolo.input_size = config.yolo.input_size
-yolo.channels = config.yolo.channels
-yolo.make_model()
+# yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
+# yolo.classes = config.yolo.classes
+# yolo.input_size = config.yolo.input_size
+# yolo.channels = config.yolo.channels
+# yolo.make_model()
 
-# yolo.load_weights(config.yolo.label_weights, weights_type=config.yolo.weights_type)
-yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
+# # yolo.load_weights(config.yolo.label_weights, weights_type=config.yolo.weights_type)
+# yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 
-for file in os.listdir(prediction_dir):
-    os.unlink(prediction_dir / file)
+# for file in os.listdir(prediction_dir):
+#     os.unlink(prediction_dir / file)
 
-def imread(path):
-    img = cv.imread(str(path), cv.IMREAD_GRAYSCALE)
-    img = np.expand_dims(img, axis=2)
-    return img
+# def imread(path):
+#     img = cv.imread(str(path), cv.IMREAD_GRAYSCALE)
+#     img = np.expand_dims(img, axis=2)
+#     return img
 
-img_paths = {str(img_paths)}
-for img_path in img_paths:
-    img = imread(img_path)
-    img = utils.resize_max_axis(img, 1000)
+# img_paths = {str(img_paths)}
+# for img_path in img_paths:
+#     img = imread(img_path)
+#     img = utils.resize_max_axis(img, 1000)
 
-    prediction = yolo.predict(
-        img, iou_threshold={iou_thresh}, score_threshold={conf_thresh}
-    )
+#     prediction = yolo.predict(
+#         img, iou_threshold={iou_thresh}, score_threshold={conf_thresh}
+#     )
 
-    if {debug}:
-        utils.show_bboxes(img, prediction, type_="pred")
+#     if {debug}:
+#         utils.show_bboxes(img, prediction, type_="pred")
 
-    if np.any(prediction == 42):
-        print("WTF!!: ", prediction)
+#     if np.any(prediction == 42):
+#         print("WTF!!: ", prediction)
 
-    prediction_dir = "{prediction_dir}"
-    np.save(f"{{prediction_dir}}/{{Path(img_path).stem}}.npy", prediction)
-""",
-        ],
-        stdout=sp.DEVNULL,
-        stderr=sp.DEVNULL,
-    )
-    import os
-    import time
+#     prediction_dir = "{prediction_dir}"
+#     np.save(f"{{prediction_dir}}/{{Path(img_path).stem}}.npy", prediction)
+# """,
+#         ],
+#         stdout=sp.DEVNULL,
+#         stderr=sp.DEVNULL,
+#     )
+#     import os
+#     import time
 
-    time.sleep(1)
+#     time.sleep(1)
 
-    prediction_files = sorted(os.listdir(prediction_dir))
-    predictions = [np.load(Path(prediction_dir) / pred) for pred in prediction_files]
-    print("DONE")
+#     prediction_files = sorted(os.listdir(prediction_dir))
+#     predictions = [np.load(Path(prediction_dir) / pred) for pred in prediction_files]
+#     print("DONE")
 
-    return predictions
+#     return predictions
+
+
+def yolo_predict(
+    img_paths, weights, input_size, score_thresh, iou_thresh, nms, tta, vote_thresh
+):
+    yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
+    yolo.classes = config.yolo.classes
+    yolo.input_size = int(input_size)
+    yolo.channels = config.yolo.channels
+    yolo.make_model()
+    yolo.load_weights(weights, weights_type="yolo")
+
+    def imread(path):
+        img = cv.imread(str(path), cv.IMREAD_GRAYSCALE)
+        img = np.expand_dims(img, axis=2)
+        return img
+
+    preds = []
+    for img_path in img_paths:
+        img = imread(img_path)
+
+        pred = yolo.predictme(
+            img,
+            iou_thresh=iou_thresh,
+            score_thresh=score_thresh,
+            tta=tta,
+            nms=nms,
+            vote_thresh=vote_thresh,
+        )
+        preds.append(pred)
+
+    yolo.unload()
+
+    return preds
 
 
 def imread(path):
@@ -194,6 +236,7 @@ class EvaluationItem:
         self.topology = None
         self.false_negative_gts = []
         self.unmatched_gt = []
+        self.classification = Result()
 
         # [(ecc1, arrow1), ...]
         self.matched_arrows = []
@@ -215,31 +258,79 @@ class EvaluationItem:
         return self
 
 
-def predict(img_paths, iou_thresh, conf_thresh):
+def predict(
+    img_paths,
+    yolo_iou_thresh,
+    yolo_score_thresh,
+    yolo_nms,
+    yolo_tta,
+    yolo_input_size,
+    yolo_vote_thresh,
+    yolo_weights,
+    yolo_load,
+    unet_weights,
+    unet_input_size,
+    use_gt=False,
+):
     # DEBUG
     # utils.show(img)
 
-    yolo_predictions = run_prediction(
-        img_paths, iou_thresh=iou_thresh, conf_thresh=conf_thresh, debug=False
-    )
+    if not use_gt:
+        if not yolo_load:
+            yolo_predictions = yolo_predict(
+                img_paths,
+                input_size=yolo_input_size,
+                weights=yolo_weights,
+                score_thresh=yolo_score_thresh,
+                iou_thresh=yolo_iou_thresh,
+                vote_thresh=yolo_vote_thresh,
+                nms=yolo_nms,
+                tta=yolo_tta,
+            )
+            for img_path, pred in zip(img_paths, yolo_predictions):
+                np.save(f"predictions/{Path(img_path).stem}.npy", pred)
+
+        else:
+            print("Using Ground Truth")
+            yolo_predictions = []
+            for img_path in img_paths:
+                pred = np.load(f"predictions/{Path(img_path).stem}.npy")
+                yolo_predictions.append(pred)
+    else:
+        label_paths = [
+            utils.Yolo.label_from_img(Path(img_path)) for img_path in img_paths
+        ]
+        yolo_predictions = [utils.load_ground_truth(l) for l in label_paths]
 
     # unet predictions
-    unet = init_unet()
+    unet = init_unet(unet_input_size, weights=unet_weights)
 
     eval_items = []
     for img_path, yolo_pred in zip(img_paths, yolo_predictions):
         img_path = Path(img_path)
 
         img = imread(str(img_path))
-        img = utils.resize_max_axis(img, config.unet.test_input_size)
-
-        pred_bboxes = [YoloBBox(img.shape).from_prediction(p) for p in yolo_pred]
+        img = utils.resize_max_axis(img, yolo_input_size)
+        if not use_gt:
+            pred_bboxes = [YoloBBox(img.shape).from_prediction(p) for p in yolo_pred]
+        else:
+            pred_bboxes = [YoloBBox(img.shape).from_ground_truth(g) for g in yolo_pred]
 
         ground_truth = utils.Yolo.parse_labels(utils.Yolo.label_from_img(img_path))
         gt_bboxes = [YoloBBox(img.shape).from_ground_truth(gt) for gt in ground_truth]
 
-        output = unet.predict(img)
-        segmentation = cv.resize(output, img.shape[:2][::-1])
+        if False:
+        # if not use_gt:
+            output = unet.predict(img, input_size=unet_input_size)#, tta=True)
+            segmentation = cv.resize(output, img.shape[:2][::-1])
+        else:
+            print("Using Ground Truth")
+            label_path = utils.segmentation_label_from_img(img_path)
+            segmentation = np.load(label_path) * 255
+            segmentation = utils.resize_max_axis(
+                segmentation, config.yolo.input_size
+            )
+
         # DEBUG
         # utils.show(segmentation[..., np.newaxis], img)
 
@@ -248,6 +339,10 @@ def predict(img_paths, iou_thresh, conf_thresh):
         eval_item = EvaluationItem().from_predict(
             classes, img, gt_bboxes, pred_bboxes, segmentation
         )
+        # first fuse text then remove occlusions, because text could also be occulusions
+        # but are a special case
+        eval_item = fuse_textboxes(eval_item, 0.15)
+        eval_item = apply_occlusion_nms(eval_item, 0.4)
         eval_items.append(eval_item)
 
     unet.unload()
@@ -304,13 +399,21 @@ def add_false_negatives_and_false_positive(eval_item, threshold):
             # add the fn to the topology of the prediciton
 
         elif len(match) > 1:
-            # DEBUG
             bboxes = [pred_bboxes[idx] for idx in match]
-            utils.show_bboxes(eval_item.img, bboxes, type_="utils")
-            raise ValueError("FALSE POSITIVE WITH GROUND TRUTH NOT YET HANDLED")
-            # print("FALSE POSITIVE OCCURED CARE!!!! TRYING TO HANDLE")
+            # utils.show_bboxes(
+            #     eval_item.img, bboxes, type_="utils", classes=eval_item.classes
+            # )
+            # raise ValueError("FALSE POSITIVE WITH GROUND TRUTH NOT YET HANDLED")
+            print("FALSE POSITIVE OCCURED CARE!!!! TRYING TO HANDLE")
+            eval_item.classification.FPS += 1
+            # gt_bbox = gt_bboxes[gt_idx]
+            # eval_item.false_negative_g
 
         # else == 1 correct
+
+    eval_item.classification.TPS = len(gt_bboxes) - len(eval_item.false_negative_gts)
+    eval_item.classification.FPS = len(unmatched_gt)
+    eval_item.classification.FNS = len(eval_item.false_negative_gts)
 
     # print(matches)
     gt_to_pred = {gt_idx: pred_idxs[0] for gt_idx, pred_idxs in matches.items()}
@@ -326,7 +429,6 @@ def add_false_negatives_and_false_positive(eval_item, threshold):
     eval_item.pred_bboxes = new_pred_bboxes
     eval_item.unmatched_gt = unmatched_gt
     eval_item.pred_bboxes.extend(unmatched_gt)
-
 
     # DEBUG
     if unmatched_gt:
@@ -596,8 +698,10 @@ def apply_occlusion_nms(eval_item, occlusion_iou):
         # utils.show_bboxes(
         #     eval_item.img, pred_bboxes, type_="utils", classes=eval_item.classes
         # )
-
-        pred_bboxes.pop(idx)
+        try:
+            pred_bboxes.pop(idx)
+        except:
+            pass
 
         # DEBUG
         # print("Occlusion NMS After")
@@ -627,15 +731,15 @@ def topology(eval_item, fn_threshold, fuse_textbox_iou, occlusion_iou, debug=Fal
     # utils.show(bin_img)
 
     segmentation[segmentation > 0] = 1
-    segmentation = segmentation * bin_img
+
     # segmentation = cv.dilate(segmentation, kernel, iterations=2)
     # DEBUG
     # utils.show(segmentation)
 
     # first fuse text then remove occlusions, because text could also be occulusions
     # but are a special case
-    eval_item = fuse_textboxes(eval_item, fuse_textbox_iou)
-    eval_item = apply_occlusion_nms(eval_item, occlusion_iou)
+    # eval_item = fuse_textboxes(eval_item, fuse_textbox_iou)
+    # eval_item = apply_occlusion_nms(eval_item, occlusion_iou)
 
     # fill FNs from yolo with ground truth dummys
     eval_item = add_false_negatives_and_false_positive(eval_item, fn_threshold)

@@ -15,6 +15,7 @@ Furthermore, as has been described in section \ref{sec:data}, for some images a 
 This augmentation is referred to as projection or copy-paste augmentation.
 The search for the optimal configuration was performed by training every possible combination of the three described offline augmentations.
 Again, the best performing combination was used as the baseline for the next experiment.
+Note that the flip and rotation augmentation change the class of an underlying bounding box due to the nature of the dataset, therefore augmentation complexity is increased since all labels have to be recalculated and the class has to be adapted, hence the augmentations were done before the begin of the training.
 
 Afterwards, an ablation study was performed for various augmentations, with different parameters.
 The augmentations in that study are also referred to as online augmentations, since they were performed at training time.
@@ -26,7 +27,12 @@ The grid search always utilized the best performing offline and online augmentat
 
 Finally after training each network, a threshold fine-tuning was performed for each network and other improvement strategies were tested, such as \ac{TTA}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% YOLO TRAINING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{YOLOv4-Tiny}
+\label{sec:training_yolo}
 
 To perform any experiments with the \ac{YOLO} network, first an initial configuration was defined.
 This configuration is given in table \ref{tab:initial_yolo_config}, where the default parameters of the utilized YOLO repository were used.
@@ -213,7 +219,7 @@ The $\gamma$ parameter in Focal-\ac{EIoU} was not set arbitrary, but was selecte
 \hline
 \textbf{Offline Augmentations} & projection, flip, rotation \\
 \hline
-\textbf{Online Augmentations} & rotation = 10\textdegree), scale = 20\%, safe crop = 90\%, color jitter = 20\% \\
+\textbf{Online Augmentations} & rotation = 10\textdegree, scale = 20\%, safe crop = 90\%, color jitter = 20\% \\
 \hline
 
 \end{tabular}
@@ -328,8 +334,18 @@ Using a voting threshold has not shown any improvement on the validation set, he
 
 \subsubsection{Final Results}
 
-Figure \ref{fig:yolo_tuning_combined_results} shows the combined results of each tuning step on the validation and the test set.
-Note that all thresholds were tuned on the validation set only.
+Figure \ref{fig:yolo_tuning_combined_results} and table \ref{tab:yolo_tuning_combined_results} show the combined results of each tuning step on the validation and the test set, compared to the untuned baseline, which is the best performing network from the grid search experiment.
+
+The first tuning A) was the tuning of the input size.
+The impact of that on the validation set was way smaller than on the test set, which probably relies in the fact that the network was already tuned on the validation set during training and is hence already well optimized on that.
+
+Then in B) and C) the two \ac{NMS} algorithms \ac{DIoU}-\ac{NMS} and \ac{WBF} were tuned.
+On the validation set a slight increase can be seen for both algorithms, however on the test set that increase can only be observed for \ac{WBF}.
+
+The last tuning in D) was additionally done using \ac{WBF} as \ac{NMS} together with \ac{TTA}.
+Here, a clear increase in performance can be observed and \ac{TTA} definitely benefits the recognition performance.
+
+Overall through tuning and \ac{TTA} a relative improvement of 2.173\% and 6.609\% could be achieved on the validation and test dataset, respectively.
 
 \begin{figure}
 \begin{center}
@@ -358,18 +374,27 @@ C        & WBF     & 0.15 & 0.25 & $736 \times 736$ & 97.187\% & 93.188\% \\
 D        & WBF-TTA & 0.1  & 0.45 & $736 \times 736$ & \cellcolor{green}98.543\% & \cellcolor{green}95.492\% \\
 \hline
 \end{tabular}
-\caption{Results of the tuning experiment performed on the validation set, presented also with the performance on the test dataset. A visual representation can also be found in figure \ref{fig:yolo_tuning_combined_results}.}
+\caption{Results of the tuning experiment with the underlying threshold and input size combination, performed on the validation set, presented also with the performance on the test dataset. A visual representation can also be found in figure \ref{fig:yolo_tuning_combined_results}.}
 \label{tab:yolo_tuning_combined_results}
 \end{center}
 \end{table}
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% MUNET TRAINING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{MobileNetV2-UNet}
+\label{sec:training_munet}
 
 In this section the training and the tuning of thresholds of the \ac{MUnet} is presented.
 The experiments were conducted in the same way as with the YOLO network, as described in the beginning of this section \ref{sec:training}.
 The configuration for the \ac{MUnet} is presented in table \ref{tab:munet_config}.
 The selected values correspond to the initial values from the used repository.
-TODO transfer learning
+It has been shown that transfer learning has a positive effect on the training process \cite{mobile_unet}, therefore the training of \ac{MUnet} is performed with MobileNetV2 weights, which were pretrained on the ImageNet dataset.
+The backbone was pretrained on RGB images, while in this work colors are not considered to be good features.
+To fit the input size of the backbone network, a grayscale image is repeated three times along the channel direction.
 
 \begin{table}[H]
 \footnotesize
@@ -383,7 +408,7 @@ TODO transfer learning
 \hline
 \textbf{Optimizer} & AMSGrad ($\mu = 0.95$, $\rho = 0.999$) \\
 \hline
-\textbf{Input Size} & $448 \times 448 \times 3$ (grayscale image with repeated channels) \\
+\textbf{Input Size} & $448 \times 448 \times 3$ (gray scale image with repeated channels) \\
 \hline
 \textbf{Pretraining} & Backbone pretrained on ImageNet \\
 \hline
@@ -402,18 +427,113 @@ Further, a learning rate scheduler with the following formula was used:
 \begin{equation}
     lr(step) =
     \begin{cases}
-        lr_{base} / 10 & \textbf{if } step > 1500 \\
-        lr_{base} / 5  & \textbf{else if}\ step > 1000 \\
+        lr_{base} / 25 & \textbf{if } \ \ \ step > 1500 \\
+        lr_{base} / 5  & \textbf{elif}\ step > 1000 \\
         lr_{base}      & \textbf{else} \\
     \end{cases}
 \end{equation}
 
 \subsubsection{Experiment: Initial Learning Rate Search}
 
+The first experiment was a search for an initial learning rate.
+The results of the learning rate search can be found in figure \ref{fig:munet_lr_exp}
+The learning rate 0.01 showed the best results within a reasonable standard deviation and is therefore selected as the initial learning rate for the next experiment.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/munet_lr_exp.pdf}
+    \caption{The results of the initial learning rate search shown on the validation set, as the mean F1-Score of three separate training runs.}
+    \label{fig:munet_lr_exp}
+\end{center}
+\end{figure}
+
 \subsubsection{Experiment: Offline Augmentations}
+
+The next experiment was done using the learning rate from the learning rate search experiment.
+The results can be found in figure \ref{fig:munet_offline_exp}.
+In contrast to YOLO this experiment shows a significantly smaller increase in F1-Score in general.
+Again the best performing offline augmentation combination, is the one with projection, flip and rotation.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/munet_offline_aug_experiment.pdf}
+    \caption{The results of the offline augmentation experiment shown on the validation set, as the mean F1-Score of three separate training runs.}
+    \label{fig:munet_offline_exp}
+\end{center}
+\end{figure}
 
 \subsubsection{Experiment: Online Augmentations}
 
+The next experiment was done to find optimal parameters for the online augmentations.
+Here, the same augmentations were used as in the respective YOLO experiment, except for the crop augmentation, which is now not a safe crop, but just a plain random crop, which doesn't consider the segmentation labels.
+The results of this experiment can be found in figure \ref{fig:munet_online_exp}.
+The only augmentation which didn't increase the performance was the scale augmentation.
+It is hence not used in further experiments.
+From the other augmentations again the one with the best performing parameter was selected for the following grid search.
+In table \ref{tab:munet_grid_params} the selected augmentations with their respective parameters are shown.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\columnwidth]{imgs/munet_online_aug_experiment.pdf}
+    \caption{The results of the online augmentation experiment shown on the validation set, as the mean F1-Score of three separate training runs.}
+    \label{fig:munet_online_exp}
+\end{center}
+\end{figure}
+
 \subsubsection{Experiment: Grid Search}
 
-\subsubsection{Tuning: Input Size}
+The final training experiment of the \ac{MUnet} was formed by an extensive grid search to obtain the optimal parameters for the training.
+The grid search was performed on the following parameters:
+
+\begin{table}[H]
+\footnotesize
+\begin{center}
+\begin{tabular}{|l|l|}
+
+\hline
+\textbf{Learning Rates} & $1.0e^{-2}, 5.0e^{-3}, 2.5e^{-3}, 1.0e^{-3}, 5.0e^{-4}, 2.5e^{-4}, 1.0e^{-4}$ \\
+\hline
+\textbf{Batch Size} & $32, 64$ \\
+\hline
+\textbf{Losses} & focal ($\alpha = 0.8, \gamma = 2$), focal ($\alpha = 0.1, \gamma = 2$), dice  \\
+\hline
+\textbf{Offline Augmentations} & projection, flip, rotation \\
+\hline
+\textbf{Online Augmentations} & rotation = 20\textdegree, crop = 90\%, color jitter = 20\% \\
+\hline
+
+\end{tabular}
+\caption{Configuration of the \ac{MUnet} grid search experiment. The networks were trained for all possible combinations of learning rate, batch size and loss function.}
+\label{tab:munet_grid_params}
+\end{center}
+\end{table}
+
+The results of the grid search experiment were first evaluated on the validation set and performance is shown for the three different metrics f1-score, recall and precision.
+Further, the evaluation was split up and the three metrics were calculated on the whole validation set and only on the checkered images in the validation set.
+This distinction was done to see whether the data is biased towards non-checkered images or not.
+The results of the three metrics on the full validation set are shown in the figures \ref{fig:munet_f1b_heat}, \ref{fig:munet_rb_heat} and \ref{fig:munet_pb_heat}, respectively.
+The results on only checkered images can be found in the figures \ref{fig:munet_f1c_heat}, \ref{fig:munet_rc_heat} and \ref{fig:munet_pc_heat}, respectively.
+In the following a fold is defined as a combination of loss and batch size.
+
+When looking at the f1-score on the full validation set (fig. \ref{fig:munet_f1b_heat}), no clear sign can be observed that a one batch size performs better than another.
+Furthermore, all focal loss folds seem to be robust in terms of differing learning rates, however the same does not apply to the dice loss folds, which show with a decreasing learning rate, also a decrease in f1-score.
+The decrease in f1-score in the dice loss folds is related to a drop in precision (fig. \ref{fig:munet_pb_heat}), but on the other hand-side an increase in recall (fig. \ref{fig:munet_rb_heat}).
+The best performing learning rates can be found for the higher learning rates ranging from $2.5e^{-3}$ to $1.0e^{-2}$.
+
+Inspecting now the f1-score on the validation set for checkered images only (fig. \ref{fig:munet_f1c_heat}), the best learning rates can be found in the middle and low range ($1.0^e{-4}$ - $1.0e^{-3}$), which leads to the assumption that higher learning rates probably perform better on non-checkered images, and lower learning rates perform better on checkered images.
+Comparing the different loss configurations based on their batch size shows that a higher batch size seems to perform slightly better on the checkered images.
+Furthermore, the dice loss against shows poor performance on small learning rates.
+
+For the final evaluation from each fold six networks are selected.
+This networks were chosen based on the best performing metrics, where three networks were chosen based on the best f1-score, precision and recall on the full validation set.
+And the other three were selected for the same metrics, based only on the checkered images from the validation set.
+If a network was the best performing on more than one metric no other network was selected from that fold, hence the amount of networks was reduced.
+The selected folds based on their best performing metric can be found in table \ref{tab:munet_selected_nets}.
+Overall there were six folds (three loss functions * two batch sizes), each fold was tested for three metrics on two datasets (f1-score, precision and recall * (full validation set + checkered validation set)), therefore in theory there were a maximum of 36 network candidates.
+Some networks were the best on multiple metrics, therefore the actual number of selected networks was 26.
+
+The selected networks were now used for further testing and the performance on the validation and test dataset can be found in the figures \ref{fig:munet_fold_32} and \ref{fig:munet_fold_64}, for the batch size of 32 and 64 respectively.
+When looking at both fold types based on the batch size for the focal loss types a decreasing trend in f1-score can be observed on the validation set, however on the test set the f1-score is increasing.
+This leads even more to the assumption that the high learning rate, chosen in the initial learning rate search experiment, leads to an overfitting on the validation set and a smaller learning rate would have been more adequate.
+Further, again the worst performing networks are those trained with the dice loss and a low learning rate combination, which already showed bad validation and now again showed bad test performance of around 50\% f1-score.
+In general the best learning rates can be found in the middle and lower learning rate range.

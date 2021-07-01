@@ -1,92 +1,103 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{}%
 \contentsline {section}{\numberline {1.1}Motivation}{1}{}%
-\contentsline {section}{\numberline {1.2}Related Works}{1}{}%
-\contentsline {subsection}{\numberline {1.2.1}Classification of Eletrical Circuit Components}{1}{}%
-\contentsline {section}{\numberline {1.3}Goals of the Thesis}{1}{}%
-\contentsline {subsection}{\numberline {1.3.1}Task Description}{1}{}%
-\contentsline {subsection}{\numberline {1.3.2}Contribution}{1}{}%
-\contentsline {chapter}{\numberline {2}Theory}{3}{}%
-\contentsline {section}{\numberline {2.1}Electrical Circuit Diagrams}{3}{}%
-\contentsline {section}{\numberline {2.2}LTspice}{4}{}%
-\contentsline {subsection}{\numberline {2.2.1}LTspice Schematic File Syntax}{4}{}%
-\contentsline {subsubsection}{Header}{4}{}%
-\contentsline {subsubsection}{Symbols}{4}{}%
-\contentsline {subsubsection}{Symbol Attributes}{5}{}%
-\contentsline {subsubsection}{Ground}{6}{}%
-\contentsline {subsubsection}{Wire}{6}{}%
-\contentsline {section}{\numberline {2.3}Artificial Neural Networks}{6}{}%
-\contentsline {subsection}{\numberline {2.3.1}General Concepts}{6}{}%
-\contentsline {subsubsection}{Multi Layer Perceptron}{7}{}%
-\contentsline {subsubsection}{Learning Procedure}{8}{}%
-\contentsline {subsection}{\numberline {2.3.2}Activation Functions}{10}{}%
-\contentsline {subsubsection}{Sigmoid}{10}{}%
-\contentsline {subsubsection}{Rectified Linear Unit (ReLU)}{10}{}%
-\contentsline {subsubsection}{ReLU6}{11}{}%
-\contentsline {subsection}{\numberline {2.3.3}Convolutional Neural Networks}{11}{}%
-\contentsline {subsubsection}{Convolutional Layer}{11}{}%
-\contentsline {subsubsection}{Pooling Layer}{12}{}%
-\contentsline {subsubsection}{Fully-Connected Layer}{12}{}%
-\contentsline {subsection}{\numberline {2.3.4}Batch Normalization}{13}{}%
-\contentsline {section}{\numberline {2.4}Data Augmentation}{13}{}%
-\contentsline {section}{\numberline {2.5}Object Detection}{14}{}%
-\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{14}{}%
-\contentsline {subsubsection}{Sliding Window}{14}{}%
-\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{15}{}%
-\contentsline {subsubsection}{Fast R-CNN}{16}{}%
-\contentsline {subsubsection}{Anchor Box Based Single Shot Detectors}{16}{}%
-\contentsline {subsubsection}{Anchor Box Free Single Shot Detectors}{16}{}%
-\contentsline {subsection}{\numberline {2.5.2}Intersection Over Union (IoU)}{17}{}%
-\contentsline {subsection}{\numberline {2.5.3}IoU Based Loss Functions}{17}{}%
-\contentsline {section}{\numberline {2.6}You Only Look Once (YOLO)}{19}{}%
-\contentsline {subsubsection}{General}{19}{}%
-\contentsline {subsubsection}{Backbone}{19}{}%
-\contentsline {subsubsection}{Neck}{21}{}%
-\contentsline {subsubsection}{Head}{21}{}%
-\contentsline {subsubsection}{Loss}{21}{}%
-\contentsline {subsubsection}{Non-Maximum Suppression (NMS)}{24}{}%
-\contentsline {section}{\numberline {2.7}Segmentation}{27}{}%
-\contentsline {section}{\numberline {2.8}MobileNetV2-UNet}{27}{}%
-\contentsline {subsubsection}{MobileNetV2-UNet backbone}{28}{}%
-\contentsline {subsubsection}{MobileNetV2-UNet decoder}{28}{}%
-\contentsline {section}{\numberline {2.9}Hypergraphs}{30}{}%
-\contentsline {section}{\numberline {2.10}Metrics}{32}{}%
-\contentsline {subsubsection}{True Positive, False Positive, False Negative}{32}{}%
-\contentsline {subsubsection}{Precision}{32}{}%
-\contentsline {subsubsection}{Recall}{32}{}%
-\contentsline {subsubsection}{F1-Score}{32}{}%
-\contentsline {subsubsection}{Average Precision (AP)}{33}{}%
-\contentsline {subsubsection}{Mean Average Precision (mAP)}{33}{}%
-\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{34}{}%
-\contentsline {chapter}{\numberline {3}Material and Methods}{35}{}%
-\contentsline {section}{\numberline {3.1}Data}{35}{}%
-\contentsline {subsubsection}{Labeling}{35}{}%
-\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{36}{}%
-\contentsline {subsubsection}{Recognition}{38}{}%
-\contentsline {subsubsection}{Topology Creation}{38}{}%
-\contentsline {subsubsection}{Annotation Matching}{40}{}%
-\contentsline {subsubsection}{LTspice Conversion}{41}{}%
-\contentsline {section}{\numberline {3.3}Training}{42}{}%
-\contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{42}{}%
-\contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{43}{}%
-\contentsline {subsubsection}{Experiment: Offline Augmentations}{45}{}%
-\contentsline {subsubsection}{Experiment: Online Augmentations}{46}{}%
-\contentsline {subsubsection}{Experiment: Grid Search}{47}{}%
-\contentsline {subsubsection}{Tuning: Input Size}{48}{}%
-\contentsline {subsubsection}{Tuning: Non-Maximum Suppression and Test-Time Augmentation}{50}{}%
-\contentsline {subsubsection}{Experiment: Improve Model Uncertainty Through Voting Based Thresholding in \ac {WBF}}{51}{}%
-\contentsline {subsubsection}{Final Results}{51}{}%
-\contentsline {subsection}{\numberline {3.3.2}MobileNetV2-UNet}{53}{}%
-\contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{54}{}%
-\contentsline {subsubsection}{Experiment: Offline Augmentations}{54}{}%
-\contentsline {subsubsection}{Experiment: Online Augmentations}{54}{}%
-\contentsline {subsubsection}{Experiment: Grid Search}{54}{}%
-\contentsline {subsubsection}{Tuning: Input Size}{54}{}%
-\contentsline {chapter}{\numberline {4}Results}{55}{}%
-\contentsline {chapter}{\numberline {5}Discussion}{57}{}%
-\contentsline {chapter}{\numberline {6}Abbrevations}{59}{}%
-\contentsline {chapter}{List of Figures}{62}{}%
-\contentsline {chapter}{List of Tables}{67}{}%
-\contentsline {chapter}{Bibliography}{71}{}%
-\contentsline {chapter}{Appendix}{78}{}%
-\contentsline {section}{\numberline {A}YOLOv4-Tiny Experiments}{78}{}%
-\contentsline {section}{\numberline {B}MobileNetV2-UNet experiments}{83}{}%
+\contentsline {section}{\numberline {1.2}Problem Statement}{2}{}%
+\contentsline {section}{\numberline {1.3}Related Works}{2}{}%
+\contentsline {subsection}{\numberline {1.3.1}Classification}{3}{}%
+\contentsline {subsection}{\numberline {1.3.2}Extraction and Classification}{3}{}%
+\contentsline {subsection}{\numberline {1.3.3}Extraction, Classification and Topology Creation}{4}{}%
+\contentsline {section}{\numberline {1.4}Goals of this Thesis}{5}{}%
+\contentsline {subsection}{\numberline {1.4.1}Task Description}{5}{}%
+\contentsline {subsection}{\numberline {1.4.2}Contribution}{6}{}%
+\contentsline {chapter}{\numberline {2}Theory}{7}{}%
+\contentsline {section}{\numberline {2.1}Electrical Circuit Diagrams}{7}{}%
+\contentsline {section}{\numberline {2.2}LTspice}{8}{}%
+\contentsline {subsubsection}{Header}{8}{}%
+\contentsline {subsubsection}{Symbols}{8}{}%
+\contentsline {subsubsection}{Symbol Attributes}{9}{}%
+\contentsline {subsubsection}{Ground}{10}{}%
+\contentsline {subsubsection}{Wire}{10}{}%
+\contentsline {section}{\numberline {2.3}Artificial Neural Networks}{10}{}%
+\contentsline {subsection}{\numberline {2.3.1}General Concepts}{10}{}%
+\contentsline {subsubsection}{Multi Layer Perceptron}{11}{}%
+\contentsline {subsubsection}{Learning Procedure}{12}{}%
+\contentsline {subsection}{\numberline {2.3.2}Activation Functions}{14}{}%
+\contentsline {subsubsection}{Sigmoid}{14}{}%
+\contentsline {subsubsection}{Rectified Linear Unit (ReLU)}{14}{}%
+\contentsline {subsubsection}{ReLU6}{15}{}%
+\contentsline {subsection}{\numberline {2.3.3}Convolutional Neural Networks}{15}{}%
+\contentsline {subsubsection}{Convolutional Layer}{15}{}%
+\contentsline {subsubsection}{Pooling Layer}{16}{}%
+\contentsline {subsubsection}{Fully-Connected Layer}{16}{}%
+\contentsline {subsection}{\numberline {2.3.4}Batch Normalization}{17}{}%
+\contentsline {section}{\numberline {2.4}Data Augmentation}{17}{}%
+\contentsline {section}{\numberline {2.5}Object Detection}{18}{}%
+\contentsline {subsection}{\numberline {2.5.1}History of Object Detection}{18}{}%
+\contentsline {subsubsection}{Sliding Window}{18}{}%
+\contentsline {subsubsection}{Regions with CNN Features (R-CNN)}{19}{}%
+\contentsline {subsubsection}{Fast R-CNN}{20}{}%
+\contentsline {subsubsection}{Anchor Box Based Single Shot Detectors}{20}{}%
+\contentsline {subsubsection}{Anchor Box Free Single Shot Detectors}{20}{}%
+\contentsline {subsection}{\numberline {2.5.2}Intersection Over Union (IoU)}{21}{}%
+\contentsline {subsection}{\numberline {2.5.3}IoU Based Loss Functions}{21}{}%
+\contentsline {section}{\numberline {2.6}You Only Look Once (YOLO)}{23}{}%
+\contentsline {subsubsection}{General}{23}{}%
+\contentsline {subsubsection}{Backbone}{23}{}%
+\contentsline {subsubsection}{Neck}{25}{}%
+\contentsline {subsubsection}{Head}{25}{}%
+\contentsline {subsubsection}{Loss}{25}{}%
+\contentsline {subsubsection}{Non-Maximum Suppression (NMS)}{28}{}%
+\contentsline {section}{\numberline {2.7}Segmentation}{31}{}%
+\contentsline {section}{\numberline {2.8}MobileNetV2-UNet}{31}{}%
+\contentsline {subsubsection}{MobileNetV2-UNet backbone}{32}{}%
+\contentsline {subsubsection}{MobileNetV2-UNet decoder}{32}{}%
+\contentsline {section}{\numberline {2.9}Hypergraphs}{34}{}%
+\contentsline {section}{\numberline {2.10}Metrics}{36}{}%
+\contentsline {subsubsection}{True Positive, False Positive, False Negative}{36}{}%
+\contentsline {subsubsection}{Precision}{36}{}%
+\contentsline {subsubsection}{Recall}{36}{}%
+\contentsline {subsubsection}{F1-Score}{36}{}%
+\contentsline {subsubsection}{Average Precision (AP)}{37}{}%
+\contentsline {subsubsection}{Mean Average Precision (mAP)}{37}{}%
+\contentsline {subsubsection}{Mean Intersection over Union (mIoU)}{38}{}%
+\contentsline {chapter}{\numberline {3}Material and Methods}{39}{}%
+\contentsline {section}{\numberline {3.1}Data}{39}{}%
+\contentsline {subsubsection}{Labels: Object Detection and Segmentation}{39}{}%
+\contentsline {subsubsection}{Labels: Topology}{40}{}%
+\contentsline {subsubsection}{Labels: Textual Annotations and Arrow Annotations}{43}{}%
+\contentsline {section}{\numberline {3.2}Recognition and Conversion Pipeline}{44}{}%
+\contentsline {subsubsection}{Recognition}{44}{}%
+\contentsline {subsubsection}{Topology Creation}{45}{}%
+\contentsline {subsubsection}{Annotation Matching}{47}{}%
+\contentsline {subsubsection}{LTspice Conversion}{48}{}%
+\contentsline {section}{\numberline {3.3}Training}{48}{}%
+\contentsline {subsection}{\numberline {3.3.1}YOLOv4-Tiny}{49}{}%
+\contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{50}{}%
+\contentsline {subsubsection}{Experiment: Offline Augmentations}{50}{}%
+\contentsline {subsubsection}{Experiment: Online Augmentations}{53}{}%
+\contentsline {subsubsection}{Experiment: Grid Search}{53}{}%
+\contentsline {subsubsection}{Tuning: Input Size}{55}{}%
+\contentsline {subsubsection}{Tuning: Non-Maximum Suppression and Test-Time Augmentation}{55}{}%
+\contentsline {subsubsection}{Experiment: Improve Model Uncertainty Through Voting Based Thresholding in \ac {WBF}}{57}{}%
+\contentsline {subsubsection}{Final Results}{58}{}%
+\contentsline {subsection}{\numberline {3.3.2}MobileNetV2-UNet}{60}{}%
+\contentsline {subsubsection}{Experiment: Initial Learning Rate Search}{60}{}%
+\contentsline {subsubsection}{Experiment: Offline Augmentations}{62}{}%
+\contentsline {subsubsection}{Experiment: Online Augmentations}{62}{}%
+\contentsline {subsubsection}{Experiment: Grid Search}{63}{}%
+\contentsline {chapter}{\numberline {4}Pipeline Evaluation}{67}{}%
+\contentsline {section}{\numberline {4.1}Evaluation Algorithm}{67}{}%
+\contentsline {subsubsection}{Classification Evaluation}{67}{}%
+\contentsline {subsubsection}{Topology Evaluation}{68}{}%
+\contentsline {subsubsection}{Annotation Matching Evaluation}{70}{}%
+\contentsline {section}{\numberline {4.2}Results}{70}{}%
+\contentsline {subsubsection}{Classification}{70}{}%
+\contentsline {subsubsection}{Topology}{71}{}%
+\contentsline {subsubsection}{Arrow and Text Matching}{72}{}%
+\contentsline {chapter}{\numberline {5}Summary and Outlook}{75}{}%
+\contentsline {chapter}{\numberline {6}Abbrevations}{77}{}%
+\contentsline {chapter}{List of Figures}{80}{}%
+\contentsline {chapter}{List of Tables}{85}{}%
+\contentsline {chapter}{Bibliography}{89}{}%
+\contentsline {chapter}{Appendix}{95}{}%
+\contentsline {section}{\numberline {A}YOLOv4-Tiny Experiments}{95}{}%
+\contentsline {section}{\numberline {B}MobileNetV2-UNet Experiments}{105}{}%

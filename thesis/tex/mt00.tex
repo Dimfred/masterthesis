@@ -35,6 +35,8 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 
+
+
 % plotting
 \usepackage{pgfplots}
 \pgfplotsset{width=14cm,compat=1.9}
@@ -143,7 +145,8 @@ Erlangen, den \selectlanguage{german} \today \hspace{6.0cm} \\[10mm]
 % \makeglossary
 \begin{center}
 \bfseries
-"Ubersicht
+% "Ubersicht
+Overview
 \normalfont
 \end{center}
 
@@ -171,11 +174,11 @@ Abstract
 \input{main/03_results}
 \cleardoublepage
 \input{main/04_discussion}
-\cleardoublepage
-\include{mt07}   % Ausblick (\chapter{Ausblick} TEXT)
-\cleardoublepage
-\include{mt08}   % Zusammenfassung (\chapter{Zusammenfassung}  TEXT)
-\cleardoublepage
+% \cleardoublepage
+% \include{mt07}   % Ausblick (\chapter{Ausblick} TEXT)
+% \cleardoublepage
+% \include{mt08}   % Zusammenfassung (\chapter{Zusammenfassung}  TEXT)
+% \cleardoublepage
 
 
 \cleardoublepage
@@ -202,6 +205,7 @@ Abstract
 \addcontentsline{toc}{chapter}{Appendix}
 \renewcommand{\thesection}{\Alph{section}}
 \input{main/app_yolo_experiments}
+\input{main/app_munet_experiments}
 % \end{appendices}
 
 \end{document}

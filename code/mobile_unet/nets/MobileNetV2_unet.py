@@ -239,17 +239,17 @@ class MobileNetV2_unet(nn.Module):
                 m.weight.data.normal_(0, 0.01)
                 m.bias.data.zero_()
 
-    def predict(self, img, score_thresh=0.5, tta=False, debug=False, label=None):
+    def predict(self, img, score_thresh=0.5, input_size=448, tta=False, debug=False, label=None):
         # pad equally left or right, and top or bottom
-        img = utils.resize_max_axis(img, config.unet.test_input_size)
+        img = utils.resize_max_axis(img, input_size)
         # orig = img.copy()
-        img, y_slice, x_slice = utils.pad_equal(img, config.unet.test_input_size)
+        img, y_slice, x_slice = utils.pad_equal(img, input_size)
         # WORKS!
         # assert np.all(orig == img[y_slice, x_slice])
 
         if label is not None:
-            label = utils.resize_max_axis(label, config.unet.test_input_size)
-            label, _, _ = utils.pad_equal(label, config.unet.test_input_size)
+            label = utils.resize_max_axis(label, input_size)
+            label, _, _ = utils.pad_equal(label, input_size)
 
         is_gray = lambda img: len(img.shape) == 2
         if is_gray(img):

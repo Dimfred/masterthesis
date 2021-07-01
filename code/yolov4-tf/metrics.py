@@ -102,8 +102,8 @@ def main(
     ### INIT YOLO ####
     ##################
 
-    input_size = 736
-    # input_size = 608
+    # input_size = 736
+    input_size = 608
 
     yolo = YOLOv4(tiny=config.yolo.tiny, small=config.yolo.small)
     yolo.classes = config.yolo.classes
@@ -172,6 +172,10 @@ def main(
                 )
                 img = utils.resize_max_axis(img, 1000)
                 resized_img = utils.resize_max_axis(img, input_size)
+
+                # ONLY TEST
+                # yolo.predictme(img, tta=True, nms="wbf")
+
                 orig = img.copy()
 
                 gt_path = utils.Yolo.label_from_img(img_path)

@@ -1,0 +1,313 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  Vorname Name Datum
+%  "Titel"
+%  Lehrstuhl fuer Mustererkennung, FAU Erlangen-Nuernberg
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Document class for LME theses: lmedoc
+% %LANGUAGE
+% %CONFIG
+%    The option "german" uses german.sty
+%    For english papers, use the "english" option
+% Possible types of theses:
+% bt - Bachelor's thesis
+% mt - Master's thesis
+% diss - Dissertation
+% sa - Student thesis
+%\documentclass[german,bt]{lmedoc/lmedoc}
+\documentclass[english,bt]{lmedoc/lmedoc}
+
+
+%%%%%%%%%%%%%%%%%%
+% pdflatex and lualatex are supported
+% ++ "Umlaut" support
+%    The package "inputenc" can be used to write Umlaute or the german double s
+%    directly. You need to use the correct encoding, e.g. latin1.
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\else
+  \ifXeTeX
+     \usepackage{fontspec}
+  \else
+     \usepackage{luatextra}
+  \fi
+\fi
+
+%%%%%%%%%%%%%%%%%%
+% ++ use \toprule,\midrule und \endrule in your tables, no \hline or vertical
+% columns please
+\usepackage{booktabs}
+% guessing if space is needed
+\usepackage{xspace}
+
+% mathstuff
+\usepackage{amsmath,amssymb}
+\usepackage{mathtools}
+\usepackage{bm}
+
+% Color stuff
+\usepackage[usenames,dvipsnames,table]{xcolor}
+% let's define a dark blue color
+\definecolor{faublue}{RGB}{0,51,102}
+
+% defines units
+\usepackage[binary-units,abbreviations]{siunitx}
+
+% allows inline enumerate
+\usepackage[inline]{enumitem}
+% and sets them to Arabic
+\setlist*[enumerate]{label=(\arabic*)}
+% remove widows at end or beginning of a page
+\usepackage[all]{nowidow}
+
+% great packages to make nice figures/plots/
+\usepackage{tikz}
+%\usepackage{pgfplots}
+
+% you can even separate table content and layout
+%\usepackage{pgfplotstable}
+%\pgfplotsset{compat=newest}
+
+% url package, it also breaks at hyphens
+\usepackage[hyphens]{url}
+
+% typesetting numbers and units
+\usepackage{siunitx}
+\sisetup{mode=text}% use text mode for numbers
+
+% ++ \url{} better breaking of urls and connect w. hyperref
+\usepackage{url}
+% ++ Biblatex
+%    Replaces the old 'bibtex'. The bibtex step has to be replaced with 'biber'.
+\usepackage[backend=biber, bibencoding=utf8, giveninits=true,
+maxbibnames=99, % show all authors in the bibliography
+maxalphanames=1, minalphanames=1, style=alphabetic,%
+style=trad-alpha, backref=true]{biblatex}
+% biblatex backref
+\DefineBibliographyStrings{english}{%
+  backrefpage = {cited on p\onedot},
+	backrefpages = {cited on pp\onedot},
+}
+
+% ++ use for refercence farther away: \vref
+\usepackage{varioref}
+\renewcommand\reftextfaraway[1]{(p.\,\pageref{#1})}
+% ++ Makes all the references in the document clickable.
+%    To ensure that backref is working, this package has to be loaded after biblatex.
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks = true,   % Führt zu einem farbigen Ausdruck!
+  linkcolor =  faublue,
+  urlcolor =   magenta,
+  citecolor =  faublue,
+  plainpages =        false,
+  hypertexnames =     true,
+  linktocpage =       true,
+  bookmarksopen =     true,
+  bookmarksnumbered = true,
+  bookmarksopenlevel= 0,
+% pdf information, uncomment if done
+%  pdftitle =    {your thesis title},
+%  pdfauthor =   {your name},
+%  pdfsubject =  {Master's thesis},
+%  pdfkeywords = {put in some comma-separated keywords}
+}
+% Enable correct jumping to figures when referencing
+\usepackage[all]{hypcap}
+
+% ++ use for refercence in the local arae \cref, e.g. \cref{fig:xyz}
+%  has to come after hyperref package
+\usepackage[noabbrev,capitalise,nameinlink]{cleveref}
+
+% ++ use multiple figures/tables in one
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup[table]{position=top}
+\captionsetup[figure]{position=bottom}
+\captionsetup[subtable]{position=bottom}
+% will result in references (typeset with \ref )
+% like ‘1a’ but sub-references (typeset with \subref) like ‘(a)’.
+\captionsetup{subrefformat=parens}
+
+
+% ++ Enables glossaries-extra. Should be used for abbreviations in the paper.
+\usepackage[abbreviations,shortcuts=true]{glossaries-extra}
+% abbreviationstyle for acronyms
+\setabbreviationstyle{long-short}
+% one can also use \makeglossaries and \printglossaries however then you need to
+% create a latexmk file and it might become more complicated for Windows users...
+
+% put in this file your abbreviations
+\input{abbreviations.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% supress messages because of underful hbox, this is not a problem
+\hbadness=10000
+
+
+
+% some useful commands
+\makeatletter % let's define a single dot
+\DeclareRobustCommand\onedot{\futurelet\@let@token\@onedot}
+\newcommand{\@onedot}{\ifx\@let@token.\else.\null\fi\xspace}
+\makeatother
+
+\newcommand{\etal}[1]{#1~et~al\onedot}
+\def\accto{acc.~to\xspace}
+\newcommand{\eg}{e.\,g.,\xspace}
+\newcommand{\Eg}{E.\,g.,\xspace}
+\newcommand{\cf}{cf\onedot}
+\newcommand{\ie}{i.\,e.,\xspace}
+\newcommand{\wrt}{w.\,r.\,t\onedot}
+\newcommand{\aka}{a.\,k.\,a\onedot}
+\newcommand{\todo}[1]{\textcolor{red}{TODO: #1}}
+\renewcommand{\vec}[1]{\bm{#1}}
+
+
+
+% Sets the bib file
+
+\addbibresource{literature.bib}
+
+% When writing a large document, it is sometimes useful to work on selected sections of the document.
+% Use this command to only build the document partially. Speeds up the developement cycle.
+% For the final product, this has to be commented out.
+%\includeonly{introduction,appendix,foo,bar}
+
+
+\pagenumbering{roman}
+
+\begin{document}
+\clearpage
+% %CONFIG
+% This is for students' theses
+  \begin{deckblatt}
+    \Titel{Detection of Hand Drawn Electrical Circuit Diagrams and their Components using Deep Learning Methods and Conversion into LTspice Format} % Title
+    \Name{Vinokour} % Last name
+    \Vorname{Dmitrij} % Given name
+    \Geburtsort{St. Petersburg} % Place of birth
+    \Geburtsdatum{19.12.1993} % Date of birth
+    \Betreuer{Florian Thamm M. Sc., Felix Denzinger M. Sc., Prof. Dr. Andreas Maier} % Advisor
+    \Start{01.01.2021} % Start of thesis
+    \Ende{31.07.2021} % End of thesis
+    %\ZweitInstitut{ZweitInstitut} % Cooperation partner
+  \end{deckblatt}
+
+
+\cleardoublepage
+
+
+
+
+
+Ich versichere, dass ich die Arbeit ohne fremde Hilfe und ohne Benutzung
+anderer als der angegebenen Quellen angefertigt habe und dass die Arbeit
+in gleicher oder "ahnlicher Form noch keiner anderen Pr"ufungsbeh"orde
+vorgelegen hat und von dieser als Teil einer Pr"ufungsleistung
+angenommen wurde. Alle Ausf"uhrungen, die w"ortlich oder sinngem"a"s
+"ubernommen wurden, sind als solche gekennzeichnet.
+\\
+
+Die Richtlinien des Lehrstuhls f"ur Studien- und Diplomarbeiten
+habe ich gelesen und anerkannt, insbesondere die Regelung des
+Nutzungsrechts. \\[15mm]
+Erlangen, den {\selectlanguage{german} \today} \hspace{6.0cm} \\[10mm]
+
+
+
+\cleardoublepage
+
+
+\begin{center}
+\bfseries
+% Abstract in German
+{\selectlanguage{german}"Ubersicht}
+\normalfont
+\end{center}
+
+
+\vspace{5.0cm}
+
+\begin{center}
+\bfseries
+% Abstract in English
+{\selectlanguage{english}Abstract}
+\normalfont
+\end{center}
+
+
+
+\cleardoublepage
+
+\tableofcontents
+
+\cleardoublepage \pagenumbering{arabic}
+
+\input{main/00_introduction}
+\cleardoublepage
+\input{main/01_theory}
+\cleardoublepage
+\input{main/02_mandm}
+\cleardoublepage
+\input{main/03_results}
+\cleardoublepage
+\input{main/04_discussion}
+\cleardoublepage
+
+% \include{mt07}   % Ausblick (\chapter{Ausblick} TEXT)
+% \cleardoublepage
+% \include{mt08}   % Zusammenfassung (\chapter{Zusammenfassung}  TEXT)
+% \cleardoublepage
+
+
+
+% \cleardoublepage
+% \input{mt-glossar}   % Glossar (\chapter{Glossar}  TEXT)
+
+
+% \include{introduction}   % Introduction
+% \cleardoublepage
+% \include{background}   % (\chapter{})
+% \cleardoublepage
+% \include{methodology}   % (\chapter{})
+% \cleardoublepage
+%% ... more chapters ....
+%\include{conlusion}   % Conclusion (\chapter{Conclusion}  TEXT)
+%\cleardoublepage
+
+% \appendix
+% \cleardoublepage
+% \include{appendix}   % appendix A
+% \cleardoublepage
+%\include{thesis10}   % appendix B
+%\cleardoublepage
+%\include{thesis11}   % appendix C
+%\cleardoublepage
+
+%% Do not change, auto-generated lists of figures, tables and literature %%
+% Glossar
+\printunsrtglossary[type=abbreviations]
+\cleardoublepage
+
+% List of figures
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+\cleardoublepage
+
+% List of tables
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+\cleardoublepage
+
+% Literature list
+% %CONFIG:
+%\selectlanguage{german}{\addcontentsline{toc}{chapter}{\bibname}}
+\selectlanguage{english}{\addcontentsline{toc}{chapter}{\bibname}}
+
+\printbibliography
+\end{document}

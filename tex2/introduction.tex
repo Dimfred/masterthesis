@@ -1,0 +1,56 @@
+\chapter{Introduction}
+
+% let's show you how \cite and \gls for abbreviations works
+Example paragraph: 
+
+Niemann~\cite{Niemann83KVM} wrote a nice book. There is no \glspl{svm} defined,
+but maybe he said something about Bayesian classifiers, maybe here~\cite[p.34]{Niemann83KVM}.
+But I like \glspl{svm}, so give me an \gls{svm}. 
+
+Useful reads:
+
+Checkout the subcaption package how to do multiple figures/tables. Make sure
+that you use vector graphics - no blurry png - for graphs or similar, \eg use
+tikz/inkscape. \cref{fig:ex} is an example of a figure using the package tikz. Make also sure that your plots are readable and have axis
+captions, \eg use pgfplots.
+
+How to create good looking tables with the booktabs package
+e.g. a table should like \cref{tab:ex}.
+
+\begin{table}
+    \centering
+        \caption[Short title for the List of Tables.]{Long caption for this table which is composed by sub-table 1 and sub-table 2.}
+        \begin{subtable}{.5\textwidth}
+            \centering
+                \caption{Sub-table 1.}
+            	\begin{tabular}{llr}
+            		\toprule
+            		id & method & result\\
+            		\midrule
+            		1 & A & 0.9\\
+            		2 & B & 0.8\\
+            		\bottomrule
+            	\end{tabular}
+        \end{subtable}% <---- don't forget this %
+        \begin{subtable}{.5\textwidth}
+            \centering
+                \caption{Sub-table 2.}
+            	\begin{tabular}{llr}
+            		\toprule
+            		id & method & result\\
+            		\midrule
+            		1 & C & 90\%\\
+            		2 & D & 80\%\\
+            		\bottomrule
+            	\end{tabular}
+        \end{subtable}
+\label{tab:ex}
+\end{table}
+
+
+\begin{figure}
+\centering
+\input{fig1}
+\caption{Example of a figure using the package \textit{tikz}}
+\label{fig:ex}
+\end{figure}
