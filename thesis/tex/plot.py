@@ -5,6 +5,8 @@ import matplotlib as mpl
 import math
 import itertools as it
 
+from sklearn.metrics import precision_recall_curve
+
 import seaborn as sns
 import pandas as pd
 from pathlib import Path
@@ -43,14 +45,18 @@ blue = sns.color_palette("Blues_d", 3)[1]
 red = sns.color_palette("Reds_d", 3)[1]
 
 
-def text_on_bars(ax, values, formatter):
+def text_on_bars(ax, values, formatter=lambda v: f"{v:.3f}%", fontsize=None):
     bars = ax.patches
+    print(len(bars))
     for bar, value in zip(bars, values):
         h = bar.get_height()
         w = bar.get_width()
         pos = bar.get_x() + bar.get_width() / 2.0
 
-        ax.text(pos, h, formatter(value), ha="center")
+        if fontsize:
+            ax.text(pos, h, formatter(value), ha="center", fontsize=fontsize)
+        else:
+            ax.text(pos, h, formatter(value), ha="center")
 
 
 def set_capcolor(ax, color=green):
@@ -72,49 +78,50 @@ def make_score_tuning_heatmap(results, score_threshs, iou_threshs, size=(11, 11)
     plt.tight_layout()
 
 
+error_color = (0, 0, 0, 0.3)
+
+# fmt: off
 @click.command()
-@click.option("--show", is_flag=True, default=False)
-@click.option("--yolo_lr", is_flag=True, default=False)
-@click.option("--yolo_offline", is_flag=True, default=False)
-@click.option("--yolo_online", is_flag=True, default=False)
-@click.option("--yolo_grid_all", is_flag=True, default=False)
-@click.option("--yolo_grid_heat", is_flag=True, default=False)
-@click.option("--yolo_input_size", is_flag=True, default=False)
-@click.option("--yolo_diou_heat", is_flag=True, default=False)
-@click.option("--yolo_diou_tta_heat", is_flag=True, default=False)
-@click.option("--yolo_wbf_heat", is_flag=True, default=False)
-@click.option("--yolo_wbf_tta_heat", is_flag=True, default=False)
-@click.option("--yolo_wbf_tta_votes", is_flag=True, default=False)
-@click.option("--yolo_all_tuning", is_flag=True, default=False)
-@click.option("--munet_lr", is_flag=True, default=False)
-@click.option("--munet_offline", is_flag=True, default=False)
-@click.option("--munet_online", is_flag=True, default=False)
-@click.option("--munet_grid_all_bs", is_flag=True, default=False)
-@click.option("--munet_grid_all", is_flag=True, default=False)
-@click.option("--munet_grid_heat", is_flag=True, default=False)
-@click.option("--munet_folds", is_flag=True, default=False)
-def main(
-    show,
-    yolo_lr,
-    yolo_offline,
-    yolo_online,
-    yolo_grid_all,
-    yolo_grid_heat,
-    yolo_input_size,
-    yolo_diou_heat,
-    yolo_wbf_heat,
-    yolo_diou_tta_heat,
-    yolo_wbf_tta_heat,
-    yolo_wbf_tta_votes,
-    yolo_all_tuning,
-    munet_lr,
-    munet_offline,
-    munet_online,
-    munet_grid_all_bs,
-    munet_grid_all,
-    munet_grid_heat,
-    munet_folds,
-):
+@click.option("--show",                 is_flag=True, default=False)
+@click.option("--pr_curve",             is_flag=True, default=False)
+@click.option("--yolo_lr",              is_flag=True, default=False)
+@click.option("--yolo_offline",         is_flag=True, default=False)
+@click.option("--yolo_online",          is_flag=True, default=False)
+@click.option("--yolo_grid_all",        is_flag=True, default=False)
+@click.option("--yolo_grid_heat",       is_flag=True, default=False)
+@click.option("--yolo_input_size",      is_flag=True, default=False)
+@click.option("--yolo_diou_heat",       is_flag=True, default=False)
+@click.option("--yolo_diou_tta_heat",   is_flag=True, default=False)
+@click.option("--yolo_wbf_heat",        is_flag=True, default=False)
+@click.option("--yolo_wbf_tta_heat",    is_flag=True, default=False)
+@click.option("--yolo_wbf_tta_votes",   is_flag=True, default=False)
+@click.option("--yolo_all_tuning",      is_flag=True, default=False)
+@click.option("--munet_lr",             is_flag=True, default=False)
+@click.option("--munet_offline",        is_flag=True, default=False)
+@click.option("--munet_online",         is_flag=True, default=False)
+@click.option("--munet_grid_all_bs",    is_flag=True, default=False)
+@click.option("--munet_grid_all",       is_flag=True, default=False)
+@click.option("--munet_grid_heat",      is_flag=True, default=False)
+@click.option("--munet_folds",          is_flag=True, default=False)
+def main(show, pr_curve, yolo_lr, yolo_offline, yolo_online, yolo_grid_all, yolo_grid_heat, yolo_input_size, yolo_diou_heat, yolo_wbf_heat, yolo_diou_tta_heat, yolo_wbf_tta_heat, yolo_wbf_tta_votes, yolo_all_tuning, munet_lr, munet_offline, munet_online, munet_grid_all_bs, munet_grid_all, munet_grid_heat, munet_folds):
+# fmt: on
+    if pr_curve:
+        sns.set_style("whitegrid")
+        ylabel, xlabel = "Precision", "Recall"
+
+        data = pd.DataFrame({
+            xlabel: np.arange(0, 1.1, 0.1),
+            ylabel: (1, 1, 1, 0.4, 0.45, 0.5, 0.55, 0.58, 0.45, 0.48, 0.5)
+        })
+
+        # ax = sns.lineplot(data=data, x=xlabel, y=ylabel)
+        # ax.set_yticks(np.arange(0, 1.1, 0.1))
+        # ax.set_xticks(np.arange(0, 1.1, 0.1))
+
+        plt.savefig(output / "pr_curve.pdf")
+        if show:
+            plt.show()
+
     ########################################################################################
     ## YOLO EXPERIMENTS
     ########################################################################################
@@ -125,12 +132,46 @@ def main(
     if yolo_lr:
         sns.set_style("whitegrid")
         lrs = [fsci(lr) for lr in (0.01, 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001)]
-        maps = (72.352, 71.223, 71.474, 73.415, 71.887, 71.472, 70.650)
+        map_values = (72.352, 71.223, 71.474, 73.415, 71.887, 71.472, 70.650)
+        maps = (
+            (0.730395, 0.722359, 0.717805),
+            (0.731512, 0.712088, 0.693098),
+            (0.726695, 0.733718, 0.683804),
+            (0.734765, 0.725393, 0.742283),
+            (0.727844, 0.722296, 0.70647),
+            (0.71887, 0.714032, 0.711261),
+            (0.700158, 0.722826, 0.69653),
+        )
 
-        data = pd.DataFrame({"Learning Rate": lrs, "mAP [%]": maps})
+        ylabel, xlabel = "mAP [%]", "Learning Rate"
 
-        plt.ylim((70, 74))
-        ax = sns.barplot(x="Learning Rate", y="mAP [%]", data=data, palette="Blues_d")
+        data = []
+        for lr, map_ in zip(lrs, maps):
+            for v in map_:
+                data.append((lr, v * 100))
+
+        data = pd.DataFrame(data, columns=[xlabel, ylabel])
+
+        # size = (8, 5)
+        size = (22, 10)
+
+        fig = plt.figure(figsize=size)
+        plt.ylim((67, 75))
+        ax = sns.barplot(
+            x=xlabel,
+            y=ylabel,
+            data=data,
+            palette=len(lrs) * [blue],
+            capsize=0.2,
+            ci="sd",
+            errcolor=error_color,
+        )
+        ax.set_ylabel(ylabel, fontsize=34)
+        ax.set_xlabel(xlabel, fontsize=34)
+        ax.tick_params(labelsize=28)
+        sns.set_style("whitegrid")
+        text_on_bars(ax, map_values, lambda v: f"{v:.3f}%", fontsize=28)
+
 
         plt.savefig(output / "yolo_lr_experiment.pdf")
         if show:
@@ -142,34 +183,63 @@ def main(
     if yolo_offline:
         sns.set_style("whitegrid")
         configs = ("Baseline", "R", "F", "F,R", "P", "P,R", "P,F", "P,F,R")
-        maps = (73.415, 87.140, 84.415, 91.113, 79.403, 89.641, 86.129, 92.578)
+        map_vals = (73.415, 87.140, 84.415, 91.113, 79.403, 89.641, 86.129, 92.578)
 
-        both = list(zip(configs, maps))
-        by_map = lambda vals: vals[1]
-        both = sorted(both, key=by_map)
-        configs, maps = [], []
-        for c, m in both:
-            configs.append(c)
-            maps.append(m)
+        maps = (
+            (0.734765, 0.725393, 0.742283),
+            (0.874025, 0.873762, 0.866413),
+            (0.884209, 0.825059, 0.82317),
+            (0.914477, 0.910632, 0.90827),
+            (0.817009, 0.776369, 0.788722),
+            (0.897369, 0.896583, 0.895264),
+            (0.861265, 0.859016, 0.863599),
+            (0.924946, 0.930219, 0.92216),
+        )
+
+        all_ = list(zip(configs, map_vals, maps))
+        by_map_mean = lambda vals: vals[1]
+        all_ = sorted(all_, key=by_map_mean)
 
         xlabel, ylabel = "Configuration", "mAP [%]"
-        data = pd.DataFrame({xlabel: configs, ylabel: maps})
 
-        min_y, max_y, step = 70, 93, 2
-        ax = sns.barplot(x=xlabel, y=ylabel, data=data, palette="Blues_d")
+        data = []
+        for config, mean, maps in all_:
+            for v in maps:
+                data.append((config, v * 100))
+
+        data = pd.DataFrame(data, columns=[xlabel, ylabel])
+
+        # size = (9, 6)
+        size = (22, 13)
+        fig = plt.figure(figsize=size)
+        min_y, max_y, step = 68, 94, 2
+        ax = sns.barplot(
+            x=xlabel,
+            y=ylabel,
+            data=data,
+            palette=[green] + (len(configs) - 1) * [blue],
+            capsize=0.2,
+            errcolor=error_color,
+            ci="sd",
+        )
+        ax.set_ylabel(ylabel, fontsize=34)
+        ax.set_xlabel(xlabel, fontsize=34)
+        ax.tick_params(labelsize=28)
+        text_on_bars(ax, [v for _, v, _ in all_], lambda v: f"{v:.3f}%", fontsize=28)
 
         # ticks
         yticks = np.arange(min_y, max_y, step)
         ax.set_yticks(yticks)
         plt.ylim((min_y, max_y))
 
+        plt.rcParams["legend.fontsize"] = 28
         legend = [
             Patch(color="white", label="P: Projection"),
             Patch(color="white", label="F: Horizontal Flip"),
             Patch(color="white", label="R: Rotation"),
             Patch(color="white", label="Baseline: LR = 1e-3"),
         ]
-        plt.legend(handles=legend)
+        plt.legend(handles=legend, loc="upper left")
 
         plt.savefig(output / "yolo_offline_aug_experiment.pdf")
         if show:
@@ -181,65 +251,102 @@ def main(
     if yolo_online:
         augs = ("Rotation", "Scale", "SafeCrop", "ColorJitter")
 
-        rot_map = (95.368, 94.521, 94.198)
+        rot_map_vals = (95.368, 94.521, 94.198)
         rot_params = ("10°", "20°", "30°")
+        rot_maps = (
+            (0.957676, 0.953432, 0.949919),
+            (0.945191, 0.94476, 0.94568),
+            (0.940533, 0.947177, 0.938232),
+        )
 
-        scale_map = (93.062, 93.261, 92.935)
+        scale_map_vals = (93.062, 93.261, 92.935)
         scale_params = ("10%", "20%", "30%")
+        scale_maps = (
+            (0.92964, 0.928164, 0.934063),
+            (0.924235, 0.938415, 0.935191),
+            (0.936594, 0.926332, 0.925122),
+        )
 
-        crop_map = (94.820, 94.893, 95.027)
+        crop_map_vals = (94.820, 94.893, 95.027)
         crop_params = ("70%", "80%", "90%")
+        crop_maps = (
+            (0.947463, 0.947819, 0.949305),
+            (0.948257, 0.945725, 0.952799),
+            (0.949988, 0.945555, 0.955263),
+        )
 
-        color_map = (92.656, 93.243, 93.182)
+        color_map_vals = (92.656, 93.243, 93.182)
         # hack to prevent the combination of the same xvalues
         # this is an invisible unicode char
         color_params = ("10%\uFEFF", "20%\uFEFF", "30%\uFEFF")
+        color_maps = (
+            (0.923355, 0.930764, 0.925557),
+            (0.930736, 0.936396, 0.930167),
+            (0.94089, 0.927393, 0.92719),
+        )
 
-        baseline_map = (92.578,)
+        baseline_map_val = (92.578,)
+        baseline_maps = ((0.924946, 0.930219, 0.92216),)
+
         baseline_params = ("Baseline",)
 
         xlabel, ylabel = "Parameters", "mAP [%]"
         sns.set(font_scale=2)
         sns.set_style("whitegrid")
 
-        baseline_data = pd.DataFrame(
-            {"Augmentation": "Baseline", xlabel: baseline_params, ylabel: baseline_map}
-        )
-        rot_data = pd.DataFrame(
-            {"Augmentation": "Rotation", xlabel: rot_params, ylabel: rot_map}
-        )
-        scale_data = pd.DataFrame(
-            {"Augmentation": "Scale", xlabel: scale_params, ylabel: scale_map}
-        )
-        crop_data = pd.DataFrame(
-            {"Augmentation": "SafeCrop", xlabel: crop_params, ylabel: crop_map}
-        )
-        color_data = pd.DataFrame(
-            {"Augmentation": "ColorJitter", xlabel: color_params, ylabel: color_map}
-        )
+        data = []
 
-        data = pd.concat([baseline_data, rot_data, scale_data, crop_data, color_data])
-        print(data)
+        def to_data(aug, param, maps):
+            for p, maps_ in zip(param, maps):
+                for v in maps_:
+                    data.append((aug, p, v * 100))
 
-        flare = sns.color_palette("flare", 1)
+        to_data("Baseline", baseline_params, baseline_maps)
+        to_data("Rotation", rot_params, rot_maps)
+        to_data("Scale", scale_params, scale_maps)
+        to_data("SafeCrop", crop_params, crop_maps)
+        to_data("ColorJitter", color_params, color_maps)
+        data = pd.DataFrame(data, columns=["Augmentation", xlabel, ylabel])
+
+        greens = [sns.color_palette("Greens_d", 3)[1]]
         blues = 3 * [sns.color_palette("Blues_d", 3)[1]]
-        greens = 3 * [sns.color_palette("Greens_d", 3)[1]]
+        flare = 3 * sns.color_palette("flare", 1)
         reds = 3 * [sns.color_palette("Reds_d", 3)[1]]
         greys = 3 * [sns.color_palette("Greys_d", 3)[1]]
-        palette = flare + blues + greens + reds + greys
+        palette = greens + blues + flare + reds + greys
 
-        size = (20, 10)
+        size = (22, 10)
         fig = plt.figure(figsize=size)
-        ax = sns.barplot(x=xlabel, y=ylabel, data=data, palette=palette, dodge=False)
+        ax = sns.barplot(
+            x=xlabel,
+            y=ylabel,
+            data=data,
+            palette=palette,
+            dodge=False,
+            ci="sd",
+            capsize=0.2,
+            errcolor=error_color,
+        )
+        text_on_bars(
+            ax,
+            [
+                *baseline_map_val,
+                *rot_map_vals,
+                *scale_map_vals,
+                *crop_map_vals,
+                *color_map_vals,
+            ],
+            lambda v: f"{v:.3f}%",
+        )
 
         min_y, max_y = 92, 96
         plt.ylim((min_y, max_y))
         plt.tight_layout()
 
         legend = [
-            Patch(color=flare[0], label="Baseline"),
+            Patch(color=greens[0], label="Baseline"),
             Patch(color=blues[0], label="Rotation"),
-            Patch(color=greens[0], label="Scale"),
+            Patch(color=flare[0], label="Scale"),
             Patch(color=reds[0], label="Safe Crop"),
             Patch(color=greys[0], label="Color Jitter"),
         ]
@@ -283,13 +390,47 @@ def main(
             sns.color_palette("Greens", 3)[1],
         ]
 
-        size = (7, 4)
+        sns.set_style("whitegrid")
+        size = (10, 6)
         fig = plt.figure(figsize=size)
         min_y, max_y = 93, 97
         sns.scatterplot(
-            x="Learning Rate", y="mAP [%]", data=data, hue="Batch Size", palette=palette
+            x="Learning Rate",
+            y="mAP [%]",
+            data=data,
+            hue="Batch Size",
+            palette=palette,
+            sizes=len(data) * [50],
         )
+        for idx, row in data.iterrows():
+            x = row["Learning Rate"]
+            y = row["mAP [%]"]
+            bs = row["Batch Size"]
 
+            loss = row["Loss"]
+            if loss == "EIoU@0":
+                t = "EIoU"
+            else:
+                t = loss
+
+            if x == "1.0e-4" and bs == 32 and loss == "EIoU@0.5":
+                plt.text(x, y, t, horizontalalignment="right", size="medium")
+            elif x == "1.0e-3" and bs == 32 and loss == "EIoU@0.5":
+                plt.text(x, y, t, horizontalalignment="right", size="medium")
+            elif x == "2.5e-3" and bs == 64 and loss == "EIoU@0":
+                plt.text(x, y, t, horizontalalignment="right", size="medium")
+            elif x == "1.0e-3" and bs == 64 and loss == "EIoU@0":
+                plt.text(x, y, t, horizontalalignment="right", size="medium")
+            elif x == "1.0e-4" and bs == 64 and loss == "EIoU@0.5":
+                plt.text(x, y, t, horizontalalignment="right", size="medium")
+            elif x == "2.5e-4" and bs == 64 and loss == "EIoU@0.5":
+                plt.text(x, y, t, horizontalalignment="right", size="medium")
+            elif x == "5.0e-4" and bs == 64 and loss == "EIoU@0.5":
+                plt.text(x, y, t, horizontalalignment="right", size="medium")
+            else:
+                plt.text(x, y, t, horizontalalignment="left", size="medium")
+
+        plt.legend(loc="center left")
         plt.savefig(output / "yolo_grid_bs_compare.pdf")
         if show:
             plt.show()
@@ -333,9 +474,12 @@ def main(
 
         min_y, max_y = 95, 97.5
 
-        size = (16, 7)
+        size = (17, 7)
         fig = plt.figure(figsize=size)
-        ax = sns.barplot(x=xlabel, y=ylabel, data=data, palette="Blues_d")
+        ax = sns.barplot(
+            x=xlabel, y=ylabel, data=data, palette=len(input_size) * [blue]
+        )
+        text_on_bars(ax, valid)
         plt.ylim((min_y, max_y))
 
         plt.savefig(output / "yolo_input_size_tuning.pdf")
@@ -446,7 +590,10 @@ def main(
 
         size = (8, 3)
         fig = plt.figure(figsize=size)
-        ax = sns.barplot(x=xlabel, y=ylabel, data=data, palette="Blues_d")
+        ax = sns.barplot(
+            x=xlabel, y=ylabel, data=data, palette=len(vote_thresh) * [blue]
+        )
+        text_on_bars(ax, results)
         plt.ylim((min_y, max_y))
 
         plt.tight_layout()
@@ -460,7 +607,7 @@ def main(
         types = ["DIoU Untuned, 608x608", "Input Size Tuned", "DIoU Tuned", "WBF Tuned", "WBF-TTA Tuned"]
         valid = [v*100 for v in [0.9637025, 0.97006387, 0.9703562, 0.9718724, 0.9854284]]
         test = [v*100 for v in [0.88883495, 0.92925644, 0.92925644, 0.9318778, 0.95491886]]
-        experiments = ["Baseline", "A", "B", "C", "D"]
+        experiments = ["Baseline", "InputSize", "DIoU-Tune", "WBF-Tune", "WBF-TTA-Tune"]
         # fmt: on
 
         ylabel, xlabel = "mAP [%]", "Performed Tuning Experiment\n\n"
@@ -516,7 +663,7 @@ def main(
             (0.0001, (81.68054, 81.44921, 81.67149)),
         )
 
-        ylabel, xlabel = "F1-Score [%]", "Learning Rate"
+        ylabel, xlabel = "f1-Score [%]", "Learning Rate"
 
         data = []
         for lr, f1s in results:
@@ -525,10 +672,24 @@ def main(
 
         data = pd.DataFrame(data, columns=[xlabel, ylabel])
 
-        size = (8, 5)
+        # size = (8, 5)
+        size = (22, 10)
         fig = plt.figure(figsize=size)
-        ax = sns.barplot(x=xlabel, y=ylabel, data=data, palette="Blues_d", capsize=0.2)
-        set_capcolor(ax, "black")
+        ax = sns.barplot(
+            x=xlabel,
+            y=ylabel,
+            data=data,
+            palette=len(results) * [blue],
+            capsize=0.2,
+            ci="sd",
+            errcolor=error_color,
+        )
+        ax.set_ylabel(ylabel, fontsize=34)
+        ax.set_xlabel(xlabel, fontsize=34)
+        ax.tick_params(labelsize=28)
+        text_on_bars(ax, [np.mean(r) for _, r in results], fontsize=28)
+        sns.set_style("whitegrid")
+        # set_capcolor(ax, "black")
         plt.ylim((80, 84))
 
         plt.savefig(output / "munet_lr_exp.pdf")
@@ -557,7 +718,7 @@ def main(
         by_mean = lambda v: np.array(v[1]).mean()
         results = sorted(results, key=by_mean)
 
-        ylabel, xlabel = "F1-Score [%]", "Configuration"
+        ylabel, xlabel = "f1-Score [%]", "Configuration"
 
         data = []
         for config, f1s in results:
@@ -565,12 +726,26 @@ def main(
                 data.append((config, f1))
         data = pd.DataFrame(data, columns=[xlabel, ylabel])
 
-        palette = sns.color_palette("Blues_d", len(results))
+        palette = sns.color_palette([green] + (len(results) - 1) * [blue], len(results))
 
-        size = (8, 5)
+        # size = (8, 5)
+        size = (22, 10)
         fig = plt.figure(figsize=size)
-        ax = sns.barplot(x=xlabel, y=ylabel, data=data, palette=palette, capsize=0.2)
-        set_capcolor(ax, "black")
+        ax = sns.barplot(
+            x=xlabel,
+            y=ylabel,
+            data=data,
+            palette=palette,
+            capsize=0.2,
+            ci="sd",
+            errcolor=error_color,
+        )
+        # set_capcolor(ax, "black")
+
+        ax.set_ylabel(ylabel, fontsize=34)
+        ax.set_xlabel(xlabel, fontsize=34)
+        ax.tick_params(labelsize=28)
+        text_on_bars(ax, [np.mean(r) for _, r in results], fontsize=28)
 
         min_y, max_y = 82, 86
         plt.ylim((min_y, max_y))
@@ -579,6 +754,7 @@ def main(
         # yticks = np.arange(min_y, max_y, step)
         # ax.set_yticks(yticks)
 
+        plt.rcParams["legend.fontsize"] = 28
         legend = [
             Patch(color="white", label="P: Projection"),
             Patch(color="white", label="F: Horizontal Flip"),
@@ -623,7 +799,7 @@ def main(
             ("30%\uFEFF", (85.31983, 84.56982, 85.53279)),
         )
 
-        ylabel, xlabel = "F1-Score [%]", "Parameters"
+        ylabel, xlabel = "f1-Score [%]", "Parameters"
         sns.set(font_scale=2)
         sns.set_style("whitegrid")
 
@@ -641,28 +817,47 @@ def main(
         to_data(color_results, "ColorJitter")
         data = pd.DataFrame(data, columns=["Type", xlabel, ylabel])
 
-        flare = sns.color_palette("flare", 1)
+        flare = 3 * sns.color_palette("flare", 1)
         blues = 3 * [sns.color_palette("Blues_d", 3)[1]]
-        greens = 3 * [sns.color_palette("Greens_d", 3)[1]]
+        greens = [sns.color_palette("Greens_d", 3)[1]]
         reds = 3 * [sns.color_palette("Reds_d", 3)[1]]
         greys = 3 * [sns.color_palette("Greys_d", 3)[1]]
-        palette = flare + blues + greens + reds + greys
+        palette = greens + blues + flare + reds + greys
 
-        size = (20, 10)
+        size = (22, 10)
         fig = plt.figure(figsize=size)
         ax = sns.barplot(
-            x=xlabel, y=ylabel, data=data, palette=palette, dodge=False, capsize=0.2
+            x=xlabel,
+            y=ylabel,
+            data=data,
+            palette=palette,
+            dodge=False,
+            capsize=0.2,
+            ci="sd",
+            errcolor=error_color,
         )
-        set_capcolor(ax, "black")
+        # set_capcolor(ax, "black")
+
+        def m(res):
+            return [np.mean(r) for _, r in res]
+
+        text_on_bars(
+            ax,
+            m(baseline)
+            + m(rot_results)
+            + m(scale_results)
+            + m(crop_results)
+            + m(color_results),
+        )
 
         min_y, max_y = 80, 88
         plt.ylim((min_y, max_y))
         plt.tight_layout()
 
         legend = [
-            Patch(color=flare[0], label="Baseline"),
+            Patch(color=greens[0], label="Baseline"),
             Patch(color=blues[0], label="Rotation"),
-            Patch(color=greens[0], label="Scale"),
+            Patch(color=flare[0], label="Scale"),
             Patch(color=reds[0], label="Crop"),
             Patch(color=greys[0], label="Color Jitter"),
         ]
@@ -723,7 +918,7 @@ def main(
 
     lrs = [fsci(lr) for lr in [0.01, 0.005, 0.0025, 0.001, 0.0005, 0.00025, 0.0001]]
     if munet_grid_all_bs:
-        ylabel, xlabel = "F1-Score [%]", "Learning Rate"
+        ylabel, xlabel = "f1-Score [%]", "Learning Rate"
 
         palette = [
             sns.color_palette("Blues_d", 3)[1],
@@ -755,7 +950,7 @@ def main(
             return f"Focal\n{alpha}=0.8\n{gamma}=2"
 
     if munet_grid_heat:
-        ylabel, xlabel = "F1-Score [%]", "Learning Rate"
+        ylabel, xlabel = "f1-Score [%]", "Learning Rate"
         sns.set_style("whitegrid")
 
         def loss_to_tick(loss):
@@ -803,8 +998,8 @@ def main(
         losses = ["focal2_0.1", "focal2_0.8", "dice"]
 
         metrics_ylabel = (
-            ("F1 B", "F1-Score [%]"),
-            ("F1 C", "F1-Score [%]"),
+            ("F1 B", "f1-Score [%]"),
+            ("F1 C", "f1-Score [%]"),
             ("R B", "Recall [%]"),
             ("R C", "Recall [%]"),
             ("P B", "Precision [%]"),
@@ -869,12 +1064,11 @@ def main(
         )
         # fmt: on
 
-        sns.set(font_scale=2)
+        # sns.set(font_scale=2)
         sns.set_style("whitegrid")
 
-
         xlabel = "Learning Rate"
-        ylabel = "F1-Score [%]"
+        ylabel = "f1-Score [%]"
 
         def loss_to_tick(loss):
             if loss == "dice":
@@ -890,7 +1084,7 @@ def main(
         for bs in (32, 64):
             full_data = None
             for loss in ("focal2_0.1", "focal2_0.8", "dice"):
-                print("Fold:", loss, bs)
+                # print("Fold:", loss, bs)
                 d = data
                 d = d.loc[d["Loss"] == loss]
                 d = d.loc[d["Batch Size"] == bs]
@@ -904,7 +1098,8 @@ def main(
                         ylabel: d["FV"].to_list() + d["FT"].to_list(),
                         # "Hue": len(d["FV"]) * [f"Valid{bs}{loss}"] + len(d["FT"]) * [f"Test{bs}{loss}"],
                         "Fold": 2 * len(d["FV"]) * [f"{loss_to_tick(loss)}"],
-                        "Dataset": len(d["FV"]) * ["Validation"] + len(d["FV"]) * ["Test"]
+                        "Dataset": len(d["FV"]) * ["Validation"]
+                        + len(d["FV"]) * ["Test"],
                     }
                 )
 
@@ -913,16 +1108,20 @@ def main(
                 else:
                     full_data = pd.concat([full_data, nd], axis=0)
 
-            print(full_data)
-            full_data = full_data.sort_values(["Learning Rate", "Fold"], ascending=False)
+            # print(full_data)
+            full_data = full_data.sort_values(
+                ["Learning Rate", "Fold"], ascending=False
+            )
             full_data["Learning Rate"] = full_data["Learning Rate"].apply(fsci)
 
             valid_data = full_data.loc[full_data["Dataset"] == "Validation"]
-            valid_f1 = valid_data[ylabel].to_list()
-
             test_data = full_data.loc[full_data["Dataset"] == "Test"]
-            test_f1 = test_data[ylabel].to_list()
 
+            # fold_order = full_data["Fold"].unique()
+            # fold_order.sort()
+            # fold_order = [[o] for o in fold_order]
+            print(full_data)
+            full_data = full_data.sort_values(by="Fold")
 
             palette = [blue, green]
             ax = sns.catplot(
@@ -934,20 +1133,51 @@ def main(
                 hue="Dataset",
                 row="Fold",
                 data=full_data,
-                aspect=2/1,
+                order=lrs,
+                hue_order=["Validation", "Test"],
+                aspect=2 / 1,
                 palette=palette,
-                legend=True
+                legend=True,
+                legend_out=False,
             )
-            min_y, max_y = 50, 88
+            min_y, max_y = 50, 93
             plt.ylim((min_y, max_y))
-            # plt.legend(loc="upper left")
+
+            for idx, (fold, ax_) in enumerate(
+                zip(full_data["Fold"].unique(), ax.axes)
+            ):
+                vfold = valid_data.loc[valid_data["Fold"] == fold].copy()
+                tfold = test_data.loc[test_data["Fold"] == fold].copy()
+
+                vf1 = []
+                for lr in lrs:
+                    current = vfold.loc[vfold["Learning Rate"] == lr]
+                    if current.empty:
+                        vf1.append(0)
+                    else:
+                        vf1.append(current[ylabel].values[0])
+
+                tf1 = []
+                for lr in lrs:
+                    current = tfold.loc[tfold["Learning Rate"] == lr]
+                    if current.empty:
+                        tf1.append(0)
+                    else:
+                        tf1.append(current[ylabel].values[0])
+
+                text_on_bars(ax_[0], vf1 + tf1)
+
+            # ax.legend(loc="upper right")
+            # ax.axes[0].legend(loc="upper right")
 
             # text_on_bars(, valid_f1 + test_f1, formatter=lambda v: f"{v:.3f}%")
+            # print(ax.axes)
 
             plt.tight_layout()
             plt.savefig(output / f"munet_folds_bs{bs}.pdf")
             if show:
                 plt.show()
+
 
 if __name__ == "__main__":
     main()

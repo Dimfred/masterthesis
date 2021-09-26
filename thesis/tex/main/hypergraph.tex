@@ -1,13 +1,14 @@
-To evaluate the produced \ac{ECD} topologies, topologies are represented as a hypergraph, therefore the basic theory of hypergraphs first should be explained.
+To evaluate the produced \ac{ECD} topologies, topologies are represented as a hypergraph.
 Hypergraphs are a generalization of a graph and are formally defined as:
-$H = (V, E)$, where $V$ is a set of $N \in \N$ vertices $\{v_1,...,v_N\}$ and $E$ is a set of $M \in \N$ hyperedges $\{e_1,...,e_M\}$, where each hyperedge $e_i \in E$ is $e_i \subseteq V$. \cite{hypergraph_def}
-In matrix notation a hypergraph can be represented in a so called adjacency matrix.
+$\mathbf{H} = (\mathbf{V}, \mathbf{E})$, where $\mathbf{V}$ is a set of $N \in \N$ vertices $\{v_1,...,v_N\}$ and $\mathbf{E}$ is a set of $M \in \N$ hyperedges $\{\mathbf{e_1},...,\mathbf{e_M}\}$, where each hyperedge $\mathbf{e_i} \in \mathbf{E}$ is $\mathbf{e_i} \subseteq \mathbf{V}$ \cite{hypergraph_def}.
+In matrix notation a hypergraph can be represented in an adjacency matrix \cite{hypergraph_adjacency}.
 An example of an adjacency matrix together with the corresponding drawing of a hypergraph can be found in figure \ref{fig:hypergraph_adjacency}.
 
 \begin{figure}
 \begin{center}
-    \includegraphics[width=13cm]{imgs/hypergraph_adjacency.png}
-    \caption{An example drawing of a hypergraph with its corresponding adjacency matrix. The hypergraph is defined as: $H = (V, E)$, $V = \{v1, v2, v3, v4\}$, $E = \{e1, e2\}$, with $e1 = \{v1, v2, v3\}$, $e2 = \{v3, v4\}$. In the adjacency matrix a row corresponds to a hyperedge and each column to a vertex. When a vertex is present in a hyperedge it has a 1 as an entry in the matrix, when a vertex is not present it has a 0.}
+    % \includegraphics[width=13cm]{imgs/hypergraph_adjacency.png}
+    \includegraphics[width=13cm]{imgs/hypergraph_adjacency_cropped.pdf}
+    \caption{An example drawing of a hypergraph with its corresponding adjacency matrix. The hypergraph is defined as: $\mathbf{H} = (\mathbf{V}, \mathbf{E})$, $\mathbf{V} = \{v_1, v_2, v_3, v_4\}$, $\mathbf{E} = \{\mathbf{e_1}, \mathbf{e_2}\}$, with $\mathbf{e_1} = \{v_1, v_2, v_3\}$, $\mathbf{e_2} = \{v_3, v_4\}$. In the adjacency matrix a row corresponds to a hyperedge and each column to a vertex. When a vertex is present in a hyperedge it has a 1 as an entry in the matrix, when a vertex is not present it has a 0 \cite{hypergraph_adjacency_my}.}
     \label{fig:hypergraph_adjacency}
 \end{center}
 \end{figure}

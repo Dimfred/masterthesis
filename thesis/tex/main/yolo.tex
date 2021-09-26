@@ -9,23 +9,39 @@ Furthermore, there exists a version of \ac{YOLOv4} (YOLOv4-tiny \cite{yolov4_tin
 \subsubsection{General}
 
 \ac{YOLOv4} unifies class prediction and bounding box regression in a single neural network.
-It is an anchor based detection network and hence outputs regression offsets based on a predefined anchor box.
+It is an anchor-based detection network and hence outputs regression offsets based on a predefined anchor box.
 The architecture can be structured into three main parts: a backbone, a neck and a head.
-The backbone receives as input an image and is responsible to extract features out of it.
+The backbone receives an image as input and is responsible to extract features out of it.
 Further, the neck receives the output of the backbone and produces output feature maps, which are further processed by the head to produce the final prediction.
-The final prediction is then a vector with bounding box regression offsets for the anchors, an objectness score, which class agnostically indicates whether an object is present, as well as a vector of independent class probabilities.
+The final prediction is then a vector with bounding box regression offsets for the anchors, an objectness score, which class-agnostically indicates whether an object is present, as well as a vector of independent class probabilities.
 
 \subsubsection{Backbone}
 
-The backbone of the \ac{YOLOv4} network is mostly formed out of YOLOConv layers (tab. \ref{tab:yoloconv}), which is sequentially build out of a convolutional layer, a batch normalization layer and a leaky \ac{ReLU} activation function, following the principles of \cite{batchnorm}.
+The backbone of the \ac{YOLOv4} network is mostly formed out of YOLOConv layers (table \ref{tab:yoloconv}), which is sequentially build out of a convolutional layer, a batch normalization layer and a leaky \ac{ReLU} activation function.
 
 The initial two layers (c0, c1) use an increased stride and a valid padding to first reduce the input size of the image.
-The following layers always use three $3x3$ convolutions, followed by one $1x1$ convolution and a max pooling layer to half the feature map size.
-The number of filters for the four convolutions is always $N * (K, K/2, K/2, K)$, where $N$ denotes the layer number and $K$ the number of filters beginning with $64$.
-So as can be seen in \ref{tab:darknet_tiny_arch}, where the whole architecture of the backbone is presented, in the first layer the kernel sizes are set to $(64, 32, 32, 64)$.
-Further, the backbone has three outputs, seen on the right of the table ($Skip_S$, $Skip_M$, $Skip_L$), which are used as skip connections to the following neck network.
+The following layers always use three $3 \times 3$ convolutions, followed by one $1 \times 1$ convolution and a max pooling layer to half the feature map size.
+The number of filters for the four convolutions is always $B \cdot (K, \frac{K}{2}, \frac{K}{2}, K)$, where $B$ denotes the block number and $K$ the number of filters (kernels) beginning with $64$.
+So as can be seen in table \ref{tab:darknet_tiny_arch}, where the whole architecture of the backbone is presented, in the first layer the kernel sizes are set to $(64, 32, 32, 64)$.
+Further, the backbone has three outputs, seen on the right of the table ($\mathbf{Skip_S}$, $\mathbf{Skip_M}$, $\mathbf{Skip_L}$), which are used as skip connections to the following neck network.
 $S$, $M$, $L$ indicates here the size of the detected object (small, medium, large).
 
+\begin{table} %[H]
+\begin{center}
+
+\begin{tabular}{l|c|c|c|c|c}
+    \textbf{Sequence} & \textbf{Parameter}\\
+    \hline
+    Convolution & see table \ref{tab:darknet_tiny_arch}; l2 kernel regularization $5x10^{-3}$\\
+    BatchNorm &\\
+    LeakyReLU & $\alpha = 0.1$\\
+
+\end{tabular}
+\caption{Convolutional basic building block in YOLOv4 (YOLOConv). A convolutional layer, followed by a batch normalization layer, followed by a LeakyReLU activation function.}
+\label{tab:yoloconv}
+
+\end{center}
+\end{table}
 
 \begin{table} %[H]
 \begin{center}
@@ -46,16 +62,16 @@ $S$, $M$, $L$ indicates here the size of the detected object (small, medium, lar
     c6 & m0 & YOLOConv & 128 & 3x3 & 1 & same\\
     c7 & c6 & YOLOConv & 64 & 3x3 & 1 & same\\
     c8 & c7 & YOLOConv & 64 & 3x3 & 1 & same\\
-    c9 & c7 \& c8 & YOLOConv & 128 & 1x1 & 1 & same & $Skip_S$\\
+    c9 & c7 \& c8 & YOLOConv & 128 & 1x1 & 1 & same & $\mathbf{Skip_S}$\\
     m1 & c6 \& c9 & MaxPool & & 2x2  & 2 & same\\
     \textbf{Block 3} & & & & & &\\
     c10 & m1 & YOLOConv & 256 & 3x3 & 1 & same\\
     c11 & c10 & YOLOConv & 128 & 3x3 & 1 & same\\
     c12 & c11 & YOLOConv & 128 & 3x3 & 1 & same\\
-    c13 & c11 \& c12 & YOLOConv &  256 & 1x1 & 1 & same & $Skip_M$\\
+    c13 & c11 \& c12 & YOLOConv &  256 & 1x1 & 1 & same & $\mathbf{Skip_M}$\\
     m2 & c10 \& c13 & MaxPool & & 2x2 & 2 & same\\
     \textbf{Block 4} & & & & & &\\
-    c14 & m2 & YOLOConv & 512 & 3x3 & 1 & same & $Skip_L$\\
+    c14 & m2 & YOLOConv & 512 & 3x3 & 1 & same & $\mathbf{Skip_L}$\\
 \end{tabular}
 
 \caption{The CSPDarknet53Tiny Architecture is a scaled version of the original CSPDarknet53 architecture \cite{yolov4}. The definition for YOLOConv can be found in table \ref{tab:yoloconv}. MaxPool indicates here the Max Pooling operation as described in sec. \ref{sec:max_pooling}. The network is build out of five blocks, the first block reducing the image size and the following blocks building up features. Further, features from three different scales are taken and used as skip connections to the following network.}
@@ -63,32 +79,17 @@ $S$, $M$, $L$ indicates here the size of the detected object (small, medium, lar
 \end{center}
 \end{table}
 
-\begin{table} %[H]
-\begin{center}
-
-\begin{tabular}{l|c|c|c|c|c}
-    \textbf{Sequence} & \textbf{Parameter}\\
-    \hline
-    Convolution & see tab. \ref{tab:darknet_tiny_arch}; l2 kernel regularization $5x10^{-3}$\\
-    BatchNorm &\\
-    LeakyReLU & $\alpha = 0.1$\\
-
-\end{tabular}
-\caption{Convolutional basic building block in YOLOv4 (YOLOConv). A convolutional layer, followed by a batch normalization layer, followed by a leaky ReLU activation function.}
-\label{tab:yoloconv}
-
-\end{center}
-\end{table}
 
 \subsubsection{Neck}
 
 The neck of the \ac{YOLOv4} network is a scaled version of the \ac{PANet} \cite{pannet} and is further referred to as PANet-tiny \cite{yolov4_tiny}.
-The PANet-tiny receives as input the outputs of the backbone and produces three output tensors, where each output tensor is a prediction for a particular scale of object.
-Each prediction output has twice the feature map size of the previous output, except for the most lowest output ($Pred_L$), which has the size of the last backbone output block.
-Therefore, $Pred_L$ has a size of $S \times S$, $Pred_M$ has a size of $2S \times 2S$ and $Pred_S$ has a size of $4S \times 4S$, where $S \times S$ .
-Generally, the PANet-tiny is build by using a separate output branch to produce a prediction, followed by an upsampling layer, where the feature map is bilinearly upsampled and convolved together with the skip connection from the backbone to serve again as input for the next output branch.
+The PANet-tiny receives the outputs of the backbone as input and produces three output tensors, where each output tensor is a prediction for a particular scale of object.
+Each prediction output has twice the feature map size of the previous output, except for the most lowest output ($\mathbf{Pred_L}$), which has the size of the last backbone output block.
+Therefore, $\mathbf{Pred_L}$ has a size of $S \times S$, $\mathbf{Pred_M}$ has a size of $2S \times 2S$ and $\mathbf{Pred_S}$ has a size of $4S \times 4S$.
+The grid size $S \times S$ can be calculated by dividing the spatial input dimensions by 32, i.e. $S \times S = \frac{w}{32} \times \frac{h}{32}$, which also enforces input sizes to be divisible by 32.
+Generally, the PANet-tiny is built by using a separate output branch to produce a prediction, followed by an upsampling layer, where the feature map is bilinearly upsampled and convolved together with the skip connection from the backbone to serve again as input for the next output branch.
 Each output branch is a $1 \times 1$ convolution and hence acts as a fully-connected layer.
-The output size of each output layer is $3 \dot (5+C)$, where $3$ are the number of anchor boxes in that particular scale, $5$ are the number of bounding box parameters (4 regression offsets, 1 objectness score) and $C$ are the number of classes.
+The output size of each output layer is $3 \cdot (5+C)$, where $3$ is the number of anchor boxes in that particular scale, $5$ is the number of bounding box parameters (4 regression offsets, 1 objectness score) and $C$ is the number of classes.
 So the final output tensor of the network is $(2^{O-1}*S) \times (2^{O-1}*S) \times (3*(5+C))$.
 
 
@@ -98,25 +99,25 @@ So the final output tensor of the network is $(2^{O-1}*S) \times (2^{O-1}*S) \ti
 \begin{tabular}{l|c|c|c|c|c|c|c}
     \textbf{Layer} & \textbf{Input} & \textbf{Type} & \textbf{Filters} & \textbf{Size} & \textbf{Stride} & \textbf{Padding} & \textbf{Output} \\
     \hline
-    c15 & $Skip_L$ & YOLOConv & 256 & 1x1 & 1 & same\\
+    c15 & $\mathbf{Skip_L}$ & YOLOConv & 256 & 1x1 & 1 & same\\
     \textbf{Out 1} & & & & & &\\
     c16 & c15 & YOLOConv & 512 & 3x3 & 1 & same\\
-    c17 & c16 & YOLOConv & 3 * (5 + C) & 1x1 & 1 & same & $Pred_L$\\
+    c17 & c16 & YOLOConv & 3 * (5 + C) & 1x1 & 1 & same & $\mathbf{Pred_L}$\\
     \textbf{Up 1}& & & & & &\\
     c18 & c15 & YOLOConv & 128 & 1x1 & 1 & same \\
     u18 & c18 & UpBillinear & & 2x2 & &\\
     \textbf{Out 2}& & & & & &\\
-    c19 & $Skip_M$ \& u18 & YOLOConv & 256 & 3x3 & 1 & same\\
-    c20 & c19 & YOLOConv & 3 * (5 + C) & 1x1 & 1 & same & $Pred_M$\\
+    c19 & $\mathbf{Skip_M}$ \& u18 & YOLOConv & 256 & 3x3 & 1 & same\\
+    c20 & c19 & YOLOConv & 3 * (5 + C) & 1x1 & 1 & same & $\mathbf{Pred_M}$\\
     \textbf{Up 2}& & & & & &\\
     c21 & c19 & YOLOConv & 256 & 3x3 & 1 & same\\
     u21 & c21 & UpBillinear & & 2x2 & &\\
     \textbf{Out 3}& & & & & &\\
-    c22 & $Skip_S$ \& u21 & YOLOConv & 128 & 3x3 & 1 & same\\
-    c32 & c22 & YOLOConv & 3 * (5 + C) & 1x1 & 1 & same & $Pred_S$\\
+    c22 & $\mathbf{Skip_S}$ \& u21 & YOLOConv & 128 & 3x3 & 1 & same\\
+    c32 & c22 & YOLOConv & 3 * (5 + C) & 1x1 & 1 & same & $\mathbf{Pred_S}$\\
 \end{tabular}
 
-\caption{The PANetTiny architecture which is a scaled version of PANet \cite{pannet}, which is the decoder in the YOLO network. It takes as inputs the skip connections from the CSPDarknet53Tiny. The network is build by alternating an output branch and an upsampling branch. First, the most lowest skip connection $Skip_L$ from the backbone is convolved and the output fed into the first output layer. Each output layer has again a $3\times3$ convolution followed by a $1\times1$ convolution, which form a raw bounding box prediction, fed to the YOLO head. After an output has been processed the previous convolution is again convolved and upsampled to be fed into the next output block. This is done three times in the whole PANetTiny network.}
+\caption{The PANetTiny architecture which is a scaled version of PANet \cite{pannet}, which is the decoder in the YOLO network. It takes as inputs the skip connections from the CSPDarknet53Tiny. The network is build by alternating an output branch and an upsampling branch. First, the lowest skip connection $\mathbf{Skip_L}$ from the backbone is convolved and the output fed into the first output layer. Each output layer has again a $3\times3$ convolution followed by a $1\times1$ convolution, which form a raw bounding box prediction, fed to the YOLO head. After an output has been processed the previous convolution is again convolved and upsampled to be fed into the next output block. This is done three times in the whole PANetTiny network.}
 \label{tab:panet_tiny_arch}
 \end{center}
 \end{table}
@@ -124,11 +125,11 @@ So the final output tensor of the network is $(2^{O-1}*S) \times (2^{O-1}*S) \ti
 
 \subsubsection{Head}
 The last component in the \ac{YOLOv4} network architecture is the head, which is reused from YOLOv3 \cite{yolov3}.
-Each input scale from the neck ($Pred_{L}$, $Pred_{M}$, $Pred_{S}$) is processed in the same manner.
+Each input scale from the neck ($\mathbf{Pred_{L}}$, $\mathbf{Pred_{M}}$, $\mathbf{Pred_{S}}$) is processed in the same manner.
 The input vector looks as follows:
 
 \begin{equation}
-    Pred_{X} = \{t_x, t_y, t_w, t_h, q_{conf}, q_{C1},...,q_{CC}\}
+    \mathbf{Pred_{X}} = \{t_x, t_y, t_w, t_h, q_{conf}, q_{C1},...,q_{CC}\}
 \end{equation}
 
 The final bounding box calculation as well as some visual information on how the final bounding box parameters are derived can be seen in fig. \ref{fig:bbox_calculation}.
@@ -138,7 +139,8 @@ Finally, the objectness score as well as the class probabilities are also calcul
 
 \begin{figure}
 \begin{center}
-    \includegraphics[width=8cm]{imgs/bbox_calculation.png}
+    % \includegraphics[width=8cm]{imgs/bbox_calculation.png}
+    \includegraphics[width=8cm]{imgs/bbox_calculation.pdf}
     \caption{Bounding box calculation in the YOLOv4 network based on a prior anchor box \cite{yolov2}. The $b_*$ indicate the final prediction, $p_*$ indicate parameters of the prior bounding box and $c_*$ indicate the prior bounding box spatial offset based on the current cell. The final center coordinate offset is predicted non-linearly with a sigmoid function, while the final width and height are predicted linearly, as it is done in \cite{fast_rcnn} and \cite{faster_rcnn}.}
     \label{fig:bbox_calculation}
 \end{center}
@@ -155,15 +157,17 @@ The loss can be separated into three main parts:
     \item bounding box regression loss
 \end{enumerate}
 
+
 In the following $1_{sb}^{obj}$ denotes that the anchor box $b$ in grid cell $s$ is responsible for detecting the object.
 Before training, responsibility is assigned by making that anchor box responsible which has the highest \ac{IoU} with the ground truth bounding box.
 Furthermore, $S^2$ denotes the number of grid cells in a particular scale and $B$ the number of anchor boxes present in a grid cell (three in \ac{YOLOv4}).
 
-The class loss (eq. \ref{eq:yolo_lclass}) is calculated by taking the sum of all possible anchor boxes and the sum of all independent class losses, which is calculated with the \ac{CE} Loss.
+
+The class loss (equation \ref{eq:yolo_lclass}) is calculated by taking the sum of all possible anchor boxes and the sum of all independent class losses, which is calculated with the \ac{CE} loss.
 An anchor box only contributes to the loss, when an object is labeled to be present in it.
 
 \begin{equation}
-    L_{class} = \sum_{s=0}^{S^2} \sum_{b=0}^B \sum_{c \in classes} 1_{sb}^{obj} * CE(P_{sbc}, \hat{P}_{sbc})
+    \text{L}_{\text{class}} = \sum_{s=0}^{S^2} \sum_{b=0}^B \sum_{c \in classes} 1_{sb}^{obj} \cdot \text{CE}(P_{sbc}, \hat{P}_{sbc})
     \label{eq:yolo_lclass}
 \end{equation}
 
@@ -171,31 +175,31 @@ The bounding box regression loss (eq. \ref{eq:yolo_lbbox}) is calculated again a
 Additionally, the XIoU is multiplied with a scaling weight which enforces a multiplier based on the size of the ground truth bounding box, i.e. if the bounding box is small more weight is applied on the loss of that bounding box.
 
 \begin{equation}
-    L_{IoU} = \sum_{s=0}^{S^2}\sum_{b=0}^{B} 1^{obj}_{sb} * w_{scale} * XIoU(bbox, \hat{b}box)
+    \text{L}_{\text{IoU}} = \sum_{s=0}^{S^2}\sum_{b=0}^{B} 1^{obj}_{sb} \cdot w_{scale} \cdot \text{XIoU}(\mathbf{bbox}, \mathbf{\hat{b}box})
     \label{eq:yolo_lbbox}
 \end{equation}
 
 \begin{equation}
-    w_{scale} = 2 - w * h
+    w_{scale} = 2 - w \cdot h
 \end{equation}
 
 The last part of the multi-task loss is the objectness loss, where objectness is defined as the confidence of the network that an object is present in a grid cell or not.
 The objectness loss is split into two sub equations.
-The former (eq. \ref{eq:yolo_lobj}) defines the loss which occurs when an object is present and the latter (eq. \ref{eq:yolo_lnoobj}) when no object is present.
+The former (equation \ref{eq:yolo_lobj}) defines the loss which occurs when an object is present and the latter (equation \ref{eq:yolo_lnoobj}) when no object is present.
 Again, both are taken over the sum of all possible anchor boxes.
-$L_{obj}$ takes the sum of all \ac{CE} Loss outputs, applied to $1_{sb}^{obj}$ and the predicted objectness score.
-Almost the same is done in $L_{noobj}$, but instead here the inverse prediction score is used.
-Additionally, a constraint is introduced that makes the loss only contribute when the maximum \ac{IoU} of the predicted and any ground truth bounding box is below a certain threshold $t_{ignore}$.
+$\text{L}_{\text{obj}}$ takes the sum of all \ac{CE} loss outputs, applied to $1_{sb}^{obj}$ and the predicted objectness score.
+Almost the same is done in $\text{L}_{\text{noobj}}$, but instead here the inverse prediction score is used.
+Additionally, a constraint is introduced that makes the loss only contribute when the maximum \ac{IoU} of the predicted bounding box $\hat{b}box_{sb}$ and any ground truth bounding box $bbox$ is below a certain threshold $t_{ignore}$.
 This does not penalize predictions which have a high \ac{IoU}, but should normally not be present, i.e. another anchor box is assigned as a predictor.
 For example this can happen when during prediction responsibility assignment two anchor boxes had a similar \ac{IoU} with the ground truth bounding box, the network hence tries to predict both of them.
 
 \begin{equation}
-    L_{obj} = \sum_{s=0}^{S^2}\sum_{b=0}^{B} CE(1^{obj}_{sb}, \hat{P}_{sb})
+    \text{L}_{\text{obj}} = \sum_{s=0}^{S^2}\sum_{b=0}^{B} \text{CE}(1^{obj}_{sb}, \hat{P}_{sb})
     \label{eq:yolo_lobj}
 \end{equation}
 
 \begin{equation}
-    L_{noobj} = \sum_{s=0}^{S^2}\sum_{b=0}^{B} CE(1^{noobj}_{sb}, 1 - \hat{P}_{sb}) * \{max(IoU(\forall bbox, \hat{b}box_{sb})) < t_{ignore}\}
+    \text{L}_{\text{noobj}} = \sum_{s=0}^{S^2}\sum_{b=0}^{B} \text{CE}(1^{noobj}_{sb}, 1 - \hat{P}_{sb}) \cdot \{\text{max}(\text{IoU}(\forall \mathbf{bbox}, \mathbf{\hat{b}box_{sb}})) < t_{ignore}\}
     \label{eq:yolo_lnoobj}
 \end{equation}
 
@@ -203,7 +207,7 @@ For example this can happen when during prediction responsibility assignment two
 Finally, each of the above losses is multiplied with a tunable hyperparameter and summed up to form the final \ac{YOLO} loss.
 
 \begin{equation}
-    L_{YOLO} = \lambda_{class} * L_{class} + \lambda_{IoU} * L_{IoU} + \lambda_{objectness} * (L_{obj} + L_{noobj})
+    \text{L}_{\text{YOLO}} = \lambda_{class} * L_{class} + \lambda_{IoU} * L_{IoU} + \lambda_{objectness} * (L_{obj} + L_{noobj})
     \label{eq:yolo_loss}
 \end{equation}
 
@@ -214,41 +218,78 @@ To suppress unnecessary bounding boxes, a \ac{NMS} algorithm is applied.
 More precisely \ac{DIoU}-\ac{NMS} \cite{diou} is used during training time, which has shown to perform better than classical \ac{NMS} \cite{soft_nms}, especially in cases of occlusion.
 
 In the following the algorithm for \ac{DIoU}-\ac{NMS} is presented.
-The input is a set of bounding boxes $B$, also called candidates, as well as the corresponding prediction scores $S$ and a suppression threshold $\epsilon$.
-The algorithm first selects the bounding box $B_m$ with the highest score $S_m$ and compares it to every other bounding box $b_i$ in the candidate set $B$.
-If the \ac{DIoU} measure between $B_m$ and $b_i$ is above the threshold $\epsilon$, the bounding box $b_i$ gets suppressed by removing it from the set $B$.
-This process is repeated until no bounding boxes are present in $B$.
+The input is a set of bounding boxes $\mathbf{B}$, also called candidates, as well as the corresponding prediction scores $\mathbf{S}$ and a suppression threshold $\epsilon$.
+The algorithm first selects the bounding box $\mathbf{b_m}$ with the highest score $s_m$ and compares it to every other bounding box $\mathbf{b_i}$ in the candidate set $\mathbf{B}$.
+If the \ac{DIoU} measure between $\mathbf{b_m}$ and $\mathbf{b_i}$ is above the threshold $\epsilon$, the bounding box $\mathbf{b_i}$ gets suppressed by removing it from the set $\mathbf{B}$.
+This process is repeated until no bounding boxes are present in $\mathbf{B}$.
 
-\begin{algorithm}[caption={DIoU-NMS Algorithm TODO caption to bottom and format}, label={alg1}]
-input:  $B$ = {$b_1$,...,$b_N$}, $S$ = {$s_1$,...,$s_N$}, $\epsilon$
-        $B$: list of bounding box proposals
-        $S$: list of bounding box scores
-        $\epsilon$: NMS threshold
-output: $B_S \subseteq B$, $B_S = \{b_1,...,b_M\}$
-        $B_S$: list of bounding boxes after suppression
-        $S_S$: list of bounding box scores after suppression
+% \begin{algorithm}[caption={DIoU-NMS Algorithm}, label={alg1}]
+% input:  $B$ = {$b_1$,...,$b_N$}, $S$ = {$s_1$,...,$s_N$}, $\epsilon$
+%         $B$: list of bounding box proposals
+%         $S$: list of bounding box scores
+%         $\epsilon$: NMS threshold
+% output: $B_S \subseteq B$, $B_S = \{b_1,...,b_M\}$
+%         $B_S$: list of bounding boxes after suppression
+%         $S_S$: list of bounding box scores after suppression
 
-begin
-$B_S \gets \{\}$; $S_S \gets \{\}$
-while $B \neq empty$ do
-    $m \gets$ argmax($S$)
-    $B_m \gets B[m]$; $S_m \gets S[m]$
+% begin
+% $B_S \gets \{\}$; $S_S \gets \{\}$
+% while $B \neq empty$ do
+%     $m \gets$ argmax($S$)
+%     $B_m \gets B[m]$; $S_m \gets S[m]$
 
-    $B_S \gets B_S \cup B_m$; $S_S \gets S_S \cup S_m$
-    $B \gets B - B_m$; $S \gets S - S_m$
+%     $B_S \gets B_S \cup B_m$; $S_S \gets S_S \cup S_m$
+%     $B \gets B - B_m$; $S \gets S - S_m$
 
-    foreach $b_i$, $s_i$ in $B$, $S$ do
-        if $DIoU(B_m, b_i) \geq \epsilon$ then
-            $B \gets B - b_i; S \gets S - s_i$
-        end
-    end
+%     foreach $b_i$, $s_i$ in $B$, $S$ do
+%         if $DIoU(B_m, b_i) \geq \epsilon$ then
+%             $B \gets B - b_i; S \gets S - s_i$
+%         end
+%     end
 
-    return $B_S$, $S_S$
-end
+%     return $B_S$, $S_S$
+% end
+% \end{algorithm}
+
+\begin{algorithm}[H]
+
+\SetAlgoLined
+\KwIn{$B$ = {$b_1$,...,$b_N$} (list of bounding box proposals)
+
+$S$ = {$s_1$,...,$s_N$} (list of bounding box scores)
+
+$\epsilon$ (NMS threshold)
+}
+
+\KwOut{ $B_S = \{b_1,...,b_M\}$ (list of bounding boxes after NMS)
+
+$S_S = \{s_1,...,s_M\}$ (list of bounding box scores after NMS)
+}
+
+B$_S$ $\gets$ \{\}\;
+S$_S$ $\gets$ \{\}\;
+
+\While{B $\neq$ empty} {
+    m $\gets$ argmax(S)
+
+    B$_S$ $\gets$ B$_S$ $\cup$ B$_m$;
+    S$_S$ $\gets$ S$_S$ $\cup$ S$_m$;
+
+    \For{b$_i$, s$_i$ in B, S} {
+        \If{DIoU(B$_m$, b$_i$) $\geq$ $\epsilon$} {
+            B $\gets$ B - b$_i$;
+            S $\gets$ S - s$_i$;
+        }
+    }
+
+    \Return{B$_S$, S$_S$}
+}
+
+\caption{\ac{DIoU}-\ac{NMS}}\label{alg:diou_nms}
 \end{algorithm}
 
 DIoU-NMS is used as the default baseline. Later it will be shown that some predicted classes suffer from multiple bounding boxes, which are not suppressed by DIoU-NMS, but a combination of that bounding boxes would lead to a superior prediction.
-Therefore, experiments are also evaluated using the \ac{WBF} \cite{weighted_bbox_fusion} algorithm, which could help increase the overall prediction quality. The algorithm will be described in the following.:
+Therefore, experiments are also evaluated using the \ac{WBF} \cite{weighted_bbox_fusion} algorithm, which could help increase the overall prediction quality. The algorithm is described in the following.:
 
 \begin{enumerate}
 
@@ -263,28 +304,28 @@ Therefore, experiments are also evaluated using the \ac{WBF} \cite{weighted_bbox
     \end{equation}
 
     \begin{equation}
-        X_{1,2} = \frac{\sum^T_{i=1} C_i * X_{1,2}}{\sum^T_{i=1} C_i}
+        X_{1,2} = \frac{\sum^T_{i=1} C_i \cdot X_{1,2}}{\sum^T_{i=1} C_i}
     \end{equation}
 
     \begin{equation}
-        Y_{1,2} = \frac{\sum^T_{i=1} C_i * Y_{1,2}}{\sum^T_{i=1} C_i}
+        Y_{1,2} = \frac{\sum^T_{i=1} C_i \cdot Y_{1,2}}{\sum^T_{i=1} C_i}
     \end{equation}
 
     \item \textbf{Optional.} When bounding boxes from more than one model are used, which is the case when \ac{TTA} is used, or an ensemble of multiple predictors, then the confidence score of the fused bounding box should be adapted to incorporate the uncertainty of multiple models. For example when one model predicts a bounding box, but another model does not. Therefore, the confidence is rescaled with:
 
     \begin{equation}
-        C = C * \frac{min(T, N)}{N}
+        C = C \cdot \frac{\text{min}(T, N_P)}{N_P}
         \label{eq:confidence_rescale}
     \end{equation}
 
     or
 
     \begin{equation}
-        C = C * \frac{T}{N}
+        C = C \cdot \frac{T}{N_P}
         \label{eq:confidence_rescale_not_used}
     \end{equation}
 
-    Here, $T$ is the number of bounding boxes in a cluster and $N$ is the number of predictors, which have predicted a bounding box in that particular cluster.
-    The experiments in this thesis utilize equation \ref{eq:confidence_rescale}, because there the confidence can't be greater than one.
+    Here, $T$ is the number of bounding boxes in a cluster and $N_P$ is the number of predictors, which have predicted a bounding box in that particular cluster.
+    The experiments in this thesis utilize equation \ref{eq:confidence_rescale}, because there the confidence can not be greater than one.
     In equation \ref{eq:confidence_rescale_not_used} the confidence can exceed one,  when the number of predicted bounding boxes is higher than the number of predictors, which is often the case.
 \end{enumerate}

@@ -103,6 +103,7 @@ def dump_lr_init():
     for lr, runs in lr_runs:
         paths = build_paths(lr, runs)
         pred_50, pred_75, cls_names = parse_results(paths)
+        print(pred_75)
 
         # fmt: off
         results += [
@@ -143,6 +144,7 @@ def dump_offline_aug():
     for (P, F, R), runs in params_runs:
         paths = build_paths(P, F, R, runs)
         pred_50, pred_75, cls_names = parse_results(paths)
+        print(pred_75)
 
         # fmt: off
         results += [
@@ -216,6 +218,8 @@ def dump_rotate_aug():
         paths = build_paths(rot, runs)
         pred_50, pred_75, cls_names = parse_results(paths)
 
+        print(pred_75)
+
         # fmt: off
         results += [
             [],
@@ -253,6 +257,7 @@ def dump_random_scale_aug():
         paths = build_paths(scale, runs)
         pred_50, pred_75, cls_names = parse_results(paths)
 
+        print(pred_75)
         # fmt: off
         results += [
             [],
@@ -290,6 +295,7 @@ def dump_color_jitter_aug():
         paths = build_paths(color_jitter, runs)
         pred_50, pred_75, cls_names = parse_results(paths)
 
+        print(pred_75)
         # fmt: off
         results += [
             [],
@@ -325,6 +331,7 @@ def dump_bbox_safe_crop_aug():
         paths = build_paths(sc, runs)
         pred_50, pred_75, cls_names = parse_results(paths)
 
+        print(pred_75)
         # fmt: off
         results += [
             [],
@@ -523,17 +530,17 @@ def main():
     #####################
     #### offline_aug ####
     #####################
-    # dump_offline_aug()
+    dump_offline_aug()
 
     #####################
     #### online_aug #####
     #####################
-    # dump_rotate_aug()
-    # dump_random_scale_aug()
-    # dump_color_jitter_aug()
-    # dump_bbox_safe_crop_aug()
+    dump_rotate_aug()
+    dump_random_scale_aug()
+    dump_color_jitter_aug()
+    dump_bbox_safe_crop_aug()
 
-    dump_grid()
+    # dump_grid()
 
 
 if __name__ == "__main__":

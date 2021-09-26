@@ -60,8 +60,9 @@ yolo.load_weights(config.yolo.weights, weights_type=config.yolo.weights_type)
 # dirs = [config.test_out_dir]
 # dirs = [config.unlabeled_dir]
 # dirs = [config.unused_data_dir]
+dirs = [config.data / "noise"]
 for dir_ in dirs:
     for img_path in utils.list_imgs(dir_):
         # print(str(img_path))
         # utils.show(cv.imread((str(img_path))))
-        yolo.inference(str(img_path), iou_threshold=0.2, score_threshold=0.3)
+        yolo.inference(str(img_path), iou_threshold=0.3, score_threshold=0.25)

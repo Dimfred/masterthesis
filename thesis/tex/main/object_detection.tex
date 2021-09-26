@@ -9,7 +9,7 @@ In this format a bounding box is defined as:
     bbox = (x_{rel}, y_{rel}, w_{rel}, h_{rel})
 \end{equation}
 
-Where the bounding box is presented as a tuple of values.
+Where the bounding box is presented as a tuple of four values.
 The first two values indicate the center of the bounding box relative to the image size, while the latter two values indicate the width and the height of the bounding box also relative to the image size.
 All values can be calculated by dividing the absolute value by the corresponding image value.
 For example $x_{rel}$ would be calculated by dividing the absolute x-coordinate $x_{abs}$ by the width of the image.
@@ -26,7 +26,7 @@ The simplest algorithm to detect objects in an image is the sliding window appro
 A classifier is trained on image patches which contain the object to detect.
 To now detect the objects in an unseen image, the image is divided into patches of various scale and fed to the classifier.
 The prediction score of the patches is thresholded with a predefined value.
-High confidence patches are likely to contain an object and are kept. \cite{sliding_window_satelite}
+High confidence patches are likely to contain an object and are kept \cite{sliding_window_satelite}.
 
 % Before an object detection can be performed on an image, a classifier has to be trained.
 % This classifier is normally trained on image patches, where a patch has roughly the size of the objects it should classify.
@@ -64,7 +64,7 @@ Further, the bounding box is improved through $N$ separately trained bounding bo
 \begin{figure}
 \begin{center}
     \includegraphics[width=10cm]{imgs/selective_search.png}
-    \caption{Example of results obtained through the Selective Search algorithm (top) with increasing region scale from left to right and bounding boxes drawn around those regions (bottom). Selective Search produces sub-segmentations of objects in an image, considering size, color, texture and shape based features for the grouping of the regions.   \cite{selective_search}}
+    \caption{Example of results obtained through the Selective Search algorithm (top) with increasing region scale from left to right and bounding boxes drawn around those regions (bottom). Selective Search produces sub-segmentations of objects in an image, considering size, color, texture and shape based features for the grouping of the regions \cite{selective_search}.}
     \label{fig:selective_search}
 \end{center}
 \end{figure}
@@ -75,7 +75,7 @@ With Fast R-CNN Girshick \cite{fast_rcnn} improved on the training and inference
 
 The main difference to \ac{R-CNN} is that instead of generating region proposals and passing them through the \ac{CNN}, region proposals are now projected onto the feature maps of the \ac{CNN} and pooled into a fixed size grid through a \ac{RoI} pooling layer.
 Meaning that the \ac{CNN} computations are shared between each bounding box proposal resulting in a drastic inference speed improvement.
-After pooling the \ac{RoI} it is processed by a fully-connected layer, producing a so called \ac{RoI} feature vector.
+After pooling, the \ac{RoI} it is processed by a fully-connected layer, producing a so called \ac{RoI} feature vector.
 This feature vector is fed into a siblings output layer.
 The first branch is a classification layer with a softmax output, producing class probabilities and replaces the previous \acp{SVM}.
 The second branch is comprised of a bounding box regression layer, which outputs bounding box regression offsets as in \ac{R-CNN} \cite{rcnn}.
@@ -105,8 +105,8 @@ The second branch is comprised of a bounding box regression layer, which outputs
 Various object detection networks such as, Faster \ac{R-CNN} \cite{faster_rcnn}, \ac{YOLO} \cite{yolov1}, \ac{SSD} \cite{ssd} and RetinaNet \cite{focalloss} use anchor boxes to predict the objects in an image.
 Further, all the named methods predict the class as well as the bounding boxes for the objects in a single network pass, therefore the name single shot.
 Anchor boxes are predefined boxes of various size aspect ratio, which are used as a base for the prediction bounding box prediction of the above networks.
-Instead of making the network predict the bounding box directly, the network predict bounding box regression offsets based on a certain anchor box. \cite{yolov3}
-The selection of good anchor box sizes is a hyper parameter in the training of an object detector and can improve the prediction quality \cite{faster_rcnn}.
+Instead of making the network predict the bounding box directly, the network predicts bounding box regression offsets based on a certain anchor box \cite{yolov3}.
+The selection of good anchor box sizes is a hyperparameter in the training of an object detector and can improve the prediction quality \cite{faster_rcnn}.
 The scale and aspect ratio of the anchor boxes is often selected by using the k-means clustering algorithm on the labeled bounding boxes of the dataset \cite{yolov2}.
 
 
@@ -126,10 +126,10 @@ As of now, all the above methods perform worse than their current state-of-the-a
 \subsection{Intersection Over Union (IoU)}
 
 The \ac{IoU}, which is also known as the Jaccard index, is a measure for how much two arbitrary shapes (volumes) are overlapping \cite{giou}.
-In object detection \ac{IoU} is often used to compare two bounding boxes and also to construct various loss functions as well as metrics.
+In object detection \ac{IoU} is often used to compare two bounding boxes $A$ and $B$ and also to construct various loss functions as well as metrics.
 
 \begin{equation}
-    IoU(A, B) = \frac{|A \cap B|}{|A \cup B|} = \frac{| A \cap B |}{|A| + |B| - |A \cap B|}
+    \text{IoU}(A, B) = \frac{|A \cap B|}{|A \cup B|} = \frac{| A \cap B |}{|A| + |B| - |A \cap B|}
 \end{equation}
 
 
@@ -137,50 +137,51 @@ In object detection \ac{IoU} is often used to compare two bounding boxes and als
 
 The \ac{MSE} has shown to perform not well for the task of bounding box regression, because it assumes that the regressed variables ($x$, $y$, $w$, $h$) are independent of each other and can be optimized separately \cite{iou}.
 
-To take the correlation of those variables into account, Yu et al. \cite{iou} proposed the \ac{IoU} Loss (eq. \ref{eq:iou_loss}).
-While this was a major improvement to previously known methods the \ac{IoU} Loss still suffers from slow convergence and from the gradient vanishing problem, which occurs when the two bounding boxes $A$ and $B$ have no intersection.
+To take the correlation of those variables into account, Yu et al. \cite{iou} proposed the \ac{IoU} loss (equation \ref{eq:iou_loss}).
+While this was a major improvement to previously known methods the \ac{IoU} loss still suffers from slow convergence and from the gradient vanishing problem, which occurs when the two bounding boxes $A$ and $B$ have no intersection.
 
 \begin{equation}
-    L_{IoU} = 1 - IoU(A, B)
+    \text{L}_{\text{IoU}}(A, B) = 1 - \text{IoU}(A, B)
     \label{eq:iou_loss}
 \end{equation}
 
-Further, to solve these drawbacks Rezatofighi et al. \cite{giou} proposed the \ac{GIoU} Loss (eq. \ref{eq:giou_loss}).
-Their loss introduces an additional penalty term added to the \ac{IoU} Loss.
+Further, to solve these drawbacks Rezatofighi et al. \cite{giou} proposed the \ac{GIoU} loss (equation \ref{eq:giou_loss}).
+Their loss introduces an additional penalty term added to the \ac{IoU} loss.
 Here, $C$ is the smallest convex box enclosing $A$ and $B$.
 Hence, when the boxes have no overlap there is still a gradient pushing them closer to each other.
-While the \ac{GIoU} Loss is a major improvement in terms of vanishing gradient, it suffers from slow convergence when $A$ and $B$ have overlap and at the same time $A$ contains $B$ (or vice versa), because the penalty term then becomes $0$, as a consequence the \ac{GIoU} Loss becomes the \ac{IoU} Loss.
-Furthermore, it has been observed that when $A$ and $B$ have no overlap, instead of decreasing the spatial distance between $A$ and $B$, the \ac{GIoU} Loss tends to increase the size of the bounding box area to reduce the loss \cite{eiou}.
+While the \ac{GIoU} loss is a major improvement in terms of vanishing gradient, it suffers from slow convergence when $A$ and $B$ have overlap and at the same time $A$ contains $B$ (or vice versa), because the penalty term then becomes $0$, as a consequence the \ac{GIoU} loss becomes the \ac{IoU} loss.
+Furthermore, it has been observed that when $A$ and $B$ have no overlap, instead of decreasing the spatial distance between $A$ and $B$, the \ac{GIoU} loss tends to increase the size of the bounding box area to reduce the loss \cite{eiou}.
 
 \begin{equation}
-    L_{GIoU} = 1 - IoU(A, B) + \frac{|C - (A \cup B)|}{|C|}
+    \text{L}_{\text{GIoU}}(A, B) = 1 - \text{IoU}(A, B) + \frac{|C - (A \cup B)|}{|C|}
     \label{eq:giou_loss}
 \end{equation}
 
-The next improvement in the \ac{IoU} based loss function space was proposed by Zheng et al. \cite{diou}, with their \ac{DIoU} and \ac{CIoU} Loss functions.
-In contrast to \ac{GIoU}, \ac{DIoU} (eq. \ref{eq:diou_loss}) solves the gradient vanishing problem by considering the normalized distance of the central points of the two bounding boxes.
+The next improvement in the \ac{IoU} based loss function space was proposed by Zheng et al. \cite{diou}, with their \ac{DIoU} and \ac{CIoU} loss functions.
+In contrast to \ac{GIoU}, \ac{DIoU} (equation \ref{eq:diou_loss}) solves the gradient vanishing problem by considering the normalized distance of the central points of the two bounding boxes.
 The squared euclidean distance is normalized by the squared diagonal length of the smallest box containing $A$ and $B$.
 
 \begin{equation}
-    L_{DIoU} = 1 - IoU(A, B) + \frac{\|(A_{center} - B_{center})\|^2}{\|C_{diag}\|^2}
+    \text{L}_{\text{DIoU}}(A, B) = 1 - \text{IoU}(A, B) + \frac{\|(A_{center} - B_{center})\|^2}{\|C_{diag}\|^2}
     \label{eq:diou_loss}
 \end{equation}
 
 To further improve on that, the authors additionally considered the aspect ratio of the bounding box to be another important geometric factor for bounding box regression.
-Hence, the \ac{DIoU} Loss is further extended by a penalty term considering the aspect ratio and resulting in the improved \ac{CIoU} Loss (eq. \ref{eq:ciou_loss}, \ref{eq:ciou_nu}, \ref{eq:ciou_alpha}).
+Hence, the \ac{DIoU} loss is further extended by a penalty term considering the aspect ratio and resulting in the improved \ac{CIoU} loss (equations \ref{eq:ciou_loss}, \ref{eq:ciou_nu}, \ref{eq:ciou_alpha}).
+
 The penalty in \ac{CIoU} is split into $\alpha$ and $\nu$.
-$\alpha$ is a trade-off parameter which gives higher priority to the overlapping factor, especially in the case of non-overlap.
+The term $\alpha$ is a trade-off parameter which gives higher priority to the overlapping factor, especially in the case of non-overlap.
 Further, $\nu$ is the parameter penalizing the difference in the aspect ratios of $A$ and $B$.
-Still, it can be noticed that the $\nu$ is $0$ when the aspect ratios are the same, regardless of the underlying relations between $A_w$, $B_w$ and $A_h$, $B_h$.
+Still, it can be noticed that $\nu$ is $0$ when the aspect ratios are the same, regardless of the underlying relations between $A_w$, $B_w$ and $A_h$, $B_h$.
 E.g. the aspect ratio is the same for all boxes with the following property $\{ (A_w=kB_w, \ A_h=kB_h)\ |\ k \in \R^+\}$ \cite{eiou}.
 
 \begin{equation}
-    L_{CIoU} = DIoU(A, B) + \alpha(A,B) * \nu(A, B)
+    \text{L}_{\text{CIoU}}(A, B) = \text{DIoU}(A, B) + \alpha(A,B) \cdot \nu(A, B)
     \label{eq:ciou_loss}
 \end{equation}
 
 \begin{equation}
-    \nu(A, B) = \frac{4}{\pi^2} [arctan(\frac{A_w}{A_h}) - arctan(\frac{B_w}{B_h})]^2
+    \nu(A, B) = \frac{4}{\pi^2} \left[arctan\left(\frac{A_w}{A_h}\right) - arctan\left(\frac{B_w}{B_h}\right)\right]^2
     \label{eq:ciou_nu}
 \end{equation}
 
@@ -189,10 +190,10 @@ E.g. the aspect ratio is the same for all boxes with the following property $\{ 
     \label{eq:ciou_alpha}
 \end{equation}
 
-Therefore, Zhang et al. \cite{eiou} proposed the \ac{EIoU} Loss to remove this error.
+Therefore, Zhang et al. \cite{eiou} proposed the \ac{EIoU} loss to remove this error.
 The aspect ratio penalty is here replaced through two separate penalties, which consider the normalized width and height of the two bounding boxes.
 
 \begin{equation}
-    L_{EIoU} = 1 - IoU(A, B) + \frac{\|(A_{center} - B_{center})\|^2}{\|C_{diag}\|^2} + \frac{\|(A_{w} - B_{w})\|^2}{\|C_w\|^2} + \frac{\|(A_{h} - B_{h})\|^2}{\|C_h\|^2}
+    \text{L}_{\text{EIoU}}(A, B) = 1 - IoU(A, B) + \frac{\|(A_{center} - B_{center})\|^2}{\|C_{diag}\|^2} + \frac{\|(A_{w} - B_{w})\|^2}{\|C_w\|^2} + \frac{\|(A_{h} - B_{h})\|^2}{\|C_h\|^2}
     \label{eq:eiou_loss}
 \end{equation}

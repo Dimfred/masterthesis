@@ -88,6 +88,17 @@ class SummaryWriter:
 
         n_persons = len(set(path.name[:2] for path in imgs))
 
+        # persons = set(str(path.name[:2]) for path in imgs)
+        l_persons = [str(path.name[:2]) for path in imgs]
+
+        from collections import Counter
+
+        # print(l_persons)
+        c = Counter(l_persons)
+        res = dict(c)
+        print(tabulate(((str(v1), str(v2)) for v1, v2 in res.items())))
+
+
         originals = [pure, checkered, annotated, checkered_and_annotated]
 
         # all files

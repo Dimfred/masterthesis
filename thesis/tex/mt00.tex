@@ -27,7 +27,8 @@
 
 
 % TODO add this in the end, currently makes compilation insanely slow
-% \usepackage{hyperref}
+\usepackage{hyperref}
+
 % \usepackage[pdftex,colorlinks=true,urlcolor=refC,linkcolor=refC,citecolor=citeC]{hyperref} % math
 
 \usepackage{amsmath}
@@ -64,40 +65,13 @@
 \usepackage{caption}
 
 \usepackage{rotating}
+\usepackage[ruled,vlined,linesnumbered,resetcount,algochapter]{algorithm2e}
 
-\newcounter{nalg}[chapter] % defines algorithm counter for chapter-level
-\renewcommand{\thenalg}{\thechapter .\arabic{nalg}} %defines appearance of the algorithm counter
-\DeclareCaptionLabelFormat{algocaption}{Algorithm \thenalg} % defines a new caption label as Algorithm x.y
-
-\lstnewenvironment{algorithm}[1][] %defines the algorithm listing environment
-{
-    \refstepcounter{nalg} %increments algorithm number
-    \captionsetup{labelformat=algocaption,labelsep=colon} %defines the caption setup for: it uses label format as the declared caption label above and makes label and caption text to be separated by a ':'
-    \lstset{ %this is the stype
-        mathescape=true,
-        frame=tB,
-        numbers=left,
-        numberstyle=\tiny,
-        basicstyle=\scriptsize,
-        keywordstyle=\color{black}\bfseries\em,
-        keywords={input, then, output, return, datatype, function, in, if, else, foreach, do, while, begin, end, for, elif} %add the keywords you want, or load a language as Rubens explains in his comment above.
-        numbers=left,
-        xleftmargin=.04\textwidth,
-        #1 % this is to add specific settings to an usage of this environment (for instnce, the caption and referable label)
-    }
-}
-{}
-% multiline formulas
-% \usepackage{breqn}
-
-% non-retarded new line
 \newcommand{\lf}{\\[\baselineskip]}
 
 % ++ es werden keine underfull hboxes als Fehler ausgegeben,
 %    da das ja nur hei�t, dass die Seite noch nicht ganz voll ist
 \hbadness=10000
-
-
 
 \includeonly{mt01, mt02, mt03, mt04, mt05, mt06, mt07, mt08, mt09, mt10, mt11, mt-lit, mt-lof, mt-lot}
 
@@ -105,6 +79,7 @@
 
 %\bibliographystyle{galpha1a} %german bibliography
 \bibliographystyle{alphamod} %english bibliography
+
 
 % fix bad url formatting
 \usepackage{etoolbox}
@@ -142,22 +117,9 @@ Erlangen, den \selectlanguage{german} \today \hspace{6.0cm} \\[10mm]
 
 \cleardoublepage
 
+
 % \makeglossary
-\begin{center}
-\bfseries
-% "Ubersicht
-Overview
-\normalfont
-\end{center}
-
-
-\vspace{5.0cm}
-
-\begin{center}
-\bfseries
-Abstract
-\normalfont
-\end{center}
+\input{main/abstract}
 
 \cleardoublepage
 
@@ -174,16 +136,12 @@ Abstract
 \input{main/03_results}
 \cleardoublepage
 \input{main/04_discussion}
-% \cleardoublepage
-% \include{mt07}   % Ausblick (\chapter{Ausblick} TEXT)
-% \cleardoublepage
-% \include{mt08}   % Zusammenfassung (\chapter{Zusammenfassung}  TEXT)
-% \cleardoublepage
-
-
+\cleardoublepage
+\input{main/05_summary_and_outlook}
 \cleardoublepage
 \input{mt-glossar}   % Glossar (\chapter{Glossar}  TEXT)
-% \cleardoublepage
+\cleardoublepage
+
 % \include{mt10}   %
 % \cleardoublepage
 % \include{mt11}   %

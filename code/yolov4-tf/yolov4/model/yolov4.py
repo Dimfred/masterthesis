@@ -152,5 +152,6 @@ class YOLOv4Tiny(Model):
     def call(self, x):
         x = self.backbone(x)
         x = self.panet_tiny(x)
+        # print([x_.shape for x_ in x])
         x = self.yolov3_head_tiny(x)
         return x

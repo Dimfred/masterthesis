@@ -1,2 +1,359 @@
-    \hline
-    Edge 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 4t,7ba         \\
+\chapter{Pipeline Evaluation}
+
+This chapter presents the evaluation of the pipeline as a whole system.
+First, the used evaluation algorithms are briefly explained together.
+In addition also the notions of \ac{TP}, \ac{FP} and \ac{FN} are presented in their respective context.
+For object detection this has already been explained in section \ref{sec:tpfpfn}.
+Afterwards, the results are presented together with a thorough evaluation.
+
+\section{Evaluation Algorithm}
+\label{sec:eval_algo}
+
+\subsubsection{Classification Evaluation}
+
+The evaluation of the \ac{YOLO} network was already done in section \ref{sec:training}  based on the \ac{mAP} metric.
+This metric considers multiple \ac{IoU} thresholds in its calculation and provides a general detection performance.
+However, in the context of topology generation, a prediction with a bad \ac{IoU} with its ground truth could still lead to a correct prediction of the topology.
+Therefore, for the evaluation of the full pipeline the matching of bounding box predictions is done using a fixed \ac{IoU} threshold.
+To find an initial guess of the threshold, first the maximum occlusion \ac{IoU} was obtained from the validation dataset by calculating the \ac{IoU} between each ground truth in an image.
+The maximum occurring \ac{IoU} was found at 14\%, which means that in general the dataset has low occlusion.
+Under the assumption that the size of the predicted bounding boxes will be greater than the size of the respective ground truth bounding boxes the \ac{IoU} was chosen to be bigger than the maximum occlusion \ac{IoU}.
+For the evaluation the \ac{IoU} threshold was hence set to 30\%.
+Furthermore, for the evaluation in the section the predictions are provided with the \acp{TP}, \acp{FP} and \acp{FN} values, as well as with metrics, which can be calculated from those.
+
+The segmentation outcome is not further quantified, but it can be said that, a bad segmentation result will be reflected in the results of the topology, which will probably have many errors.
+
+\subsubsection{Topology Evaluation}
+
+The similarity of the predicted and the ground truth topology is measured, based a hypergraph adjacency matrix, where the format has been defined in section \ref{sec:hypergraph_topology}.
+To recall, a hypergraph is defined as: $H = \{V, E\}$, with the vertices $V \in \{v_1,...,v_n\}$ and the edges, $E = \{e_1,...e_n\} = \{\{v_i,...,v_j\},...,\{v_x,...,v_y\}\}$.
+Further, a subedge and the amount of subedges present in an hyperedge is defined as: $S(e_i) = \{ \{v_1,v_2\}\ |\ \{v_1,v_2\} \in e_i,\ e_i \in E\}$, $\#S(e_i) = \{ \#e_i - 1\ |\  e_i \in E\}$, where \# is the length operator for a set.
+
+\acp{TP} in the used algorithm are always measured through a perfect match, where a perfect match occurs, when the two hyperedges (which are sets of vertices) are the same.
+The amount of \acp{TP} which occurs through a perfect match is defined as amount of subedges $\#S(e_i)$ on the ground truth hyperedge.
+Note, that in an error free context (no \acp{FN}, no \acp{FP}), the amount of \acp{TP} is equal to the amount of all possible predictions.
+
+After all initial perfect matches have been identified the algorithm tries to find the remaining \acp{TP}, \acp{FP} and \acp{FN}.
+Compared to object detection a \ac{FN} occurs, when a prediction is missing, i.e. a ground truth could not be matched to a prediction, since no such prediction exists.
+In the context of topology matching a \ac{FN} is defined as ``a subedge is missing''.
+Consider the following example:
+
+\begin{itemize}
+    \item Ground truth $H$: $V = \{v_1, v_2, v_3\}$, $E = \{\{v_1, v_2, v_3\}\}$
+    \item Predicted $\hat{H}$: $\hat{V} = \{v_1, v_2, v_3\}$, $\hat{E} = \{\{v_1, v_2\}, \{v_3\}\}$
+\end{itemize}
+
+As mentioned all \ac{TP} calculations are only performed with perfect matches.
+In this case a perfect match can be recreated by combining the two hyperedges in $\hat{H}$.
+The resulting perfect match would have $TPs = 2$, due to the fact that this is the amount of subedges $\#S(e_i)$, however there was one \ac{FN} since the perfect match could only be produced through recombination of predicted hyperedges.
+Therefore, the notion of \acp{FN} is introduced, which are defined as:
+
+\begin{equation}
+    FNs = \#(recombined\ hyperedges\ for\ perfect\ match) - 1
+    \label{eq:fns}
+\end{equation}
+
+It has been mentioned, that in an error free context the amount of \acp{TP} is equal to the amount of all possible predictions.
+Further, the amount of all possible predictions is in general defined as:
+
+\begin{equation}
+    \#(all\ possible\ predictions) = TPs + FNs
+    \label{eq:tps_plus_fns}
+\end{equation}
+
+Hence, the amount of \acp{TP} has to be adapted based on the amount of \acp{FN}.
+Therefore, when a recombination case occurs, formula \ref{eq:tps_plus_fns} has to be used to subtract the amount of \acp{FN} from the \acp{TP}.
+Resulting here in $TPs = 1$, $FNs = 1$.
+
+Naturally the equations \ref{eq:fns} and \ref{eq:tps_plus_fns} extend to the case, where the hyperedges of $\hat{H}$ are $\hat{E} = \{\{v_1\}, \{v_2\}, \{v_3\}\}$.
+Again, to have a perfect match all hyperedges have to be recombined, hence: $FNs = 2$, $TPs = 0$.
+
+The next case considers \acp{FP}, where a \ac{FP} is defined as: ``a subedge too much''.
+Consider again the following example of a ground truth and predicted hypergraph:
+
+\begin{itemize}
+    \item Ground truth $H$: $V = \{v_1, v_2, v_3\}$, $E = \{\{v_1, v_2\}, \{v_3\}\}$
+    \item Predicted $\hat{H}$: $\hat{V} = \{v_1, v_2, v_3\}$, $\hat{E} = \{\{v_1, v_2, v_3\}\}$
+\end{itemize}
+
+A \ac{FP} can be identified in general when: $e_i \subset \hat{e_j}$.
+The algorithm here then removes the ground truth hyperedge from the predicted hyperedge, by setting all values in the predicted hyperedge to 0.
+The remaining parts of the predicted hyperedge are then again reused for the recombination.
+
+The algorithm in general looks like this:
+
+\begin{enumerate}
+    \item Input: ground truth hypergraph $H$, prediction hypergraph $\hat{H}$
+    \item Initial Perfect Matching: Find all perfect matches between $H$ and $\hat{H}$, store perfectly matched hyperedges in \textbf{Matched}.
+    \item Recombination: Try to find perfect matches with unmatched hyperedges of $H$ and $\hat{H}$, where an unmatched hyperedge is one which is not present in \textbf{Matched}.
+    Use also recombination of hyperedges in $\hat{H}$ to find perfect matches and store perfectly matched hyperedges in \textbf{Matched}.
+    \item Splitting: Try to find perfect matches with unmatched hyperedges of $H$ and $\hat{H}$, by trying to find an $\hat{e_i} \in \hat{E}$, where an $e_j \in E$, $e_j \subset e_i$.
+    Store only $e_j$ in \textbf{Matched}.
+    \item Repeat Recombination and Splitting until all hyperedges are matched.
+\end{enumerate}
+
+At the current state, the algorithm is not able to handle mixed cases of \ac{FP} and \ac{FN} such as:
+
+\begin{itemize}
+    \item Ground truth $H$: $V = \{v_1, v_2, v_3, v_4\}$, $E = \{\{v_1, v_2\}, \{v_3, v_4\}\}$
+    \item Predicted $\hat{H}$: $\hat{V} = \{v_1, v_2, v_3, v_4\}$, $\hat{E} = \{\{v_1, v_3\}, \{v_2, v_4\}\}$
+\end{itemize}
+
+Here, neither through recombination, nor through splitting a perfect match can be identified.
+When this occurs all the remaining unmatched ground truth hyperedges are used and the worst case scenario is computed, which is that all possible remaining \acp{TP} become \acp{FN}.
+
+Furthermore, the algorithm also does not handle transient error cases in the topology evaluation.
+For example when you consider that an \ac{ECC} was not predicted, at the moment that \ac{ECC} is inserted such that it is at least possible that a perfect match occurs.
+
+
+\subsubsection{Annotation Matching Evaluation}
+
+To recreate the full topology in the \ac{LDom} the textual as well as the arrow annotations have to be matched against their respective \ac{ECC}.
+Hence, part of the evaluation is to quantify the amount of correctly and falsely matched annotations.
+The format of the matching labels and the matching algorithm, were already presented in section \ref{sec:data} and section \ref{sec:pipeline}, respectively.
+Consider again the three possible cases for a \ac{TP}, \ac{FN} and \ac{FP}.
+A \ac{TP} being the simplest case occurs when an annotation is matched to its respective \ac{ECC}.
+Further, a \ac{FN} is always a transient error from the YOLO recognition, i.e. an annotation could not be predicted and hence there exists no annotation, which can be matched against an \ac{ECC}.
+The last case being the \ac{FP} case, which occurs when an annotation was matched with a wrong \ac{ECC}.
+
+\section{Results}
+\label{sec:evaluation_results}
+
+\subsubsection{Classification}
+First the results for the plain classification based on the \ac{YOLO} network are presented.
+The used networks were the tuned networks from figure \ref{fig:yolo_tuning_combined_results}, while in this figure the tuning increased the overall \ac{mAP}, now the results are presented for an \ac{IoU} threshold of 0.3 as plain \ac{TP}, \ac{FP} and \ac{FN} (table \ref{tab:yolo_classification_res}).
+
+\begin{table}[H]
+\footnotesize
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
+
+\hline
+\textbf{NMS} & \textbf{ScoreThr.} & \textbf{IoUThr.} & \textbf{InputSize} & \textbf{Vote} & \textbf{TP}  & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall}  & \textbf{F1}       \\
+\hline
+DIoU    & 0.3        & 0.25     & $608 \times 608$   & -     & 798 & 6  & 9  & 99.25\%   & 98.88\% & 99.07\%  \\
+\hline
+DIoU    & 0.3        & 0.25     & $736  \times 736$      & -     & 799 & 8  & 8  & 99.01\%   & 99.01\% & 99.01\%  \\
+\hline
+DIoU    & 0.15       & 0.45     & $736  \times 736$     & -     & 801 & 12 & 6  & 98.52\%   & 99.26\% & 98.89\%  \\
+\hline
+WBF     & 0.15       & 0.25     & $736  \times 736$      & -     & 801 & 12 & 6  & 98.52\%   & 99.26\% & 98.89\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & $736  \times 736$      & 1     & 804 & 30 & 3  & 96.40\%   & 99.63\% & 97.99\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & $736  \times 736$        & 2     & 804 & 21 & 3  & 97.45\%   & 99.63\% & 98.53\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & $736  \times 736$        & 3     & 804 & 17 & 3  & 97.93\%   & 99.63\% & 98.77\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & $736  \times 736$        & 4     & 804 & 13 & 3  & 98.41\%   & 99.63\% & 99.01\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & $736  \times 736$        & 5     & 803 & 13 & 4  & 98.41\%   & 99.50\% & 98.95\%  \\
+\hline
+
+\end{tabular}
+\caption{The results of the YOLO classification for the tuned networks presented in section \ref{sec:training_yolo}. Classification was done based on a matching \ac{IoU} threshold of 0.3.}
+\label{tab:yolo_classification_res}
+\end{center}
+\end{table}
+
+Comparing the results based on the f1-score shows, that actually the baseline (first configuration) performed best.
+Increasing the input size added one \ac{TP}, but also increased the amount of \acp{FP} by two.
+The further tuning of the \ac{DIoU}-\ac{NMS} and of the \ac{WBF} algorithm also led to an increase of two \acp{TP}, but also in a higher increase of \acp{FP}.
+Adding \ac{TTA} shows that, the amount of \acp{TP} could be further increased, but again the trade-off is here higher increase in \acp{FP} vs. some increase in \ac{TP}.
+The small gain by adding \ac{TTA} can be explained, with the observations of \cite{when_tta_works}, they showed in their experiments, that \ac{TTA} has especially a positive effect on networks, which are not well trained.
+Networks, which are trained well with enough data, as it seems to be the case here, actually started to perform worse when \ac{TTA} was used.
+With the addition of the proposed voting mechanism in section \ref{sec:training_yolo}, the amount of \acp{TP} can be maintained, while the amount of \acp{FP} can be decreased.
+It therefore seems to be the case that having a voting based exclusion approach, seems to work on the test dataset.
+
+\subsubsection{Topology}
+
+The next presented results, are the results of the topology recognition.
+To have a comparable baseline the topology first was tested with the ground truth of the \ac{YOLO} and the ground truth of the \ac{MUnet}.
+Further, the baseline \ac{YOLO} from table \ref{tab:yolo_classification_res} was used to recognize the components.
+Since the evaluation of the topology currently does not consider transient errors from the \ac{YOLO} recognition, the evaluation could also be performed with the ground truth, but it could be that the bounding box sizes heavily differ from the ground truth, so to make the evaluation as realistic as possible a trained \ac{YOLO} is used instead of the ground truth.
+Further, the evaluation was performed for all \ac{MUnet} networks from table \ref{tab:munet_selected_nets}.
+
+The results of the topology evaluation can be found in table \ref{tab:topology_test_plain}, where the results are listed based on the fold configuration and the learning rate.
+The first listed network is the network, which was evaluated with both network ground truths.
+It can be observed that the evaluation with the ground truth still had 47 \acp{FN}, which are related to either mixed cases of \ac{FP} and \ac{FN}, as described in the evaluation algorithm section \ref{sec:eval_algo}, or to false negatives produced, due to holes in the wire escaping the morphological closing.
+However, it overall shows the best performance over all networks with 620 \acp{TP}.
+
+In general it showed that all networks had a low amount of \acp{FP} (max. 7).
+
+The fold trained with a batch size of 32 and the focal loss with an $\alpha$ of 0.1, shows generally an increase in \acp{TP} with decreasing learning rate and the smallest learning rate $1.0e^{-4}$ performed best.
+When looking at the metrics why this network was selected (table \ref{tab:munet_selected_nets}), it can be seen that this network had scored best on three metrics (recall full, f1-score checkered, recall checkered).
+This fold with the same loss function, but a batch size of 64 shows comparable performance, however the smallest learning rate was slightly better with one \ac{TP} more.
+Interestingly the smallest learning rate was selected based on the same criteria as the networks with a batch size of 32.
+
+The focal loss fold with an $\alpha$ of 0.8 and a batch size of 32  again shows that the higher learning rates had worse performance than the lower learning rates.
+The best performing learning rate was $2.5e^{-4}$, where this network was selected best on the best f1-score on the checkered dataset.
+Further, this loss function with a batch size of 64 showed the same results.
+Higher learning rates perform worse than lower ones.
+The best performing learning rate here was $5.0e^{-4}$ and was selected based on the best f1-score on the checkered dataset.
+
+The last folds being the ones trained with the dice loss.
+First consider the fold with a batch size of 32.
+The biggest learning rate performs here not well and the smallest exceptionally bad too.
+The smallest learning rate was not even able to reach half the performance of the other networks.
+The best network in that fold and actually overall the best, had a learning rate of $1.0e^{-3}$ with 531 \acp{TP}.
+This network was - as most of the others, which performed well - selected based on the best f1-score on the checkered validation set.
+The last remaining fold being the one with the dice loss and a batch size of 64.
+The smallest learning rate again showed very poor performance and could not reach half the performance of all other networks.
+Further, the two best performing learning rate was $2.5e^{-3}$, which is also the second best performing learning rate overall with 521 \acp{TP}.
+It was selected based on the best precision on the full validation set.
+
+
+To summarize the presented results:
+\begin{itemize}
+    \item Bigger learning rates showed in general a worse performance than smaller learning rates
+    \item The smallest learning rates for the focal loss folds showed the best performance for those folds ($5.0e^{-4}$, $2.5e^{-4}$, $1.0e^{-4}$).
+    \item Dice loss is exceptionally sensitive to the used learning rate and the smallest learning rates showed exceptionally bad performance.
+    \item The dice loss folds had the two best performing learning rates overall ($2.5e^{-3}$, $1.0e^{-3}$)
+    \item Most of the best performing networks were selected based on the best f1-score on the checkered validation set.
+\end{itemize}
+
+
+\begin{table}
+\footnotesize
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
+
+\hline
+\textbf{Batch Size} & \textbf{Loss}      & \textbf{Learning Rate} & TP  & FP & FN  & Precision & Recall  & F1      \\
+\hline
+Ground Truth        &                    &                        & 620 & 0  & 47  & 100.0\%   & 92.95\% & 96.35\% \\
+\hline
+32                  & focal $\alpha=0.1$ & $1.0e^{-2}$            & 482 & 7  & 185 & 98.57\%   & 72.26\% & 83.39\% \\
+\hline
+32                  & focal $\alpha=0.1$ & $2.5e^{-3}$            & 488 & 4  & 179 & 99.19\%   & 73.16\% & 84.21\% \\
+\hline
+32                  & focal $\alpha=0.1$ & $1.0e^{-4}$            & 504 & 6  & 163 & 98.82\%   & 75.56\% & 85.64\% \\
+\hline
+64                  & focal $\alpha=0.1$ & $1.0e^{-2}$            & 464 & 7  & 203 & 98.51\%   & 69.57\% & 81.55\% \\
+\hline
+64                  & focal $\alpha=0.1$ & $5.0e^{-3}$            & 492 & 6  & 175 & 98.80\%   & 73.76\% & 84.46\% \\
+\hline
+64                  & focal $\alpha=0.1$ & $2.5e^{-3}$            & 491 & 4  & 176 & 99.19\%   & 73.61\% & 84.51\% \\
+\hline
+64                  & focal $\alpha=0.1$ & $1.0e^{-4}$            & 505 & 7  & 162 & 98.63\%   & 75.71\% & 85.67\% \\
+\hline
+32                  & focal $\alpha=0.8$ & $5.0e^{-3}$            & 485 & 5  & 182 & 98.98\%   & 72.71\% & 83.84\% \\
+\hline
+32                  & focal $\alpha=0.8$ & $2.5e^{-3}$            & 469 & 5  & 198 & 98.95\%   & 70.31\% & 82.21\% \\
+\hline
+32                  & focal $\alpha=0.8$ & $2.5e^{-4}$            & 498 & 5  & 169 & 99.01\%   & 74.66\% & 85.13\% \\
+\hline
+32                  & focal $\alpha=0.8$ & $1.0e^{-4}$            & 484 & 5  & 183 & 98.98\%   & 72.56\% & 83.74\% \\
+\hline
+64                  & focal $\alpha=0.8$ & $1.0e^{-2}$            & 492 & 5  & 175 & 98.99\%   & 73.76\% & 84.54\% \\
+\hline
+64                  & focal $\alpha=0.8$ & $1.0e^{-3}$            & 499 & 5  & 168 & 99.01\%   & 74.81\% & 85.23\% \\
+\hline
+64                  & focal $\alpha=0.8$ & $5.0e^{-4}$            & 511 & 4  & 156 & 99.22\%   & 76.61\% & 86.46\% \\
+\hline
+64                  & focal $\alpha=0.8$ & $1.0e^{-4}$            & 496 & 5  & 171 & 99.00\%   & 74.36\% & 84.93\% \\
+\hline
+32                  & dice               & $1.0e^{-2}$            & 449 & 5  & 218 & 98.90\%   & 67.32\% & 80.11\% \\
+\hline
+32                  & dice               & $5.0e^{-3}$            & 468 & 6  & 199 & 98.73\%   & 70.16\% & 82.03\% \\
+\hline
+32                  & dice               & $1.0e^{-3}$            & 531 & 4  & 136 & 99.25\%   & 79.61\% & 88.35\% \\
+\hline
+32                  & dice               & $1.0e^{-4}$            & 183 & 6  & 484 & 96.83\%   & 27.44\% & 42.76\% \\
+\hline
+64                  & dice               & $5.0e^{-3}$            & 457 & 6  & 210 & 98.70\%   & 68.52\% & 80.88\% \\
+\hline
+64                  & dice               & $2.5e^{-3}$            & 521 & 5  & 146 & 99.05\%   & 78.11\% & 87.34\% \\
+\hline
+64                  & dice               & $1.0e^{-3}$            & 512 & 5  & 155 & 99.03\%   & 76.76\% & 86.49\% \\
+\hline
+64                  & dice & $1.0e^{-4}$            & 185 & 6  & 482 & 96.86\%   & 27.74\% & 43.12\% \\
+\hline
+
+\end{tabular}
+\caption{Results of the topology evaluation. The focal loss folds all have $\gamma = 2$. The used networks were the ones selected in table \ref{tab:munet_selected_nets}.}
+\label{tab:topology_test_plain}
+\end{center}
+\end{table}
+
+\subsubsection{Arrow and Text Matching}
+
+The last step in the evaluation of the whole pipeline is composed of an evaluation of the matching algorithm \ref{alg:annotation_matching} for the text and arrow annotations.
+The evaluation of the matching does not depend on the segmentation and is therefore only shown for the networks shown in table \ref{tab:yolo_classification_res}.
+
+Table \ref{tab:text_matching_results} shows the results of the text matching, where all configurations showed the same results.
+Every text annotation, which also had to be matched against an \ac{ECC} was predicted, therefore the results have no \acp{FN}.
+The only error source were here \acp{FP}, which were produced either due to a \ac{FP} prediction of the \ac{YOLO} network, hence being a transient error, or generally due to wrong matching.
+Overall a matching precision of 94.94\% could be achieved on the test dataset.
+
+
+\begin{table}
+\footnotesize
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
+
+\hline
+NMS     & Score Thr. & IoU Thr. & Input Size & Votes & TP  & FP & FN & Precision & Recall   & F1       \\
+\hline
+DIoU    & 0.3        & 0.25     & 608        & -     & 169 & 9  & 0  & 94.94\%   & 100.00\% & 97.41\%  \\
+\hline
+DIoU    & 0.3        & 0.25     & 736        & -     & 169 & 9  & 0  & 94.94\%   & 100.00\% & 97.41\%  \\
+\hline
+DIoU    & 0.15       & 0.45     & 736        & -     & 169 & 9  & 0  & 94.94\%   & 100.00\% & 97.41\%  \\
+\hline
+WBF     & 0.15       & 0.25     & 736        & -     & 169 & 9  & 0  & 94.94\%   & 100.00\% & 97.41\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & 736        & 1     & 169 & 9  & 0  & 94.94\%   & 100.00\% & 97.41\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & 736        & 2     & 169 & 9  & 0  & 94.94\%   & 100.00\% & 97.41\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & 736        & 3     & 169 & 9  & 0  & 94.94\%   & 100.00\% & 97.41\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & 736        & 4     & 169 & 9  & 0  & 94.94\%   & 100.00\% & 97.41\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & 736        & 5     & 169 & 9  & 0  & 94.94\%   & 100.00\% & 97.41\%  \\
+\hline
+
+\end{tabular}
+\caption{Results of the text matching, based on the \ac{YOLO} configurations from table \ref{tab:yolo_classification_res}.}
+\label{tab:text_matching_results}
+\end{center}
+\end{table}
+
+Further, for the matching of the arrow annotation the networks also show the same performance over all configurations.
+In the case of the arrow annotations the algorithm was able to match every annotation correctly to its respective \ac{ECC}, therefore a precision of 100.00\% was achieved.
+Further, since no \acp{FN} were observed in the prediction of the \ac{YOLO} network, also no transient error applies here.
+Therefore, the arrow matching achieves perfect results.
+
+\begin{table}
+\footnotesize
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
+
+\hline
+NMS     & Score Thr. & IoU Thr. & Input Size & Votes & TP  & FP & FN & Precision & Recall   & F1       \\
+\hline
+DIoU    & 0.3        & 0.25     & 608        & -     & 40  & 0  & 0  & 100.00\%  & 100.00\% & 100.00\%  \\
+\hline
+DIoU    & 0.3        & 0.25     & 736        & -     & 40  & 0  & 0  & 100.00\%  & 100.00\% & 100.00\%  \\
+\hline
+DIoU    & 0.15       & 0.45     & 736        & -     & 40  & 0  & 0  & 100.00\%  & 100.00\% & 100.00\%  \\
+\hline
+WBF     & 0.15       & 0.25     & 736        & -     & 40  & 0  & 0  & 100.00\%  & 100.00\% & 100.00\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & 736        & 1     & 40  & 0  & 0  & 100.00\%  & 100.00\% & 100.00\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & 736        & 2     & 40  & 0  & 0  & 100.00\%  & 100.00\% & 100.00\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & 736        & 3     & 40  & 0  & 0  & 100.00\%  & 100.00\% & 100.00\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & 736        & 4     & 40  & 0  & 0  & 100.00\%  & 100.00\% & 100.00\%  \\
+\hline
+WBF-TTA & 0.1        & 0.45     & 736        & 5     & 40  & 0  & 0  & 100.00\%  & 100.00\% & 100.00\%  \\
+\hline
+
+\end{tabular}
+\caption{Results of the arrow matching}
+\label{tab:arrow_matching_results}
+\end{center}
+\end{table}

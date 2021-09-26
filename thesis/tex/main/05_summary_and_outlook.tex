@@ -1,0 +1,307 @@
+\chapter{Summary and Outlook}
+
+\section{Discussion}
+
+\subsubsection{\ac{YOLO}}
+
+The \ac{YOLO} network was with each experiment, iteratively improved on the validation set.
+With each experiment the previously established baseline could be improved.
+The highest improvement could be achieved through the offline augmentation experiment, since here, when an augmentation was applied the existing class with its orientation subclass was transformed into the same class with another orientation subclass.
+Especially, on the text and arrow class the offline augmentation experiment showed an improvement in \ac{mAP} of 24.482\% and 47.988\%, respectively.
+
+In table \ref{tab:yolo_classification_res} the final results for the classification results for the topology were presented and the best network had a f1-score of 99.07\%.
+This network was the baseline network from the grid search, which was not further tuned.
+This is an interesting observation, since the tuning results shown in figure \ref{fig:yolo_tuning_combined_results} actually showed that the results based on the \ac{mAP} metric improved.
+However, it seems that the \ac{mAP} metric is probably not the best choice for the task of topology classification.
+
+\subsubsection{\ac{MUnet}}
+
+The results of the \ac{MUnet} experiments showed that a lower learning rate, would have been a better choice for the experiments.
+The choice for the best learning rate, was done based on the best f1-score.
+The f1-score was calculated on the whole validation set, where \acp{ECD} drawn on white paper background as well as on checkered paper background were used.
+Comparing the f1-score on the validation set with white paper background and checkered paper background, showed that the results were better on white paper background, therefore the f1-score was more biased towards \acp{ECD} drawn on white paper background.
+This makes sense, since the segmentation of \acp{ECD} on white paper background is probably simpler than the segmentation of \acp{ECD} on checkered paper background.
+In general the segmentation did not perform as well as the object detection with \ac{YOLO} and the results still require improvement.
+
+\subsubsection{Pipeline}
+
+The current pipeline algorithm (section \ref{sec:pipeline}) shows an approach how an image of \acp{ECD} can be converted into the LTspice format.
+In the pipeline the detection of the characters inside the detected text class were not considered and hence also not evaluated.
+However, some possible problems could be:
+
+\begin{itemize}
+    \item The bounding boxes for the text class do not cover the text fully
+    \item The characters can not be identified correctly
+\end{itemize}
+
+This would additionally introduce new error sources.
+When observing the results presented in table \ref{tab:topology_test_plain} the topology creation algorithm (section \ref{sec:pipeline}) could not produce perfect results with the ground truth from the \ac{YOLO} and the ground truth from the \ac{MUnet}.
+The root cause is here manifold.
+On the one hand, the evaluation algorithm can not handle mixed cases of $FN_h$ and $FP_h$ and when those occur the remaining unmatched ground truth hyperedges are taken as a worst case approximation of remaining errors, therefore introducing a high amount of $FN_h$.
+On the other hand, when inspecting the results of the topology creation, it could be observed that most $FN_h$ were not related to a insufficient segmentation of the wires, but rather to already existing holes in the wires that were drawn that way.
+
+The matching of the text classes in table \ref{tab:text_matching_results} showed for each configuration the same results.
+This is due to the fact that, the \acp{TP}, \acp{FP} and \acp{FN} for the text class were the same in each configuration.
+Further, the matching relies on the center point of the predicted bounding box, which here did not influence the matching outcome.
+The same applies to the arrow matching in table \ref{tab:arrow_matching_results}.
+
+\subsubsection{Evaluation Algorithm}
+
+The results presented in \ref{tab:topology_test_plain} should be treated with care, since the current state of the topology evaluation algorithm has multiple drawbacks:
+
+\begin{itemize}
+    \item Classification errors from the \ac{YOLO} are not treated as errors in the topology
+    \item Mixed cases of $FN_h$ and $FP_h$ can not be solved and induce a worst case error, where the remaining unmatched ground truth hyperedges are treated as $FN_h$
+\end{itemize}
+
+\section{Future Work}
+
+The current classification stages of the presented pipeline (section \ref{sec:pipeline}) require two separate networks, an object detection network to identify the components of an \acp{ECD} and a segmentation network to segment the \acp{ECD}.
+As a future work these two stages of the pipeline could be unified through an instance segmentation model such as Mask-RCNN \cite{mask_rcnn}, which would simplify the classification process due to reduced computational overhead.
+
+Furthermore, at the current stage neither the object detection model, nor the segmentation model are able to identify holes between wires.
+While the preprocessing steps of the pipeline close some possible holes through morphological operations, still a non-negligible amount remains which is reflected in the evaluation.
+Possible solutions for that could be to either, to detect holes as a node with the object detection network, or try to make the segmentation network learn the notion of holes and make it predict a mask, where the holes are closed.
+
+As mentioned, \ac{OCR} was introduced as a necessary step in the pipeline, however it was not implemented.
+As a future work this step could be included in the pipeline.
+
+\section{Summary}
+
+Hand-drawn \acfp{ECD}, consist of \acfp{ECC} and are a way to represent an electrical circuit.
+While for humans the recognition of a circuit is simple, it is a challenging task for computers \cite{ecd_knnfull} \cite{ecd_anngeo}.
+Circuit simulation software, such as LTspice, are used in electrical science to model and simulate circuits.
+In LTspice the simulation is fast, however the modeling of the circuits can take much time.
+Especially when considering that the circuit to simulate already exists in the form of a drawing on paper.
+So to ease the use of applications like LTspice, the overall goal of this thesis was to develop a pipeline, which converts an image of a hand-drawn \ac{ECD} into the LTspice schematic file format.
+The components of an \ac{ECD} can be decomposed into the \acp{ECC}, the connections between \acp{ECC}, and annotations which describe an \ac{ECC}.
+All those components have to be recognized to reflect a hand-drawn \ac{ECD} in the digital world.
+
+Recent works regarding this topic have mostly examined parts of the problem.
+In \cite{ecd_basecnn}, \cite{ecd_anngeo} and \cite{ecd_texturesmo} only the classification of samples of \acp{ECC} was studied.
+The works by \cite{ecd_knn_recog} and \cite{ecd_seghogsvm} extended the problem further and additionally included the detection of \acp{ECC} from an \acp{ECD} image.
+Afterwards, the detected \acp{ECC} were also classified.
+The most relation to this thesis has the work by Dhanushika and Ranathunga \cite{ecd_yolobool}.
+In their work they detected the components of logical gates and recreated a boolean expression from the hand-drawn diagram.
+The detection of the components was done with an object detection network and the connections between the components were detected by utilizing various computer vision methods.
+What all works have in common is that checkered paper background, which is a common paper type used for drawing such diagrams, was not considered at all.
+
+In this thesis, the hand-drawn \acp{ECD} are converted into the LTspice schematic file format, which is a human readable file format.
+It contains commands which build an \ac{ECD} with its various components and annotations in the simulation software.
+
+Deep learning methods are used in this thesis to detect \ac{ECC} and to segment the \ac{ECD}, where deep learning refers to the training of neural networks.
+Classification in neural networks is performed through a chain of trainable and non-trainable functions.
+The behavior of the trainable functions, which are also called layers, is defined by a weight matrix, which is optimized during the training process of an \ac{ANN}.
+During training the error with respect to the prediction is calculated and the weights of the last layer are updated based on the gradient with respect to the weights.
+Utilizing the chain rule this is done for all previous layers of the network.
+
+\acp{CNN} are networks which have shown to perform well on image data since spatial dependencies are captured better than in \acp{MLP} \cite{lecun_lenet}.
+In such networks, convolutions are used to perform calculations, where an input gets convolved with a trainable weight kernel.
+As in classical \acp{ANN} the weight kernels are optimized during training.
+
+Object detection is one problem domain where \acp{CNN} are commonly used \cite{yolov1}.
+It is an extension of the classification task, where additionally to the class also a bounding box is predicted for an object in an image, where a bounding box is defined by the corner coordinates of the box enclosing an object.
+Two different types of object detectors exist: the two-stage detectors and the one-stage detectors.
+In two-stage detectors the prediction pipeline is split into two parts.
+First, probable regions are obtained where an object could be present and afterwards those regions are classified \cite{rcnn}.
+Obtaining probable regions introduces an overhead and therefore one-stage detectors were invented, which internally model this process.
+% One-stage detectors can additionally be divided into anchor box based and anchor box free detectors.
+% In anchor box based networks \cite{yolov3} \cite{ssd} \cite{focalloss} the resulting bounding box is not a direct prediction of the bounding box coordinates of the object, but more an offset of a predefined anchor box.
+% On the other side in anchor box free detectors the bounding box coordinates are predicted directly without the use of anchor boxes \cite{yolov1} \cite{corner_net} \cite{center_net}.
+% While anchor box free methods reduce overhead during training, which is related to anchor box based calculations, such as the calculation of the \ac{IoU}, as the time of writing anchor box based methods are still superior in prediction quality \cite{yolov4}.
+
+In this thesis the one-stage object detection architecture \ac{YOLO}v4-Tiny \cite{yolov4_tiny} was used to detect the \acp{ECC} and \ac{ECC} annotations in the hand-drawn \ac{ECD}.
+\ac{YOLO} uses an encoding network to create features, which are then taken by the decoder network for further processing.
+The decoder upsamples the input feature maps and outputs the prediction of the bounding boxes.
+To detect various object sizes the \ac{YOLO} architecture has multiple output branches, which utilize different feature map resolutions from the encoder \cite{fpn}.
+The prediction of \ac{YOLO} often contains multiple bounding boxes per object, therefore \ac{NMS} methods have to be applied in order to suppress unnecessary bounding boxes.
+The two \ac{NMS} algorithms used in this thesis were the \ac{DIoU}-\ac{NMS} \cite{diou}, which suppresses bounding boxes based on the \ac{DIoU}, and the \ac{WBF} algorithm \cite{weighted_bbox_fusion}, which does not suppress bounding boxes, but rather fuses those together which have a certain \ac{IoU}.
+Therefore, \ac{WBF} is well suited for environments in which \ac{TTA} is used and can enhance recognition performance.
+
+Another problem in the image domain is the segmentation problem, which essentially is a classification problem, however instead of predicting the class of the whole image, in segmentation the class is predicted pixel-wise.
+Two types of segmentation exist.
+In instance segmentation the target is to predict the class and the instance of an object \cite{mask_rcnn}, so when multiple instances of the same class are present in the prediction, they can be distinguished.
+On the other hand in semantic segmentation only the class in general is of interest \cite{semantic_segmentation}.
+
+The pipeline of this thesis requires the segmentation of the \ac{ECD}.
+To accomplish this task, the \acf{MUnet} architecture \cite{mobile_unet} was selected.
+As with \ac{YOLO} the \ac{MUnet} architecture has an encoder network to create features from the input image and a decoder which outputs a prediction map.
+The \ac{MUnet} encoder is composed of the MobileNetV2 architecture \cite{mnetv2}, which is a \ac{CNN} architecture for resource constrained environments.
+The efficiency of the network comes through the usage of depthwise separable convolutions, which are a way to factorize a convolution.
+Depthwise separable convolutions in combination with skip connections and a linear bottleneck layer form the inverted residual block, which is the main building block of the MobileNetV2 architecture.
+
+The topologies created in this thesis are represented as a hypergraph \cite{hypergraph_def}.
+A hypergraph is a generalization of a graph, where one edge can connect more than two vertices.
+Hypergraphs can be represented as an adjacency matrix, where each row represents a hyperedge and the columns represent a vertex in the hypergraph \cite{hypergraph_adjacency}.
+
+Training of the two architectures \ac{YOLO} and \ac{MUnet} requires data.
+Therefore, in the scope of thesis a dataset was created, which contains 239 images of hand-drawn \acp{ECD}, created by 31 different persons.
+The drawings contain nine different \ac{ECC} types and annotations, and were drawn on checkered as well as on white paper background.
+Further, the images were labeled with bounding boxes for the \ac{YOLO} and with segmentation masks for the \ac{MUnet}.
+
+The full pipeline of this thesis can be summarized as follows:
+
+\begin{enumerate}
+    \item Object detection of \acp{ECC} and related components (textual and arrow annotations)
+    \item Segmentation of the \ac{ECD}
+    \item Creation of a topology
+    \item \ac{OCR} of the textual annotations (not implemented in the scope of this thesis)
+    \item Matching of textual and arrow annotations against their respective \ac{ECC}
+    \item Conversion into the LTspice format
+\end{enumerate}
+
+As mentioned, for the object detection of the \acp{ECC} and annotations the \ac{YOLO} architecture was used.
+The topology creation algorithm performed well on white paper background, however failed on checkered paper background.
+Therefore, segmentation with the \ac{MUnet} was introduced to provide a clean mask of the underlying \ac{ECD}.
+The topology creation algorithm uses as input the bounding boxes provided by the \ac{YOLO} and the segmentation mask provided by the \ac{MUnet}.
+First, the bounding boxes were removed from the segmentation mask, which results in an image containing only the wires.
+Using a connected components analysis the individual wires were labeled.
+This labeled mask was then intersected with a plain bounding box mask and the \ac{ECC}, which were connected to each other were obtained, resulting in the topology of the \ac{ECD}.
+Under normal circumstances the detected textual annotations, would have been processed by an \ac{OCR} algorithm, however this was not implemented in the scope of this thesis.
+Further, the pipeline also contained the matching of the annotations to their respective \ac{ECC}, which was done by calculating the nearest neighbor \ac{ECC}.
+Afterwards, the gathered information is embedded into the LTspice schematic file format.
+The created module would also allow embedding the text of the annotations, but since they were not detected dummy values were embedded.
+
+The aim of this thesis was to provide the best possible configuration for the \ac{YOLO} and \ac{MUnet} architecture.
+Therefore, an experimental setup was established in which the two networks were systematically parameterized.
+In the first step an initial learning rate search was performed.
+This was followed by experiments on various augmentations, such as rotation, flip, crop, color jitter and the copy-paste augmentation \cite{copypaste_aug}.
+In the last step, a grid-search was performed, where various loss functions, learning rates and batch sizes were tested to find the optimal hyperparameters.
+For \ac{YOLO} additionally a post training fine-tuning was performed on the \ac{DIoU}-\ac{NMS}, \ac{WBF} algorithm and the \ac{WBF} algorithm in combination with \ac{TTA}.
+The results for both networks were measured on the test dataset, where for \ac{YOLO} a \ac{mAP}@0.5:0.75 of 95.492\% was obtained.
+Comparing the classification results of the \ac{YOLO} to the results of the related works (including plain classification), the \ac{YOLO} trained in this thesis obtains state-of-the-art performance in the detection of \acp{ECC}.
+Obviously, this comparison is not perfectly fair since different datasets were used and the used classes differ in shape.
+Furthermore, for the \ac{MUnet} an f1-score of 81.9\% was obtained.
+
+The final step in this thesis was the evaluation of the whole system.
+Classification results of the \ac{YOLO} were measured with a fixed \ac{IoU} threshold  of 0.3, which was obtained as the maximum occlusion appearing in the train and validation dataset.
+Here, the \ac{YOLO} obtained an f1-score of 99.07\% (precision 99.25\%, recall 98.88\%) on the test dataset.
+The results of the segmentation can not be measured directly, however the segmentation outcome is reflected in the topology results, i.e. a bad segmentation will lead to a bad topology outcome.
+For the evaluation of the topology an algorithm was implemented, which is closely related to the graph edit distance \cite{graph_edit_distance}.
+The graph edit distance measures the steps, which are needed to transform one graph into another.
+However, it does not consider the error type of the step (\ac{FP}, \ac{FN}), i.e. is this edge missing or is this edge too much.
+Therefore, the notions of $TP_h$, $FN_h$ and $FP_h$, where $*_h$ refers to hyperedge, were introduced in order to classify the type of the error.
+The algorithm could not be finished and therefore the highest degree of error is assumed, in cases where the algorithm fails.
+Such evaluation has not been done so far and is one of the contributions of this thesis.
+During the evaluation of the topology an f1-score of 88.35\% (precision 99.25\%, recall 79.61\%) was obtained.
+This results were compared to the baseline, which was established by running the topology evaluation with the ground truth of the \ac{YOLO} and the ground truth of the \ac{MUnet}.
+With the baseline an f1-score of 96.35\% (precision 100.00\%, recall 92.95\%) was obtained.
+In the last step of the evaluation pipeline the annotation algorithm was evaluated.
+Textual and arrow annotations were evaluated separately.
+For the textual annotations an f1-score of 97.41\% (precision 94.94\%, recall 100.00\%) was obtained and for the arrow annotations an f1-score of 100.00\% (precision 100.00\%, recall 100.00\%) was obtained.
+
+\section{Conclusion}
+
+A pipeline was presented, which can convert an image of a hand-drawn \ac{ECD} into the LTspice schematic file format.
+The pipeline utilizes deep learning methods to detect \acp{ECC} and annotations (object detection), and to segment the \ac{ECD} (segmentation).
+The two utilized network architectures \ac{YOLOv4}-Tiny and \ac{MUnet} were evaluated on a test dataset, where the \ac{YOLO} obtained state-of-the-art performance in \ac{ECC} classification.
+Such a pipeline could be used as a plugin for LTspice to directly generate an \ac{ECD} inside the software, from the image of a hand-drawn \ac{ECD}, omitting the need of manual circuit modeling.
+
+% \subsubsection{REMOVE}
+
+% % trainable functions are called layers
+
+% % These neural networks utilise a chain of trainable and non-trainable functions in order to perform classification tasks.
+% % Trainable functions are called layers and mostly are dot-products with a trainable weight matrix (fully-connected layer) or convolutions with trainable kernel weights (convolutional layer).
+% % The weights of these layers get adapted by calculating the error with respect to the networks prediction and updating
+% % all layers using the resulting gradient with respect to the weights utilising the chain rule. A third
+% % form of trainable layer, the RNN cell can be used in order to analyse sequences.
+% % In the scope of this thesis a data collection of 105 patients with 463 lesions was used. For each
+
+
+% % In the scope of this thesis a pipeline has been proposed, which converts a hand-drawn \ac{ECD} into the LTspice schematic file format
+
+
+% % - Problem, Goal
+% % - Related class, ext and class, ext class and topo
+% % - Theory
+% %     - ECD
+% %     - LT
+% %     - ANNs: fc, conv
+
+% % - data
+% %     - 31 people, 239 circuits seg, obj labels
+
+
+% % - obj detection, yolo
+% % - segmentation, munet
+
+% % - traning experiments, best yolo, best munet
+% % - pipeline indepth
+
+% % - eval algo: how, and problems (never done in this way)
+% % - results full
+
+
+
+
+
+% In this thesis an end-to-end pipeline was presented, that can convert an image of an \ac{ECD} into the LTspice schematic file format.
+% For this purpose a dataset with 239 images of hand-drawn \acp{ECD} was created, which was labeled with bounding boxes for object detection and masks for a segmentation task (section \ref{sec:data}).
+% The presented six-stage pipeline (section \ref{sec:pipeline}) includes:
+
+% \begin{enumerate}
+%     \item Object detection of \acp{ECC} and related components (textual and arrow annotations)
+%     \item Segmentation of the \ac{ECD}
+%     \item Creation of a topology
+%     \item \ac{OCR} of the textual annotations (not implemented in the scope of this thesis)
+%     \item Matching of textual and arrow annotations against their respective \ac{ECC}
+%     \item Conversion into the LTspice format
+% \end{enumerate}
+
+% To achieve the goal of stage one and two, the \ac{YOLO} (section \ref{sec:yolo}) and the \ac{MUnet} (section \ref{sec:mobilenetv2_unet}) architectures were trained.
+% Both models were iteratively improved through a series of experiments and an overview of the experiments is given in figure \ref{fig:yolo_experiments_overview} and \ref{fig:munet_experiments_overview} for \ac{YOLO} and \ac{MUnet} respectively.
+
+% The initial learning rate search for \ac{YOLO} (section \ref{sec:yolo_lr} on the non-augmented dataset, showed that the best performing learning rate was $1.0e^{-3}$ with a \ac{mAP} of 73.415\%.
+% In the next experiments the influence of various augmentations was examined (section \ref{sec:yolo_augs}).
+% In the offline augmentation study, the influence of combinations of the projection, flip and rotation augmentation was observed.
+% The best performing combination was the one, where projection, flip and rotation were enabled simultaneously.
+% It achieved a \ac{mAP} of 92.578\%.
+% Afterwards, the online augmentations, rotation, scale, safe crop and color jitter were examined, where every augmentation was tested with three parameters in an ablation study.
+% Rotation with 10\textdegree\ achieved a \ac{mAP} of 95.368\%, scale with 20\% achieved a \ac{mAP} of 93.261\%, safe crop with a final crop size of 90\% (relative to the original image) achieved a \ac{mAP} of 95.027\% and color jitter with 20\% achieved a \ac{mAP} of 93.243\%.
+% The last training experiment was a search for optimal hyperparameters (section \ref{sec:yolo_grid}), where seven different learning rates, two batch sizes and three loss functions were studied.
+% It was shown, that each configuration with a batch size of 32 performed worse that a configuration with batch size 64.
+% The best performing configuration was trained with a the \ac{EIoU} loss and a learning rate of $1.0e^{-2}$ and achieved a \ac{mAP} of 96.217\%.
+% After the training experiments fine-tuning approaches were investigated like increasing the input size, tuning the \ac{NMS} algorithms and applying \ac{TTA} to increase prediction performance.
+% The results of the tuning can be found in figure \ref{fig:yolo_tuning_combined_results}.
+% It was shown that input size tuning had a positive effect on the test set, where the \ac{mAP} could be increased to 92.926\%.
+% Tuning the \ac{DIoU}-\ac{NMS} showed no improvement and tuning of the \ac{WBF} algorithm increase the \ac{mAP} only slightly to 93.188\%.
+% The best performing tuning was \ac{WBF} in combination with \ac{TTA}, which achieved a \ac{mAP} of 95.492\% on the test set.
+
+% The \ac{MUnet} experiments were conducted in the same way (section \ref{sec:training_munet}).
+% The initial learning rate search showed that the best performing learning rate was $1.0e^{-2}$, with an f1-score of 83.069\%.
+% The study on the different augmentations showed again that the best configuration of offline augmentations is the one, where projection, flip and rotation are enabled simultaneously.
+% It achieved an f1-score of 84.908\%.
+% In the online augmentation section the rotation, scale, crop and color jitter augmentation were examined.
+% A Rotation of 20\textdegree\  achieved an f1-score of 84.957\%, every configuration of scale performed worse than the previously established baseline from the offline augmentations.
+% Further, a crop of 90\% achieved an f1-score of 85.707\% and a color jitter of 20\% achieved an f1-score of 85.676\%.
+% The best parameters were then used in the final grid search experiment.
+% As with \ac{YOLO} the grid search included seven different learning rates, two batch sizes and three different loss functions.
+% In general it was shown that a high learning rate was not a good choice, when looking at the results on the test set.
+% Further, small learning rates in combination with the dice loss showed poor performance.
+% The full results can be found in figure \ref{fig:munet_fold_32} and \ref{fig:munet_fold_64}.
+
+% Finally, the evaluation of the whole pipeline was presented.
+% The evaluation was split into three parts:
+
+% \begin{enumerate}
+%     \item Evaluation of the classification performance
+%     \item Evaluation of the topology creation
+%     \item Evaluation of the matching algorithm
+% \end{enumerate}
+
+% Evaluation of the classification performance was only performed on the \ac{YOLO}, since the segmentation outcome is reflected in the topology evaluation.
+% The performance was measured using a fixed \ac{IoU} threshold of 0.3, which was obtained from the training and validation dataset.
+% The results were presented on the test dataset, where it actually showed that all the tuning steps performed on the \ac{YOLO} network had a worsening effect on classification performance with a fixed threshold.
+% Therefore, for the further evaluation only the untuned \ac{YOLO} network was used, which was obtained from the grid search experiment.
+% It showed an f1-score of 99.07\%.
+
+% In the topology evaluation step, the best performing \ac{YOLO} as well as the selected \ac{MUnet} networks from table \ref{tab:munet_selected_nets} were used for testing.
+% For comparison, a baseline was established by evaluating the topology creation, with the ground truths of \ac{YOLO} and \ac{MUnet}.
+% Here, an f1-score of 96.35\% could be achieved.
+% Afterwards, the topology was evaluated with real predictions, where the \ac{MUnet} network with a batch size of 32, dice loss and a learning rate of $1.0e^{-3}$, performed best with an f1-score of 88.35\%.
+% Due to the insufficiencies of the topology evaluation algorithm, this results should be treated with care.
+
+% The final step in the evaluation pipeline was formed by the evaluation of the matching algorithm.
+% The results for the matching of texts and arrows can be found in table \ref{tab:text_matching_results} and table \ref{tab:arrow_matching_results}, respectively.
+% For the text matching an f1-score of 97.41\% could be obtained and for the arrow matching an f1-score of 100\% could be obtained.

@@ -1,19 +1,22 @@
-LTspice is a circuit simulation software, where circuits can be modeled, parametrized and simulated.
-A modeled circuit is stored in a LTspice schematic file, with the file extension .asc.
-Since, the last step in the pipeline of this thesis is the conversion of the hand drawn \acp{ECD} into a LTspice schematic file, the file structure and syntax were analyzed and are presented in this section.
+\label{sec:ltspice}
 
-LTspice files are written in plain text and are human readable.
+LTspice is a circuit simulation software where circuits can be modeled, parameterized, and simulated.
+A modeled circuit is stored in an LTspice schematic file with the file extension .asc.
+Since the last step in the pipeline of this thesis is the conversion of the hand-drawn \acp{ECD} into an LTspice schematic file, the file structure and syntax were analyzed and are presented in this section.
+The understanding of the syntax is necessary to understand which parameters have to be obtained throughout the pipeline to produce a valid LTspice schematic file.
+
+LTspice files are written in plain text and are human-readable.
 The file structure can be interpreted line by line, meaning that one command is written on one line.
-Inside a line a command is separated by a space.
-In most cases the first word of a line is a keyword indicating the used command, which then is followed by parameters for the command.
+Inside a line, a command is separated by a space.
+In most cases, the first word of a line is a keyword indicating the used command, which then is followed by parameters for the command.
 
-LTspice itself provides a grid, where components are aligned to.
-This grid has a size of $32x32$ units, where a unit is an abstract measure inside of LTspice.
+LTspice itself provides a grid where components are aligned to.
+This grid has a size of $32 \times 32$ units, where a unit is an abstract measure inside of LTspice.
 
 \subsubsection{Header}
 
 Each schematic file starts with a header, which defines the used version of the syntax.
-Throughout this thesis the forth version of the syntax is used. Table \ref{tab:ltheader_syntax} shows the syntax for the version definition command.
+Throughout this thesis, the fourth version of the syntax is used. Table \ref{tab:ltheader_syntax} shows the syntax for the version definition command.
 
 \begin{table}[H]
 \begin{center}
@@ -33,15 +36,15 @@ Throughout this thesis the forth version of the syntax is used. Table \ref{tab:l
 
 \subsubsection{Symbols}
 
-In LTspice \acp{ECC} are called symbols.
+In LTspice, \acp{ECC} are called symbols.
 The syntax to define a symbol is presented in table \ref{tab:ltsymbol_syntax}.
 The command is declared by using the keyword \textit{SYMBOL} followed by a symbol name, where the symbol name is a mapping to an \ac{ECC}.
 All symbol names which are used in this thesis are shown in table \ref{tab:ltsymbol_mapping}.
 The symbol name is followed by two integers defining the $x$ and $y$ coordinate of the symbol.
-The coordinates are representing the upper left corner of the symbols image used to represent the symbol inside LTspice.
-Additionally a rotation has to be provided with $Rr$ where $r$ defines the rotation in degree.
-The rotation $r$ is constrained to be either $0$, $90$ or $270$ degree.
-So an example for a resistor declaration would be: \textit{SYMBOL res 32 32 R90}, which means that a resistor is defined at $x = 32$, $y = 32$ with a rotation of $90$ degree.
+The coordinates are representing the upper left corner of the image of the symbol used to represent the \ac{ECC} inside LTspice.
+Additionally, a rotation has to be provided with $Rr$, where $r$ defines the rotation in degree.
+The rotation $r$ is constrained to be either $0$\textdegree, $90$\textdegree, or $270$\textdegree.
+So an example for a resistor declaration would be \textit{SYMBOL res 32 32 R90}, which means that a resistor is defined at $x = 32$, $y = 32$ with a rotation of $90$\textdegree.
 
 \begin{table}[H]
 \begin{center}
@@ -84,8 +87,8 @@ The symbol attribute is always applied to the first occurrence of a previously d
 The syntax for this command is presented in table \ref{tab:ltsymattr_syntax}.
 This command is declared using the keyword \textit{SYMATTR} followed by the targeted attribute and the corresponding value to be set for the targeted attribute.
 Two attributes can be used as a target for this command.
-The \textit{InstName} attribute allows to declare a name for the symbol and the value therefore is a string.
-The \textit{Value} attribute allows to declare a component value for the symbol always defined in the corresponding base unit of the component (e.g. $\Omega$ for resistors).
+The \textit{InstName} attribute allows declaring a name for the symbol, and the value therefore is a string.
+The \textit{Value} attribute allows declaring a component value for the symbol always defined in the corresponding base unit of the component (e.g., $\Omega$ for resistors).
 
 \begin{table}[H]
 \begin{center}
@@ -106,7 +109,7 @@ The \textit{Value} attribute allows to declare a component value for the symbol 
 
 Grounds are defined by using the keyword \textit{FLAG} followed by the coordinates of the ground.
 An additional \textit{0} has to be placed at the end of the line, which indicates that the used flag is indeed a ground node.
-Note that it was not further analyzed which effect the last parameter has on the flag definition, but it can be said that when the \textit{0} is not present the ground is not defined correctly.
+Note that it was not further analyzed which effect the last parameter has on the flag definition, but it can be said that when the \textit{0} is not present, the ground is not defined correctly.
 The syntax for grounds can be seen in table \ref{tab:ltflag_syntax}.
 
 \begin{table}[H]
@@ -126,11 +129,11 @@ The syntax for grounds can be seen in table \ref{tab:ltflag_syntax}.
 
 \subsubsection{Wire}
 
-After the symbols have been defined they are connected through wires.
+After the symbols have been defined, they are connected through wires.
 Wires in LTspice are defined as lines.
 The syntax is presented in table \ref{tab:ltwire_syntax}.
 The command begins with the keyword \textit{WIRE} followed by two coordinate pairs.
-The first pair is the beginning of the line and second the end of the line.
+The first pair is the beginning of the line, and the second one, the end of the line.
 
 \begin{table}[H]
 \begin{center}

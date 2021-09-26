@@ -1,0 +1,38 @@
+% \begin{center}
+\bfseries
+{\selectlanguage{german}"Ubersicht}
+\normalfont
+LTspice ist ein Simulationsprogramm f"ur elektrische Schaltungen, in dem Schaltungen modelliert und simuliert werden k"onnen, um ben"otigte Parameter zu erhalten, wie beispielsweise den Strom der durch ein Bauteil flie"st.
+W"ahrend das Simulieren schnell ist, kann das Modellieren einer Schaltung durchaus Zeit beanspruchen und ist oft unn"otig, da Schaltungen bereits in handgezeichneter Form existieren.
+Eine automatisierte Umwandlung von handgezeichneten elektrischen Schaltungen in das LTspice Schematik Datenformat, k"onnte daher die Nutzerfreundlichkeit des Programms erh"ohen.
+Daher besch"aftigt sich die vorliegende Arbeit mit der Umwandlung von handgeschriebenen elektrischen Schaltungen in das LTspice Schematik Datenformat.
+Die Pipeline beinhaltet das Erkennen von elektrischen Bauteilen und deren Annotationen, sowie das Segmentieren der gesamten Schaltung.
+Hierbei kommt das Objekt Erkennungs-Netzwerk You Only Look Once (YOLO), sowie das Segmentierungs-Netzwerk MobileV2-UNet zum Einsatz.
+Um die bestm"oglichen Ergebnisse zu erzielen, werden die optimalen Hyperparameter beider Netzwerke "uber eine Reihe von Experimenten ermittelt.
+Hierbei, wird zun"achst eine initialie Lernrate bestimmt, dann werden verschiedene Augmentierungen auf ihre Parameter getestet und abschlie"send with eine Gittersuche "uber mehrere Loss Funktionen, Lernraten und Batch Gr"o"sen durchgef"uhrt.
+Die weiteren Schritte der vorgestellten Pipeline beinhalten zudem, das Erzeugen der Topologie einer Schaltung, das Verbinden von Annotationen mit den zugeh"origen elektrischen Schaltungs-Bauteilen, sowie das Erkennen des Texts in den Annotationen.
+Um die Umwandlung quantifizieren zu k"onnen wird au"serdem ein Evaluations Algorithmus vorgestellt, der mit dem Graph Edit Distance Algorithmus \cite{graph_edit_distance} verwandt ist.
+
+
+% \end{center}
+
+% \vspace{1.0cm}
+
+\newpage
+% \begin{center}
+\bfseries
+{\selectlanguage{english}Abstract}
+\normalfont
+LTspice is a simulation program for electrical circuits, in which circuits can be modeled and simulated to obtain required parameters, such as the current flowing through an electrical circuit component.
+While simulating is fast, modeling a circuit can take time and is often unnecessary, primarily when circuits already exist in hand-drawn form.
+An automated conversion of hand-drawn electrical circuits into the LTspice schematic data format could increase the programs's usability.
+Therefore, this thesis deals with the conversion of hand-drawn electrical circuits into the LTspice schematic file format.
+The conversion pipeline includes the detection of electrical components and their annotations and the segmentation of the entire circuit.
+The object detection network You Only Look Once (YOLO) and the segmentation network MobileV2-UNet are used.
+In order to achieve the best possible results, the hyperparameters of both networks are improved over a series of experiments.
+Here, first an initial learning rate search is conducted, followed by the testing of different augmentations and their parameters.
+Finally, a grid search is performed to find the optimal configuration of loss function, learning rate, and batch size.
+The further steps of the presented pipeline also include the generation of the topology of the circuit, matching of annotations with their corresponding electrical circuit component and the recognition of the text in the annotations.
+In order to quantify the results, an evaluation algorithm related to the Graph Edit Distance algorithm \cite{graph_edit_distance} is proposed.
+
+% \end{center}

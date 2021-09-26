@@ -1,4 +1,16 @@
-\begin{thebibliography}{{G"u}20}
+\begin{thebibliography}{{Lin}17a}
+
+\bibitem[Aba15]{tensorflow}
+M.~Abadi, A.~Agarwal, P.~Barham, E.~Brevdo, Z.~Chen, C.~Citro, G.~Corrado,
+  A.~Davis, J.~Dean, M.~Devin, S.~Ghemawat, I.~Goodfellow, A.~Harp, G.~Irving,
+  M.~Isard, Y.~Jia, R.~Jozefowicz, L.~Kaiser, M.~Kudlur, J.~Levenberg,
+  D.~Man\'{e}, R.~Monga, S.~Moore, D.~Murray, C.~Olah, M.~Schuster, J.~Shlens,
+  B.~Steiner, I.~Sutskever, K.~Talwar, P.~Tucker, V.~Vanhoucke, V.~Vasudevan,
+  F.~Vi\'{e}gas, O.~Vinyals, P.~Warden, M.~Wattenberg, M.~Wicke, Y.~Yu, and
+  X.~Zheng.
+\newblock {TensorFlow}: Large-scale machine learning on heterogeneous systems,
+  2015.
+\newblock Software available from tensorflow.org.
 
 \bibitem[AD18]{ecd_knn_recog}
 A.~Dhole A.~Dewangan.
@@ -44,6 +56,11 @@ J.~Canny.
 R.~Cao and C.~Tan.
 \newblock Line primitive extraction by interpretation of line continuation.
 
+\bibitem[Che18]{graph_edit_distance}
+X.~Chen, H.~Huo, J.~Huan, and J.~Vitter.
+\newblock An efficient algorithm for graph edit distance computation.
+\newblock {\em Knowledge-Based Systems}, 10 2018.
+
 \bibitem[{Dha}19]{ecd_yolobool}
 T.~{Dhanushika} and L.~{Ranathunga}.
 \newblock Fine-tuned line connection accompanied boolean expression generation
@@ -60,6 +77,13 @@ M.~Diganta.
 V.~Dumoulin and F.~Visin.
 \newblock A guide to convolution arithmetic for deep learning.
 \newblock {\em ArXiv e-prints}, mar 2016.
+
+\bibitem[{Edw}00]{ecd_knnfull}
+B.~{Edwards} and V.~{Chandran}.
+\newblock Machine recognition of hand-drawn circuit diagrams.
+\newblock In {\em 2000 IEEE International Conference on Acoustics, Speech, and
+  Signal Processing. Proceedings (Cat. No.00CH37100)}, volume~6, pages
+  3618--3621 vol.6, 2000.
 
 \bibitem[{Fel}10]{bbox_regressor}
 P.~{Felzenszwalb}, R.~{Girshick}, D.~{McAllester}, and D.~{Ramanan}.
@@ -177,6 +201,11 @@ D.~Kaiwen, B.~Song, X.~Lingxi, Q.~Honggang, H.~Qingming, and T.~Qi.
 D.~Kingma and J.~Ba.
 \newblock Adam: A method for stochastic optimization, 2017.
 
+\bibitem[Kon01]{hypergraph_adjacency_my}
+E.~Konstantinova and V.~Skorobogatov.
+\newblock Application of hypergraph theory in chemistry.
+\newblock {\em Discrete Mathematics}, 235(1-3):365--383, may 2001.
+
 \bibitem[Kos20]{cv}
 R.~Kosti, V.~Christlein, and M.~Stamminger.
 \newblock {\em Computer Vision Lecture}.
@@ -197,7 +226,14 @@ Y.~Lewei, P.~Renjie, X.~Hang, Z.~Wei, L.~Zhenguo, and Z.~Tong.
 \newblock Joint-detnas: Upgrade your detector with nas, pruning and dynamic
   distillation, 2021.
 
-\bibitem[Lin17]{focalloss}
+\bibitem[{Lin}17a]{fpn}
+T.~{Lin}, P.~{Dollar}, R.~{Girshick}, K.~{He}, B.~{Hariharan}, and
+  S.~{Belongie}.
+\newblock Feature pyramid networks for object detection.
+\newblock In {\em 2017 IEEE Conference on Computer Vision and Pattern
+  Recognition (CVPR)}, pages 936--944, 2017.
+
+\bibitem[Lin17b]{focalloss}
 T.~Lin, P.~Goyal, R.~Girshick, K.~He, and P.~Doll.
 \newblock Focal loss for dense object detection.
 \newblock {\em CoRR}, abs/1708.02002, 2017.
@@ -245,6 +281,29 @@ N.~Moshkov, B.~Mathe, A.~Kertesz-Farkas, R.~Hollandi, and P.~Horvath.
 \bibitem[Net21]{semantic_segmentation}
 P.~Neto.
 \newblock Deep learning based analysis of prostate cancer from mp-mri, 2021.
+
+\bibitem[Ouv17]{hypergraph_adjacency}
+X.~Ouvrard, J.~Le Goff, and S.~Marchand{-}Maillet.
+\newblock Adjacency and tensor representation in general hypergraphs part 1:
+  e-adjacency tensor uniformisation using homogeneous polynomials.
+\newblock {\em CoRR}, abs/1712.08189, 2017.
+
+\bibitem[Pas19]{pytorch}
+A.~Paszke, S.~Gross, F.~Massa, A.~Lerer, J.~Bradbury, G.~Chanan, T.~Killeen,
+  Z.~Lin, N.~Gimelshein, L.~Antiga, A.~Desmaison, A.~Kopf, E.~Yang, Z.~DeVito,
+  M.~Raison, A.~Tejani, S.~Chilamkurthy, B.~Steiner, L.~Fang, J.~Bai, and
+  S.~Chintala.
+\newblock Pytorch: An imperative style, high-performance deep learning library.
+\newblock In H.~Wallach, H.~Larochelle, A.~Beygelzimer, F.~d\textquotesingle
+  Alch\'{e}-Buc, E.~Fox, and R.~Garnett, editors, {\em Advances in Neural
+  Information Processing Systems 32}, pages 8024--8035. Curran Associates,
+  Inc., 2019.
+
+\bibitem[Pow08]{tpfp}
+D.~Powers.
+\newblock Evaluation: From precision, recall and f-factor to roc, informedness,
+  markedness \& correlation.
+\newblock {\em Mach. Learn. Technol.}, 2, 01 2008.
 
 \bibitem[Pri20]{sliding_window_satelite}
 M.~Pritt.
@@ -296,6 +355,11 @@ S.~Rezatofighi, N.~Tsoi, J.~Gwak, A.~Sadeghian, I.~Reid, and S.~Savarese.
   bounding box regression.
 \newblock {\em CoRR}, abs/1902.09630, 2019.
 
+\bibitem[Rod18]{one_hot_enc}
+P.~Rodr{\'{\i}}guez, M.~Bautista, J.~Gonz{\`{a}}lez, and S.~Escalera.
+\newblock Beyond one-hot encoding: lower dimensional target embedding.
+\newblock {\em CoRR}, abs/1806.10805, 2018.
+
 \bibitem[Ron15]{unet}
 O.~Ronneberger, P.~Fischer, and T.~Brox.
 \newblock U-net: Convolutional networks for biomedical image segmentation,
@@ -321,6 +385,11 @@ M.~Sandler, A.~Howard, M.~Zhu, A.~Zhmoginov, and L.~Chen.
 D.~Shanmugam, D.~Blalock, G.~Balakrishnan, and J.~Guttag.
 \newblock When and why test-time augmentation works.
 \newblock {\em CoRR}, abs/2011.11156, 2020.
+
+\bibitem[She15]{hough_transform}
+A.~Shehata, S.~Mohammad, M.~Abdallah, and M.~Ragab.
+\newblock A survey on hough transform, theory, techniques and applications.
+\newblock 02 2015.
 
 \bibitem[Sho19]{augmentation_survey}
 C.~Shorten and T.~Khoshgoftaar.

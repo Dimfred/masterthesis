@@ -143,11 +143,11 @@
 % \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
-Learning Rate                   & 0.01     &          & 0.005    &          & 0.0025   &          & \cellcolor{green}0.001    &           \\
+Learning Rate                   & 0.01     &          & 0.005    &          & 0.0025   &          & 0.001    &           \\
 \hline
                                 & mean     & std      & mean     & std      & mean     & std      & mean     & std       \\
 \hline
-mAP@0.5:0.75:0.05               & 72.352\% & 0.637\%  & 71.223\% & 1.921\%  & 71.474\% & 2.702\%  & \cellcolor{green}73.415\% & 0.846\%   \\
+mAP@0.5:0.75:0.05               & 72.352\% & 0.637\%  & 71.223\% & 1.921\%  & 71.474\% & 2.702\%  & \textbf{73.415\%} & 0.846\%   \\
 \hline
 \rowcolor{lightgray!50}
 diode left                      & 74.175\% & 7.430\%  & 77.938\% & 7.303\%  & 75.364\% & 7.540\%  & 75.587\% & 16.873\%  \\
@@ -289,11 +289,11 @@ arrow bottom                    & 68.291\% & 3.777\%  & 61.672\% & 3.133\%  & 80
 \hline
 % \\\\\\
 \hline
-Offline Augmentation            & P1F0R1   &          & P1F1R0   &          & \cellcolor{green}P1F1R1   &           & Baseline &          \\
+Offline Augmentation            & P1F0R1   &          & P1F1R0   &          & P1F1R1   &           & Baseline &          \\
 \hline
                                 & mean     & std      & mean     & std      & mean     & std       & mean     & std      \\
 \hline
-mAP@0.5:0.75:0.05               & 89.641\% & 0.106\%  & 86.129\% & 0.229\%  &  \cellcolor{green}92.578\%  & 0.409\% & 73.415\% & 0.846\%  \\
+mAP@0.5:0.75:0.05               & 89.641\% & 0.106\%  & 86.129\% & 0.229\%  &  \textbf{92.578\%}  & 0.409\% & 73.415\% & 0.846\%  \\
 \hline
 \rowcolor{lightgray!50}
 diode left                      & 93.597\% & 4.014\%  & 91.181\% & 7.667\%  &  92.333\%  & 4.550\% & 75.587\% & 16.873\% \\
@@ -348,11 +348,11 @@ arrow bottom                    & 73.246\% & 6.320\%  & 72.935\% & 4.459\%  &  8
 \begin{center}
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
-Rotation                        & \cellcolor{green}10\textdegree\   &   & 20\textdegree\ &     & 30\textdegree\ &     & Baseline &              \\
+Rotation                        & 10\textdegree\   &   & 20\textdegree\ &     & 30\textdegree\ &     & Baseline &              \\
 \hline
                                 & mean     & std      & mean     & std      & mean     & std      & mean     & std          \\
 \hline
-mAP@0.5:0.75:0.05               & \cellcolor{green}95.368\%  & 0.388\%  & 94.521\%  & 0.046\%  & 94.198\%  & 0.464\% & 92.578\%  & 0.409\%   \\
+mAP@0.5:0.75:0.05               & \textbf{95.368\%}  & 0.388\%  & 94.521\%  & 0.046\%  & 94.198\%  & 0.464\% & 92.578\%  & 0.409\%   \\
 \hline
 \rowcolor{lightgray!50}
 diode left                      & 93.276\%  & 2.454\%  & 93.879\%  & 1.966\%  & 95.265\%  & 3.030\% & 92.333\%  & 4.550\%   \\
@@ -406,11 +406,11 @@ arrow bottom                    & 84.769\%  & 3.433\%  & 85.361\%  & 6.232\%  & 
 \begin{center}
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
-Random Scale                    & 0.1      &          & \cellcolor{green}0.2      &          & 0.3      &          & Baseline &              \\
+Random Scale                    & 0.1      &          & 0.2      &          & 0.3      &          & Baseline &              \\
 \hline
                                 & mean     & std      & mean     & std      & mean     & std      & mean     & std          \\
 \hline
-mAP@0.5:0.75:0.05               & 93.062\% & 0.307\% & \cellcolor{green}93.261\% & 0.743\% & 92.935\%   & 0.630\%   & 92.578\%  & 0.409\%   \\
+mAP@0.5:0.75:0.05               & 93.062\% & 0.307\% & \textbf{93.261\%} & 0.743\% & 92.935\%   & 0.630\%   & 92.578\%  & 0.409\%   \\
 \hline
 \rowcolor{lightgray!50}
 diode left                      & 90.376\% & 3.263\% & 92.683\% & 1.615\% & 97.339\%   & 1.487\%   & 92.333\%  & 4.550\%   \\
@@ -464,11 +464,11 @@ arrow bottom                    & 83.764\% & 3.405\% & 80.166\% & 5.373\% & 80.2
 \begin{center}
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
-Bounding Box Safe Crop          & 0.7      &          & 0.8      &          & \cellcolor{green}0.9      &          & Baseline &              \\
+Bounding Box Safe Crop          & 0.7      &          & 0.8      &          & 0.9      &          & Baseline &              \\
 \hline
                                 & mean     & std      & mean     & std      & mean     & std      & mean     & std          \\
 \hline
-mAP@0.5:0.75:0.05               & 94.820\%  & 0.098\% & 94.893\%  & 0.358\% & \cellcolor{green}95.027\%  & 0.486\%  & 92.578\%  & 0.409\%   \\
+mAP@0.5:0.75:0.05               & 94.820\%  & 0.098\% & 94.893\%  & 0.358\% & \textbf{95.027\%}  & 0.486\%  & 92.578\%  & 0.409\%   \\
 \hline
 \rowcolor{lightgray!50}
 diode left                      & 93.084\%  & 1.078\% & 96.176\%  & 3.373\% & 97.706\%  & 1.229\%  & 92.333\%  & 4.550\%   \\
@@ -522,11 +522,11 @@ arrow bottom                    & 89.762\%  & 2.138\% & 85.042\%  & 3.452\% & 86
 \begin{center}
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
-Color Jitter                    & 0.1      &          & \cellcolor{green}0.2      &          & 0.3      &          & Baseline &              \\
+Color Jitter                    & 0.1      &          & 0.2      &          & 0.3      &          & Baseline &              \\
 \hline
                                 & mean     & std      & mean     & std      & mean     & std      & mean     & std          \\
 \hline
-mAP@0.5:0.75:0.05               & 92.656\%  & 0.380\% & \cellcolor{green}93.243\%  & 0.344\% & 93.182\% & 0.785\%  & 92.578\%  & 0.409\%   \\
+mAP@0.5:0.75:0.05               & 92.656\%  & 0.380\% & \textbf{93.243\%}  & 0.344\% & 93.182\% & 0.785\%  & 92.578\%  & 0.409\%   \\
 \hline
 \rowcolor{lightgray!50}
 diode left                      & 90.749\%  & 8.335\% & 89.807\%  & 4.257\% & 91.810\% & 6.853\%  & 92.333\%  & 4.550\%   \\

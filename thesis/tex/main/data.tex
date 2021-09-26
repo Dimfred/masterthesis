@@ -1,13 +1,22 @@
 \label{sec:data}
 
-In this section the data which was used in this thesis is presented, as well as some general information about that.
-Generally, the dataset is a collection of \acp{ECD}, with \acp{ECC} in German notation.
-The task was constrained to seven different \acp{ECC}, which are shown in figure \ref{fig:used_eccs}.
-Most of the images were taken with a mobile phone, but some were also directly drawn on a digital device such as a tablet.
+In this section the data which was collected for and in the scope of this thesis is presented, as well as some general information about that.
+The dataset is a collection of \acp{ECD}, with \acp{ECC} in German notation.
+Seven different \acp{ECC} with connections on two sides were chosen for the scope of this thesis and are shown in figure \ref{fig:used_eccs}.
+The number of classes was constrained in order to allow dataset contributors to chose from a small set of symbols.
+Under the assumption that each contributer draws the same amount of \acp{ECC} per \ac{ECD} overall the number of samples per class will be higher than with a big amount of symbols.
+Therefore, the individual classes are more representative.
+Most of the images were taken with a mobile phone, but some were directly drawn on a digital device such as a tablet.
+Overall 31 persons contributed to the dataset, with an average of 7.6 \acp{ECD}, a maximum of 30 \acp{ECD} and a minimum of one \ac{ECD}.
+For the train, validation test split, \acp{ECD} of 21 persons are used in the train and validation dataset.
+In the test dataset those 21 person do not appear, hence 10 previously unseen persons are used for testing.
 
-The difficulty of the task in this thesis increased gradually and more data was always acquired when the difficulty increased.
+The difficulty of the task in this thesis increased gradually and more data was always acquired after the difficulty increased.
 At first, only images of \acp{ECD} on a white background without annotations were gathered, when that showed promising results, additionally images of \acp{ECD} without annotation but on checkered background were gathered and finally when annotations were added both images with white and checkered background and annotations were acquired.
-The total amount of images is show in table \ref{tab:data_distribution}.
+The total amount of images is shown in table \ref{tab:data_distribution}.
+Evaluation was done with all images.
+When an image did not contain annotations, then the evaluation of the annotations for this particular image was skipped.
+
 
 \begin{table}
 \begin{center}
@@ -23,7 +32,7 @@ The total amount of images is show in table \ref{tab:data_distribution}.
     \textbf{Total} & 239 & & &45.12\% & 12.19\% & 42.69\%\\
 
 \end{tabular}
-\caption{Amount of images of \acp{ECD} used in this thesis shown with their underlying background and whether they are annotated or not. Further, the train / validation / test split of the different image types is shown. While this might seem like a big split for test, the number of bounding boxes included in the test set is way smaller and is shown in table \ref{tab:yolo_classes}}
+\caption{Amount of images of \acp{ECD} used in this thesis shown with their underlying background and whether they are annotated or not. Further, the train / validation / test split of the different image types is shown. While this might seem like a big split for test, the number of bounding boxes included in the test set is way smaller and is shown in table \ref{tab:yolo_classes}. For the test dataset 10 persons were used, which are not present in the train and validation dataset.}
 \label{tab:data_distribution}
 \end{center}
 \end{table}
@@ -41,10 +50,22 @@ The only exception is the text class, which does not have an orientation, since 
 Bounding boxes were annotated with the labeling tool labelme \cite{labelme} in the yolo format which was presented in section \ref{sec:object_detection}.
 To also capture parts of the wire in the prediction the bounding boxes were stretched towards the wire around an object.
 
-The segmentation masks were created in a binary fashion, where the foreground corresponds to the drawn \ac{ECD} and the background is everything else.
+The segmentation masks were created in a binary fashion, where the foreground corresponds to the drawn \ac{ECD} and the background to everything else.
 The masks were created semi-automatically by applying a Canny Edge Detector \cite{canny_edge} on the image.
-The resulting edge mask is dilated five times to close the holes between the edges of a wire and afterwards eroded four times to reduce the thickness of the segmentation mask.
-The labels are not perfect because sometimes it is hard to remove the gridded background without removing parts of the wire with this technique, therefore each mask is additionally manually fine-tuned, with a simple drawing tool build with the Python version of OpenCV \cite{opencv}.
+The resulting edge mask is dilated five times to close potential holes between the edges of a wire and eroded four times to reduce the thickness of the segmentation mask.
+The image processing steps become instable once gridded paper is being used, thus each mask is additionally manually fine-tuned, with a simple drawing tool build with the Python version of OpenCV \cite{opencv}.
+
+An example for the \ac{YOLO} bounding boxes and the segmentation mask labels can be found in figure \ref{fig:example_labels}.
+
+\begin{figure}
+\begin{center}
+
+    \includegraphics[width=\columnwidth]{imgs/labels/both_example.png}
+    \caption{Example segmentation label mask (left) and bounding boxes labels (right).}
+    \label{fig:example_labels}
+
+\end{center}
+\end{figure}
 
 \begin{table}
 \begin{center}
@@ -87,16 +108,17 @@ The labels are not perfect because sometimes it is hard to remove the gridded ba
 \label{sec:hypergraph_topology}
 
 The pipeline of this thesis produces a topology representing the underlying connections between \acp{ECC}.
-To quantify the amount of errors in a produced topology (prediction), a sort of ground truth is needed, against which the prediction is compared to.
+To quantify the amount of errors in a produced topology (prediction), a ground truth is needed, against which the prediction is compared to.
 The chosen prediction and ground truth format is an adjacency matrix of a hypergraph.
+The labeling process as well as the evaluation with proposed algorithm is time consuming, therefore only the test dataset was labeled and evaluated in this thesis.
+Especially due to the fact that the underlying problem, which the evaluation algorithm tries to solve, is NP-hard.
+More details are explained in section \ref{sec:eval_algo}.
 Following the label format of the \acp{ECD} is explained.
-Note that only the test dataset was labeled in this format.
 
-First an image was created, where the base of the image is a copy of the original \ac{ECD}.
-The copy was then populated with numbers above each component, which was labeled with a bounding box.
+First a copy of the original \ac{ECD} was created, which was then populated with numbers above each component, which was labeled with a bounding box.
 The number above each component corresponds to the index of that bounding box in the YOLO label file.
 Those images were used as a visual helper in the topology labeling process.
-An example of such an image can be found in \ref{fig:example_topology_label}.
+An example of such an image can be found in figure \ref{fig:example_topology_label}.
 
 \begin{figure}
 \begin{center}
@@ -122,19 +144,19 @@ An example of such an image can be found in \ref{fig:example_topology_label}.
 
     \end{tabular}
 
-    \caption{An example visual labeling helper image (top), shown with the index of the respective bounding box in the YOLO label file, together with the corresponding hypergraph adjacency matrix (bottom). Two columns in the matrix correspond to one \ac{ECC}, each column to one orientation, where the first column can either be the left or top orientation and the second column be the right or bottom orientation. The last column in the table further shows the string representation of an edge, which acts as the input for the labeling tool.}
+    \caption{An example visual labeling helper image (top), shown with the index of the respective bounding box in the YOLO label file, together with the corresponding hypergraph adjacency matrix (bottom). Two columns in the matrix correspond to one \ac{ECC}, each column to one orientation, where the first column can either be the left or top orientation and the second column be the right or bottom orientation. The last column in the table further shows the string representation of an edge, which acts as the input for the labeling tool. For instance ``1r,0t,4t'' means that 1 right, 0 top and 4 top are connected to each other through a hyperedge.}
     \label{fig:example_topology_label}
 
 \end{center}
 \end{figure}
 
 To now label the topology, first each index is split into to sub-indexes, each representing the orientation of the connection, where a connection is defined as the side where the wire is connected to.
-For instance, index 1 is a ground symbol and its connection is on the right side.
+For instance in figure \ref{fig:example_topology_label}, index 1 is a ground symbol and its connection is on the right side.
 For index 0, which is a capacitor the connection is at the top and the bottom.
 The two orientation pairs \{left, top\} and \{right, bottom\} are fused together into one column of the hypergraph adjacency matrix.
 Given a hypergraph matrix, the orientation of a particular bounding box index n can be obtained with the index 2n or 2n+1, for the \{left, top\} or \{right, bottom\} orientation, respectively.
 A connection, where multiple \acp{ECC} are connected is represented as a row in the adjacency matrix.
-Figure \ref{fig:example_topology_label} should clarify, how the hypergraph adjacency can be created from a visual helper image.
+Figure \ref{fig:example_topology_label} shows how the hypergraph adjacency can be created from a visual helper image.
 
 For the topology labeling a small labeling tool was created, where the algorithm should be shortly presented:
 
@@ -147,7 +169,7 @@ For the topology labeling a small labeling tool was created, where the algorithm
 
 \subsubsection{Labels: Textual Annotations and Arrow Annotations}
 
-In general all annotation types used in this work belong to an \ac{ECC}, so act like an extension of an \ac{ECC}.
+In general all annotation types used in this work belong to an \ac{ECC} and therefore act as an extension of an \ac{ECC}.
 Therefore, matching of annotations to their respective \ac{ECC} is part of this work and is presented in section \ref{sec:pipeline}.
 To quantify the matching performance, a representation of the ground truth is needed.
 The chosen label format builds on the visual helper image, presented in the topology labeling process.

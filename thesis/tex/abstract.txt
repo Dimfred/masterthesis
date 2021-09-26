@@ -1,0 +1,31 @@
+LTspice ist ein Simulationsprogramm f"ur elektrische Schaltungen, in dem Schaltungen modelliert und simuliert werden k"onnen, um ben"otigte Parameter zu erhalten.
+W"ahrend das Simulieren schnell ist, kann das Modellieren einer Schaltung durchaus Zeit beanspruchen und ist oft unn"otig, da Schaltungen bereits in handgezeichneter Form existieren. 
+Eine automatisierte Umwandlung von handgezeichneten elektrischen Schaltungen in das LTspice Schematik Datenformat, k"onnte daher die Nutzerfreundlichkeit des Programms erh"ohen. 
+Daher besch"aftigt sich die vorliegende Arbeit mit der Umwandlung von elektrischen Schaltungen in das LTspice Schematik Datenformat.
+Die Umwandlungsabfolge beinhaltet das Erkennen von elektrischen Bauteilen und deren Annotationen, sowie das Segmentieren der gesamten Schaltung.
+Hierbei kommt das Objekt Detektions-Netzwerk You Only Look Once (YOLO), sowie das Segmentierungs-Netzwerk MobileV2-UNet zum Einsatz.
+Um die bestm"oglichen Ergebnisse zu erzielen, werden beide Netzwerke "uber eine Reihe von Experimenten verbessert. 
+Die weiteren Schritte der vorgestellten Abfolge beinhalten zudem, das Erzeugen der Topologie einer Schaltung, das Verbinden von Annotationen mit den zugeh"origen elektrischen Schaltungs-Bauteilen, sowie das Erkennen des Texts in den Annotationen. 
+Um die Umwandlung quantifizieren zu k"onnen wird au"serdem ein Evaluations Algorithmus vorgestellt, der mit dem Graph Edit Distance Algorithmus \cite{graph_edit_distance} verwandt ist.
+
+LTspice is a simulation program for electrical circuits, in which circuits can be modeled and simulated in order to obtain the required parameters.
+While the simulation is fast, modeling a circuit can take time and is often unnecessary because circuits already exist in hand-drawn form.
+An automated conversion of hand-drawn electrical circuits into the LTspice schematic data format could therefore increase the user-friendliness of the program.
+Therefore this thesis deals with the conversion of electrical circuits into the LTspice Schematik data format.
+The conversion sequence includes the recognition of electrical components and their annotations, as well as the segmentation of the entire circuit.
+The object detection network You Only Look Once (YOLO) and the segmentation network MobileV2-UNet are used here.
+In order to achieve the best possible results, both networks are improved through a series of experiments.
+The further steps of the presented sequence also include generating the topology of a circuit, connecting annotations with the associated electrical circuit components, and recognizing the text in the annotations.
+In order to be able to quantify the conversion, a prototype for an evaluation algorithm is also presented, which is related to the Graph Edit Distance Algorithm \ cite {graph_edit_distance}.
+
+LTspice is a simulation program for electrical circuits, in which circuits can be modeled and simulated in order to obtain required parameters.
+While simulating is fast, modeling a circuit can take time and is often unnecessary, especially when circuits already exist in hand-drawn form. 
+An automated conversion of hand-drawn electrical circuits into the LTspice schematic data format could therefore increase the usability of the program. 
+Therefore, this thesis deals with the conversion of electrical circuits into the LTspice schematic file format.
+The conversion pipeline includes the detection of electrical components and their annotations, as well as the segmentation of the entire circuit.
+The object detection network You Only Look Once (YOLO) and the segmentation network MobileV2-UNet are used.
+In order to achieve the best possible results, both networks are improved over a series of experiments. 
+The further steps of the presented pipeline also include generating the topology of a circuit, mathing of annotations with their corresponding electrical circuit component and recognizing the text in the annotations. 
+In order to quantify the results, an evaluation algorithm, related to the Graph Edit Distance algorithm \cite{graph_edit_distance}, is presented.
+
+Translated with www.DeepL.com/Translator (free version)

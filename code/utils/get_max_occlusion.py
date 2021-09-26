@@ -5,7 +5,10 @@ import itertools as it
 
 
 def main():
+    # gts = YoloAugmentator.fileloader(config.test_out_dir)
+    # gts = YoloAugmentator.fileloader(config.valid_out_dir)
     gts = YoloAugmentator.fileloader(config.test_out_dir)
+
 
     max_iou = 0
     for _, label in gts:

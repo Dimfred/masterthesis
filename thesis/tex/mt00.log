@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/Arch Linux) (preloaded format=pdflatex 2021.6.7)  30 JUN 2021 16:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/Arch Linux) (preloaded format=pdflatex 2021.6.7)  11 AUG 2021 11:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -254,6 +254,109 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+) (/usr/share/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2021-02-27 v7.00k Hypertext links for LaTeX
+ (/usr/share/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
+) (/usr/share/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+ (/usr/share/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+) (/usr/share/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
+) (/usr/share/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+) (/usr/share/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+) (/usr/share/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+) (/usr/share/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
+Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
+) (/usr/share/texmf-dist/tex/latex/auxhook/auxhook.sty
+Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
+) (/usr/share/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2020-10-07 v3.14 Key value format for package options (HO)
+)
+\@linkdim=\dimen162
+\Hy@linkcounter=\count275
+\Hy@pagecounter=\count276
+ (/usr/share/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2021-02-27 v7.00k Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+) (/usr/share/texmf-dist/tex/latex/hyperref/hyperref-langpatches.def
+File: hyperref-langpatches.def 2021-02-27 v7.00k Hyperref: patches for babel languages
+) (/usr/share/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+) (/usr/share/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
+)
+\Hy@SavedSpaceFactor=\count277
+ (/usr/share/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2021-02-27 v7.00k Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Hyper figures OFF on input line 4192.
+Package hyperref Info: Link nesting OFF on input line 4197.
+Package hyperref Info: Hyper index ON on input line 4200.
+Package hyperref Info: Plain pages OFF on input line 4207.
+Package hyperref Info: Backreferencing OFF on input line 4212.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4445.
+\c@Hy@tempcnt=\count278
+ (/usr/share/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4804.
+\XeTeXLinkMargin=\dimen163
+ (/usr/share/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+ (/usr/share/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
+))
+\Fld@menulength=\count279
+\Field@Width=\dimen164
+\Fld@charsize=\dimen165
+Package hyperref Info: Hyper figures OFF on input line 6075.
+Package hyperref Info: Link nesting OFF on input line 6080.
+Package hyperref Info: Hyper index ON on input line 6083.
+Package hyperref Info: backreferencing OFF on input line 6090.
+Package hyperref Info: Link coloring OFF on input line 6095.
+Package hyperref Info: Link coloring with OCG OFF on input line 6100.
+Package hyperref Info: PDF/A mode OFF on input line 6105.
+LaTeX Info: Redefining \ref on input line 6145.
+LaTeX Info: Redefining \pageref on input line 6149.
+ (/usr/share/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2020/08/17 v1.0a Emulation of the original atbegshi package
+with kernel methods
+)
+\Hy@abspage=\count280
+\c@Item=\count281
+\c@Hfootnote=\count282
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+ (/usr/share/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2021-02-27 v7.00k Hyperref driver for pdfTeX
+ (/usr/share/texmf-dist/tex/latex/base/atveryend-ltx.sty
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atvery package
+with kernel methods
+)
+\Fld@listcount=\count283
+\c@bookmark@seq@number=\count284
+ (/usr/share/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2019/12/05 v1.9 Rerun checks for auxiliary files (HO)
+ (/usr/share/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 286.
+)
+\Hy@SectionHShift=\skip56
 ) (/usr/share/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
  (/usr/share/texmf-dist/tex/latex/amsfonts/amsfonts.sty
@@ -267,8 +370,8 @@ LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 Package: pgfplots 2020/02/29 v1.17 Data Visualization (1.17)
  (/usr/share/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (/usr/share/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (/usr/share/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (/usr/share/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
 \pgfutil@everybye=\toks31
-\pgfutil@tempdima=\dimen162
-\pgfutil@tempdimb=\dimen163
+\pgfutil@tempdima=\dimen166
+\pgfutil@tempdimb=\dimen167
  (/usr/share/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-lists.tex)) (/usr/share/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
 \pgfutil@abb=\box53
 ) (/usr/share/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex (/usr/share/texmf-dist/tex/generic/pgf/pgf.revision.tex)
@@ -283,26 +386,26 @@ Package: pgfsys 2020/12/27 v3.1.8b (3.1.8b)
  (/usr/share/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.code.tex
 \pgfkeys@tmptoks=\toks34
 ))
-\pgf@x=\dimen164
-\pgf@y=\dimen165
-\pgf@xa=\dimen166
-\pgf@ya=\dimen167
-\pgf@xb=\dimen168
-\pgf@yb=\dimen169
-\pgf@xc=\dimen170
-\pgf@yc=\dimen171
-\pgf@xd=\dimen172
-\pgf@yd=\dimen173
+\pgf@x=\dimen168
+\pgf@y=\dimen169
+\pgf@xa=\dimen170
+\pgf@ya=\dimen171
+\pgf@xb=\dimen172
+\pgf@yb=\dimen173
+\pgf@xc=\dimen174
+\pgf@yc=\dimen175
+\pgf@xd=\dimen176
+\pgf@yd=\dimen177
 \w@pgf@writea=\write3
 \r@pgf@reada=\read2
-\c@pgf@counta=\count275
-\c@pgf@countb=\count276
-\c@pgf@countc=\count277
-\c@pgf@countd=\count278
+\c@pgf@counta=\count285
+\c@pgf@countb=\count286
+\c@pgf@countc=\count287
+\c@pgf@countd=\count288
 \t@pgf@toka=\toks35
 \t@pgf@tokb=\toks36
 \t@pgf@tokc=\toks37
-\pgf@sys@id@count=\count279
+\pgf@sys@id@count=\count289
  (/usr/share/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
 File: pgf.cfg 2020/12/27 v3.1.8b (3.1.8b)
 )
@@ -313,59 +416,59 @@ File: pgfsys-pdftex.def 2020/12/27 v3.1.8b (3.1.8b)
 File: pgfsys-common-pdf.def 2020/12/27 v3.1.8b (3.1.8b)
 ))) (/usr/share/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
 File: pgfsyssoftpath.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-\pgfsyssoftpath@smallbuffer@items=\count280
-\pgfsyssoftpath@bigbuffer@items=\count281
+\pgfsyssoftpath@smallbuffer@items=\count290
+\pgfsyssoftpath@bigbuffer@items=\count291
 ) (/usr/share/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
 File: pgfsysprotocol.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 )) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
 Package: pgfcore 2020/12/27 v3.1.8b (3.1.8b)
  (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
-\pgfmath@dimen=\dimen174
-\pgfmath@count=\count282
+\pgfmath@dimen=\dimen178
+\pgfmath@count=\count292
 \pgfmath@box=\box54
 \pgfmath@toks=\toks38
 \pgfmath@stack@operand=\toks39
 \pgfmath@stack@operation=\toks40
 ) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex))) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
-\c@pgfmathroundto@lastzeros=\count283
+\c@pgfmathroundto@lastzeros=\count293
 )) (/usr/share/texmf-dist/tex/generic/pgf/math/pgfint.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
 File: pgfcorepoints.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-\pgf@picminx=\dimen175
-\pgf@picmaxx=\dimen176
-\pgf@picminy=\dimen177
-\pgf@picmaxy=\dimen178
-\pgf@pathminx=\dimen179
-\pgf@pathmaxx=\dimen180
-\pgf@pathminy=\dimen181
-\pgf@pathmaxy=\dimen182
-\pgf@xx=\dimen183
-\pgf@xy=\dimen184
-\pgf@yx=\dimen185
-\pgf@yy=\dimen186
-\pgf@zx=\dimen187
-\pgf@zy=\dimen188
+\pgf@picminx=\dimen179
+\pgf@picmaxx=\dimen180
+\pgf@picminy=\dimen181
+\pgf@picmaxy=\dimen182
+\pgf@pathminx=\dimen183
+\pgf@pathmaxx=\dimen184
+\pgf@pathminy=\dimen185
+\pgf@pathmaxy=\dimen186
+\pgf@xx=\dimen187
+\pgf@xy=\dimen188
+\pgf@yx=\dimen189
+\pgf@yy=\dimen190
+\pgf@zx=\dimen191
+\pgf@zy=\dimen192
 ) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
 File: pgfcorepathconstruct.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-\pgf@path@lastx=\dimen189
-\pgf@path@lasty=\dimen190
+\pgf@path@lastx=\dimen193
+\pgf@path@lasty=\dimen194
 ) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
 File: pgfcorepathusage.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-\pgf@shorten@end@additional=\dimen191
-\pgf@shorten@start@additional=\dimen192
+\pgf@shorten@end@additional=\dimen195
+\pgf@shorten@start@additional=\dimen196
 ) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
 File: pgfcorescopes.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 \pgfpic=\box55
 \pgf@hbox=\box56
 \pgf@layerbox@main=\box57
-\pgf@picture@serial@count=\count284
+\pgf@picture@serial@count=\count294
 ) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-\pgflinewidth=\dimen193
+\pgflinewidth=\dimen197
 ) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
 File: pgfcoretransformations.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-\pgf@pt@x=\dimen194
-\pgf@pt@y=\dimen195
-\pgf@pt@temp=\dimen196
+\pgf@pt@x=\dimen198
+\pgf@pt@y=\dimen199
+\pgf@pt@temp=\dimen256
 ) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
 File: pgfcorequick.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 ) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
@@ -374,12 +477,12 @@ File: pgfcoreobjects.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 File: pgfcorepathprocessing.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 ) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
 File: pgfcorearrows.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-\pgfarrowsep=\dimen197
+\pgfarrowsep=\dimen257
 ) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
 File: pgfcoreshade.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-\pgf@max=\dimen198
-\pgf@sys@shading@range@num=\count285
-\pgf@shadingcount=\count286
+\pgf@max=\dimen258
+\pgf@sys@shading@range@num=\count295
+\pgf@shadingcount=\count296
 ) (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
 File: pgfcoreimage.code.tex 2020/12/27 v3.1.8b (3.1.8b)
  (/usr/share/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
@@ -400,91 +503,92 @@ File: pgfmoduleshapes.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 File: pgfmoduleplot.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 ) (/usr/share/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
 Package: pgfcomp-version-0-65 2020/12/27 v3.1.8b (3.1.8b)
-\pgf@nodesepstart=\dimen199
-\pgf@nodesepend=\dimen256
+\pgf@nodesepstart=\dimen259
+\pgf@nodesepend=\dimen260
 ) (/usr/share/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
 Package: pgfcomp-version-1-18 2020/12/27 v3.1.8b (3.1.8b)
 )) (/usr/share/texmf-dist/tex/latex/pgf/utilities/pgffor.sty (/usr/share/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (/usr/share/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)) (/usr/share/texmf-dist/tex/latex/pgf/math/pgfmath.sty (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)) (/usr/share/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
 Package: pgffor 2020/12/27 v3.1.8b (3.1.8b)
  (/usr/share/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)
-\pgffor@iter=\dimen257
-\pgffor@skip=\dimen258
+\pgffor@iter=\dimen261
+\pgffor@skip=\dimen262
 \pgffor@stack=\toks41
 \pgffor@toks=\toks42
 )) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
 Package: tikz 2020/12/27 v3.1.8b (3.1.8b)
  (/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-\pgf@plot@mark@count=\count287
-\pgfplotmarksize=\dimen259
+\pgf@plot@mark@count=\count297
+\pgfplotmarksize=\dimen263
 )
-\tikz@lastx=\dimen260
-\tikz@lasty=\dimen261
-\tikz@lastxsaved=\dimen262
-\tikz@lastysaved=\dimen263
-\tikz@lastmovetox=\dimen264
-\tikz@lastmovetoy=\dimen265
-\tikzleveldistance=\dimen266
-\tikzsiblingdistance=\dimen267
+\tikz@lastx=\dimen264
+\tikz@lasty=\dimen265
+\tikz@lastxsaved=\dimen266
+\tikz@lastysaved=\dimen267
+\tikz@lastmovetox=\dimen268
+\tikz@lastmovetoy=\dimen269
+\tikzleveldistance=\dimen270
+\tikzsiblingdistance=\dimen271
 \tikz@figbox=\box60
 \tikz@figbox@bg=\box61
 \tikz@tempbox=\box62
 \tikz@tempbox@bg=\box63
-\tikztreelevel=\count288
-\tikznumberofchildren=\count289
-\tikznumberofcurrentchild=\count290
-\tikz@fig@count=\count291
+\tikztreelevel=\count298
+\tikznumberofchildren=\count299
+\tikznumberofcurrentchild=\count300
+\tikz@fig@count=\count301
  (/usr/share/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
 File: pgfmodulematrix.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-\pgfmatrixcurrentrow=\count292
-\pgfmatrixcurrentcolumn=\count293
-\pgf@matrix@numberofcolumns=\count294
+\pgfmatrixcurrentrow=\count302
+\pgfmatrixcurrentcolumn=\count303
+\pgf@matrix@numberofcolumns=\count304
 )
-\tikz@expandcount=\count295
+\tikz@expandcount=\count305
  (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
 File: tikzlibrarytopaths.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 ))) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotscore.code.tex
 \t@pgfplots@toka=\toks43
 \t@pgfplots@tokb=\toks44
 \t@pgfplots@tokc=\toks45
-\pgfplots@tmpa=\dimen268
-\c@pgfplots@coordindex=\count296
-\c@pgfplots@scanlineindex=\count297
+\pgfplots@tmpa=\dimen272
+\c@pgfplots@coordindex=\count306
+\c@pgfplots@scanlineindex=\count307
  (/usr/share/texmf-dist/tex/generic/pgfplots/sys/pgfplotssysgeneric.code.tex)) (/usr/share/texmf-dist/tex/generic/pgfplots/libs/pgfplotslibrary.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_loader.code.tex (/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex)) (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststructure.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsliststructureext.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsarray.code.tex
-\c@pgfplotsarray@tmp=\count298
+\c@pgfplotsarray@tmp=\count308
 ) (/usr/share/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsmatrix.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstableshared.code.tex
-\c@pgfplotstable@counta=\count299
+\c@pgfplotstable@counta=\count309
 \t@pgfplotstable@a=\toks46
 ) (/usr/share/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsdeque.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotsbinary.data.code.tex)) (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.verb.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/libs/pgflibrarypgfplots.surfshading.code.tex
-\c@pgfplotslibrarysurf@no=\count300
+\c@pgfplotslibrarysurf@no=\count310
  (/usr/share/texmf-dist/tex/generic/pgfplots/sys/pgflibrarypgfplots.surfshading.pgfsys-pdftex.def))) (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotscolormap.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/util/pgfplotscolor.code.tex)) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotsstackedplots.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotsplothandlers.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplothandler.code.tex (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotsmeshplotimage.code.tex))) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.scaling.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotscoordprocessing.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.errorbars.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.markers.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplotsticks.code.tex) (/usr/share/texmf-dist/tex/generic/pgfplots/pgfplots.paths.code.tex) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex (/usr/share/texmf-dist/tex/generic/pgf/modules/pgfmoduledecorations.code.tex
-\pgfdecoratedcompleteddistance=\dimen269
-\pgfdecoratedremainingdistance=\dimen270
-\pgfdecoratedinputsegmentcompleteddistance=\dimen271
-\pgfdecoratedinputsegmentremainingdistance=\dimen272
-\pgf@decorate@distancetomove=\dimen273
-\pgf@decorate@repeatstate=\count301
-\pgfdecorationsegmentamplitude=\dimen274
-\pgfdecorationsegmentlength=\dimen275
+\pgfdecoratedcompleteddistance=\dimen273
+\pgfdecoratedremainingdistance=\dimen274
+\pgfdecoratedinputsegmentcompleteddistance=\dimen275
+\pgfdecoratedinputsegmentremainingdistance=\dimen276
+\pgf@decorate@distancetomove=\dimen277
+\pgf@decorate@repeatstate=\count311
+\pgfdecorationsegmentamplitude=\dimen278
+\pgfdecorationsegmentlength=\dimen279
 )
 \tikz@lib@dec@box=\box64
 ) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.code.tex (/usr/share/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathmorphing.code.tex)) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing.code.tex (/usr/share/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.tex))
-\pgfplots@numplots=\count302
-\pgfplots@xmin@reg=\dimen276
-\pgfplots@xmax@reg=\dimen277
-\pgfplots@ymin@reg=\dimen278
-\pgfplots@ymax@reg=\dimen279
-\pgfplots@zmin@reg=\dimen280
-\pgfplots@zmax@reg=\dimen281
+\pgfplots@numplots=\count312
+\pgfplots@xmin@reg=\dimen280
+\pgfplots@xmax@reg=\dimen281
+\pgfplots@ymin@reg=\dimen282
+\pgfplots@ymax@reg=\dimen283
+\pgfplots@zmin@reg=\dimen284
+\pgfplots@zmax@reg=\dimen285
 ) (/usr/share/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
 File: tikzlibraryplotmarks.code.tex 2020/12/27 v3.1.8b (3.1.8b)
- (/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
+
+(/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryplotmarks.code.tex
 File: pgflibraryplotmarks.code.tex 2020/12/27 v3.1.8b (3.1.8b)
 ))) (/usr/share/texmf-dist/tex/latex/appendix/appendix.sty
 Package: appendix 2020/02/08 v1.2c extra appendix facilities
-\c@@pps=\count303
-\c@@ppsavesec=\count304
-\c@@ppsaveapp=\count305
+\c@@pps=\count313
+\c@@ppsavesec=\count314
+\c@@ppsaveapp=\count315
 ) (/usr/share/texmf-dist/tex/latex/chngcntr/chngcntr.sty
 Package: chngcntr 2018/04/09 v1.1a change counter resetting
 Package chngcntr Info: \counterwithout already defined.
@@ -493,26 +597,23 @@ Package chngcntr Info: \counterwithout already defined.
 File: tikzlibraryfadings.code.tex 2020/12/27 v3.1.8b (3.1.8b)
  (/usr/share/texmf-dist/tex/generic/pgf/libraries/pgflibraryfadings.code.tex
 File: pgflibraryfadings.code.tex 2020/12/27 v3.1.8b (3.1.8b)
-)) (/usr/share/texmf-dist/tex/latex/url/url.sty
-\Urlmuskip=\muskip17
-Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
-) (/usr/share/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count306
+)) (/usr/share/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count316
 \lst@gtempboxa=\box65
 \lst@token=\toks47
-\lst@length=\count307
-\lst@currlwidth=\dimen282
-\lst@column=\count308
-\lst@pos=\count309
-\lst@lostspace=\dimen283
-\lst@width=\dimen284
-\lst@newlines=\count310
-\lst@lineno=\count311
-\lst@maxwidth=\dimen285
+\lst@length=\count317
+\lst@currlwidth=\dimen286
+\lst@column=\count318
+\lst@pos=\count319
+\lst@lostspace=\dimen287
+\lst@width=\dimen288
+\lst@newlines=\count320
+\lst@lineno=\count321
+\lst@maxwidth=\dimen289
  (/usr/share/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
-\c@lstnumber=\count312
-\lst@skipnumbers=\count313
+\c@lstnumber=\count322
+\lst@skipnumbers=\count323
 \lst@framebox=\box66
 ) (/usr/share/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2020/03/24 1.8d listings configuration
@@ -522,59 +623,109 @@ Package: listings 2020/03/24 1.8d (Carsten Heinz)
 Package: caption 2020/10/26 v3.5g Customizing captions (AR)
  (/usr/share/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
-\captionmargin=\dimen286
-\captionmargin@=\dimen287
-\captionwidth=\dimen288
-\caption@tempdima=\dimen289
-\caption@indent=\dimen290
-\caption@parindent=\dimen291
-\caption@hangindent=\dimen292
+\captionmargin=\dimen290
+\captionmargin@=\dimen291
+\captionwidth=\dimen292
+\caption@tempdima=\dimen293
+\caption@indent=\dimen294
+\caption@parindent=\dimen295
+\caption@hangindent=\dimen296
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count314
-\c@continuedfloat=\count315
+\c@caption@flags=\count324
+\c@continuedfloat=\count325
 Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 ) (/usr/share/texmf-dist/tex/latex/graphics/rotating.sty
 Package: rotating 2016/08/11 v2.16d rotated objects in LaTeX
  (/usr/share/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\c@r@tfl@t=\count316
-\rotFPtop=\skip56
-\rotFPbot=\skip57
+\c@r@tfl@t=\count326
+\rotFPtop=\skip57
+\rotFPbot=\skip58
 \rot@float@box=\box67
 \rot@mess@toks=\toks48
+) (/usr/share/texmf-dist/tex/latex/algorithm2e/algorithm2e.sty
+Package: algorithm2e 2017/07/18 v5.2 algorithms environments
+\c@AlgoLine=\count327
+\algocf@hangindent=\skip59
+ (/usr/share/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
+Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
+\c@checkoddpage=\count328
+) (/usr/share/texmf-dist/tex/latex/tools/xspace.sty
+Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
+) (/usr/share/texmf-dist/tex/latex/relsize/relsize.sty
+Package: relsize 2013/03/29 ver 4.1
 )
-\c@nalg=\count317
- (/usr/share/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+\skiptotal=\skip60
+\skiplinenumber=\skip61
+\skiprule=\skip62
+\skiphlne=\skip63
+\skiptext=\skip64
+\skiplength=\skip65
+\algomargin=\skip66
+\skipalgocfslide=\skip67
+\algowidth=\dimen297
+\inoutsize=\dimen298
+\inoutindent=\dimen299
+\interspacetitleruled=\dimen300
+\interspacealgoruled=\dimen301
+\interspacetitleboxruled=\dimen302
+\algocf@ruledwidth=\skip68
+\algocf@inoutbox=\box68
+\algocf@inputbox=\box69
+\AlCapSkip=\skip69
+\AlCapHSkip=\skip70
+\algoskipindent=\skip71
+\algocf@nlbox=\box70
+\algocf@hangingbox=\box71
+\algocf@untilbox=\box72
+\algocf@skipuntil=\skip72
+\algocf@capbox=\box73
+\algocf@lcaptionbox=\skip73
+\algoheightruledefault=\skip74
+\algoheightrule=\skip75
+\algotitleheightruledefault=\skip76
+\algotitleheightrule=\skip77
+\c@algocfline=\count329
+\c@algocfproc=\count330
+\c@algocf=\count331
+\algocf@algoframe=\box74
+\algocf@algobox=\box75
+) (/usr/share/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count318
+\etb@tempcnta=\count332
 )
-LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 113.
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 88.
  (/usr/share/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 ) (/usr/share/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count319
-\l__pdf_internal_box=\box68
+\l__color_backend_stack_int=\count333
+\l__pdf_internal_box=\box76
 ) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux))
 \openout1 = `mt00.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 88.
+LaTeX Font Info:    ... okay on input line 88.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 88.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 88.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 88.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 88.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 88.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 88.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 88.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 88.
+LaTeX Font Info:    ... okay on input line 88.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -612,16 +763,16 @@ LaTeX Font Info:    ... okay on input line 113.
 
 (/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count320
-\scratchdimen=\dimen293
-\scratchbox=\box69
-\nofMPsegments=\count321
-\nofMParguments=\count322
+\scratchcounter=\count334
+\scratchdimen=\dimen303
+\scratchbox=\box77
+\nofMPsegments=\count335
+\nofMParguments=\count336
 \everyMPshowfont=\toks49
-\MPscratchCnt=\count323
-\MPscratchDim=\dimen294
-\MPnumerator=\count324
-\makeMPintoPDFobject=\count325
+\MPscratchCnt=\count337
+\MPscratchDim=\dimen304
+\MPnumerator=\count338
+\makeMPintoPDFobject=\count339
 \everyMPtoPDFconversion=\toks50
 ) (/usr/share/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -629,23 +780,41 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-LaTeX Info: Redefining \microtypecontext on input line 113.
+LaTeX Info: Redefining \microtypecontext on input line 88.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 113.
+LaTeX Info: Redefining \showhyphens on input line 88.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
  (/usr/share/texmf-dist/tex/latex/microtype/mt-ptm.cfg
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
+Package hyperref Info: Link coloring OFF on input line 88.
+ (/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
+ (/usr/share/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+) (/usr/share/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+)
+\c@section@level=\count340
+)
+LaTeX Info: Redefining \ref on input line 88.
+LaTeX Info: Redefining \pageref on input line 88.
+LaTeX Info: Redefining \nameref on input line 88.
+ (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.out) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.out)
+\@outlinefile=\write4
+\openout4 = `mt00.out'.
+
+
 Package pgfplots notification 'compat/show suggested version=true': you might benefit from \pgfplotsset{compat=1.17} (current compat level: 1.9).
 
-\c@lstlisting=\count326
+\c@lstlisting=\count341
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: rotating package is loaded.
 Package caption Info: End \AtBeginDocument code.
@@ -658,9 +827,7 @@ Package caption Info: End \AtBeginDocument code.
 
 ] [3] [4
 
-] [5] [6
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.toc (/usr/share/texmf-dist/tex/latex/microtype/mt-cmr.cfg
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/abstract.tex [5]) [6] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.toc (/usr/share/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman (RS)
 )
 LaTeX Font Info:    Trying to load font information for U+msa on input line 2.
@@ -677,11 +844,14 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ) [7
 
 
-])
-\tf@toc=\write4
-\openout4 = `mt00.toc'.
 
- [8] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/00_introduction.tex
+] [8])
+\tf@toc=\write5
+\openout5 = `mt00.toc'.
+
+ [9] [10
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/00_introduction.tex
 Chapter 1.
 Package acronym Info: Label `acro:ECD' newly defined as it shall be overridden
 although it is yet undefined on input line 7.
@@ -695,42 +865,49 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [1
 
 
-
 ]
+<imgs/eccs/ecd.png, id=433, 4625.28pt x 3468.96pt>
+File: imgs/eccs/ecd.png Graphic file (type png)
+<use imgs/eccs/ecd.png>
+Package pdftex.def Info: imgs/eccs/ecd.png  used on input line 37.
+(pdftex.def)             Requested size: 312.9803pt x 234.70049pt.
+ [2 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/eccs/ecd.png>]
 Package acronym Info: Label `acro:CNN' newly defined as it shall be overridden
-although it is yet undefined on input line 57.
- [2]
-Package acronym Info: Label `acro:ANN' newly defined as it shall be overridden
-although it is yet undefined on input line 63.
-Package acronym Info: Label `acro:SMO' newly defined as it shall be overridden
 although it is yet undefined on input line 67.
 Package acronym Info: Label `acro:MLP' newly defined as it shall be overridden
-although it is yet undefined on input line 68.
+although it is yet undefined on input line 73.
+Package acronym Info: Label `acro:SMO' newly defined as it shall be overridden
+although it is yet undefined on input line 77.
 Package acronym Info: Label `acro:KNN' newly defined as it shall be overridden
-although it is yet undefined on input line 68.
-Package acronym Info: Label `acro:HOG' newly defined as it shall be overridden
-although it is yet undefined on input line 87.
-Package acronym Info: Label `acro:SVM' newly defined as it shall be overridden
-although it is yet undefined on input line 87.
+although it is yet undefined on input line 78.
  [3]
-Package acronym Info: Label `acro:YOLO' newly defined as it shall be overridden
-although it is yet undefined on input line 116.
+Package acronym Info: Label `acro:HOG' newly defined as it shall be overridden
+although it is yet undefined on input line 98.
+Package acronym Info: Label `acro:SVM' newly defined as it shall be overridden
+although it is yet undefined on input line 98.
  [4]
-Package acronym Info: Label `acro:MUnet' newly defined as it shall be overridden
-although it is yet undefined on input line 136.
-Package acronym Info: Label `acro:OCR' newly defined as it shall be overridden
-although it is yet undefined on input line 138.
+Package acronym Info: Label `acro:YOLO' newly defined as it shall be overridden
+although it is yet undefined on input line 128.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [5]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 146.
+Package acronym Info: Label `acro:MUnet' newly defined as it shall be overridden
+although it is yet undefined on input line 148.
+Package acronym Info: Label `acro:OCR' newly defined as it shall be overridden
+although it is yet undefined on input line 150.
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 158.
  (/usr/share/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
 Package acronym Info: Label `acro:YOLOv4' newly defined as it shall be overridden
-although it is yet undefined on input line 152.
-) [6] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/01_theory.tex
+although it is yet undefined on input line 164.
+ [6]) [7] [8
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/01_theory.tex
 Chapter 2.
 (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ecds.tex
-<imgs/eccs/all.png, id=77, 1696.3375pt x 256.96pt>
+<imgs/eccs/all.png, id=592, 1696.3375pt x 256.96pt>
 File: imgs/eccs/all.png Graphic file (type png)
 <use imgs/eccs/all.png>
 Package pdftex.def Info: imgs/eccs/all.png  used on input line 15.
@@ -738,52 +915,50 @@ Package pdftex.def Info: imgs/eccs/all.png  used on input line 15.
 ) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ltspice.tex
 Underfull \vbox (badness 5050) has occurred while \output is active []
 
- [7
+ [9
 
 
-
- </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/eccs/all.png>] [8] [9]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ann.tex [10]
-Package acronym Info: Label `acro:FC' newly defined as it shall be overridden
-although it is yet undefined on input line 28.
- [11] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/mlp_fig.tex)
-Package acronym Info: Label `acro:MSE' newly defined as it shall be overridden
-although it is yet undefined on input line 71.
+ </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/eccs/all.png>] [10] [11]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/ann.tex
+Package acronym Info: Label `acro:ANN' newly defined as it shall be overridden
+although it is yet undefined on input line 4.
  [12]
+Package acronym Info: Label `acro:FC' newly defined as it shall be overridden
+although it is yet undefined on input line 26.
+ [13] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/mlp_fig.tex) [14]
+Package acronym Info: Label `acro:MSE' newly defined as it shall be overridden
+although it is yet undefined on input line 67.
 Package acronym Info: Label `acro:CE' newly defined as it shall be overridden
-although it is yet undefined on input line 78.
- [13]
+although it is yet undefined on input line 74.
+ [15]
 Package acronym Info: Label `acro:ReLU' newly defined as it shall be overridden
-although it is yet undefined on input line 138.
+although it is yet undefined on input line 131.
 Package acronym Info: Label `acro:LReLU' newly defined as it shall be overridden
-although it is yet undefined on input line 149.
- [14] [15]
-<imgs/conv_example_full.png, id=118, 979.66pt x 259.97125pt>
-File: imgs/conv_example_full.png Graphic file (type png)
-<use imgs/conv_example_full.png>
-Package pdftex.def Info: imgs/conv_example_full.png  used on input line 223.
-(pdftex.def)             Requested size: 455.24408pt x 120.80605pt.
+although it is yet undefined on input line 142.
+ [16] [17]
+<imgs/conv/combined.png, id=778, 468.97116pt x 123.14119pt>
+File: imgs/conv/combined.png Graphic file (type png)
+<use imgs/conv/combined.png>
+Package pdftex.def Info: imgs/conv/combined.png  used on input line 216.
+(pdftex.def)             Requested size: 455.24408pt x 119.53699pt.
 Package acronym Info: Label `acro:BatchNorm' newly defined as it shall be overridden
-although it is yet undefined on input line 248.
-)
-Underfull \vbox (badness 7256) has occurred while \output is active []
-
- [16 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/conv_example_full.png>] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/data_augmentation.tex
+although it is yet undefined on input line 244.
+) [18 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/conv/combined.png>] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/data_augmentation.tex
 Package acronym Info: Label `acro:TTA' newly defined as it shall be overridden
 although it is yet undefined on input line 28.
-) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/object_detection.tex [17] [18]
+) [19] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/object_detection.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [20]
 Package acronym Info: Label `acro:R-CNN' newly defined as it shall be overridden
 although it is yet undefined on input line 57.
-<imgs/selective_search.png, id=130, 702.625pt x 462.72874pt>
+<imgs/selective_search.png, id=849, 702.625pt x 462.72874pt>
 File: imgs/selective_search.png Graphic file (type png)
 <use imgs/selective_search.png>
 Package pdftex.def Info: imgs/selective_search.png  used on input line 66.
 (pdftex.def)             Requested size: 284.52756pt x 187.38293pt.
-
-Underfull \vbox (badness 7981) has occurred while \output is active []
-
- [19 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/selective_search.png>]
 Package acronym Info: Label `acro:RoI' newly defined as it shall be overridden
 although it is yet undefined on input line 76.
+ [21]
 Package acronym Info: Label `acro:SSD' newly defined as it shall be overridden
 although it is yet undefined on input line 105.
 Package acronym Info: Label `acro:YOLOv1' newly defined as it shall be overridden
@@ -792,250 +967,367 @@ Package acronym Info: Label `acro:FCOS' newly defined as it shall be overridden
 although it is yet undefined on input line 120.
 Package acronym Info: Label `acro:IoU' newly defined as it shall be overridden
 although it is yet undefined on input line 121.
- [20]
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [22 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/selective_search.png>]
 Package acronym Info: Label `acro:GIoU' newly defined as it shall be overridden
 although it is yet undefined on input line 148.
+ [23]
 Package acronym Info: Label `acro:DIoU' newly defined as it shall be overridden
 although it is yet undefined on input line 160.
 Package acronym Info: Label `acro:CIoU' newly defined as it shall be overridden
 although it is yet undefined on input line 160.
- [21]
 Package acronym Info: Label `acro:EIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 192.
-) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/yolo.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
+although it is yet undefined on input line 193.
 
- [22]
+Underfull \vbox (badness 1253) has occurred while \output is active []
+
+ [24]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/yolo.tex [25]
 Package acronym Info: Label `acro:PANet' newly defined as it shall be overridden
 although it is yet undefined on input line 85.
- [23] [24]
-<imgs/bbox_calculation.png, id=150, 804.00375pt x 620.3175pt>
-File: imgs/bbox_calculation.png Graphic file (type png)
-<use imgs/bbox_calculation.png>
-Package pdftex.def Info: imgs/bbox_calculation.png  used on input line 141.
-(pdftex.def)             Requested size: 227.62204pt x 175.61862pt.
- [25] [26] [27 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/bbox_calculation.png>]
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [26] [27] [28]
+<imgs/bbox_calculation.pdf, id=1047, 596.2275pt x 442.65375pt>
+File: imgs/bbox_calculation.pdf Graphic file (type pdf)
+<use imgs/bbox_calculation.pdf>
+Package pdftex.def Info: imgs/bbox_calculation.pdf  used on input line 143.
+(pdftex.def)             Requested size: 227.62204pt x 168.99367pt.
+ [29 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/bbox_calculation.pdf>] [30]
 Package acronym Info: Label `acro:NMS' newly defined as it shall be overridden
-although it is yet undefined on input line 213.
- [28]
-LaTeX Font Info:    Trying to load font information for OMS+ptm on input line 223.
+although it is yet undefined on input line 217.
+LaTeX Font Info:    Trying to load font information for OMS+ptm on input line 269.
  (/usr/share/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
-LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 223.
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 269.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [31]
 Package acronym Info: Label `acro:WBF' newly defined as it shall be overridden
-although it is yet undefined on input line 251.
- [29]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex [30]
-<imgs/instance_vs_semantic_seg.png, id=175, 1222.5675pt x 333.245pt>
+although it is yet undefined on input line 292.
+ [32]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/segmentation.tex [33]
+<imgs/instance_vs_semantic_seg.png, id=1201, 1222.5675pt x 333.245pt>
 File: imgs/instance_vs_semantic_seg.png Graphic file (type png)
 <use imgs/instance_vs_semantic_seg.png>
 Package pdftex.def Info: imgs/instance_vs_semantic_seg.png  used on input line 13.
 (pdftex.def)             Requested size: 455.24408pt x 124.08687pt.
- [31 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/instance_vs_semantic_seg.png>]
-<imgs/inverted_residual.png, id=180, 702.625pt x 272.01625pt>
-File: imgs/inverted_residual.png Graphic file (type png)
-<use imgs/inverted_residual.png>
-Package pdftex.def Info: imgs/inverted_residual.png  used on input line 75.
-(pdftex.def)             Requested size: 369.88582pt x 143.20082pt.
- [32] [33 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/inverted_residual.png (PNG copy)>]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/hypergraph.tex
-<imgs/hypergraph_adjacency.png, id=187, 1371.1225pt x 668.4975pt>
-File: imgs/hypergraph_adjacency.png Graphic file (type png)
-<use imgs/hypergraph_adjacency.png>
-Package pdftex.def Info: imgs/hypergraph_adjacency.png  used on input line 9.
-(pdftex.def)             Requested size: 369.88582pt x 180.33353pt.
+ [34 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/instance_vs_semantic_seg.png>]
+<imgs/inverted_residual_block.png, id=1228, 1030.85126pt x 421.575pt>
+File: imgs/inverted_residual_block.png Graphic file (type png)
+<use imgs/inverted_residual_block.png>
+Package pdftex.def Info: imgs/inverted_residual_block.png  used on input line 77.
+(pdftex.def)             Requested size: 369.88582pt x 151.26512pt.
+<imgs/normal_residual_block.png, id=1229, 1030.85126pt x 421.575pt>
+File: imgs/normal_residual_block.png Graphic file (type png)
+<use imgs/normal_residual_block.png>
+Package pdftex.def Info: imgs/normal_residual_block.png  used on input line 86.
+(pdftex.def)             Requested size: 369.88582pt x 151.26512pt.
+ [35] [36 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/inverted_residual_block.png> </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/normal_residual_block.png>]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/hypergraph.tex
+
+pdfTeX warning: pdflatex (file /home/dimfred/workspaces/uni/ma/thesis/tex/imgs/hypergraph_adjacency_cropped.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
+<imgs/hypergraph_adjacency_cropped.pdf, id=1261, 398.48875pt x 189.70876pt>
+File: imgs/hypergraph_adjacency_cropped.pdf Graphic file (type pdf)
+<use imgs/hypergraph_adjacency_cropped.pdf>
+Package pdftex.def Info: imgs/hypergraph_adjacency_cropped.pdf  used on input line 10.
+(pdftex.def)             Requested size: 369.88582pt x 176.0973pt.
 ) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/metrics.tex
 Package acronym Info: Label `acro:TP' newly defined as it shall be overridden
-although it is yet undefined on input line 34.
+although it is yet undefined on input line 5.
 Package acronym Info: Label `acro:FP' newly defined as it shall be overridden
-although it is yet undefined on input line 34.
+although it is yet undefined on input line 5.
+Package acronym Info: Label `acro:TN' newly defined as it shall be overridden
+although it is yet undefined on input line 5.
 Package acronym Info: Label `acro:FN' newly defined as it shall be overridden
-although it is yet undefined on input line 34.
- [34] [35 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/hypergraph_adjacency.png>]
+although it is yet undefined on input line 5.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [37] [38 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/hypergraph_adjacency_cropped.pdf>]
 Package acronym Info: Label `acro:AP' newly defined as it shall be overridden
-although it is yet undefined on input line 71.
- [36]
-<imgs/pr_curve.png, id=199, 1509.64pt x 748.7975pt>
+although it is yet undefined on input line 43.
+ [39]
+<imgs/pr_curve.png, id=1343, 1509.64pt x 748.7975pt>
 File: imgs/pr_curve.png Graphic file (type png)
 <use imgs/pr_curve.png>
-Package pdftex.def Info: imgs/pr_curve.png  used on input line 86.
-(pdftex.def)             Requested size: 312.9803pt x 155.24118pt.
+Package pdftex.def Info: imgs/pr_curve.png  used on input line 58.
+(pdftex.def)             Requested size: 460.93457pt x 228.62856pt.
 Package acronym Info: Label `acro:mAP' newly defined as it shall be overridden
-although it is yet undefined on input line 94.
-Package acronym Info: Label `acro:mIoU' newly defined as it shall be overridden
-although it is yet undefined on input line 104.
- [37 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pr_curve.png (PNG copy)>])) [38] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
-Chapter 3.
-(/home/dimfred/workspaces/uni/ma/thesis/tex/main/data.tex [39
+although it is yet undefined on input line 66.
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [40 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pr_curve.png (PNG copy)>]
+Package acronym Info: Label `acro:mIoU' newly defined as it shall be overridden
+although it is yet undefined on input line 76.
+)) [41] [42
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/02_mandm.tex
+Chapter 3.
+(/home/dimfred/workspaces/uni/ma/thesis/tex/main/data.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [43
 
 
 ]
-<imgs/topology_label_idx_example.png, id=210, 564.1075pt x 552.0625pt>
+<imgs/labels/both_example.png, id=1422, 1545.775pt x 752.8125pt>
+File: imgs/labels/both_example.png Graphic file (type png)
+<use imgs/labels/both_example.png>
+Package pdftex.def Info: imgs/labels/both_example.png  used on input line 63.
+(pdftex.def)             Requested size: 460.93457pt x 224.47853pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [44] [45]
+<imgs/topology_label_idx_example.png, id=1445, 564.1075pt x 552.0625pt>
 File: imgs/topology_label_idx_example.png Graphic file (type png)
 <use imgs/topology_label_idx_example.png>
-Package pdftex.def Info: imgs/topology_label_idx_example.png  used on input line 104.
+Package pdftex.def Info: imgs/topology_label_idx_example.png  used on input line 126.
 (pdftex.def)             Requested size: 315.82576pt x 309.0855pt.
-LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 134.
- [40] [41] [42 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/topology_label_idx_example.png>]
+
+Underfull \vbox (badness 1540) has occurred while \output is active []
+
+ [46 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/labels/both_example.png>] [47 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/topology_label_idx_example.png>]
 Package acronym Info: Label `acro:CSV' newly defined as it shall be overridden
-although it is yet undefined on input line 156.
+although it is yet undefined on input line 178.
 ) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/pipeline.tex
 Package acronym Info: Label `acro:IDom' newly defined as it shall be overridden
 although it is yet undefined on input line 4.
 Package acronym Info: Label `acro:LDom' newly defined as it shall be overridden
 although it is yet undefined on input line 4.
- [43]
-<imgs/pipeline/combined_pred.png, id=225, 1270.7475pt x 564.1075pt>
-File: imgs/pipeline/combined_pred.png Graphic file (type png)
-<use imgs/pipeline/combined_pred.png>
-Package pdftex.def Info: imgs/pipeline/combined_pred.png  used on input line 35.
-(pdftex.def)             Requested size: 455.24408pt x 202.08867pt.
- [44] [45 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pipeline/combined_pred.png>] [46] [47]) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex [48]
+ [48]
+
+pdfTeX warning: pdflatex (file /home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pipeline/pipeline_overview.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
+<imgs/pipeline/pipeline_overview.pdf, id=1493, 614.295pt x 794.97pt>
+File: imgs/pipeline/pipeline_overview.pdf Graphic file (type pdf)
+<use imgs/pipeline/pipeline_overview.pdf>
+Package pdftex.def Info: imgs/pipeline/pipeline_overview.pdf  used on input line 17.
+(pdftex.def)             Requested size: 426.79134pt x 552.32666pt.
+
+LaTeX Warning: Float too large for page by 39.21136pt on input line 21.
+
+[49] [50 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pipeline/pipeline_overview.pdf>] [51]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [52]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [53] [54]) [55] [56
+
+]
+Chapter 4.
+(/home/dimfred/workspaces/uni/ma/thesis/tex/main/training.tex
 Package acronym Info: Label `acro:SGD' newly defined as it shall be overridden
-although it is yet undefined on input line 51.
- [49]
-<imgs/yolo_lr_experiment.pdf, id=248, 462.52798pt x 346.89601pt>
+although it is yet undefined on input line 19.
+
+
+pdfTeX warning: pdflatex (file /home/dimfred/workspaces/uni/ma/thesis/tex/imgs/experiments_overview_yolo.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
+<imgs/experiments_overview_yolo.pdf, id=1671, 487.8225pt x 197.73875pt>
+File: imgs/experiments_overview_yolo.pdf Graphic file (type pdf)
+<use imgs/experiments_overview_yolo.pdf>
+Package pdftex.def Info: imgs/experiments_overview_yolo.pdf  used on input line 34.
+(pdftex.def)             Requested size: 398.33858pt x 161.46794pt.
+[57
+
+] [58 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/experiments_overview_yolo.pdf>]
+<imgs/yolo_lr_experiment.pdf, id=1712, 1589.94pt x 722.7pt>
 File: imgs/yolo_lr_experiment.pdf Graphic file (type pdf)
 <use imgs/yolo_lr_experiment.pdf>
-Package pdftex.def Info: imgs/yolo_lr_experiment.pdf  used on input line 92.
-(pdftex.def)             Requested size: 369.88582pt x 277.42719pt.
-<imgs/yolo_offline_aug_experiment.pdf, id=249, 462.52798pt x 346.89601pt>
+Package pdftex.def Info: imgs/yolo_lr_experiment.pdf  used on input line 114.
+(pdftex.def)             Requested size: 369.88582pt x 168.12526pt.
+ [59 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_lr_experiment.pdf>]
+<imgs/yolo_offline_aug_experiment.pdf, id=1768, 1589.94pt x 939.51pt>
 File: imgs/yolo_offline_aug_experiment.pdf Graphic file (type pdf)
 <use imgs/yolo_offline_aug_experiment.pdf>
-Package pdftex.def Info: imgs/yolo_offline_aug_experiment.pdf  used on input line 132.
-(pdftex.def)             Requested size: 369.88582pt x 277.42719pt.
- [50] [51 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_lr_experiment.pdf>] [52 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_offline_aug_experiment.pdf>]
-<imgs/yolo_online_aug_experiment.pdf, id=338, 1445.4pt x 722.7pt>
+Package pdftex.def Info: imgs/yolo_offline_aug_experiment.pdf  used on input line 144.
+(pdftex.def)             Requested size: 369.88582pt x 218.56284pt.
+<imgs/yolo_online_aug_experiment.pdf, id=1771, 1589.94pt x 722.7pt>
 File: imgs/yolo_online_aug_experiment.pdf Graphic file (type pdf)
 <use imgs/yolo_online_aug_experiment.pdf>
-Package pdftex.def Info: imgs/yolo_online_aug_experiment.pdf  used on input line 195.
-(pdftex.def)             Requested size: 455.24408pt x 227.61862pt.
- [53]
-<imgs/yolo_grid_bs_compare.pdf, id=343, 505.89pt x 289.08pt>
+Package pdftex.def Info: imgs/yolo_online_aug_experiment.pdf  used on input line 152.
+(pdftex.def)             Requested size: 455.24408pt x 206.93103pt.
+ [60 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_offline_aug_experiment.pdf>] [61 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_online_aug_experiment.pdf>]
+<imgs/yolo_grid_bs_compare.pdf, id=1903, 722.7pt x 433.62pt>
 File: imgs/yolo_grid_bs_compare.pdf Graphic file (type pdf)
 <use imgs/yolo_grid_bs_compare.pdf>
-Package pdftex.def Info: imgs/yolo_grid_bs_compare.pdf  used on input line 238.
-(pdftex.def)             Requested size: 341.43306pt x 195.10733pt.
- [54 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_online_aug_experiment.pdf>]
-<imgs/yolo_grid_heat.pdf, id=392, 505.89pt x 252.945pt>
+Package pdftex.def Info: imgs/yolo_grid_bs_compare.pdf  used on input line 247.
+(pdftex.def)             Requested size: 398.33858pt x 239.0012pt.
+<imgs/yolo_grid_heat.pdf, id=1904, 505.89pt x 252.945pt>
 File: imgs/yolo_grid_heat.pdf Graphic file (type pdf)
 <use imgs/yolo_grid_heat.pdf>
-Package pdftex.def Info: imgs/yolo_grid_heat.pdf  used on input line 249.
-(pdftex.def)             Requested size: 455.24408pt x 227.62523pt.
-<imgs/yolo_input_size_tuning.pdf, id=393, 1156.32pt x 505.89pt>
+Package pdftex.def Info: imgs/yolo_grid_heat.pdf  used on input line 255.
+(pdftex.def)             Requested size: 426.79134pt x 213.39865pt.
+<imgs/yolo_input_size_tuning.pdf, id=1908, 1228.59pt x 505.89pt>
 File: imgs/yolo_input_size_tuning.pdf Graphic file (type pdf)
 <use imgs/yolo_input_size_tuning.pdf>
-Package pdftex.def Info: imgs/yolo_input_size_tuning.pdf  used on input line 266.
-(pdftex.def)             Requested size: 398.33858pt x 174.26978pt.
- [55 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_grid_bs_compare.pdf>] [56 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_grid_heat.pdf> </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_input_size_tuning.pdf
+Package pdftex.def Info: imgs/yolo_input_size_tuning.pdf  used on input line 275.
+(pdftex.def)             Requested size: 369.88582pt x 152.3085pt.
+ [62]
 
-pdfTeX warning: pdflatex (file /home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_input_size_tuning.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] [57]
-<imgs/yolo_wbf_tta_votes.pdf, id=517, 578.16pt x 216.81pt>
+LaTeX Warning: Text page 63 contains only floats.
+
+[63 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_grid_bs_compare.pdf> </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_grid_heat.pdf
+
+pdfTeX warning: pdflatex (file /home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_grid_heat.pdf): PDF inclusion: multiple pdfs with page group included in a single page
+>] [64 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_input_size_tuning.pdf>]
+<imgs/yolo_wbf_tta_votes.pdf, id=2096, 578.16pt x 216.81pt>
 File: imgs/yolo_wbf_tta_votes.pdf Graphic file (type pdf)
 <use imgs/yolo_wbf_tta_votes.pdf>
-Package pdftex.def Info: imgs/yolo_wbf_tta_votes.pdf  used on input line 329.
-(pdftex.def)             Requested size: 426.79134pt x 160.04651pt.
- [58 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_wbf_tta_votes.pdf>]
-<imgs/yolo_all_tuning.pdf, id=554, 614.295pt x 361.35pt>
+Package pdftex.def Info: imgs/yolo_wbf_tta_votes.pdf  used on input line 338.
+(pdftex.def)             Requested size: 369.88582pt x 138.70499pt.
+ [65]
+<imgs/yolo_all_tuning.pdf, id=2116, 614.295pt x 361.35pt>
 File: imgs/yolo_all_tuning.pdf Graphic file (type pdf)
 <use imgs/yolo_all_tuning.pdf>
-Package pdftex.def Info: imgs/yolo_all_tuning.pdf  used on input line 352.
-(pdftex.def)             Requested size: 460.93457pt x 271.13866pt.
- [59 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_all_tuning.pdf>]
-<imgs/munet_lr_exp.pdf, id=604, 578.16pt x 361.35pt>
+Package pdftex.def Info: imgs/yolo_all_tuning.pdf  used on input line 363.
+(pdftex.def)             Requested size: 369.88582pt x 217.5836pt.
+ [66 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_wbf_tta_votes.pdf>]
+<imgs/experiments_overview_munet.png, id=2166, 1442.38875pt x 791.95876pt>
+File: imgs/experiments_overview_munet.png Graphic file (type png)
+<use imgs/experiments_overview_munet.png>
+Package pdftex.def Info: imgs/experiments_overview_munet.png  used on input line 436.
+(pdftex.def)             Requested size: 341.43306pt x 187.46378pt.
+ [67 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_all_tuning.pdf>]
+<imgs/munet_lr_exp.pdf, id=2229, 1589.94pt x 722.7pt>
 File: imgs/munet_lr_exp.pdf Graphic file (type pdf)
 <use imgs/munet_lr_exp.pdf>
-Package pdftex.def Info: imgs/munet_lr_exp.pdf  used on input line 444.
-(pdftex.def)             Requested size: 460.93457pt x 288.0824pt.
-
-Underfull \vbox (badness 1783) has occurred while \output is active []
-
- [60] [61 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_lr_exp.pdf>]
-<imgs/munet_offline_aug_experiment.pdf, id=644, 578.16pt x 361.35pt>
+Package pdftex.def Info: imgs/munet_lr_exp.pdf  used on input line 465.
+(pdftex.def)             Requested size: 341.43306pt x 155.19pt.
+<imgs/munet_offline_aug_experiment.pdf, id=2231, 1589.94pt x 722.7pt>
 File: imgs/munet_offline_aug_experiment.pdf Graphic file (type pdf)
 <use imgs/munet_offline_aug_experiment.pdf>
-Package pdftex.def Info: imgs/munet_offline_aug_experiment.pdf  used on input line 459.
-(pdftex.def)             Requested size: 460.93457pt x 288.0824pt.
-<imgs/munet_online_aug_experiment.pdf, id=645, 1445.4pt x 722.7pt>
+Package pdftex.def Info: imgs/munet_offline_aug_experiment.pdf  used on input line 484.
+(pdftex.def)             Requested size: 369.88582pt x 168.12526pt.
+ [68 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/experiments_overview_munet.png>]
+<imgs/munet_online_aug_experiment.pdf, id=2242, 1589.94pt x 722.7pt>
 File: imgs/munet_online_aug_experiment.pdf Graphic file (type pdf)
 <use imgs/munet_online_aug_experiment.pdf>
-Package pdftex.def Info: imgs/munet_online_aug_experiment.pdf  used on input line 477.
-(pdftex.def)             Requested size: 460.93457pt x 230.46371pt.
- [62 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_offline_aug_experiment.pdf>] [63 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_online_aug_experiment.pdf>]))
-Underfull \vbox (badness 8075) has occurred while \output is active []
+Package pdftex.def Info: imgs/munet_online_aug_experiment.pdf  used on input line 502.
+(pdftex.def)             Requested size: 460.93457pt x 209.51146pt.
 
- [64] [65] [66
+Underfull \vbox (badness 2478) has occurred while \output is active []
 
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
-Chapter 4.
-[67
+ [69 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_lr_exp.pdf> </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_offline_aug_experiment.pdf
 
-
-] [68] [69] [70] [71] [72] [73]
-Overfull \hbox (1.12332pt too wide) in paragraph at lines 293--318
- [] 
- []
+pdfTeX warning: pdflatex (file /home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_offline_aug_experiment.pdf): PDF inclusion: multiple pdfs with page group included in a single page
+>] [70 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_online_aug_experiment.pdf>] [71]
+<imgs/munet_folds_bs32.pdf, id=2411, 722.7pt x 1084.05pt>
+File: imgs/munet_folds_bs32.pdf Graphic file (type pdf)
+<use imgs/munet_folds_bs32.pdf>
+Package pdftex.def Info: imgs/munet_folds_bs32.pdf  used on input line 575.
+(pdftex.def)             Requested size: 415.42796pt x 623.11528pt.
 
 
-Overfull \hbox (2.79324pt too wide) in paragraph at lines 331--356
- [] 
- []
+LaTeX Warning: Float too large for page by 37.49998pt on input line 579.
 
-) [74] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex
+<imgs/munet_folds_bs64.pdf, id=2414, 722.7pt x 1084.05pt>
+File: imgs/munet_folds_bs64.pdf Graphic file (type pdf)
+<use imgs/munet_folds_bs64.pdf>
+Package pdftex.def Info: imgs/munet_folds_bs64.pdf  used on input line 583.
+(pdftex.def)             Requested size: 415.42796pt x 623.11528pt.
+
+LaTeX Warning: Float too large for page by 37.49998pt on input line 587.
+
+)) [72] [73 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_folds_bs32.pdf>] [74 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_folds_bs64.pdf>] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/03_results.tex
 Chapter 5.
-) [75
+
+
+pdfTeX warning: pdflatex (file /home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pipeline/eval_pipeline_overview_crop.pdf): PDF inclusion: found PDF version <1.6>, but at most version <1.5> allowed
+<imgs/pipeline/eval_pipeline_overview_crop.pdf, id=2528, 445.665pt x 531.9875pt>
+File: imgs/pipeline/eval_pipeline_overview_crop.pdf Graphic file (type pdf)
+<use imgs/pipeline/eval_pipeline_overview_crop.pdf>
+Package pdftex.def Info: imgs/pipeline/eval_pipeline_overview_crop.pdf  used on input line 11.
+(pdftex.def)             Requested size: 460.93457pt x 550.21803pt.
+[75
 
 
 
-] [76
+] [76 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/pipeline/eval_pipeline_overview_crop.pdf>] [77]
+Underfull \vbox (badness 1694) has occurred while \output is active []
 
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-glossar.tex
+ [78] [79]
+Overfull \hbox (1.54588pt too wide) in paragraph at lines 223--248
+ [] 
+ []
+
+[80] [81]
+Overfull \hbox (10.99283pt too wide) in paragraph at lines 381--406
+ [] 
+ []
+
+[82] [83]
+Overfull \hbox (13.77274pt too wide) in paragraph at lines 430--455
+ [] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [84]) [85] [86
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/04_discussion.tex) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/05_summary_and_outlook.tex
 Chapter 6.
-[77
+[87
 
 
-] [78]) [79]
+
+] [88] [89]
+Underfull \vbox (badness 4132) has occurred while \output is active []
+
+ [90] [91] [92]) [93] [94
+
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-glossar.tex [95
+
+
+] [96]) [97] [98
+
+]
 \openout2 = `mt-lof.aux'.
 
- (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex [80
+ (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lof
-Underfull \vbox (badness 2512) has occurred while \output is active []
-
- [81
-
-] [82] [83])
-\tf@lof=\write5
-\openout5 = `mt00.lof'.
-
-) [84]
-\openout2 = `mt-lot.aux'.
-
- (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot [85
-
-
-
+ [99
 
 
 
 ]
-Underfull \vbox (badness 2726) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [86])
-\tf@lot=\write6
-\openout6 = `mt00.lot'.
-
-)
+ [100] [101]
 Underfull \vbox (badness 5847) has occurred while \output is active []
 
- [87] [88]
+ [102])
+\tf@lof=\write6
+\openout6 = `mt00.lof'.
+
+) [103] [104
+
+
+
+]
+\openout2 = `mt-lot.aux'.
+
+ (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.lot [105
+
+
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [106] [107])
+\tf@lot=\write7
+\openout7 = `mt00.lot'.
+
+) [108]
 \openout2 = `mt-lit.aux'.
 
- (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl [89
+ (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.tex (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.bbl [109
 
 
 
@@ -1043,7 +1335,7 @@ Underfull \vbox (badness 5847) has occurred while \output is active []
 
 
 ]
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 91.
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 115.
  (/usr/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
@@ -1051,35 +1343,36 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `pcr' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [90]
-Overfull \hbox (16.53606pt too wide) in paragraph at lines 135--141
-\OT1/pcr/m/n/12 map-[]mean-[]average-[]precision-[]for-[]object-[]detection-[]45c121a31173$\OT1/ptm/m/n/12 (-20) , 
+ [110]
+Overfull \hbox (23.86789pt too wide) in paragraph at lines 159--165
+\OT1/pcr/m/n/12 map-[]mean-[]average-[]precision-[]for-[]object-[]detection-[]45c121a31173$[]\OT1/ptm/m/n/12 (-20) , 
  []
 
-[91] [92] [93])) [94] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/app_yolo_experiments.tex [95
+[111] [112] [113] [114])) [115] [116
 
 
 
+] (/home/dimfred/workspaces/uni/ma/thesis/tex/main/app_yolo_experiments.tex [117
 
 
 
 ]
 Overfull \vbox (62.43652pt too high) has occurred while \output is active []
 
- [96]
+ [118]
 Overfull \vbox (91.43652pt too high) has occurred while \output is active []
 
- [97]
+ [119]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [98]
+ [120]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [99]
+ [121]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [100]
-<imgs/yolo_diou_heat.pdf, id=859, 794.97pt x 794.97pt>
+ [122]
+<imgs/yolo_diou_heat.pdf, id=3438, 794.97pt x 794.97pt>
 File: imgs/yolo_diou_heat.pdf Graphic file (type pdf)
 <use imgs/yolo_diou_heat.pdf>
 Package pdftex.def Info: imgs/yolo_diou_heat.pdf  used on input line 577.
@@ -1087,8 +1380,8 @@ Package pdftex.def Info: imgs/yolo_diou_heat.pdf  used on input line 577.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [101]
-<imgs/yolo_wbf_heat.pdf, id=864, 794.97pt x 794.97pt>
+ [123]
+<imgs/yolo_wbf_heat.pdf, id=3452, 794.97pt x 794.97pt>
 File: imgs/yolo_wbf_heat.pdf Graphic file (type pdf)
 <use imgs/yolo_wbf_heat.pdf>
 Package pdftex.def Info: imgs/yolo_wbf_heat.pdf  used on input line 585.
@@ -1096,8 +1389,8 @@ Package pdftex.def Info: imgs/yolo_wbf_heat.pdf  used on input line 585.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [102 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_diou_heat.pdf>]
-<imgs/yolo_wbf_tta_heat.pdf, id=901, 794.97pt x 794.97pt>
+ [124 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_diou_heat.pdf>]
+<imgs/yolo_wbf_tta_heat.pdf, id=3495, 794.97pt x 794.97pt>
 File: imgs/yolo_wbf_tta_heat.pdf Graphic file (type pdf)
 <use imgs/yolo_wbf_tta_heat.pdf>
 Package pdftex.def Info: imgs/yolo_wbf_tta_heat.pdf  used on input line 593.
@@ -1105,13 +1398,13 @@ Package pdftex.def Info: imgs/yolo_wbf_tta_heat.pdf  used on input line 593.
 ) (/home/dimfred/workspaces/uni/ma/thesis/tex/main/app_munet_experiments.tex
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [103 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_wbf_heat.pdf>] [104 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_wbf_tta_heat.pdf>]
-<imgs/munet_grid_heat_F1_B.pdf, id=972, 794.97pt x 794.97pt>
+ [125 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_wbf_heat.pdf>] [126 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/yolo_wbf_tta_heat.pdf>]
+<imgs/munet_grid_heat_F1_B.pdf, id=3576, 794.97pt x 794.97pt>
 File: imgs/munet_grid_heat_F1_B.pdf Graphic file (type pdf)
 <use imgs/munet_grid_heat_F1_B.pdf>
 Package pdftex.def Info: imgs/munet_grid_heat_F1_B.pdf  used on input line 134.
 (pdftex.def)             Requested size: 460.93457pt x 460.9495pt.
-<imgs/munet_grid_heat_R_B.pdf, id=973, 794.97pt x 794.97pt>
+<imgs/munet_grid_heat_R_B.pdf, id=3579, 794.97pt x 794.97pt>
 File: imgs/munet_grid_heat_R_B.pdf Graphic file (type pdf)
 <use imgs/munet_grid_heat_R_B.pdf>
 Package pdftex.def Info: imgs/munet_grid_heat_R_B.pdf  used on input line 142.
@@ -1119,10 +1412,10 @@ Package pdftex.def Info: imgs/munet_grid_heat_R_B.pdf  used on input line 142.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [105
+ [127
 
  </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_F1_B.pdf>]
-<imgs/munet_grid_heat_P_B.pdf, id=1015, 794.97pt x 794.97pt>
+<imgs/munet_grid_heat_P_B.pdf, id=3626, 794.97pt x 794.97pt>
 File: imgs/munet_grid_heat_P_B.pdf Graphic file (type pdf)
 <use imgs/munet_grid_heat_P_B.pdf>
 Package pdftex.def Info: imgs/munet_grid_heat_P_B.pdf  used on input line 150.
@@ -1130,8 +1423,8 @@ Package pdftex.def Info: imgs/munet_grid_heat_P_B.pdf  used on input line 150.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [106 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_R_B.pdf>]
-<imgs/munet_grid_heat_F1_C.pdf, id=1057, 794.97pt x 794.97pt>
+ [128 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_R_B.pdf>]
+<imgs/munet_grid_heat_F1_C.pdf, id=3671, 794.97pt x 794.97pt>
 File: imgs/munet_grid_heat_F1_C.pdf Graphic file (type pdf)
 <use imgs/munet_grid_heat_F1_C.pdf>
 Package pdftex.def Info: imgs/munet_grid_heat_F1_C.pdf  used on input line 158.
@@ -1139,8 +1432,8 @@ Package pdftex.def Info: imgs/munet_grid_heat_F1_C.pdf  used on input line 158.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [107 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_P_B.pdf>]
-<imgs/munet_grid_heat_R_C.pdf, id=1103, 794.97pt x 794.97pt>
+ [129 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_P_B.pdf>]
+<imgs/munet_grid_heat_R_C.pdf, id=3720, 794.97pt x 794.97pt>
 File: imgs/munet_grid_heat_R_C.pdf Graphic file (type pdf)
 <use imgs/munet_grid_heat_R_C.pdf>
 Package pdftex.def Info: imgs/munet_grid_heat_R_C.pdf  used on input line 166.
@@ -1148,8 +1441,8 @@ Package pdftex.def Info: imgs/munet_grid_heat_R_C.pdf  used on input line 166.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [108 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_F1_C.pdf>]
-<imgs/munet_grid_heat_P_C.pdf, id=1145, 794.97pt x 794.97pt>
+ [130 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_F1_C.pdf>]
+<imgs/munet_grid_heat_P_C.pdf, id=3766, 794.97pt x 794.97pt>
 File: imgs/munet_grid_heat_P_C.pdf Graphic file (type pdf)
 <use imgs/munet_grid_heat_P_C.pdf>
 Package pdftex.def Info: imgs/munet_grid_heat_P_C.pdf  used on input line 174.
@@ -1157,40 +1450,29 @@ Package pdftex.def Info: imgs/munet_grid_heat_P_C.pdf  used on input line 174.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [109 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_R_C.pdf>]
+ [131 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_R_C.pdf>])
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [110 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_P_C.pdf>]
+ [132 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_grid_heat_P_C.pdf>]
 Overfull \vbox (53.08672pt too high) has occurred while \output is active []
 
- [111]
-<imgs/munet_folds_bs32.pdf, id=1234, 911.05371pt x 1084.05pt>
-File: imgs/munet_folds_bs32.pdf Graphic file (type pdf)
-<use imgs/munet_folds_bs32.pdf>
-Package pdftex.def Info: imgs/munet_folds_bs32.pdf  used on input line 269.
-(pdftex.def)             Requested size: 460.93457pt x 548.45822pt.
-<imgs/munet_folds_bs64.pdf, id=1235, 911.05371pt x 1084.05pt>
-File: imgs/munet_folds_bs64.pdf Graphic file (type pdf)
-<use imgs/munet_folds_bs64.pdf>
-Package pdftex.def Info: imgs/munet_folds_bs64.pdf  used on input line 277.
-(pdftex.def)             Requested size: 460.93457pt x 548.45822pt.
-)
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [112 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_folds_bs32.pdf>] [113 </home/dimfred/workspaces/uni/ma/thesis/tex/imgs/munet_folds_bs64.pdf>] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux)) ) 
+ [133] (/home/dimfred/workspaces/uni/ma/thesis/tex/mt00.aux (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lof.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lot.aux) (/home/dimfred/workspaces/uni/ma/thesis/tex/mt-lit.aux))
+Package rerunfilecheck Info: File `mt00.out' has not changed.
+(rerunfilecheck)             Checksum: 845709CD6DFB7DDB8DD694693E5B3897;9599.
+ ) 
 Here is how much of TeX's memory you used:
- 31125 strings out of 478994
- 720250 string characters out of 5864752
- 1170007 words of memory out of 5000000
- 47637 multiletter control sequences out of 15000+600000
- 450723 words of font info for 292 fonts, out of 8000000 for 9000
+ 38832 strings out of 478994
+ 836822 string characters out of 5864752
+ 1346539 words of memory out of 5000000
+ 54547 multiletter control sequences out of 15000+600000
+ 455212 words of font info for 306 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 102i,12n,102p,939b,1681s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (121 pages, 2204682 bytes).
+ 102i,18n,102p,954b,785s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on /home/dimfred/workspaces/uni/ma/thesis/tex/mt00.pdf (143 pages, 21265493 bytes).
 PDF statistics:
- 1408 PDF objects out of 1440 (max. 8388607)
- 489 compressed objects within 5 object streams
- 0 named destinations out of 1000 (max. 500000)
- 72461 words of extra memory for PDF output out of 74296 (max. 10000000)
+ 4083 PDF objects out of 4296 (max. 8388607)
+ 2978 compressed objects within 30 object streams
+ 649 named destinations out of 1000 (max. 500000)
+ 81187 words of extra memory for PDF output out of 89155 (max. 10000000)
 
